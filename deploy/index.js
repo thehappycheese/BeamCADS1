@@ -7,8 +7,8 @@ ui.reodiv = document.querySelector("#reodiv");
 
 
 // Initial Physical property input boxes
-ui.physdiv.appendChild(input("B"	, "number","mm"));
-ui.physdiv.appendChild(input("D"	, "number","mm"));
+ui.physdiv.appendChild(input("B"	, "number","mm",10000));
+ui.physdiv.appendChild(input("D"	, "number","mm",1000));
 
 ui.physdiv.appendChild(input("cover"	, "number","mm"));
 
@@ -41,6 +41,7 @@ function drawBeam(b){
 	var canvas = document.getElementById("canvas_csect");
 	var ctx = canvas.getContext('2d');
 	
+	
 	var maxwidth = canvas.width*0.6;
 	var maxheight = canvas.height*0.6;
 	var minwidth = Math.max(40, canvas.width*0.2);
@@ -60,7 +61,12 @@ function drawBeam(b){
 		console.log(w,h);
 		
 		ctx.strokeStyle = "#FF00FF";
+		ctx.lineWidth = "2px";
 		ctx.strokeRect(-w/2, -h/2, w, h);
+		
+		
+		
+		// TODO: draw cover and steel Layers
 		
 		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 10,b.B+" mm");
 		dim(ctx,-w/2,-h/2,-w/2,h/2, 0, -10,b.D+" mm");
@@ -75,7 +81,9 @@ function drawBeam(b){
 
 
 function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
-	ctx.font = "10px serif";
+	var fontpx = 15;
+	ctx.save();
+	ctx.font = fontpx+"px serif";
 	ctx.textBaseline="middle"
 	ctx.textAlign="center"
 	
@@ -91,6 +99,8 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 	var vb = va.copy().add((new Vector()).fromAngLen(angle+Math.PI/2,1).scalar(dimlen));
 	
 	ctx.strokeStyle = "#555555";
+	ctx.fillStyle = "#555555";
+	// Draw line bodies
 	ctx.beginPath();
 	var vc = va.copy().minus(v1).unit().scalar(3).add(v1);
 	var vd = va.copy().minus(v1).unit().scalar(3).add(va);
@@ -109,24 +119,33 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 	// Arrowhead A
 	ctx.save()
 	ctx.translate(va.x,va.y);
-	ctx.rotate(angle);
-	ctx.fillRect(0,0,5,5);
+	ctx.rotate(-angle*dist/Math.abs(dist));
+	ctx.beginPath();
+	ctx.moveTo(0,0);
+	ctx.lineTo(2,3);
+	ctx.lineTo(-2,3);
+	ctx.fill();
 	ctx.restore();
 	
 	// Arrowhead B
 	ctx.save()
 	ctx.translate(vb.x,vb.y);
-	ctx.rotate(angle+Math.PI);
-	ctx.fillRect(0,0,5,5);
+	ctx.rotate(-angle*dist/Math.abs(dist)+Math.PI);
+	ctx.moveTo(0,0);
+	ctx.lineTo(2,3);
+	ctx.lineTo(-2,3);
+	ctx.fill();
 	ctx.restore();
 	
+	// Draw text
+	ctx.fillStyle = "#000000";
 	var vt = va.copy().add(vb).scalar(0.5);
 	
 	console.log(metric);
-	ctx.clearRect(vt.x-metric.width/2-3,vt.y-10/2-1,metric.width+6,10+4);
+	ctx.clearRect(vt.x-metric.width/2-3,vt.y-fontpx/2-1,metric.width+6,fontpx+4);
 	ctx.fillText(txt,vt.x,vt.y);
 	
-	
+	ctx.restore();
 	
 }
 
@@ -148,13 +167,14 @@ function getInp(varname){
 
 
 
-function input(namestr, type, postfix){
+function input(namestr, type, postfix,value){
 	
 	var inp = document.createElement("input");
 	inp.placeholder = "??";
 	inp.type = type || "text";
 	inp.id = namestr;
 	inp.addEventListener("keyup",handleUserInput);
+	inp.value = value || "";
 	
 	var lable = document.createElement("lable");
 	var prefix = document.createTextNode(namestr+" =");
