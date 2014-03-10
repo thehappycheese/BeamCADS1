@@ -1,5 +1,6 @@
 	<html>
 	<head>
+	<script src="Vector.js"></script>
 	<style>
 .ichunk{
 	width:10cm;
@@ -42,94 +43,12 @@ input{
 </div>
 <div id="sketchdiv" class="ichunk">
 	<h2>Sketch</h2>
+	<p>Not To Scale</p>
 	<hr>
-	<canvas id="canvas_csect">Modern browser required to display this content!</canvas>
+	<canvas id="canvas_csect" style = "display:block;" width="350" height="200">Modern browser required to display this content!</canvas>
 </div>
 
 
 	</body>
-	<script>
-// Build UI
-var ui = {};
-ui.physdiv = document.querySelector("#physdiv");
-ui.matdiv = document.querySelector("#matdiv");
-ui.reodiv = document.querySelector("#reodiv");
-
-
-
-// Initial Physical property input boxes
-ui.physdiv.appendChild(input("B"	,"number","mm"));
-ui.physdiv.appendChild(input("D"	,"number","mm"));
-
-ui.physdiv.appendChild(input("d"	,"number","mm"));
-ui.physdiv.appendChild(input("d_n","number","mm"));
-
-ui.physdiv.appendChild(input("k_u","number",""));
-
-// Initial material properties input boxes
-ui.matdiv.appendChild(input("roh_c","number","kg/m^3"));
-ui.matdiv.appendChild(input("f'_c","number","kg/m^3"));
-ui.matdiv.appendChild(input("f_sy","number","MPa"));
-
-
-
-
-
-
-function handleUserInput(evt){
-	var b = {};
-	b.D = parseInt(getInp("D"));
-	b.B = parseInt(getInp("B"));
-	
-	drawBeam(b);
-	
-}
-
-function drawBeam(btruct){
-	var canvas = document.getElementById("canvas_csect");
-	var ctx = canvas.getContext('2d');
-	
-}
-
-
-
-
-
-
-
-
-
-
-
-
-function getInp(varname){
-	var element = document.getElementById(varname);
-	return element.value;
-}
-
-
-
-
-
-
-
-function input(namestr, type, postfix){
-	
-	var inp = document.createElement("input");
-	inp.placeholder = "??";
-	inp.type = type || "text";
-	inp.id = namestr;
-	inp.addEventListener("keyup",handleUserInput);
-	
-	var lable = document.createElement("lable");
-	var prefix = document.createTextNode(namestr+" =");
-	var postfix = document.createTextNode(postfix);
-	
-	lable.appendChild(prefix);
-	lable.appendChild(inp);
-	lable.appendChild(postfix);
-	
-	return lable;
-}
-	</script>
+	<script src="index.js"></script>
 	</html>
