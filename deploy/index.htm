@@ -1,0 +1,135 @@
+	<html>
+	<head>
+	<style>
+.ichunk{
+	width:10cm;
+	border: 1px solid black;
+	float: left;
+	margin: 10px;
+	padding: 3px;
+}
+lable{
+	display:inline-block;
+	margin: 2px;
+	padding: 1px;
+	border: 1px solid grey;
+}
+input{
+	width:2cm;
+}
+	</style>
+	</head>
+	<body>
+	<h1>Welcome to BeamCAD Lite</h1>
+	<p>The goal of this stage is to provide an intuitive capacity checking software that shows a diagram and a series of calculation. </p>
+	<p>The aim is to produce something that works and teaches something in a "new" way. Looking to solve the capacity of a given beam and explain the background concepts as intuitively/graphically as possible.</p>
+
+<div id="physdiv" class="ichunk">
+	<h2>Physical Properties</h2>
+	<hr>
+</div>
+<div id="matdiv" class="ichunk">
+	<h2>Materials Properties</h2>
+	<hr>
+</div>
+<div id="reodiv" class="ichunk">
+	<h2>Reo</h2>
+	<hr>
+	3: layer <input placeholder="from top" />mm <input placeholder="A_st" />mm^2 <br>
+	2: layer <input placeholder="from top" />mm <input placeholder="A_st" />mm^2 <br>
+	1: layer <input placeholder="from top" />mm <input placeholder="A_st" />mm^2 <br>
+	0: layer <input placeholder="from top" />mm <input placeholder="A_st" />mm^2
+</div>
+<div id="sketchdiv" class="ichunk">
+	<h2>Sketch</h2>
+	<hr>
+	<canvas id="canvas_csect">Modern browser required to display this content!</canvas>
+</div>
+
+
+	</body>
+	<script>
+// Build UI
+var ui = {};
+ui.physdiv = document.querySelector("#physdiv");
+ui.matdiv = document.querySelector("#matdiv");
+ui.reodiv = document.querySelector("#reodiv");
+
+
+
+// Initial Physical property input boxes
+ui.physdiv.appendChild(input("B"	,"number","mm"));
+ui.physdiv.appendChild(input("D"	,"number","mm"));
+
+ui.physdiv.appendChild(input("d"	,"number","mm"));
+ui.physdiv.appendChild(input("d_n","number","mm"));
+
+ui.physdiv.appendChild(input("k_u","number",""));
+
+// Initial material properties input boxes
+ui.matdiv.appendChild(input("roh_c","number","kg/m^3"));
+ui.matdiv.appendChild(input("f'_c","number","kg/m^3"));
+ui.matdiv.appendChild(input("f_sy","number","MPa"));
+
+
+
+
+
+
+function handleUserInput(evt){
+	var b = {};
+	b.D = parseInt(getInp("D"));
+	b.B = parseInt(getInp("B"));
+	
+	drawBeam(b);
+	
+}
+
+function drawBeam(btruct){
+	var canvas = document.getElementById("canvas_csect");
+	var ctx = canvas.getContext('2d');
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function getInp(varname){
+	var element = document.getElementById(varname);
+	return element.value;
+}
+
+
+
+
+
+
+
+function input(namestr, type, postfix){
+	
+	var inp = document.createElement("input");
+	inp.placeholder = "??";
+	inp.type = type || "text";
+	inp.id = namestr;
+	inp.addEventListener("keyup",handleUserInput);
+	
+	var lable = document.createElement("lable");
+	var prefix = document.createTextNode(namestr+" =");
+	var postfix = document.createTextNode(postfix);
+	
+	lable.appendChild(prefix);
+	lable.appendChild(inp);
+	lable.appendChild(postfix);
+	
+	return lable;
+}
+	</script>
+	</html>
