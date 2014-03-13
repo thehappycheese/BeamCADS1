@@ -111,6 +111,13 @@ function Vector(x,y){
 	this.toString = function(){
 		return "<"+this.x.toFixed(2)+", "+this.y.toFixed(2)+">";
 	}.bind(this);
+
+
+	this.rounded = function(){
+		this.x =Math.round(this.x);
+		this.y =Math.round(this.y);
+		return this;
+	}
 	
 	
 	this.moveTo = function(ctx){

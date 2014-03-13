@@ -6,15 +6,8 @@ document.body.appendChild(pc);
 var pctx = pc.getContext('2d');
 pc.width = 2;
 pc.height = 2;
-//pctx.translate(-0.5,-0.5)
-var dat = pctx.getImageData(0,0,2,2);
-for (var i = 0; i < dat.data.length; i+=4) {
-	dat.data[i]   = 0;
-	dat.data[i+1] = 0;
-	dat.data[i+2] = 0;
-	dat.data[i+3] = (i/3)%2*255;
-};
-pctx.putImageData(dat,0,0);
+pctx.setPixel(0,0,0,0,0,255);
+pctx.setPixel(1,1,0,0,0,255);
 
 function drawBeam(ctx, b){
 	
@@ -28,9 +21,8 @@ function drawBeam(ctx, b){
 	ctx.arrow(new Vector(Math.random()*100,Math.random()*100),new Vector(Math.random()*100,Math.random()*100),5);
 	ctx.save();
 	
-	var patt = ctx.createPattern(pc,"repeat");
-	console.log(patt)
-	ctx.translate(Math.floor(ctx.canvas.width/2)+0.5, Math.floor(ctx.canvas.height/2)+0.5);
+	var patt = ctx.createPattern(pc, "repeat");
+	ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
 	
 		
 		
@@ -40,28 +32,36 @@ function drawBeam(ctx, b){
 		var h = Math.max(scale*b.D, minheight);
 		
 		ctx.strokeStyle = "#333333";
-		ctx.lineWidth = 3;
-		ctx.strokeRect(-w/2, -h/2, w, h);
+		ctx.lineWidth = 2;
+		ctx.strokeRect(Math.round(-w/2), Math.round(-h/2), Math.round(w), Math.round(h));
 		
 		
 		
 		// TODO: draw cover and steel Layers
 		
-		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 10,b.B+" mm");
-		dim(ctx,-w/2,-h/2,-w/2,h/2, 0, -10,b.D+" mm");
+		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 12,b.B+" mm");
+		dim(ctx,-w/2,-h/2,-w/2,h/2, 0, -12,b.D+" mm");
 		
 		
 		var scaledcover = Math.max(b.cover*scale*2,10);
 		dim(ctx,w/2,-h/2,w/2,-h/2+scaledcover, 0, 10,b.cover+" mm cover");
 		
 		
-		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,scaledcover/3);
-	
-		ctx.translate(-0.5,-0.5);
-		ctx.fillStyle = patt;
-		ctx.fillRect(10.5,10.5,50,50);
-		ctx.translate(0.5,0.5);
-		
+		var N12D = Math.max(1.5,12*scale);
+		var tendonBendRadius = 4*12/2; // AS3600 17.2.3 assuming N12 Bars
+		ctx.strokeStyle = patt;
+		ctx.lineWidth = N12D;
+		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale);
+
+
+
+		// Draw required reinforcement
+
+
+		ctx.fillStyle = "black";
+		// Draw top two longitudinal reo bars. assume N12 or 3px
+		ctx.fillCircle(-w/2+scaledcover+N12D,-h/2+scaledcover+N12D,N12D/2);
+		ctx.fillCircle( w/2-scaledcover-N12D,-h/2+scaledcover+N12D,N12D/2);
 		
 		
 		
@@ -72,8 +72,6 @@ function drawBeam(ctx, b){
 	
 }
 function drawFitment(ctx,x,y,w,h,rad){
-	ctx.strokeStyle = "grey"
-	ctx.lineWidth = 2
 	ctx.beginPath();
 		ctx.moveTo(x+w,y+h-rad);
 		ctx.lineTo(x+w,y+rad);
