@@ -102,7 +102,7 @@ function Vector(x,y){
 		}.bind(this)
 	});
 	
-	Object.defineProperty(this,"dir",{
+	Object.defineProperty(this,"ang",{
 		get:function(){
 			return Math.atan2(this.y,this.x);
 		}.bind(this)

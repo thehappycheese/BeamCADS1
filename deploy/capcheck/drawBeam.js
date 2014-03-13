@@ -1,19 +1,22 @@
 ///~ globaljs/Vector.js
-
+///~ globaljs/CADCanvas.js
 
 var pc = document.createElement("canvas")
+document.body.appendChild(pc);
 var pctx = pc.getContext('2d');
-pc.width = 4;
-pc.height = 4;
+pc.width = 2;
+pc.height = 2;
 //pctx.translate(-0.5,-0.5)
-pctx.beginPath()
-pctx.moveTo(-1,-1);
-pctx.lineTo(8,5);
-pctx.stroke();
-
+var dat = pctx.getImageData(0,0,2,2);
+for (var i = 0; i < dat.data.length; i+=4) {
+	dat.data[i]   = 0;
+	dat.data[i+1] = 0;
+	dat.data[i+2] = 0;
+	dat.data[i+3] = (i/3)%2*255;
+};
+pctx.putImageData(dat,0,0);
 
 function drawBeam(ctx, b){
-	
 	
 	
 	var maxwidth = ctx.canvas.width*0.6;
@@ -22,8 +25,11 @@ function drawBeam(ctx, b){
 	var minheight = Math.max(35, ctx.canvas.height*0.2);
 	
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	ctx.arrow(new Vector(Math.random()*100,Math.random()*100),new Vector(Math.random()*100,Math.random()*100),5);
 	ctx.save();
 	
+	var patt = ctx.createPattern(pc,"repeat");
+	console.log(patt)
 	ctx.translate(Math.floor(ctx.canvas.width/2)+0.5, Math.floor(ctx.canvas.height/2)+0.5);
 	
 		
@@ -51,10 +57,10 @@ function drawBeam(ctx, b){
 		
 		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,scaledcover/3);
 	
-		var patt = ctx.createPattern(pc,"repeat");
-		
+		ctx.translate(-0.5,-0.5);
 		ctx.fillStyle = patt;
-		ctx.fillRect(10,10,50,50);
+		ctx.fillRect(10.5,10.5,50,50);
+		ctx.translate(0.5,0.5);
 		
 		
 		
