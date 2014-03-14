@@ -59,6 +59,6 @@ CanvasRenderingContext2D.prototype.setPixel = function (x,y,r,g,b,a) {
 }
 
 
-
+CanvasRenderingContext2D.sharpLineTo
 
 
