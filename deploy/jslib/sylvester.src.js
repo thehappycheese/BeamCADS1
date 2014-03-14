@@ -20,6 +20,9 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
+var slvstr = (function (){
+
+var exports = {};
 var Sylvester = {
   version: '0.1.3',
   precision: 1e-6
@@ -1252,3 +1255,12 @@ var $V = Vector.create;
 var $M = Matrix.create;
 var $L = Line.create;
 var $P = Plane.create;
+
+exports.Sylvester = Sylvester;
+exports.Vector	= Vector;
+exports.Matrix	= Matrix;
+exports.Line	= Line;
+exports.Plane	= Plane;
+
+return exports
+})();

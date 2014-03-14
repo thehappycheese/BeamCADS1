@@ -14,8 +14,8 @@ function drawBeam(ctx, b){
 	
 	var maxwidth = ctx.canvas.width*0.6;
 	var maxheight = ctx.canvas.height*0.6;
-	var minwidth = Math.max(35, ctx.canvas.width*0.2);
-	var minheight = Math.max(35, ctx.canvas.height*0.2);
+	var minwidth = 80;//Math.max(35, ctx.canvas.width*0.2);
+	var minheight = 80;//Math.max(35, ctx.canvas.height*0.2);
 	var patt = ctx.createPattern(pc, "repeat");
 	
 	
@@ -27,7 +27,8 @@ function drawBeam(ctx, b){
 	
 	ctx.save();
 		ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
-	
+		dim(ctx,50,50,150,20, Math.PI*0.2, 20,"test :)");
+		
 		
 		
 		var scale = Math.min(maxwidth/b.b, maxheight/b.D);
@@ -77,7 +78,6 @@ function drawBeam(ctx, b){
 		ctx.fillCircle( w/2-scaledcover-N12D, -h/2+scaledcover+N12D, N12D/2);
 		
 		
-		ctx.sharpLine(Math.random()*40,Math.random()*40,Math.random()*40,Math.random()*40);
 		
 		
 	ctx.restore();
@@ -136,7 +136,7 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 		vt = va.copy().add(vb).scalar(0.5).add(offset.unit().scalar(metric.width/2+5));
 	}
 	
-	
+	var angAtoB = vb.copy().minus(va).ang;
 	
 	ctx.lineWidth = 1;
 	ctx.strokeStyle = "#555555";
@@ -146,39 +146,46 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 	ctx.beginPath();
 	var vc = va.copy().minus(v1).unit().scalar(4).add(v1);
 	var vd = va.copy().minus(v1).unit().scalar(4).add(va);
-	ctx.moveTo(vc.x,vc.y);
-	ctx.lineTo(vd.x,vd.y);
-	//ctx.sharpLineV(vc,vd,0,0,0,255);
+	//ctx.moveTo(vc.x,vc.y);
+	//ctx.lineTo(vd.x,vd.y);
+	ctx.sharpLineV(vc,vd,0,0,0,255);
 	
 	
 	var vc = vb.copy().minus(v2).unit().scalar(4).add(v2);
 	var vd = vb.copy().minus(v2).unit().scalar(4).add(vb);
-	ctx.moveTo(vc.x,vc.y);
-	ctx.lineTo(vd.x,vd.y);
+	//ctx.moveTo(vc.x,vc.y);
+	//ctx.lineTo(vd.x,vd.y);
+	ctx.sharpLineV(vc,vd,0,0,0,255);
 	
-	ctx.moveTo(va.x,va.y);
-	ctx.lineTo(vb.x,vb.y);
-	ctx.stroke();
+	//ctx.moveTo(va.x,va.y);
+	//ctx.lineTo(vb.x,vb.y);
+	ctx.sharpLineV(va,vb,0,0,0,255);
+	//ctx.stroke();
 	
 	// Arrowhead A
 	ctx.save()
-	ctx.translate(va.x,va.y);
-	ctx.rotate(-angle*dist/Math.abs(dist));
-	ctx.beginPath();
-	ctx.moveTo(0,0);
-	ctx.lineTo(2,3);
-	ctx.lineTo(-2,3);
-	ctx.fill();
+		ctx.translate(va.x,va.y);
+		ctx.rotate(angAtoB-Math.PI/2);
+		//ctx.beginPath();
+		//ctx.moveTo(0,0);
+		//ctx.lineTo(2,3);
+		//ctx.lineTo(-2,3);
+		
+		ctx.sharpLine(0,0,2,5,0,0,0,255);
+		ctx.sharpLine(0,0,-2,5,0,0,0,255);
+		//ctx.fill();
 	ctx.restore();
 	
 	// Arrowhead B
 	ctx.save()
-	ctx.translate(vb.x, vb.y);
-	ctx.rotate(-angle*dist/Math.abs(dist)+Math.PI);
-	ctx.moveTo(0,0);
-	ctx.lineTo(2,3);
-	ctx.lineTo(-2,3);
-	ctx.fill();
+		ctx.translate(vb.x, vb.y);
+		ctx.rotate(angAtoB+Math.PI/2);
+		//ctx.moveTo(0,0);
+		//ctx.lineTo(4,15);
+		//ctx.lineTo(-4,15);
+		ctx.sharpLine(0,0,2,5,0,0,0,255);
+		ctx.sharpLine(0,0,-2,5,0,0,0,255);
+		//ctx.fill();
 	ctx.restore();
 	
 	// Draw text
