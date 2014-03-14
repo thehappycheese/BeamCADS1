@@ -30,3 +30,8 @@ input{
 	padding:2px;
 	margin:1px;
 }
+
+h2{
+	margin: 3px 10px 3px 5px;
+	font-size:14pt;
+}

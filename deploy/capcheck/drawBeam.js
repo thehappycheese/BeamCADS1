@@ -1,5 +1,5 @@
-///~ globaljs/Vector.js
-///~ globaljs/CADCanvas.js
+///~ jslib/Vector.js
+///~ jslib/CADCanvas.js
 
 var pc = document.createElement("canvas")
 document.body.appendChild(pc);
@@ -16,19 +16,23 @@ function drawBeam(ctx, b){
 	var maxheight = ctx.canvas.height*0.6;
 	var minwidth = Math.max(35, ctx.canvas.width*0.2);
 	var minheight = Math.max(35, ctx.canvas.height*0.2);
+	var patt = ctx.createPattern(pc, "repeat");
+	
+	
+	
+	
 	
 	
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	
+	ctx.save();
+		ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
 	
-	var patt = ctx.createPattern(pc, "repeat");
-	ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
-	
 		
 		
-		var scale = Math.min(maxwidth/b.B, maxheight/b.D);
+		var scale = Math.min(maxwidth/b.b, maxheight/b.D);
 		
-		var w = Math.max(scale*b.B, minwidth);
+		var w = Math.max(scale*b.b, minwidth);
 		var h = Math.max(scale*b.D, minheight);
 		
 		ctx.strokeStyle = "#333333";
@@ -47,7 +51,7 @@ function drawBeam(ctx, b){
 
 
 		// Breadth
-		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 12,b.B+" mm");
+		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 12,b.b+" mm");
 		// Depth
 		dim(ctx,-w/2,-h/2,-w/2,h/2, 0, -12,b.D+" mm");
 		//Cover
@@ -142,9 +146,9 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 	ctx.beginPath();
 	var vc = va.copy().minus(v1).unit().scalar(4).add(v1);
 	var vd = va.copy().minus(v1).unit().scalar(4).add(va);
-	//ctx.moveTo(vc.x,vc.y);
-	//ctx.lineTo(vd.x,vd.y);
-	ctx.sharpLineV(vc,vd,0,0,0,255);
+	ctx.moveTo(vc.x,vc.y);
+	ctx.lineTo(vd.x,vd.y);
+	//ctx.sharpLineV(vc,vd,0,0,0,255);
 	
 	
 	var vc = vb.copy().minus(v2).unit().scalar(4).add(v2);
@@ -169,7 +173,7 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 	
 	// Arrowhead B
 	ctx.save()
-	ctx.translate(vb.x,vb.y);
+	ctx.translate(vb.x, vb.y);
 	ctx.rotate(-angle*dist/Math.abs(dist)+Math.PI);
 	ctx.moveTo(0,0);
 	ctx.lineTo(2,3);

@@ -1,5 +1,6 @@
 
 ///* drawBeam.js
+///~ spreadsheetdata/Data.js
 // Build UI
 
 
@@ -13,25 +14,51 @@ ui.c1div	= document.querySelector("#c1div");
 
 
 // Initial Physical property input boxes
-ui.physdiv.appendChild(input("B"	,"B", 		"number","mm",300));
-ui.physdiv.appendChild(input("D"	,"D", 		"number","mm",600));
+ui.physdiv.appendChild(mkin("b"));
+ui.physdiv.appendChild(mkin("D"));
+ui.physdiv.appendChild(mkin("cover"));
 
-ui.physdiv.appendChild(input("cover","Cover",	"number","mm",30));
-
-ui.physdiv.appendChild(input("d"	, "d",		"number","mm"));
-ui.physdiv.appendChild(input("d_n"	, "d_n",	"number","mm"));
-
-ui.physdiv.appendChild(input("k_u"	, "k_u",	"number",""));
 
 // Initial material properties input boxes
-ui.matdiv.appendChild(input("roh_c"	, "r",		"number","kg/m^3", 2400));
-ui.matdiv.appendChild(input("fc"	, "f'c",	"number","MPa", 32));
-ui.matdiv.appendChild(input("f_sy"	, "f_sy",	"number","MPa", 500));
-ui.matdiv.appendChild(input("reoclass","Reo Class",	"text","N or L", "N"));
+ui.matdiv.appendChild(mkin("rhoc"));
+ui.matdiv.appendChild(mkin("fc"));
+ui.matdiv.appendChild(mkin("fsy"));
+ui.matdiv.appendChild(mkin("reoclass"));
+
 
 // Calculated coefficients
-ui.c1div.appendChild(input("alpha_2",	"al",	"number","", ""));
-ui.c1div.appendChild(input("gamma",		"gam",	"number","", ""));
+ui.c1div.appendChild(mkin("alpha2"));
+ui.c1div.appendChild(mkin("gamma"));
+ui.c1div.appendChild(mkin("dn"));
+ui.c1div.appendChild(mkin("dn"));
+ui.c1div.appendChild(mkin("d"));
+ui.c1div.appendChild(mkin("ku"));
+
+
+function mkin(id){
+	var dat = data_AS3600Variables({id:id});
+	var t = document.querySelector("template");
+	
+	t.content.querySelector("td").innerHTML = dat.first().unicode+" =";
+	t.content.querySelectorAll("td")[2].innerHTML = dat.first().unit;
+	var inp = t.content.querySelector("input");
+	inp.value = dat.first().default;
+	inp.id = id;
+	inp.type = "number";
+	
+	
+	t.content.querySelector("table").title = dat.first().name+"\n"+dat.first().description;
+	
+	
+	
+	var elem = document.importNode(t.content,true);
+	inp = elem.querySelector("input");
+	inp.addEventListener("keyup",update);
+	inp.addEventListener("mouseup",update);
+	
+	return elem
+}
+
 
 
 
@@ -56,11 +83,11 @@ function update(evt){
 	}.bind(b);
 	
 	b.add("D",			"int");
-	b.add("B",			"int");
+	b.add("b",			"int");
 	b.add("cover",		"int");
-	b.add("roh_c",		"int");
+	b.add("rhoc",		"int");
 	b.add("fc",			"int");
-	
+	//
 	b.add("d0",		"int");
 	b.add("d1",		"int");
 	b.add("d2",		"int");
@@ -69,16 +96,13 @@ function update(evt){
 	b.add("A_st1",	"int");
 	b.add("A_st2",	"int");
 	b.add("A_st3",	"int");
-	
-	b.D = parseInt(getInp("D"));
-	b.B = parseInt(getInp("B"));
-	b.cover = parseInt(getInp("cover"));
-
-	b.alpha_2	= Math.min(0.85,Math.max(0.67, 1 - b["f'_c"]*0.003));
-	b.gamma		= Math.min(0.85,Math.max(0.67,1.05-b["f'_c"]*0.007));
+	//
+    //
+	b.alpha_2	= Math.min(0.85,Math.max(0.67, 1 - b.fc*0.003)) || "";
+	b.gamma		= Math.min(0.85,Math.max(0.67,1.05-b.fc*0.007)) || "";
 	//console.log(b);
 	
-	document.getElementById("alpha_2").value	= Math.round(b.alpha_2*1000)/1000;
+	document.getElementById("alpha2").value	= Math.round(b.alpha_2*1000)/1000;
 	document.getElementById("gamma").value		= Math.round(b.gamma*1000)/1000;
 	
 	
@@ -101,20 +125,6 @@ function resize(e){
 	canvas.height = Math.min(parseInt(st.width)-10,400);
 	update();
 }
-
-
-
-
-
-
-
-function getInp(varname){
-	var element = document.getElementById(varname);
-	return element.value;
-}
-
-
-
 
 
 
