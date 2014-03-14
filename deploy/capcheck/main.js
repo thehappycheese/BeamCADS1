@@ -1,6 +1,9 @@
 
 ///* drawBeam.js
 // Build UI
+
+
+var ff=document.getElementById("canvas_csect").getContext('2d')
 var ui = {};
 ui.physdiv	= document.querySelector("#physdiv");
 ui.matdiv	= document.querySelector("#matdiv");
@@ -22,7 +25,7 @@ ui.physdiv.appendChild(input("k_u"	, "k_u",	"number",""));
 
 // Initial material properties input boxes
 ui.matdiv.appendChild(input("roh_c"	, "r",		"number","kg/m^3", 2400));
-ui.matdiv.appendChild(input("f'_c"	, "f'c",	"number","MPa", 32));
+ui.matdiv.appendChild(input("fc"	, "f'c",	"number","MPa", 32));
 ui.matdiv.appendChild(input("f_sy"	, "f_sy",	"number","MPa", 500));
 ui.matdiv.appendChild(input("reoclass","Reo Class",	"text","N or L", "N"));
 
@@ -52,11 +55,11 @@ function update(evt){
 		}
 	}.bind(b);
 	
-	b.add("D",		"D",		"int");
-	b.add("B",		"B",		"int");
-	b.add("cover",	"Cover",	"int");
-	b.add("roh_c",	"\u03A1",	"int");
-	b.add("fc",		"f'c",		"int");
+	b.add("D",			"int");
+	b.add("B",			"int");
+	b.add("cover",		"int");
+	b.add("roh_c",		"int");
+	b.add("fc",			"int");
 	
 	b.add("d0",		"int");
 	b.add("d1",		"int");
@@ -73,7 +76,7 @@ function update(evt){
 
 	b.alpha_2	= Math.min(0.85,Math.max(0.67, 1 - b["f'_c"]*0.003));
 	b.gamma		= Math.min(0.85,Math.max(0.67,1.05-b["f'_c"]*0.007));
-	console.log(b);
+	//console.log(b);
 	
 	document.getElementById("alpha_2").value	= Math.round(b.alpha_2*1000)/1000;
 	document.getElementById("gamma").value		= Math.round(b.gamma*1000)/1000;

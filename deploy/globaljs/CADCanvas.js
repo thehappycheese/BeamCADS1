@@ -46,7 +46,56 @@ CanvasRenderingContext2D.prototype.fillStrokeCircle = function(x,y,radius){
 	this.stroke();
 }
 
-CanvasRenderingContext2D.prototype.setPixel = function (x,y,r,g,b,a) {
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//		TRACK TRANSFORMATIONS
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//		SHARP LINE
+////////////////////////////////////////////////////////////////////////////////////////
+CanvasRenderingContext2D.prototype.sharpLine = function (aa, bb, cc, dd, r,g,b,a) {
+	var t = this.getCurrentTransform();
+	var x0 = Math.round(aa)+t.x;
+	var y0 = Math.round(bb)+t.y;
+	var x1 = Math.round(cc)+t.x;
+	var y1 = Math.round(dd)+t.y;
+	
+	var imd = this.getImageData(0,0,this.canvas.width,this.canvas.height);
+	var index;
+	
+	
+	var dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+	var dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1; 
+	var err = (dx>dy ? dx : -dy)/2;
+	//var out = 0;
+	while (true) {
+		index = 4*x0 + (4*this.canvas.width)*y0;
+		imd.data[index+0]	= r;
+		imd.data[index+1]	= g;
+		imd.data[index+2]	= b;
+		imd.data[index+3]	= a;
+		//this.setPixel(x0,y0,0,0,0,255);
+		
+		if (x0 === x1 && y0 === y1) break;
+		var e2 = err;
+		if (e2 > -dx) { err -= dy; x0 += sx; }
+		if (e2 < dy) { err += dx; y0 += sy; }
+	}
+	//console.log(out);
+  this.putImageData(imd,0,0);
+}
+CanvasRenderingContext2D.prototype.sharpLineV = function(v1,v2,r,g,b,a){
+	this.sharpLine(v1.x,v1.y,v2.x,v2.y,r,g,b,a);
+}
+////////////////////////////////////////////////////////////////////////////////////////
+//		SET PIXEL
+////////////////////////////////////////////////////////////////////////////////////////
+CanvasRenderingContext2D.prototype.setPixel = function (x,y, r,g,b,a) {
 	var imd = this.getImageData(0,0,this.canvas.width,this.canvas.height);
 	var index = 4*x + (4*this.canvas.width)*y;
 
@@ -54,11 +103,5 @@ CanvasRenderingContext2D.prototype.setPixel = function (x,y,r,g,b,a) {
 	imd.data[index+1]	= g;
 	imd.data[index+2]	= b;
 	imd.data[index+3]	= a;
-	console.log(imd)
 	this.putImageData(imd,0,0);
 }
-
-
-CanvasRenderingContext2D.sharpLineTo
-
-

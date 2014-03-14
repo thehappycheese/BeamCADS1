@@ -17,11 +17,9 @@ function drawBeam(ctx, b){
 	var minwidth = Math.max(35, ctx.canvas.width*0.2);
 	var minheight = Math.max(35, ctx.canvas.height*0.2);
 	
-	ctx.setLineDash([3,5]);
+	
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	ctx.arrow(new Vector(Math.random()*100,Math.random()*100),new Vector(Math.random()*100,Math.random()*100),5);
-	ctx.save();
-	ctx.setLineDash([]);
+	
 	
 	var patt = ctx.createPattern(pc, "repeat");
 	ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
@@ -75,7 +73,7 @@ function drawBeam(ctx, b){
 		ctx.fillCircle( w/2-scaledcover-N12D, -h/2+scaledcover+N12D, N12D/2);
 		
 		
-		
+		ctx.sharpLine(Math.random()*40,Math.random()*40,Math.random()*40,Math.random()*40);
 		
 		
 	ctx.restore();
@@ -144,8 +142,10 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 	ctx.beginPath();
 	var vc = va.copy().minus(v1).unit().scalar(4).add(v1);
 	var vd = va.copy().minus(v1).unit().scalar(4).add(va);
-	ctx.moveTo(vc.x,vc.y);
-	ctx.lineTo(vd.x,vd.y);
+	//ctx.moveTo(vc.x,vc.y);
+	//ctx.lineTo(vd.x,vd.y);
+	ctx.sharpLineV(vc,vd,0,0,0,255);
+	
 	
 	var vc = vb.copy().minus(v2).unit().scalar(4).add(v2);
 	var vd = vb.copy().minus(v2).unit().scalar(4).add(vb);
