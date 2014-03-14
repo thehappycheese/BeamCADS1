@@ -2,9 +2,10 @@
 ///* drawBeam.js
 // Build UI
 var ui = {};
-ui.physdiv = document.querySelector("#physdiv");
-ui.matdiv = document.querySelector("#matdiv");
-ui.reodiv = document.querySelector("#reodiv");
+ui.physdiv	= document.querySelector("#physdiv");
+ui.matdiv	= document.querySelector("#matdiv");
+ui.reodiv	= document.querySelector("#reodiv");
+ui.c1div	= document.querySelector("#c1div");
 
 
 
@@ -24,6 +25,10 @@ ui.matdiv.appendChild(input("roh_c"	, "number","kg/m^3", 2400));
 ui.matdiv.appendChild(input("f'_c"	, "number","MPa", 32));
 ui.matdiv.appendChild(input("f_sy"	, "number","MPa", 500));
 ui.matdiv.appendChild(input("reoclass","text","N or L", "N"));
+
+// Calculated coefficients
+ui.c1div.appendChild(input("alpha_2","number","", ""));
+ui.c1div.appendChild(input("gamma","number","", ""));
 
 
 
@@ -64,6 +69,12 @@ function update(evt){
 	b.D = parseInt(getInp("D"));
 	b.B = parseInt(getInp("B"));
 	b.cover = parseInt(getInp("cover"));
+
+	b.alpha_2 = Math.min(0.85,Math.max(0.67,1-b["f'c"]*0.003));
+
+	if(b.alpha_2){
+		document.getElementById("alpha_2").value = b.alpha_2;
+	}
 	
 
 	

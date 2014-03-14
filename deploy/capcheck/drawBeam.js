@@ -17,9 +17,11 @@ function drawBeam(ctx, b){
 	var minwidth = Math.max(35, ctx.canvas.width*0.2);
 	var minheight = Math.max(35, ctx.canvas.height*0.2);
 	
+	ctx.setLineDash([3,5]);
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	ctx.arrow(new Vector(Math.random()*100,Math.random()*100),new Vector(Math.random()*100,Math.random()*100),5);
 	ctx.save();
+	ctx.setLineDash([]);
 	
 	var patt = ctx.createPattern(pc, "repeat");
 	ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
@@ -39,18 +41,27 @@ function drawBeam(ctx, b){
 		
 		// TODO: draw cover and steel Layers
 		
-		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 12,b.B+" mm");
-		dim(ctx,-w/2,-h/2,-w/2,h/2, 0, -12,b.D+" mm");
 		
 		
 		var scaledcover = Math.max(b.cover*scale*2,10);
-		dim(ctx,w/2,-h/2,w/2,-h/2+scaledcover, 0, 10,b.cover+" mm cover");
-		
-		
 		var N12D = Math.max(1.5,12*scale);
-		var tendonBendRadius = 4*12/2; // AS3600 17.2.3 assuming N12 Bars
+		var tendonBendRadius = Math.max(2,4*12/2*scale); // AS3600 17.2.3 assuming N12 Bars
+
+
+		// Breadth
+		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 12,b.B+" mm");
+		// Depth
+		dim(ctx,-w/2,-h/2,-w/2,h/2, 0, -12,b.D+" mm");
+		//Cover
+		dim(ctx,w/2,-h/2,w/2,-h/2+scaledcover-N12D/2, 0, 10,b.cover+" mm cover");
+		
+		
+		ctx.lineCap = "round";
 		ctx.strokeStyle = patt;
 		ctx.lineWidth = N12D;
+		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale);
+		ctx.strokeStyle = "white";
+		ctx.lineWidth = N12D-2;
 		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale);
 
 
@@ -59,9 +70,9 @@ function drawBeam(ctx, b){
 
 
 		ctx.fillStyle = "black";
-		// Draw top two longitudinal reo bars. assume N12 or 3px
-		ctx.fillCircle(-w/2+scaledcover+N12D,-h/2+scaledcover+N12D,N12D/2);
-		ctx.fillCircle( w/2-scaledcover-N12D,-h/2+scaledcover+N12D,N12D/2);
+		// Draw top two longitudinal reo bars.
+		ctx.fillCircle(-w/2+scaledcover+N12D, -h/2+scaledcover+N12D, N12D/2);
+		ctx.fillCircle( w/2-scaledcover-N12D, -h/2+scaledcover+N12D, N12D/2);
 		
 		
 		
