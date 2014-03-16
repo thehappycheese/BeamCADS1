@@ -20,11 +20,7 @@
 		</div>
 		<div id="reodiv" class="ichunk">
 			<hr>
-			<h2>Reo</h2>
-			3: layer <input id="d3"placeholder="from top" value=""/>mm 		<input id="A_st3" placeholder="A_st" value=""/>mm^2 <br>
-			2: layer <input id="d2"placeholder="from top" value=""/>mm 		<input id="A_st2" placeholder="A_st" value=""/>mm^2 <br>
-			1: layer <input id="d1"placeholder="from top" value=""/>mm 		<input id="A_st1" placeholder="A_st" value=""/>mm^2 <br>
-			0: layer <input id="d0"placeholder="from top" value="550"/>mm	<input id="A_st0" placeholder="A_st" value="904"/>mm^2
+			<h2>Reinforcement Detail</h2>
 		</div>
 		<div id="c1div" class="ichunk">
 			<hr>
@@ -50,14 +46,36 @@
 
 
 
+<template id="reo-input">
+	<table style="width:100%;display:block;padding:0px;border-top:1px dashed grey;">
+		<tr>
+			<td style="text-align:center;padding:0px; text-align:left; padding-right:2mm;">0:</td>
+			<td style="text-align:center;padding:0px;"><input style="width:1.5cm;border:0px;border-bottom:1px solid black;text-align:center;" placeholder="offset"/>mm</td>
+			<!--<td style="text-align:center;padding:0px;font-weight:bold;padding:0px 2mm;">from the</td>-->
+			<td style="padding:0px;text-align:left;">
+				<select>
+					<option>from top</option>
+					<option>from bottom</option>
+					<option>from lowest</option>
+					<option>from highest</option>
+				</select>
+			</td>
+			<td style="text-align:center;padding:0px;"><input style="width:2cm;border:0px;border-bottom:1px solid black;text-align:center;width:1.5cm;" placeholder="A_st"/>mm&#178</td>
+			<td style="text-align:center;padding:0px;font-weight:bold; text-align:center;"> or </td>
+			<td style="text-align:center;padding:0px;"><input style="border:0px;border-bottom:1px solid black;text-align:center;width:1.5cm;" placeholder="eg 5N32"/> bars</td>
+			<td style="text-align:center;padding:0px;"><input style="display:inline-block;width:0.8cm;" type="button" value="-"/><input style="display:inline-block;width:0.8cm;" type="button" value="+"/></td>
+		</tr>
+	</table>
+</template>
 
 
-<template style="table-layout:fixed;">
+
+<template id="text-input">
 	<table style="table-layout:fixed;display:inline-block;padding:0px;">
 		<tr>
-			<td style="padding:0px;width:1.8cm; text-align:right; padding-right:3px;">name</td>
-			<td style="padding:0px;width:1.2cm;vertical-align:bottom;"><input style="width:100%;border:0px;border-bottom:1px solid black;text-align:center" placeholder="??"/></td>
-			<td style="padding:0px;width:1.4cm;vertical-align:bottom;">postfix</td>
+			<td style="padding:0px;width:2cm; text-align:right; padding-right:3px;">name</td>
+			<td style="padding:0px;width:1.5cm;vertical-align:bottom;"><input style="width:100%;border:0px;border-bottom:1px solid black;text-align:center" placeholder="??"/></td>
+			<td style="padding:0px;width:1.5cm;vertical-align:bottom;">postfix</td>
 		</tr>
 	</table>
 </template>

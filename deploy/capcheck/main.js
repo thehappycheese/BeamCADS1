@@ -12,39 +12,44 @@ ui.reodiv	= document.querySelector("#reodiv");
 ui.c1div	= document.querySelector("#c1div");
 
 
+ui.reodiv.appendChild(makeReoInput("2:"));
+ui.reodiv.appendChild(makeReoInput("1:"));
+ui.reodiv.appendChild(makeReoInput("0:"));
+
+
 
 // Initial Physical property input boxes
-ui.physdiv.appendChild(mkin("b"));
-ui.physdiv.appendChild(mkin("D"));
-ui.physdiv.appendChild(mkin("cover"));
+ui.physdiv.appendChild(makeStandardInput("Ln"));
+ui.physdiv.appendChild(makeStandardInput("b"));
+ui.physdiv.appendChild(makeStandardInput("D"));
+ui.physdiv.appendChild(makeStandardInput("cover"));
 
 
 // Initial material properties input boxes
-ui.matdiv.appendChild(mkin("rhoc"));
-ui.matdiv.appendChild(mkin("fc"));
-ui.matdiv.appendChild(mkin("fsy"));
-ui.matdiv.appendChild(mkin("reoclass"));
+ui.matdiv.appendChild(makeStandardInput("rhoc"));
+ui.matdiv.appendChild(makeStandardInput("fc"));
+ui.matdiv.appendChild(makeStandardInput("fsy"));
+ui.matdiv.appendChild(makeStandardInput("reoclass"));
 
 
 // Calculated coefficients
-ui.c1div.appendChild(mkin("alpha2"));
-ui.c1div.appendChild(mkin("gamma"));
-ui.c1div.appendChild(mkin("dn"));
-ui.c1div.appendChild(mkin("dn"));
-ui.c1div.appendChild(mkin("d"));
-ui.c1div.appendChild(mkin("ku"));
+ui.c1div.appendChild(makeStandardInput("alpha2"));
+ui.c1div.appendChild(makeStandardInput("gamma"));
+ui.c1div.appendChild(makeStandardInput("dn"));
+ui.c1div.appendChild(makeStandardInput("dn"));
+ui.c1div.appendChild(makeStandardInput("d"));
+ui.c1div.appendChild(makeStandardInput("ku"));
 
 
-function mkin(id){
+function makeStandardInput(id){
 	var dat = data_AS3600Variables({id:id});
-	var t = document.querySelector("template");
+	var t = document.querySelector("#text-input");
 	
-	t.content.querySelector("td").innerHTML = dat.first().unicode+" =";
+	t.content.querySelector("td").innerHTML = dat.first().unicode+":";
 	t.content.querySelectorAll("td")[2].innerHTML = dat.first().unit;
 	var inp = t.content.querySelector("input");
 	inp.value = dat.first().default;
 	inp.id = id;
-	inp.type = "number";
 	
 	
 	t.content.querySelector("table").title = dat.first().name+"\n"+dat.first().description;
@@ -57,6 +62,18 @@ function mkin(id){
 	inp.addEventListener("mouseup",update);
 	
 	return elem
+}
+
+function makeReoInput(id){
+	var t = document.querySelector("#reo-input");
+
+	var elem = document.importNode(t.content,true);
+
+	elem.querySelectorAll("td")[0].innerHTML = id;
+
+
+	return elem;
+	
 }
 
 
@@ -88,14 +105,14 @@ function update(evt){
 	b.add("rhoc",		"int");
 	b.add("fc",			"int");
 	//
-	b.add("d0",		"int");
-	b.add("d1",		"int");
-	b.add("d2",		"int");
-	b.add("d3",		"int");
-	b.add("A_st0",	"int");
-	b.add("A_st1",	"int");
-	b.add("A_st2",	"int");
-	b.add("A_st3",	"int");
+	//b.add("d0",		"int");
+	//b.add("d1",		"int");
+	//b.add("d2",		"int");
+	//b.add("d3",		"int");
+	//b.add("A_st0",	"int");
+	//b.add("A_st1",	"int");
+	//b.add("A_st2",	"int");
+	//b.add("A_st3",	"int");
 	//
     //
 	b.alpha_2	= Math.min(0.85,Math.max(0.67, 1 - b.fc*0.003)) || "";
