@@ -2,7 +2,6 @@
 ///~ jslib/CADCanvas.js
 
 var pc = document.createElement("canvas")
-document.body.appendChild(pc);
 var pctx = pc.getContext('2d');
 pc.width = 2;
 pc.height = 2;
@@ -27,7 +26,6 @@ function drawBeam(ctx, b){
 	
 	ctx.save();
 		ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
-		dim(ctx,50,50,150,20, Math.PI*0.2, 20,"test :)");
 		
 		
 		
@@ -60,12 +58,12 @@ function drawBeam(ctx, b){
 		
 		
 		ctx.lineCap = "round";
-		ctx.strokeStyle = patt;
-		ctx.lineWidth = N12D;
-		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale);
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = Math.ceil(N12D+1);
+		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale,20*scale);
 		ctx.strokeStyle = "white";
-		ctx.lineWidth = N12D-2;
-		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale);
+		ctx.lineWidth = Math.ceil(N12D-2);
+		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale,20*scale);
 
 
 
@@ -84,7 +82,7 @@ function drawBeam(ctx, b){
 	
 	
 }
-function drawFitment(ctx,x,y,w,h,rad){
+function drawFitment(ctx,x,y,w,h,rad,fitmentlen){
 	ctx.beginPath();
 		ctx.moveTo(x+w,y+h-rad);
 		ctx.lineTo(x+w,y+rad);
@@ -98,7 +96,6 @@ function drawFitment(ctx,x,y,w,h,rad){
 		ctx.moveTo(x+rad,y);
 		ctx.lineTo(x+w-rad,y);
 	ctx.stroke();
-	var fitmentlen = 8;
 	ctx.beginPath();
 		ctx.moveTo(x+w-rad-rad/Math.SQRT2-fitmentlen,y+rad-rad/Math.SQRT2+fitmentlen)
 		//ctx.lineTo(x+w-rad-rad/Math.SQRT2,y+rad-rad/Math.SQRT2)

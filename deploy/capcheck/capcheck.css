@@ -1,4 +1,8 @@
 
+body{
+	margin:5px;
+	padding:0px;
+}
 lable{
 	display:inline-block;
 	margin: 1px;
@@ -17,7 +21,7 @@ input{
 
 #lbar{
 	float:left;
-	width:45%;
+	width:calc(60% - 8px);
 	border: 1px solid black;
 	padding:2px;
 	margin:1px;
@@ -25,7 +29,7 @@ input{
 
 #rbar{
 	float:left;
-	width:45%;
+	width:calc(40% - 8px);
 	border: 1px solid black;
 	padding:2px;
 	margin:1px;
