@@ -1,11 +1,14 @@
 
 ///* drawBeam.js
 ///~ spreadsheetdata/Data.js
-// Build UI
+///~ jslib/canvas.currentTransform.js
 
+// Build UI
 
 var ff=document.getElementById("canvas_csect").getContext('2d')
 var ui = {};
+
+
 ui.physdiv	= document.querySelector("#physdiv");
 ui.matdiv	= document.querySelector("#matdiv");
 ui.reodiv	= document.querySelector("#reodiv");
@@ -23,6 +26,7 @@ ui.physdiv.appendChild(makeStandardInput("Ln"));
 ui.physdiv.appendChild(makeStandardInput("b"));
 ui.physdiv.appendChild(makeStandardInput("D"));
 ui.physdiv.appendChild(makeStandardInput("cover"));
+ui.physdiv.appendChild(makeStandardInput("eclass"));
 
 
 // Initial material properties input boxes
@@ -80,22 +84,28 @@ function makeReoInput(id){
 
 
 
-var canvas = document.getElementById("canvas_csect");
+var canvas_csect	= document.getElementById("canvas_csect");
+var ctx_csect		= canvas_csect.getContext('2d');
+
+var canvas_elevation	= document.getElementById("canvas_elevation");
+var ctx_elevation		= canvas_elevation.getContext('2d');
+
+
 update();
 function update(evt){
 	var b = {};
 	window.b = b;
-	b.add = function(nm,type){
-		switch(type){
+	b.add = function(id, datatype){
+		switch(datatype){
 			case "float":
-				this[nm] = parseFloat(document.getElementById(nm).value);
+				this[id] = parseFloat(document.getElementById(id).value);
 				break
 			case "int":
-				this[nm] = parseInt(document.getElementById(nm).value);
+				this[id] = parseInt(document.getElementById(id).value);
 				break
 			case "string":
 			default:
-				this[nm] = document.getElementById(nm).value;
+				this[id] = document.getElementById(id).value;
 		}
 	}.bind(b);
 	
@@ -105,15 +115,6 @@ function update(evt){
 	b.add("rhoc",		"int");
 	b.add("fc",			"int");
 	//
-	//b.add("d0",		"int");
-	//b.add("d1",		"int");
-	//b.add("d2",		"int");
-	//b.add("d3",		"int");
-	//b.add("A_st0",	"int");
-	//b.add("A_st1",	"int");
-	//b.add("A_st2",	"int");
-	//b.add("A_st3",	"int");
-	//
     //
 	b.alpha_2	= Math.min(0.85,Math.max(0.67, 1 - b.fc*0.003)) || "";
 	b.gamma		= Math.min(0.85,Math.max(0.67,1.05-b.fc*0.007)) || "";
@@ -122,24 +123,24 @@ function update(evt){
 	document.getElementById("alpha2").value	= Math.round(b.alpha_2*1000)/1000;
 	document.getElementById("gamma").value		= Math.round(b.gamma*1000)/1000;
 	
-	
 
 	
-	var ctx = canvas.getContext('2d');
-	
-
-	
-	drawBeam(ctx, b);
+	drawBeam(ctx_csect, b);
 	
 }
 
 window.addEventListener("resize",resize);
 resize();
 function resize(e){
-	var st = window.getComputedStyle(canvas.parentElement);
-	
-	canvas.width = parseInt(st.width)-10;
-	canvas.height = Math.min(parseInt(st.width)-10,400);
+	var st = window.getComputedStyle(canvas_csect.parentElement);
+	canvas_csect.width = parseInt(st.width)-10;
+	canvas_csect.height = Math.min(parseInt(st.width)-10,400);
+
+
+	var st = window.getComputedStyle(canvas_csect.parentElement);
+	canvas_csect.width = parseInt(st.width)-10;
+	canvas_csect.height = Math.min(parseInt(st.width)-10,400);
+
 	update();
 }
 

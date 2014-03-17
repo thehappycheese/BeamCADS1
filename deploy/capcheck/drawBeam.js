@@ -1,21 +1,14 @@
 ///~ jslib/Vector.js
 ///~ jslib/CADCanvas.js
-
-var pc = document.createElement("canvas")
-var pctx = pc.getContext('2d');
-pc.width = 2;
-pc.height = 2;
-pctx.setPixel(0,0,0,0,0,255);
-pctx.setPixel(1,1,0,0,0,255);
+///~ jslib/CanvasPatterns.js
 
 function drawBeam(ctx, b){
 	
 	
-	var maxwidth = ctx.canvas.width*0.6;
-	var maxheight = ctx.canvas.height*0.6;
-	var minwidth = 80;//Math.max(35, ctx.canvas.width*0.2);
-	var minheight = 80;//Math.max(35, ctx.canvas.height*0.2);
-	var patt = ctx.createPattern(pc, "repeat");
+	var maxwidth = ctx.canvas.width-80;
+	var maxheight = ctx.canvas.height-80;
+	var minwidth = 80;
+	var minheight = 80;
 	
 	
 	
@@ -59,11 +52,17 @@ function drawBeam(ctx, b){
 		
 		ctx.lineCap = "round";
 		ctx.strokeStyle = "black";
-		ctx.lineWidth = Math.ceil(N12D+1);
+		ctx.lineWidth = Math.ceil(N12D);
 		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale,20*scale);
+		
 		ctx.strokeStyle = "white";
 		ctx.lineWidth = Math.ceil(N12D-2);
 		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale,20*scale);
+
+		ctx.lineWidth = Math.ceil(N12D+2);
+		ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
+		drawFitment(ctx,-w/2+scaledcover,-h/2+scaledcover,w-2*scaledcover,h-2*scaledcover,tendonBendRadius*scale,20*scale);
+		
 
 
 

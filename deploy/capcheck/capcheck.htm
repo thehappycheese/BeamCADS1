@@ -29,7 +29,12 @@
 	</div>
 	<div id="rbar">
 		<div id="sketchdiv" class="ichunk">
-			<h2>Sketch</h2>
+			<h2>Elevation</h2>
+			<hr>
+			<canvas id="canvas_elevation" style = "display:block;" width="350" height="80">Modern browser required to display this content!</canvas>
+		</div>
+		<div id="sketchdiv" class="ichunk">
+			<h2>Cross Section</h2>
 			<hr>
 			<canvas id="canvas_csect" style = "display:block;" width="350" height="200">Modern browser required to display this content!</canvas>
 		</div>
@@ -73,12 +78,13 @@
 <template id="text-input">
 	<table style="table-layout:fixed;display:inline-block;padding:0px;">
 		<tr>
-			<td style="padding:0px;width:2cm; text-align:right; padding-right:3px;">name</td>
+			<td style="padding:0px;width:1.3cm; text-align:right; padding-right:3px;white-space:nowrap;">name</td>
 			<td style="padding:0px;width:1.5cm;vertical-align:bottom;"><input style="width:100%;border:0px;border-bottom:1px solid black;text-align:center" placeholder="??"/></td>
-			<td style="padding:0px;width:1.5cm;vertical-align:bottom;">postfix</td>
+			<td style="padding:0px;width:1cm;vertical-align:bottom;font-size:9pt;">postfix</td>
 		</tr>
 	</table>
 </template>
+
 
 
 
