@@ -140,48 +140,48 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 	
 	// Draw line bodies
 	ctx.beginPath();
-	var vc = va.copy().minus(v1).unit().scalar(4).add(v1);
-	var vd = va.copy().minus(v1).unit().scalar(4).add(va);
-	//ctx.moveTo(vc.x,vc.y);
-	//ctx.lineTo(vd.x,vd.y);
-	ctx.sharpLineV(vc,vd,0,0,0,255);
-	
-	
-	var vc = vb.copy().minus(v2).unit().scalar(4).add(v2);
-	var vd = vb.copy().minus(v2).unit().scalar(4).add(vb);
-	//ctx.moveTo(vc.x,vc.y);
-	//ctx.lineTo(vd.x,vd.y);
-	ctx.sharpLineV(vc,vd,0,0,0,255);
-	
-	//ctx.moveTo(va.x,va.y);
-	//ctx.lineTo(vb.x,vb.y);
-	ctx.sharpLineV(va,vb,0,0,0,255);
-	//ctx.stroke();
+		var vc = va.copy().minus(v1).unit().scalar(4).add(v1);
+		var vd = va.copy().minus(v1).unit().scalar(4).add(va);
+		ctx.moveTo(vc.x,vc.y);
+		ctx.lineTo(vd.x,vd.y);
+		//ctx.sharpLineV(vc,vd,0,0,0,255);
+		
+		
+		var vc = vb.copy().minus(v2).unit().scalar(4).add(v2);
+		var vd = vb.copy().minus(v2).unit().scalar(4).add(vb);
+		ctx.moveTo(vc.x,vc.y);
+		ctx.lineTo(vd.x,vd.y);
+		//ctx.sharpLineV(vc,vd,0,0,0,255);
+		
+		ctx.moveTo(va.x,va.y);
+		ctx.lineTo(vb.x,vb.y);
+		//ctx.sharpLineV(va,vb,0,0,0,255);
+	ctx.stroke();
 	
 	// Arrowhead A
 	ctx.save()
 		ctx.translate(va.x,va.y);
 		ctx.rotate(angAtoB-Math.PI/2);
-		//ctx.beginPath();
-		//ctx.moveTo(0,0);
-		//ctx.lineTo(2,3);
-		//ctx.lineTo(-2,3);
+		ctx.beginPath();
+		ctx.moveTo(0,0);
+		ctx.lineTo(2,5);
+		ctx.lineTo(-2,5);
+		ctx.fill();
 		
-		ctx.sharpLine(0,0,2,5,0,0,0,255);
-		ctx.sharpLine(0,0,-2,5,0,0,0,255);
-		//ctx.fill();
+		//ctx.sharpLine(0,0,2,5,0,0,0,255);
+		//ctx.sharpLine(0,0,-2,5,0,0,0,255);
 	ctx.restore();
 	
 	// Arrowhead B
 	ctx.save()
 		ctx.translate(vb.x, vb.y);
 		ctx.rotate(angAtoB+Math.PI/2);
-		//ctx.moveTo(0,0);
-		//ctx.lineTo(4,15);
-		//ctx.lineTo(-4,15);
-		ctx.sharpLine(0,0,2,5,0,0,0,255);
-		ctx.sharpLine(0,0,-2,5,0,0,0,255);
-		//ctx.fill();
+		ctx.moveTo(0,0);
+		ctx.lineTo(2,5);
+		ctx.lineTo(-2,5);
+		//ctx.sharpLine(0,0,2,5,0,0,0,255);
+		//ctx.sharpLine(0,0,-2,5,0,0,0,255);
+		ctx.fill();
 	ctx.restore();
 	
 	// Draw text
