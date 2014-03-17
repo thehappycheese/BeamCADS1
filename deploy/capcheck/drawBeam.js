@@ -2,10 +2,43 @@
 ///~ jslib/CADCanvas.js
 ///~ jslib/CanvasPatterns.js
 
-function drawBeam(ctx, b){
+
+
+
+function drawElevation(ctx, b){
+
+	var maxwidth = ctx.canvas.width-200;
+	var maxheight = ctx.canvas.height-10;
+	var minwidth = 0;
+	var minheight = 0;
+
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	
+	ctx.save();
+		ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
+		var scale = Math.min(maxwidth/b.Ln, maxheight/b.D);
+
+		var w = b.Ln*scale;
+		var h = b.D*scale;
+
+		ctx.strokeStyle = "#333333";
+		ctx.lineWidth = 2;
+		ctx.strokeRect(-w/2,-h/2,w,h);
+		console.log(w,h);
+
+		dim(ctx,w/2,-h/2,w/2,h/2,0,10,"D = "+b.D+"mm");
+
+		dim(ctx,-w/2,0 ,w/2,0,Math.PI/2,(h>40)?0.01:30,"L_n = "+b.Ln+"mm");
+
+
+	ctx.restore();
+
+}
+
+function drawCrossSection(ctx, b){
 	
 	
-	var maxwidth = ctx.canvas.width-80;
+	var maxwidth = ctx.canvas.width-100;
 	var maxheight = ctx.canvas.height-80;
 	var minwidth = 80;
 	var minheight = 80;

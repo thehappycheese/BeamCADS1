@@ -113,6 +113,7 @@ function update(evt){
 	b.add("cover",		"int");
 	b.add("rhoc",		"int");
 	b.add("fc",			"int");
+	b.add("Ln",			"int");
 	//
     //
 	b.alpha_2	= Math.min(0.85,Math.max(0.67, 1 - b.fc*0.003)) || "";
@@ -124,7 +125,8 @@ function update(evt){
 	
 
 	
-	drawBeam(ctx_csect, b);
+	drawCrossSection(ctx_csect, b);
+	drawElevation(ctx_elevation,b);
 	
 }
 
@@ -132,13 +134,13 @@ window.addEventListener("resize",resize);
 resize();
 function resize(e){
 	var st = window.getComputedStyle(canvas_csect.parentElement);
-	canvas_csect.width = parseInt(st.width)-10;
-	canvas_csect.height = Math.min(parseInt(st.width)-10,400);
+	canvas_csect.width = parseInt(st.width);
+	canvas_csect.height = Math.min(parseInt(st.width),400);
 
 
-	var st = window.getComputedStyle(canvas_csect.parentElement);
-	canvas_csect.width = parseInt(st.width)-10;
-	canvas_csect.height = Math.min(parseInt(st.width)-10,400);
+	var st = window.getComputedStyle(canvas_elevation.parentElement);
+	canvas_elevation.width = parseInt(st.width);
+	canvas_elevation.height = 100;
 
 	update();
 }
