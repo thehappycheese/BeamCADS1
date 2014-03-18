@@ -24,7 +24,6 @@ function drawElevation(ctx, b){
 		ctx.strokeStyle = "#333333";
 		ctx.lineWidth = 2;
 		ctx.strokeRect(-w/2,-h/2,w,h);
-		console.log(w,h);
 
 		dim(ctx,w/2,-h/2,w/2,h/2,0,10,"D = "+b.D+"mm");
 

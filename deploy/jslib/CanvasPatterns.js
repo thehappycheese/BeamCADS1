@@ -21,8 +21,6 @@ CanvasPatterns = (function(){
 
 	slash2c.stroke();
 
-	document.body.appendChild(slash2);
-
 	exports.slash2 = slash2;
 
 	return exports;
