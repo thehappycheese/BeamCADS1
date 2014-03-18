@@ -86,9 +86,25 @@ function makeReoInput(id){
 	return elem;
 }
 
-function getBarsFromArea(a){
-	var ndia = [10,12,16,20,24,28,32,36,40];
-	var area = [78,113,201,314,452,616,804,1020,1260];
+function getBarsFromArea(a,fitwidth){
+	// TODO: verify minimum bar spacing
+	var minbarspacing = 20;
+	var maxbars = 30;
+	var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
+	var area = [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+	// search for closest area
+	var n = 1;
+	var d = area.length-1;
+	var result = []
+	for(;d>=0;d--){
+		for(n=1;n<maxbars;n++){
+			if(area[d]*n>a){
+				result.push(n+"N"+ndia[d]+" - "+(area[d]*n)+"mm^2");
+				break;
+			}
+		}
+	}
+	return result;
 }
 
 
