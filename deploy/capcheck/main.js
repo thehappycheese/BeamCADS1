@@ -3,8 +3,14 @@
 ///~ spreadsheetdata/Data.js
 
 ///////////////////////////////////////////////////////////////////////////////////////
-//		Build UI
+//		Build UI  /////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////
+
+var canvas_csect	= document.getElementById("canvas_csect");
+var ctx_csect		= canvas_csect.getContext('2d');
+
+var canvas_elevation	= document.getElementById("canvas_elevation");
+var ctx_elevation		= canvas_elevation.getContext('2d');
 
 var ui = {};
 
@@ -50,6 +56,12 @@ ui.c1div.appendChild(makeStandardInput("d"));
 ui.c1div.appendChild(makeStandardInput("ku"));
 
 
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+////  UI BUILDING HELPERS  ///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 function makeStandardInput(id){
 	var dat = data_AS3600Variables({id:id});
 	var t = document.querySelector("#text-input");
@@ -88,7 +100,7 @@ function makeReoInput(id){
 			var row = e.target.parentElement.parentElement;
 			var areaspan = row.querySelector("span");
 			var barcode = row.querySelectorAll("input")[1].value;
-			var bararea = getAreaFromBars(barcode);
+			var bararea = getReoObjectFromBarcode(barcode).a;
 			if(isNaN(bararea)){
 				row.querySelectorAll("input")[1].style.color="red";
 				areaspan.innerHTML = "";
@@ -96,6 +108,7 @@ function makeReoInput(id){
 				row.querySelectorAll("input")[1].style.color="black";
 				areaspan.innerHTML = bararea;
 			}
+			
 			update();
 		}
 		inputs[i].addEventListener("mouseup",listen);
@@ -106,21 +119,38 @@ function makeReoInput(id){
 	var morebut = elem.querySelectorAll('input[type="button"]')[1];
 	morebut.addEventListener("mouseup", function(e){
 		var row = e.target.parentElement.parentElement;
-		var area = parseInt(row.querySelector("span").innerHTML+1)||1;
+		var area = parseInt(row.querySelector("span").innerHTML)+1||1;
 		// TODO: get the beam's width to do this.
-		console.log(area,beam.b-2*(beam.cover+beam.dfitments))
-		row.querySelectorAll("input")[1].value = getBarsFromArea(area,beam.b-2*(beam.cover+b.dfitments));
+		var barobj = getReoObjectFromArea(area,beam.b-2*(beam.cover+beam.dfitments));
+		row.querySelectorAll("input")[1].value = barobj.n+"N"+barobj.d;
+		if(row.querySelectorAll("input")[0].value == ""){
+			row.querySelectorAll("input")[0].value = 0;
+		}
+		row.querySelectorAll("input")[1].dispatchEvent(new Event("change"));
+		
 	});
 
 	return elem;
 }
 
-function getBarsFromArea(a,fitwidth){
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// UTILITY FUNCTIONS /////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+function getReoObjectFromArea(a, fitwidth){
+	
 	// TODO: List this as a design assumption:
+
 	// AS3600+A2 8.1.9 Spacing of tendons
 	// AS3600+A2 17.1.3 has a shpeel about all the ways concete shoul be handeled and how it should minimise air gaps etc.
 	// 20mm is a reasonable number since it is a nominal aggregate size
 	var minbarspacing = 20;
+
+	// AS3600+A2 8.1.9 Spacing of tendons: max 300 on tension face. never allow less than 2 bars.
+	var minnumberofbars = Math.max(2,Math.ceil((beam.b-2*(beam.cover+b.dfitments))/300));
 	var maxbars = 30;
 	// AS4671 Table 5A in section 7
 	var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
@@ -130,23 +160,12 @@ function getBarsFromArea(a,fitwidth){
 	var d = area.length-1;
 	var result = []
 	for(;d>=0;d--){
-		for(n=1;n<maxbars;n++){
-			if(area[d]*n>=a && ndia[d]*n+minbarspacing*(n-1)<fitwidth){
-				result.push({n:n,d:ndia[d],a:area[d]*n});
-				break;
-			}
+		n = Math.max(2,Math.ceil(a/area[d]));
+		if(n<maxbars && ndia[d]*n+minbarspacing*(n-1)<fitwidth){
+			// There are not too many bars, and the number of bars fits within the required width
+			result.push({n:n,d:ndia[d],a:area[d]*n});
 		}
 	}
-	//if(result.length>1){
-	//	//TODO: Include this in list of assumptions:
-	//	// Force the use of two bars instead of 1
-	//	for(i=result.length-1;i>=0;i--){
-	//		if(result[i].n<=1){
-	//			//result.splice(i,1);
-	//		}
-	//	}
-	//
-	//}
 	// Sort by area
 	result.sort(function(a,b){
 		// 50mm^2 is median difference in the available areas for less than 10 bars
@@ -161,26 +180,28 @@ function getBarsFromArea(a,fitwidth){
 			return false;
 		}
 	});
-	return result;
+	// TODO: implement maximum spacing
+	return result[0];
 }
-function getAreaFromBars(bars){
-	var bs = bars.split("N");
+function getReoObjectFromBarcode(barcode){
+	var bs = barcode.split("N");
 	
 	if(bs.length<1){
-		throw new Error("Bars should be specified in the format \"2N12\". not: "+bars);
+		throw new Error("Bar-code should be specified in the format \"2N12\". not: "+barcode);
 	}
+	
 	var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
 	var area = [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-	return area[ndia.indexOf(parseInt(bs[1]))]*parseInt(bs[0]);
+	var result = {}
+	result.d = parseInt(bs[1]);
+	result.n = parseInt(bs[0]);
+	result.a = area[ndia.indexOf(result.d)]*result.n;
+	return result;
 }
 
 
 
-var canvas_csect	= document.getElementById("canvas_csect");
-var ctx_csect		= canvas_csect.getContext('2d');
 
-var canvas_elevation	= document.getElementById("canvas_elevation");
-var ctx_elevation		= canvas_elevation.getContext('2d');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //// UPDATE EVENT //////////////////////////////////////////////////////////////////////////////
@@ -214,14 +235,13 @@ function getBeamDetails(){
 	}
 	function getReoInput(b,id){
 		var row = document.getElementById(id);
-		var reo = {};
-		reo.area	= parseInt(row.querySelectorAll("span")[0].innerHTML);
-		reo.offset	= parseInt(row.querySelectorAll("input")[0].value);
-		reo.from 	= row.querySelector("select").value;
+		var layer = getReoObjectFromBarcode(row.querySelectorAll("input")[1].value);
+		layer.o = parseInt(row.querySelectorAll("input")[0].value);
+		layer.f = row.querySelectorAll("select")[0].value;
 		if(b.reo == undefined){
 			b.reo = [];
 		}
-		b.reo.push(reo);
+		b.reo.push(layer);
 	}
 
 	
@@ -249,6 +269,9 @@ function getBeamDetails(){
 function updateUI(b){
 	
 }
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////
