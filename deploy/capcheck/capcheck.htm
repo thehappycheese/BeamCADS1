@@ -55,9 +55,12 @@
 <template id="reo-input">
 	<table style="width:100%;display:block;padding:0px;border-top:1px dashed grey;">
 		<tr>
-			<td style="text-align:center;padding:0px; text-align:left; padding-right:2mm;">0:</td>
-			<td style="text-align:center;padding:0px;"><input style="width:1.5cm;border:0px;border-bottom:1px solid black;text-align:center;" placeholder="offset"/>mm</td>
-			<!--<td style="text-align:center;padding:0px;font-weight:bold;padding:0px 2mm;">from the</td>-->
+			<td style="text-align:center;padding:0px; text-align:left; padding-right:2mm;">
+				Layer Lable
+			</td>
+			<td style="text-align:center;padding:0px;">
+				<input style="width:1.5cm;border:0px;border-bottom:1px solid black;text-align:center;" placeholder="offset"/>mm
+			</td>
 			<td style="padding:0px;text-align:left;">
 				<select>
 					<option>from top</option>
@@ -66,10 +69,13 @@
 					<option>from highest</option>
 				</select>
 			</td>
-			<td style="text-align:center;padding:0px;"><input style="width:2cm;border:0px;border-bottom:1px solid black;text-align:center;width:1.5cm;" placeholder="A_st"/>mm&#178</td>
-			<td style="text-align:center;padding:0px;font-weight:bold; text-align:center;"> or </td>
-			<td style="text-align:center;padding:0px;"><input style="border:0px;border-bottom:1px solid black;text-align:center;width:1.5cm;" placeholder="eg 5N32"/> bars</td>
-			<td style="text-align:center;padding:0px;"><input style="display:inline-block;width:0.8cm;" type="button" value="-"/><input style="display:inline-block;width:0.8cm;" type="button" value="+"/></td>
+			<td style="text-align:center;padding:0px;">
+				<input style="border:0px;border-bottom:1px solid black;text-align:center;width:1.5cm;" placeholder="eg 5N32"/> bars = <span style="width:1.5cm;display:inline-block;"></span> mm&#178;
+			</td>
+			<td style="text-align:center;padding:0px;">
+				<input style="display:inline-block;width:0.8cm;" type="button" value="-"/>
+				<input style="display:inline-block;width:0.8cm;" type="button" value="+"/>
+			</td>
 		</tr>
 	</table>
 </template>

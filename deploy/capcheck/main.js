@@ -38,6 +38,7 @@ ui.matdiv.appendChild(makeStandardInput("fsy"));
 ui.matdiv.querySelector("#fsy").disabled = true;
 ui.matdiv.appendChild(makeStandardInput("reoclass"));
 ui.matdiv.querySelector("#reoclass").disabled = true;
+ui.matdiv.appendChild(makeStandardInput("dfitments"));
 
 
 // Calculated coefficients
@@ -78,10 +79,38 @@ function makeReoInput(id){
 
 	
 	var elem = document.importNode(t.content,true);
-	console.log(elem.id)
 	elem.querySelector("table").id = "reo"+id;
 	elem.querySelectorAll("td")[0].innerHTML = id;
 
+	var inputs = elem.querySelectorAll('input[type="text"], input:not([type]), select');
+	for(i=0;i<inputs.length;i++){
+		var listen = function(e){
+			var row = e.target.parentElement.parentElement;
+			var areaspan = row.querySelector("span");
+			var barcode = row.querySelectorAll("input")[1].value;
+			var bararea = getAreaFromBars(barcode);
+			if(isNaN(bararea)){
+				row.querySelectorAll("input")[1].style.color="red";
+				areaspan.innerHTML = "";
+			}else{
+				row.querySelectorAll("input")[1].style.color="black";
+				areaspan.innerHTML = bararea;
+			}
+			update();
+		}
+		inputs[i].addEventListener("mouseup",listen);
+		inputs[i].addEventListener("keyup"	,listen);
+		inputs[i].addEventListener("change"	,listen);
+	};
+
+	var morebut = elem.querySelectorAll('input[type="button"]')[1];
+	morebut.addEventListener("mouseup", function(e){
+		var row = e.target.parentElement.parentElement;
+		var area = parseInt(row.querySelector("span").innerHTML+1)||1;
+		// TODO: get the beam's width to do this.
+		console.log(area,beam.b-2*(beam.cover+beam.dfitments))
+		row.querySelectorAll("input")[1].value = getBarsFromArea(area,beam.b-2*(beam.cover+b.dfitments));
+	});
 
 	return elem;
 }
@@ -89,7 +118,7 @@ function makeReoInput(id){
 function getBarsFromArea(a,fitwidth){
 	// TODO: List this as a design assumption:
 	// AS3600+A2 8.1.9 Spacing of tendons
-	// As3600+A2 17.1.3 has a shpeel about all the ways concete shoul be handeled and how it should minimise air gaps etc.
+	// AS3600+A2 17.1.3 has a shpeel about all the ways concete shoul be handeled and how it should minimise air gaps etc.
 	// 20mm is a reasonable number since it is a nominal aggregate size
 	var minbarspacing = 20;
 	var maxbars = 30;
@@ -102,16 +131,36 @@ function getBarsFromArea(a,fitwidth){
 	var result = []
 	for(;d>=0;d--){
 		for(n=1;n<maxbars;n++){
-			if(area[d]*n>a && ndia[d]*n+minbarspacing*(n-1)<fitwidth){
-				result.push(n+"N"+ndia[d]+" - "+(area[d]*n)+"mm^2");
+			if(area[d]*n>=a && ndia[d]*n+minbarspacing*(n-1)<fitwidth){
+				result.push({n:n,d:ndia[d],a:area[d]*n});
 				break;
 			}
 		}
 	}
-	if(result.length>1){
-		//TODO: Apply second round of checks
-		// Prefer to use two bars instead of 1
-	}
+	//if(result.length>1){
+	//	//TODO: Include this in list of assumptions:
+	//	// Force the use of two bars instead of 1
+	//	for(i=result.length-1;i>=0;i--){
+	//		if(result[i].n<=1){
+	//			//result.splice(i,1);
+	//		}
+	//	}
+	//
+	//}
+	// Sort by area
+	result.sort(function(a,b){
+		// 50mm^2 is median difference in the available areas for less than 10 bars
+		// If the difference between areas is less than 50 and the number of bars is less, reverse the sort decision
+		if(a.a>b.a){
+			if(a.a>b.a-50 && b.n<a.n){
+				return false;
+			}else{
+				return true;
+			}
+		}else{
+			return false;
+		}
+	});
 	return result;
 }
 function getAreaFromBars(bars){
@@ -122,7 +171,6 @@ function getAreaFromBars(bars){
 	}
 	var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
 	var area = [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-	console.log(bs);
 	return area[ndia.indexOf(parseInt(bs[1]))]*parseInt(bs[0]);
 }
 
@@ -167,7 +215,7 @@ function getBeamDetails(){
 	function getReoInput(b,id){
 		var row = document.getElementById(id);
 		var reo = {};
-		reo.area	= parseInt(row.querySelectorAll("input")[1].value);
+		reo.area	= parseInt(row.querySelectorAll("span")[0].innerHTML);
 		reo.offset	= parseInt(row.querySelectorAll("input")[0].value);
 		reo.from 	= row.querySelector("select").value;
 		if(b.reo == undefined){
@@ -184,6 +232,7 @@ function getBeamDetails(){
 	getIdType(b, "rhoc"		, "int");
 	getIdType(b, "fc"		, "int");
 	getIdType(b, "Ln"		, "int");
+	getIdType(b, "dfitments", "int");
 	getReoInput(b,"reo0");
 	b.reoclass = "N";
 	//
