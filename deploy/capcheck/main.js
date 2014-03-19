@@ -87,9 +87,13 @@ function makeReoInput(id){
 }
 
 function getBarsFromArea(a,fitwidth){
-	// TODO: verify minimum bar spacing
+	// TODO: List this as a design assumption:
+	// AS3600+A2 8.1.9 Spacing of tendons
+	// As3600+A2 17.1.3 has a shpeel about all the ways concete shoul be handeled and how it should minimise air gaps etc.
+	// 20mm is a reasonable number since it is a nominal aggregate size
 	var minbarspacing = 20;
 	var maxbars = 30;
+	// AS4671 Table 5A in section 7
 	var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
 	var area = [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
 	// search for closest area
@@ -98,15 +102,29 @@ function getBarsFromArea(a,fitwidth){
 	var result = []
 	for(;d>=0;d--){
 		for(n=1;n<maxbars;n++){
-			if(area[d]*n>a){
+			if(area[d]*n>a && ndia[d]*n+minbarspacing*(n-1)<fitwidth){
 				result.push(n+"N"+ndia[d]+" - "+(area[d]*n)+"mm^2");
 				break;
 			}
 		}
 	}
+	if(result.length>1){
+		//TODO: Apply second round of checks
+		// Prefer to use two bars instead of 1
+	}
 	return result;
 }
-
+function getAreaFromBars(bars){
+	var bs = bars.split("N");
+	
+	if(bs.length<1){
+		throw new Error("Bars should be specified in the format \"2N12\". not: "+bars);
+	}
+	var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
+	var area = [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+	console.log(bs);
+	return area[ndia.indexOf(parseInt(bs[1]))]*parseInt(bs[0]);
+}
 
 
 
