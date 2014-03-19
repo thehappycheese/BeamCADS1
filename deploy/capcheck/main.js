@@ -130,6 +130,8 @@ function makeReoInput(id){
 		
 	});
 
+	// TODO: implement less than button
+
 	return elem;
 }
 
@@ -142,6 +144,10 @@ function makeReoInput(id){
 //////////////////////////////////////////////////////////////////////////////////////////////
 function getReoObjectFromArea(a, fitwidth){
 	
+	// TODO: subject this function to further testing
+	// TODO: rework this function to do a search in a list. This will be better for finding the next lowest/next highest
+
+
 	// TODO: List this as a design assumption:
 
 	// AS3600+A2 8.1.9 Spacing of tendons
@@ -150,8 +156,9 @@ function getReoObjectFromArea(a, fitwidth){
 	var minbarspacing = 20;
 
 	// AS3600+A2 8.1.9 Spacing of tendons: max 300 on tension face. never allow less than 2 bars.
-	var minnumberofbars = Math.max(2,Math.ceil((beam.b-2*(beam.cover+b.dfitments))/300));
-	var maxbars = 30;
+	var minnumberofbars = Math.max(2,Math.ceil((beam.b-2*(beam.cover+beam.dfitments))/300));
+	console.log("minbars",minnumberofbars);
+	var maxbars = 10;
 	// AS4671 Table 5A in section 7
 	var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
 	var area = [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
@@ -160,7 +167,7 @@ function getReoObjectFromArea(a, fitwidth){
 	var d = area.length-1;
 	var result = []
 	for(;d>=0;d--){
-		n = Math.max(2,Math.ceil(a/area[d]));
+		n = Math.max(minnumberofbars,Math.ceil(a/area[d]));
 		if(n<maxbars && ndia[d]*n+minbarspacing*(n-1)<fitwidth){
 			// There are not too many bars, and the number of bars fits within the required width
 			result.push({n:n,d:ndia[d],a:area[d]*n});

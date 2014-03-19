@@ -70,8 +70,8 @@ function drawCrossSection(ctx, b){
 		
 		
 		var scaled_cover = Math.max(b.cover*scale*2,10);
-		var scaled_dfitments = Math.max(1.5,b.dfitments*scale);
-		var tendonBendRadius = Math.max(2,4*12/2*scale); // AS3600 17.2.3 assuming N12 Bars
+		var scaled_dfitments = Math.max(2,b.dfitments*scale);
+		var tendonBendRadius = Math.max(2,4*b.dfitments/2*scale); // AS3600 17.2.3 assuming N12 Bars
 
 
 		// Breadth
@@ -87,25 +87,31 @@ function drawCrossSection(ctx, b){
 		// TODO: find the reference for this:
 		// AS3600 
 
-		ctx.rotate(Math.sin((new Date()).getTime()/7000)*Math.PI/180*1);
+		//ctx.rotate(Math.sin((new Date()).getTime()/7000)*Math.PI/180*1);
 		var placementtollerance = 10*scale;
 		ctx.translate(
 			Math.sin((new Date()).getTime()/5000)*placementtollerance/2,
 			Math.sin((new Date()).getTime()/3000)*placementtollerance/2
 		);
 
-		ctx.lineCap = "round";
-		ctx.strokeStyle = "black";
-		ctx.lineWidth = Math.ceil(scaled_dfitments);
-		drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
-		
-		ctx.strokeStyle = "white";
-		ctx.lineWidth = Math.ceil(scaled_dfitments-2);
-		drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+		if(Math.ceil(scaled_dfitments)>2){
+			ctx.lineCap = "round";
+			ctx.strokeStyle = "black";
+			ctx.lineWidth = Math.ceil(scaled_dfitments);
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+			
+			ctx.strokeStyle = "white";
+			ctx.lineWidth = Math.ceil(scaled_dfitments-2);
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
 
-		ctx.lineWidth = Math.ceil(scaled_dfitments+2);
-		ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
-		drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+			ctx.lineWidth = Math.ceil(scaled_dfitments+2);
+			ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+		}else{
+			ctx.strokeStyle = "black";
+			ctx.lineWidth = 1;
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+		}
 		
 
 		
@@ -124,12 +130,11 @@ function drawCrossSection(ctx, b){
 		var occupied_offests = [];
 		for(var i = 0; i<b.reo.length; i++){
 			var layer = b.reo[i];
-			var scaled_dtendons = Math.max(1.5,layer.d*scale);
+			var scaled_dtendons = Math.max(2,layer.d*scale);
 			var offsety = 0;
 			var offsetx = (scaled_dtendons/2*scale+scaled_cover+scaled_dfitments);
 			var direction = 0;
 			var spacing = (w-2*(scaled_cover+scaled_dfitments)-scaled_dtendons/2)/(layer.n-1);
-			var scaled_dreo = Math.max(1.5,layer.d*scale);
 			switch(layer.f){
 				case "from top":
 					offsety = layer.o*scale;
@@ -144,9 +149,8 @@ function drawCrossSection(ctx, b){
 					direction = 1;
 					break;
 			}
-			console.log(offsetx,offsety,spacing,scaled_dreo);
 			for(j=0;j<layer.n;j++){
-				ctx.fillCircle( offsetx+j*spacing-w/2, offsety-h/2, scaled_dreo/2);
+				ctx.fillCircle( offsetx+j*spacing-w/2, offsety-h/2, scaled_dtendons/2);
 			}
 		}	
 
