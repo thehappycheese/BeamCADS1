@@ -142,17 +142,17 @@ function drawCrossSection(ctx, b){
 			var offsetx = (scaled_dtendons/2*scale+scaled_cover+scaled_dfitments);
 			var direction = 0;
 			var spacing = (w-2*(scaled_cover+scaled_dfitments)-scaled_dtendons/2)/(layer.n-1);
-			switch(layer.f){
-				case "from top":
+			switch(layer.from){
+				case "top":
 					offsety = layer.o*scale;
 					break;
-				case "from bottom":
+				case "bottom":
 					offsety = h-layer.o*scale;
 					break;
-				case "from lowest":
+				case "lowest":
 					offsety = h-scaled_cover - scaled_dfitments -layer.o*scale - scaled_dtendons/2+1;
 					break;
-				case "from highest":
+				case "highest":
 					offsety = scaled_cover + scaled_dfitments + layer.o*scale + scaled_dtendons/2-1;
 					break;
 			}
