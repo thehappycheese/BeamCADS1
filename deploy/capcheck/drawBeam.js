@@ -37,10 +37,10 @@ function drawElevation(ctx, b){
 function drawCrossSection(ctx, b){
 	
 	
-	var maxwidth = ctx.canvas.width-100;
-	var maxheight = ctx.canvas.height-80;
-	var minwidth = 80;
-	var minheight = 80;
+	var maxwidth	= ctx.canvas.width-100;
+	var maxheight	= ctx.canvas.height-80;
+	var minwidth	= 80;
+	var minheight	= 80;
 	
 	
 	
@@ -59,6 +59,13 @@ function drawCrossSection(ctx, b){
 		var w = Math.max(scale*b.b, minwidth);
 		var h = Math.max(scale*b.D, minheight);
 		
+		var scaled_cover = Math.max(b.cover*scale*2,10);
+		var scaled_dfitments = Math.max(2,b.dfitments*scale);
+		// TODO: update this with correct bend radii
+		// AS3600 17.2.3 assuming N12 Bars
+		var fitments_BendRadius = Math.max(2,4*b.dfitments/2*scale); 
+
+		// Draw beam crossection outline
 		ctx.strokeStyle = "#333333";
 		ctx.lineWidth = 2;
 		ctx.strokeRect(Math.round(-w/2), Math.round(-h/2), Math.round(w), Math.round(h));
@@ -69,9 +76,6 @@ function drawCrossSection(ctx, b){
 		
 		
 		
-		var scaled_cover = Math.max(b.cover*scale*2,10);
-		var scaled_dfitments = Math.max(2,b.dfitments*scale);
-		var tendonBendRadius = Math.max(2,4*b.dfitments/2*scale); // AS3600 17.2.3 assuming N12 Bars
 
 
 		// Breadth
@@ -88,29 +92,32 @@ function drawCrossSection(ctx, b){
 		// AS3600 
 
 		//ctx.rotate(Math.sin((new Date()).getTime()/7000)*Math.PI/180*1);
-		var placementtollerance = 10*scale;
-		ctx.translate(
-			Math.sin((new Date()).getTime()/5000)*placementtollerance/2,
-			Math.sin((new Date()).getTime()/3000)*placementtollerance/2
-		);
+		//ctx.translate(
+		//var placementtollerance = 10*scale;
+		//	Math.sin((new Date()).getTime()/5000)*placementtollerance/2,
+		//	Math.sin((new Date()).getTime()/3000)*placementtollerance/2
+		//);
+		
 
-		if(Math.ceil(scaled_dfitments)>2){
+
+		// Draw Fitments
+		if(Math.ceil(scaled_dfitments)>3){
 			ctx.lineCap = "round";
 			ctx.strokeStyle = "black";
-			ctx.lineWidth = Math.ceil(scaled_dfitments);
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+			ctx.lineWidth = Math.ceil(scaled_dfitments-1);
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
 			
 			ctx.strokeStyle = "white";
 			ctx.lineWidth = Math.ceil(scaled_dfitments-2);
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
 
-			ctx.lineWidth = Math.ceil(scaled_dfitments+2);
+			ctx.lineWidth = Math.ceil(scaled_dfitments+1);
 			ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
 		}else{
 			ctx.strokeStyle = "black";
 			ctx.lineWidth = 1;
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,tendonBendRadius*scale,20*scale);
+			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
 		}
 		
 
@@ -143,10 +150,10 @@ function drawCrossSection(ctx, b){
 					offsety = h-layer.o*scale;
 					break;
 				case "from lowest":
-					offsety = h-scaled_cover - scaled_dfitments -layer.o*scale - scaled_dtendons/2;
+					offsety = h-scaled_cover - scaled_dfitments -layer.o*scale - scaled_dtendons/2+1;
 					break;
 				case "from highest":
-					direction = 1;
+					offsety = scaled_cover + scaled_dfitments + layer.o*scale + scaled_dtendons/2-1;
 					break;
 			}
 			for(j=0;j<layer.n;j++){

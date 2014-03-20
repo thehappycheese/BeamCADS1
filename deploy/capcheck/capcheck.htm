@@ -22,9 +22,9 @@
 			<hr>
 			<h2>Reinforcement Detail</h2>
 		</div>
-		<div id="c1div" class="ichunk">
+		<div id="calcdiv" class="ichunk">
 			<hr>
-			<h2>Calculated Coefficients</h2>
+			<h2>Calculated Values</h2>
 		</div>
 	</div>
 	<div id="rbar">
@@ -52,7 +52,7 @@
 
 
 
-<template id="reo-input">
+<template id="reoinput">
 	<table style="width:100%;display:block;padding:0px;border-top:1px dashed grey;">
 		<tr>
 			<td style="text-align:center;padding:0px; text-align:left; padding-right:2mm;">
@@ -64,9 +64,9 @@
 			<td style="padding:0px;text-align:left;">
 				<select>
 					<option>from top</option>
-					<option>from bottom</option>
-					<option>from lowest</option>
 					<option>from highest</option>
+					<option selected>from lowest</option>
+					<option>from bottom</option>
 				</select>
 			</td>
 			<td style="text-align:center;padding:0px;">
@@ -82,11 +82,22 @@
 
 
 
-<template id="text-input">
+<template id="textinput">
 	<table style="table-layout:fixed;display:inline-block;padding:0px;">
 		<tr>
 			<td style="padding:0px;width:1.3cm; text-align:right; padding-right:3px;white-space:nowrap;">name</td>
 			<td style="padding:0px;width:1.5cm;vertical-align:bottom;"><input style="width:100%;border:0px;border-bottom:1px solid black;text-align:center" placeholder="??"/></td>
+			<td style="padding:0px;width:1cm;vertical-align:bottom;font-size:9pt;">postfix</td>
+		</tr>
+	</table>
+</template>
+
+
+<template id="template-text-output">
+	<table style="table-layout:fixed;display:inline-block;padding:0px;">
+		<tr>
+			<td style="padding:0px;width:1.3cm; text-align:right; padding-right:3px;white-space:nowrap;">name</td>
+			<td style="padding:0px;width:1.5cm;vertical-align:bottom;"><span style="width:100%;text-align:center">--</span></td>
 			<td style="padding:0px;width:1cm;vertical-align:bottom;font-size:9pt;">postfix</td>
 		</tr>
 	</table>
