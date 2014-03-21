@@ -1,6 +1,17 @@
 ///* ReoLayer.js
 
 
+Valid = (new (function Valid(){
+	this.numeric = function(v){
+		if(isNaN(v) || v==undefined || typeof v == "string"){
+			return false;
+		}
+		if(typeof v == "number"){
+			return true;
+		}
+		return false;
+	}
+})());
 
 function BeamReoInput(lable,parentbeam){
 	
@@ -39,52 +50,66 @@ function BeamReoInput(lable,parentbeam){
 
 
 	
+	this.update = function(e){
 
+		if(this.isValid()){
+			this.elem.style.backgroundColor = "";
+		}else{
+			this.elem.style.backgroundColor = "red";
+		}
+	}.bind(this);
 
 
 	this.moreReo = function(e){
-		this.value.setFromArea(this.value.area+1 || 1);
-		if(this.value.offset!==0){
-			this.value.offset=0;
+		this.readUI();
+		this.value.morethan();
+		if(!Valid.numeric(this.value.offset)){
+			this.value.offset = 0;
 		}
 		this.writeUI();
+		this.update();
+		this.parentbeam.update();
+		// TODO: this still throws and error when it gets to big for the fitwidth
 	}.bind(this);
 
 
 
 
 	this.lessReo = function(e){
-		var row = e.target.parentElement.parentElement;
-		var area = parseInt(row.querySelector("span").innerHTML)||1;
-		// TODO: get the beam's width to do this.
-		
-		var barobj = this.parentbeam.getReoObjectFromAreaLess(area);
-
-		row.querySelectorAll("input")[1].value = barobj.number+"N"+barobj.diameter;
-		if(row.querySelectorAll("input")[0].value == ""){
-			row.querySelectorAll("input")[0].value = 0;
-		}
-		this.update();
-	}.bind(this);
-
-
-
-
-
-	this.update = function(e){
-		var areaspan		= this.elem.querySelector("span");
 		this.readUI();
+		this.value.lessthan();
+		if(!Valid.numeric(this.value.offset)){
+			this.value.offset = 0;
+		}
 		this.writeUI();
+		this.update();
 		this.parentbeam.update();
 	}.bind(this);
 
+
+
+
+	this.isValid = function(){
+		if(typeof this.value.offset == "number" && this.value.offset >= 0){
+			if(!isNaN(this.value.area)){
+				return true
+			}
+		}
+		return false;
+	}.bind(this);
+	
+
 	this.readUI = function(){
 		this.value.setBarcode(this.elem.querySelectorAll("input")[1].value);
-		this.value.offset		= this.elem.querySelectorAll("input")[0].value;
+		this.value.offset	= parseInt(this.elem.querySelectorAll("input")[0].value);
 		this.value.from		= this.elem.querySelector("select").value;
 	}.bind(this);
 	this.writeUI = function(){
-		this.elem.querySelectorAll("input")[0].value	= this.value.offset;
+		if(typeof this.value.offset == "number"){
+			this.elem.querySelectorAll("input")[0].value = this.value.offset;
+		}else{
+			this.elem.querySelectorAll("input")[0].value = "";
+		}
 		this.elem.querySelectorAll("input")[1].value	= this.value.getBarCode();
 		this.elem.querySelector("select").value			= this.value.from;
 		this.elem.querySelector("span").innerHTML		= this.value.area;
@@ -97,3 +122,4 @@ function BeamReoInput(lable,parentbeam){
 
 	this.init();
 }
+

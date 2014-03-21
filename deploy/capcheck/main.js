@@ -25,7 +25,8 @@ beam.update();
 
 update();
 function update(evt){
-	console.log("global update");
+	drawCrossSection(ctx_csect,beam);
+	drawElevation(ctx_elevation,beam);
 }
 
 

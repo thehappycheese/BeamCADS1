@@ -59,7 +59,7 @@ function drawCrossSection(ctx, b){
 		var w = Math.max(scale*b.b, minwidth);
 		var h = Math.max(scale*b.D, minheight);
 		
-		var scaled_cover = Math.max(b.cover*scale*2,10);
+		var scaled_cover = b.cover*scale;
 		var scaled_dfitments = Math.max(2,b.dfitments*scale);
 		// TODO: update this with correct bend radii
 		// AS3600 17.2.3 assuming N12 Bars
@@ -137,26 +137,18 @@ function drawCrossSection(ctx, b){
 		var occupied_offests = [];
 		for(var i = 0; i<b.reo.length; i++){
 			var layer = b.reo[i];
-			var scaled_dtendons = Math.max(2,layer.d*scale);
-			var offsety = 0;
-			var offsetx = (scaled_dtendons/2*scale+scaled_cover+scaled_dfitments);
-			var direction = 0;
-			var spacing = (w-2*(scaled_cover+scaled_dfitments)-scaled_dtendons/2)/(layer.n-1);
-			switch(layer.from){
-				case "top":
-					offsety = layer.o*scale;
-					break;
-				case "bottom":
-					offsety = h-layer.o*scale;
-					break;
-				case "lowest":
-					offsety = h-scaled_cover - scaled_dfitments -layer.o*scale - scaled_dtendons/2+1;
-					break;
-				case "highest":
-					offsety = scaled_cover + scaled_dfitments + layer.o*scale + scaled_dtendons/2-1;
-					break;
+			if(!layer.isValid()){
+				continue;
 			}
-			for(j=0;j<layer.n;j++){
+
+			var scaled_dtendons = Math.max(2,layer.diameter*scale);
+
+			var offsety = layer.getDepth()*scale;
+			var offsetx = (scaled_dtendons/2*scale+scaled_cover+scaled_dfitments);
+			
+			var spacing = (w-2*(scaled_cover+scaled_dfitments)-scaled_dtendons/2)/(layer.number-1);
+			
+			for(j=0;j<layer.number;j++){
 				ctx.fillCircle( offsetx+j*spacing-w/2, offsety-h/2, scaled_dtendons/2);
 			}
 		}	
