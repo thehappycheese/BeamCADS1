@@ -101,25 +101,15 @@ function drawCrossSection(ctx, b){
 
 
 		// Draw Fitments
-		if(Math.ceil(scaled_dfitments)>3){
-			ctx.lineCap = "round";
-			ctx.strokeStyle = "black";
-			ctx.lineWidth = Math.ceil(scaled_dfitments-1);
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
+			drawFitment(ctx,
+						-w/2 + scaled_cover,
+						-h/2 + scaled_cover,
+						 w - 2*scaled_cover,
+						 h - 2*scaled_cover,
+						fitments_BendRadius*scale,20*scale,
+						scaled_dfitments);
 			
-			ctx.strokeStyle = "white";
-			ctx.lineWidth = Math.ceil(scaled_dfitments-2);
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
 
-			ctx.lineWidth = Math.ceil(scaled_dfitments+1);
-			ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
-		}else{
-			ctx.strokeStyle = "black";
-			ctx.lineWidth = 1;
-			drawFitment(ctx,-w/2+scaled_cover,-h/2+scaled_cover,w-2*scaled_cover,h-2*scaled_cover,fitments_BendRadius*scale,20*scale);
-		}
-		
 
 		
 
@@ -159,27 +149,72 @@ function drawCrossSection(ctx, b){
 	
 	
 }
-function drawFitment(ctx,x,y,w,h,rad,fitmentlen){
-	ctx.beginPath();
-		ctx.moveTo(x+w,y+h-rad);
-		ctx.lineTo(x+w,y+rad);
-		ctx.arc(x+w-rad,y+h-rad,rad,0,Math.PI/2)
-		ctx.moveTo(x+w-rad,y+h);
-		ctx.lineTo(x+rad,y+h);
-		ctx.arc(x+rad,y+h-rad,rad,Math.PI/2,Math.PI)
-		ctx.moveTo(x,y+h-rad);
-		ctx.lineTo(x,y+rad);
-		ctx.arc(x+rad,y+rad,rad,Math.PI,Math.PI*1.5)
-		ctx.moveTo(x+rad,y);
-		ctx.lineTo(x+w-rad,y);
-	ctx.stroke();
-	ctx.beginPath();
-		ctx.moveTo(x+w-rad-rad/Math.SQRT2-fitmentlen,y+rad-rad/Math.SQRT2+fitmentlen)
-		//ctx.lineTo(x+w-rad-rad/Math.SQRT2,y+rad-rad/Math.SQRT2)
-		ctx.arc(x+w-rad,y+rad, rad, Math.PI*1.5-Math.PI/4, Math.PI*2+Math.PI/4)
-		//ctx.moveTo(x+w-rad+rad/Math.SQRT2,y+rad+rad/Math.SQRT2)
-		ctx.lineTo(x+w-rad+rad/Math.SQRT2-fitmentlen,y+rad+rad/Math.SQRT2+fitmentlen)
-	ctx.stroke();
+function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
+
+	ctx.lineCap = "round";
+	ctx.strokeStyle = "black";
+	ctx.lineWidth = Math.ceil(scaled_dfitments-1);
+	draw1();
+	
+	
+	ctx.strokeStyle = "white";
+	ctx.lineWidth = Math.ceil(scaled_dfitments-2);
+	draw1()
+
+	ctx.lineCap = "round";
+	ctx.strokeStyle = "black";
+	ctx.lineWidth = Math.ceil(scaled_dfitments-1);
+	draw2();
+	ctx.strokeStyle = "white";
+	ctx.lineWidth = Math.ceil(scaled_dfitments-2);
+	draw2();
+	//ctx.lineWidth = Math.ceil(scaled_dfitments+1);
+	//ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
+	//draw1();
+
+
+
+
+	function draw1(){
+		ctx.beginPath();
+			ctx.moveTo(x+w-rad-rad/Math.SQRT2-fitmentlen,y+rad-rad/Math.SQRT2+fitmentlen);
+			ctx.arc(x+w-rad,y+rad, rad, Math.PI*1.5-Math.PI/4, Math.PI*2);
+
+			ctx.moveTo(x+w,y+h-rad);
+			ctx.lineTo(x+w,y+rad);
+			ctx.arc(x+w-rad,y+h-rad,rad,0,Math.PI/2)
+			ctx.lineTo(x+w-rad*3,y+h)
+			//ctx.moveTo(x+w-rad,y+h);
+			//ctx.lineTo(x+rad,y+h);
+			//ctx.arc(x+rad,y+h-rad,rad,Math.PI/2,Math.PI)
+			//ctx.moveTo(x,y+h-rad);
+			//ctx.lineTo(x,y+rad);
+			//ctx.arc(x+rad,y+rad,rad,Math.PI,Math.PI*1.5)
+			//ctx.moveTo(x+rad,y);
+			//ctx.lineTo(x+w-rad,y);
+		ctx.stroke();
+	}
+	function draw2(){
+		ctx.beginPath();
+			//ctx.moveTo(x+w,y+h-rad);
+			//ctx.lineTo(x+w,y+rad);
+			//ctx.arc(x+w-rad,y+h-rad,rad,0,Math.PI/2)
+			ctx.moveTo(x+w-rad*3,y+h);
+			ctx.lineTo(x+rad,y+h);
+			ctx.arc(x+rad,y+h-rad,rad,Math.PI/2,Math.PI)
+			ctx.moveTo(x,y+h-rad);
+			ctx.lineTo(x,y+rad);
+			ctx.arc(x+rad,y+rad,rad,Math.PI,Math.PI*1.5)
+			ctx.moveTo(x+rad,y);
+			ctx.lineTo(x+w-rad,y);
+		ctx.stroke();
+		ctx.beginPath();
+			//ctx.moveTo(x+w-rad-rad/Math.SQRT2-fitmentlen,y+rad-rad/Math.SQRT2+fitmentlen)
+			ctx.arc(x+w-rad,y+rad, rad, Math.PI*1.5, Math.PI*2+Math.PI/4)
+			ctx.lineTo(x+w-rad+rad/Math.SQRT2-fitmentlen,y+rad+rad/Math.SQRT2+fitmentlen)
+		ctx.stroke();
+
+	}
 	
 }
 
