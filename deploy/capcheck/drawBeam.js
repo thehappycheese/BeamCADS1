@@ -151,6 +151,7 @@ function drawCrossSection(ctx, b){
 }
 function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 
+	
 	ctx.lineCap = "round";
 	ctx.strokeStyle = "black";
 	ctx.lineWidth = Math.ceil(scaled_dfitments-1);
@@ -161,16 +162,26 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 	ctx.lineWidth = Math.ceil(scaled_dfitments-2);
 	draw1()
 
-	ctx.lineCap = "round";
+	
 	ctx.strokeStyle = "black";
 	ctx.lineWidth = Math.ceil(scaled_dfitments-1);
 	draw2();
 	ctx.strokeStyle = "white";
 	ctx.lineWidth = Math.ceil(scaled_dfitments-2);
 	draw2();
-	//ctx.lineWidth = Math.ceil(scaled_dfitments+1);
-	//ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
-	//draw1();
+	draw3()
+	
+	ctx.lineWidth = Math.ceil(scaled_dfitments+1);
+	ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
+	draw1();
+	draw2();
+	function draw3(){
+		ctx.beginPath();
+			ctx.moveTo(x+w-rad*3-2,y+h)
+			ctx.lineTo(x+w-rad*3+2,y+h)
+
+		ctx.stroke();
+	}
 
 
 
@@ -179,7 +190,6 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 		ctx.beginPath();
 			ctx.moveTo(x+w-rad-rad/Math.SQRT2-fitmentlen,y+rad-rad/Math.SQRT2+fitmentlen);
 			ctx.arc(x+w-rad,y+rad, rad, Math.PI*1.5-Math.PI/4, Math.PI*2);
-
 			ctx.moveTo(x+w,y+h-rad);
 			ctx.lineTo(x+w,y+rad);
 			ctx.arc(x+w-rad,y+h-rad,rad,0,Math.PI/2)
