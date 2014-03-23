@@ -151,7 +151,7 @@ function drawCrossSection(ctx, b){
 }
 function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 
-	
+	if(scaled_dfitments>3){
 	ctx.lineCap = "round";
 	ctx.strokeStyle = "black";
 	ctx.lineWidth = Math.ceil(scaled_dfitments-1);
@@ -175,6 +175,17 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 	ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
 	draw1();
 	draw2();
+	}else{
+		ctx.lineCap = "round";
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = 0.5;// Math.max(0.5,Math.floor(scaled_dfitments));
+		rad*=3;
+		draw1();
+		draw2();
+	}
+
+
+
 	function draw3(){
 		ctx.beginPath();
 			ctx.moveTo(x+w-rad*3-2,y+h)
@@ -223,7 +234,6 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 			ctx.arc(x+w-rad,y+rad, rad, Math.PI*1.5, Math.PI*2+Math.PI/4)
 			ctx.lineTo(x+w-rad+rad/Math.SQRT2-fitmentlen,y+rad+rad/Math.SQRT2+fitmentlen)
 		ctx.stroke();
-
 	}
 	
 }

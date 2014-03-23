@@ -3,6 +3,10 @@ body{
 	margin:10px;
 	padding:0px;
 }
+#main{
+	display: flex;
+	flex-direction: row;
+}
 lable{
 	display:inline-block;
 	margin: 1px;
@@ -20,16 +24,14 @@ input{
 }
 
 #lbar{
-	float:left;
-	width:calc(60% - 8px);
+	flex: 3 3 0;
 	border: 1px solid black;
 	padding:2px;
 	margin:1px;
 }
 
 #rbar{
-	float:left;
-	width:calc(40% - 8px);
+	flex: 2 2 0;
 	border: 1px solid black;
 	padding:2px;
 	margin:1px;
