@@ -16,6 +16,11 @@ var ctx_elevation		= canvas_elevation.getContext('2d');
 var beam = new Beam();
 beam.onupdate = update;
 beam.update();
+beam.reoelems[2].elem.querySelector("input").value = 60;
+beam.reoelems[2].moreReo()
+beam.reoelems[3].moreReo()
+beam.reoelems[3].moreReo()
+beam.reoelems[3].moreReo()
 
 
 

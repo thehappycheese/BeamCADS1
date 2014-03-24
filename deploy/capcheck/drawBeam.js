@@ -37,7 +37,7 @@ function drawElevation(ctx, b){
 function drawCrossSection(ctx, b){
 	
 	
-	var maxwidth	= ctx.canvas.width-100;
+	var maxwidth	= ctx.canvas.width-190;
 	var maxheight	= ctx.canvas.height-80;
 	var minwidth	= 80;
 	var minheight	= 80;
@@ -56,14 +56,14 @@ function drawCrossSection(ctx, b){
 		
 		var scale = Math.min(maxwidth/b.b, maxheight/b.D);
 		
-		var w = Math.max(scale*b.b, minwidth);
-		var h = Math.max(scale*b.D, minheight);
+		var w = scale*b.b;
+		var h = scale*b.D;
 		
 		var scaled_cover = b.cover*scale;
-		var scaled_dfitments = Math.max(2,b.dfitments*scale);
+		var scaled_dfitments = b.dfitments*scale;
 		// TODO: update this with correct bend radii
 		// AS3600 17.2.3 assuming N12 Bars
-		var fitments_BendRadius = Math.max(2,4*b.dfitments/2*scale); 
+		var fitments_BendRadius = 6*b.dfitments/2*scale; 
 
 		// Draw beam crossection outline
 		ctx.strokeStyle = "#333333";
@@ -106,7 +106,8 @@ function drawCrossSection(ctx, b){
 						-h/2 + scaled_cover,
 						 w - 2*scaled_cover,
 						 h - 2*scaled_cover,
-						fitments_BendRadius*scale,20*scale,
+						fitments_BendRadius*scale,
+						30*scale,
 						scaled_dfitments);
 			
 
@@ -116,7 +117,7 @@ function drawCrossSection(ctx, b){
 		// Draw required reinforcement
 
 
-		ctx.fillStyle = "black";
+		ctx.fillStyle = "#777777";
 		// Draw top two longitudinal reo bars.
 		ctx.fillCircle(-w/2+scaled_cover+scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
 		ctx.fillCircle( w/2-scaled_cover-scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
@@ -131,16 +132,20 @@ function drawCrossSection(ctx, b){
 				continue;
 			}
 
-			var scaled_dtendons = Math.max(2,layer.diameter*scale);
+			var scaled_dtendons = layer.diameter*scale;
 
 			var offsety = layer.getDepth()*scale;
-			var offsetx = (scaled_dtendons/2*scale+scaled_cover+scaled_dfitments);
+			var offsetx = (scaled_dtendons/2+scaled_cover+scaled_dfitments*0.8);
 			
-			var spacing = (w-2*(scaled_cover+scaled_dfitments)-scaled_dtendons/2)/(layer.number-1);
+			var spacing = (w-2*(scaled_cover+scaled_dfitments*0.8)-scaled_dtendons)/(layer.number-1);
 			
 			for(j=0;j<layer.number;j++){
 				ctx.fillCircle( offsetx+j*spacing-w/2, offsety-h/2, scaled_dtendons/2);
 			}
+			ctx.fillStyle = "black";
+			ctx.textAlign = "start";
+			ctx.textBaseline = "middle";
+			ctx.fillText(layer.getBarCode(),w/2+10,  offsety-h/2);
 		}	
 
 		
@@ -152,34 +157,33 @@ function drawCrossSection(ctx, b){
 function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 
 	if(scaled_dfitments>3){
-	ctx.lineCap = "round";
-	ctx.strokeStyle = "black";
-	ctx.lineWidth = Math.ceil(scaled_dfitments-1);
-	draw1();
-	
-	
-	ctx.strokeStyle = "white";
-	ctx.lineWidth = Math.ceil(scaled_dfitments-2);
-	draw1()
+		ctx.lineCap = "square";
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = Math.ceil(scaled_dfitments);
+		draw1();
+		
+		
+		ctx.strokeStyle = "white";
+		ctx.lineWidth = Math.ceil(scaled_dfitments-2);
+		draw1()
 
-	
-	ctx.strokeStyle = "black";
-	ctx.lineWidth = Math.ceil(scaled_dfitments-1);
-	draw2();
-	ctx.strokeStyle = "white";
-	ctx.lineWidth = Math.ceil(scaled_dfitments-2);
-	draw2();
-	draw3()
-	
-	ctx.lineWidth = Math.ceil(scaled_dfitments+1);
-	ctx.strokeStyle = ctx.createPattern(CanvasPatterns.fs_can,"repeat");
-	draw1();
-	draw2();
+		
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = Math.ceil(scaled_dfitments);
+		draw2();
+		ctx.strokeStyle = "white";
+		ctx.lineWidth = Math.ceil(scaled_dfitments-2);
+		draw2();
+		draw3()
+		
+		ctx.lineWidth = Math.ceil(scaled_dfitments+2);
+		ctx.strokeStyle = ctx.createPattern(CanvasPatterns.fs_can,"repeat");
+		draw1();
+		draw2();
 	}else{
 		ctx.lineCap = "round";
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = 0.5;// Math.max(0.5,Math.floor(scaled_dfitments));
-		rad*=3;
 		draw1();
 		draw2();
 	}

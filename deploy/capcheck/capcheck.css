@@ -18,9 +18,13 @@ input{
 }
 
 .chunk{
-	border: 1px solid black;
-	padding: 3px;
-	margin:1px;
+	
+}
+.subchunk{
+	display:flex;
+	flex-direction:row;
+	justify-content:left;
+	flex-wrap:wrap;
 }
 
 #lbar{

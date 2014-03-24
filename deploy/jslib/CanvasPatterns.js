@@ -5,7 +5,7 @@ CanvasPatterns = (function(){
 
 	var fs_can	= document.createElement("canvas");
 	var fs_ctx = fs_can.getContext('2d');
-	var dim 	= 10;
+	var dim 	= 8;
 	fs_can.width = fs_can.height = dim*2;
 	//fs_ctx.fillStyle = "white";
 	//fs_ctx.fillRect(0,0,fs_can.width,fs_can.height);
@@ -26,7 +26,7 @@ CanvasPatterns = (function(){
 
 	var bs_can	= document.createElement("canvas");
 	var bs_ctx = bs_can.getContext('2d');
-	var dim 	= 10;
+	var dim 	= 5;
 	bs_can.width = bs_can.height = dim*2;
 	//bs_ctx.fillStyle = "white";
 	//bs_ctx.fillRect(0,0,bs_can.width,bs_can.height);

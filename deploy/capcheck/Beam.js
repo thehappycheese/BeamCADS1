@@ -73,6 +73,8 @@ function Beam(){
 		this.minnumberofbars	= Math.max(2,Math.ceil((this.b-2*(this.cover+this.dfitments))/300));
 		// Limit the number of bars to 10 - arbitrary but reduces number of area intervals
 		this.maxnumberofbars	= 10;
+		// AS3600+A2 8.1.2(d) Concrete maximum strain is 0.003
+		this.epsiloncmax = 0.003;
 	}.bind(this);
 	this.update = function(){
 		this.getData();
@@ -98,37 +100,94 @@ function Beam(){
 
 
 
-	this.getCapacity = function(){
+	Object.defineProperty(this,"Muo",{get:function(){
+		var dn = this.dn;
+		return (this.dsc-this.gamma*dn) * this.Cc_from_dn(dn)/1000; // kNm
+	}.bind(this)});
 
-		var dn = 0;
-
-		while(this.T_from_dn(dn)>this.C_from_dn(dn)){
-			dn++;
+	Object.defineProperty(this,"dsc",{get:function(){
+		//depth to steel centroid
+		var sum_area_times_depth = 0;
+		var sum_area = 0;
+		for(var i=0;i<this.reo.length;i++){
+			if(this.reo[i].isValid()){
+				sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
+				sum_area += this.reo[i].area;
+			}
 		}
+		return sum_area_times_depth/sum_area;
+	}.bind(this)});
+	
+	Object.defineProperty(this,"dn",{get:function(){
+		// TODO: make a beam flag to determine wheather compression steel is considered in this calculation.
+		var dn;
+		var top = this.D;
+		var bot = 0;
+		var diff;
+		var cnt = 0;
+		do{
+			dn = (top+bot)/2;
+			diff = this.Ts_from_dn(dn)-this.Cc_from_dn(dn);
+			if(diff>0){
+				bot = dn;
+			}else{
+				top = dn;
+			}
+			cnt++
+		}while(Math.abs(diff) > 0.0001 && cnt<20);
 
 		return dn;
-	}.bind(this);
-	this.T_from_dn = function(dn){
-		
+	}.bind(this)});
+	Object.defineProperty(this,"Ts",{get:function(){
+		return this.Ts_from_dn(this.dn);
+	}.bind(this)});
+	Object.defineProperty(this,"Cc",{get:function(){
+		return this.Cc_from_dn(this.dn);
+	}.bind(this)});
+
+	this.Ts_from_dn = function(dn){
+
+		// AS4671 500MPa Steel && AS3600
+		var steel_yield_stress = 500;//MPa
+		// AS3600 3.2.2 taken to be (or determined by test)
+		// LEFTOFF: 2013 03 24
+		// TODO: add Es to variable inputs (commit with35mins)
+
+		var steel_youngs_modulus = 200000;// MPa
+		var epsilonsy = steel_yield_stress/steel_youngs_modulus;
+
 		var r = this.reo;
 		var result = 0;
+		var epsilonsi;
 		for(var i = 0;i<r.length;i++){
 			if(r[i].isValid()){
-				result += r[i].area * this.fsy;
+				// First get strain in the steel layer according to similar triangles:
+				epsilonsi = this.epsiloncmax/dn*(r[i].getDepth() - dn);
+				// Limit the strain to a maximum of 0.025 and a minimum of 0 to remove compression steel.
+				epsilonsi = Math.min(epsilonsi, epsilonsy);
+				if(epsilonsi<0){
+					epsilonsi = 0;
+					// TODO: unintended compression steel?
+				}
+				// Ast*500MPa = yield force
+				result += r[i].area * steel_youngs_modulus*epsilonsi/1000; // kN??
 			}
 		}
 		return result;
 	}.bind(this);
-	this.C_from_dn = function(dn){
+	this.Cc_from_dn = function(dn){
 		return (this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
 	}.bind(this);
 
+
 	Object.defineProperty(this,"gamma",{get:function(){
-		return Math.max(0.67,Math.min(0.85,1.05*this.fc*0.007));
+		// TODO: test this
+		return Math.max(0.67,Math.min(0.85,1.05-this.fc*0.007));
 	}.bind(this)});
 
 	Object.defineProperty(this,"alpha2",{get:function(){
-		return Math.max(0.67,Math.min(0.85,1*this.fc*0.003));
+		// TODO: test this
+		return Math.max(0.67,Math.min(0.85,1-this.fc*0.003));
 	}.bind(this)});
 
 
