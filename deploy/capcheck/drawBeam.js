@@ -172,7 +172,7 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 	draw3()
 	
 	ctx.lineWidth = Math.ceil(scaled_dfitments+1);
-	ctx.strokeStyle = ctx.createPattern(CanvasPatterns.slash2,"repeat");
+	ctx.strokeStyle = ctx.createPattern(CanvasPatterns.fs_can,"repeat");
 	draw1();
 	draw2();
 	}else{
