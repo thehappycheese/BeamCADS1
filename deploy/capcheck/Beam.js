@@ -21,13 +21,13 @@ function Beam(){
 				"fsy"		,
 				"reoclass"	,
 
-				"alpha2"		,
-				"gamma"			,
-				"dn"			,
-				"d"				,
-				"ku"			,
-				"phi"			,
-				"Muo"			,
+				//"alpha2"		,
+				//"gamma"			,
+				//"dn"			,
+				//"d"				,
+				//"ku"			,
+				//"phi"			,
+				//"Muo"			,
 			]
 		this.reo = [];
 		this.minbarspacing		= undefined;
@@ -109,6 +109,7 @@ function Beam(){
 		return dn;
 	}.bind(this);
 	this.T_from_dn = function(dn){
+		
 		var r = this.reo;
 		var result = 0;
 		for(var i = 0;i<r.length;i++){
@@ -119,8 +120,16 @@ function Beam(){
 		return result;
 	}.bind(this);
 	this.C_from_dn = function(dn){
-		return (this.b*dn*this.gamma) * (this.fc*this.alpha2);
+		return (this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
 	}.bind(this);
+
+	Object.defineProperty(this,"gamma",{get:function(){
+		return Math.max(0.67,Math.min(0.85,1.05*this.fc*0.007));
+	}.bind(this)});
+
+	Object.defineProperty(this,"alpha2",{get:function(){
+		return Math.max(0.67,Math.min(0.85,1*this.fc*0.003));
+	}.bind(this)});
 
 
 

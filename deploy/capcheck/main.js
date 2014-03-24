@@ -25,8 +25,8 @@ beam.update();
 
 update();
 function update(evt){
-	drawCrossSection(ctx_csect,beam);
-	drawElevation(ctx_elevation,beam);
+	drawCrossSection(ctx_csect, beam);
+	drawElevation(ctx_elevation, beam);
 }
 
 

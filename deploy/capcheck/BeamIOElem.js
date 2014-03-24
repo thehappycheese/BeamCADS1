@@ -33,22 +33,23 @@ function BeamIOElem(varinfo, parentbeam){
 				this.input.type		= "text";
 		}
 		document.getElementById(varinfo.parent).appendChild(docfrag);
-	}	
+	}.bind(this);
 	// LEFTOFF: 2014 03 24 4:54pm
 	this.touchHandeler = function(e){
-		console.log("touch")
 		// Do validation colours etc
 		if(this.isInputValid()){
 			this._value =this.getInputValue();
+			this.input.style.color = "black";
+			this.parentbeam.update();
 		}else{
 			this.input.style.color = "red";
 		}
 	}.bind(this);
 	this.changeHandeler = function(e){
-		console.log("change")
 		// permit forced validation
 		if(this.isInputValid()){
 			this._value = this.getInputValue();
+			this.input.style.color = "black";
 		}else{
 			this.setInputValue(this._value);
 			alert("flash red");
@@ -66,10 +67,10 @@ function BeamIOElem(varinfo, parentbeam){
 			default:
 				return !(val=="");
 		} 
-	}.bind();
+	}.bind(this);
 	this.getValue = function(){
 		return this._value;
-	}
+	}.bind(this);
 	this.getInputValue = function(){
 		switch(this.varinfo.vtype){
 			case "float":
