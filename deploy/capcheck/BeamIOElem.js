@@ -1,4 +1,7 @@
 function BeamIOElem(varinfo, parentbeam){
+
+	this._value = undefined;
+
 	this.parentbeam = parentbeam;
 	this.varinfo = varinfo;
 
@@ -16,6 +19,10 @@ function BeamIOElem(varinfo, parentbeam){
 	this.input 			= this.elem.querySelector("input");
 	this.input.value	= varinfo.default;
 	this.input.disabled = varinfo.disabled;
+	this.input.addEventListerner("mouseup",this.touchHandeler);
+	this.input.addEventListerner("keyup",this.touchHandeler);
+	this.input.addEventListerner("change",this.changeHandeler);
+
 	switch(varinfo.vtype){
 		case "float":
 		case "int":
@@ -26,9 +33,22 @@ function BeamIOElem(varinfo, parentbeam){
 			this.input.type		= "text";
 	}
 	document.getElementById(varinfo.parent).appendChild(docfrag);
-}
-BeamIOElem.prototype = {
-	getValue:function(){
+
+	this.touchHandeler = function(){
+		// Do validation colours etc
+		
+	}.bind(this);
+	this.changeHandeler = function(){
+		// permit forced validation
+		
+		this.parentbeam.update();
+	}.bind(this);
+
+	this.isValid= function(){
+
+	}.bind();
+	this.getValue = function(){
+
 		switch(this.varinfo.vtype){
 			case "float":
 				return parseFloat(this.input.value);
@@ -38,11 +58,5 @@ BeamIOElem.prototype = {
 			default:
 				return this.input.value;
 		}
-	},
-	setValue:function(){
-
-	},
-	validate:function(){
-
-	},
-};
+	}
+}

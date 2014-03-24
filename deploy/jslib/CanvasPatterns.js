@@ -3,25 +3,57 @@
 CanvasPatterns = (function(){
 	var exports = {};
 
-	var slash2 = document.createElement("canvas");
-	var slash2c = slash2.getContext('2d');
-	var dim = 5;
-	slash2.width = slash2.height = dim*2;
-	//slash2c.fillStyle = "white";
-	//slash2c.fillRect(0,0,slash2.width,slash2.height);
-	//slash2c.sharpLine(0,0,slash2.width,slash2.height,0,0,0,255);
-	slash2c.beginPath();
-	slash2c.lineWidth = 1.1;
+	var fs_can	= document.createElement("canvas");
+	var fs_ctx = fs_can.getContext('2d');
+	var dim 	= 10;
+	fs_can.width = fs_can.height = dim*2;
+	//fs_ctx.fillStyle = "white";
+	//fs_ctx.fillRect(0,0,fs_can.width,fs_can.height);
+	fs_ctx.beginPath();
+	fs_ctx.lineWidth = 1;
 	var exten = 50;
-	slash2c.moveTo(-exten-dim,-exten);
-	slash2c.lineTo(slash2.width-dim+exten,slash2.height+exten);
+	fs_ctx.moveTo(-exten-dim,-exten);
+	fs_ctx.lineTo(fs_can.width-dim+exten,fs_can.height+exten);
 
-	slash2c.moveTo(-exten+dim,-exten);
-	slash2c.lineTo(slash2.width+dim+exten,slash2.height+exten);
+	fs_ctx.moveTo(-exten+dim,-exten);
+	fs_ctx.lineTo(fs_can.width+dim+exten,fs_can.height+exten);
 
-	slash2c.stroke();
+	fs_ctx.stroke();
 
-	exports.slash2 = slash2;
+
+
+	// TODO: convert this next snippet into a backslash.
+
+	var bs_can	= document.createElement("canvas");
+	var bs_ctx = bs_can.getContext('2d');
+	var dim 	= 10;
+	bs_can.width = bs_can.height = dim*2;
+	//bs_ctx.fillStyle = "white";
+	//bs_ctx.fillRect(0,0,bs_can.width,bs_can.height);
+	bs_ctx.beginPath();
+	bs_ctx.lineWidth = 1;
+	var exten = 50;
+	bs_ctx.moveTo(-exten-dim,-exten);
+	bs_ctx.lineTo(bs_can.width-dim+exten,bs_can.height+exten);
+
+	bs_ctx.moveTo(-exten+dim,-exten);
+	bs_ctx.lineTo(bs_can.width+dim+exten,bs_can.height+exten);
+
+	bs_ctx.stroke();
+
+
+
+
+
+
+
+
+
+
+
+
+
+	exports.fs_can = fs_can;
 
 	return exports;
 

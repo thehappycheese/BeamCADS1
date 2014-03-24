@@ -89,6 +89,50 @@ function Beam(){
 
 
 
+
+
+
+
+
+
+
+
+
+	this.getCapacity = function(){
+
+		var dn = 0;
+
+		while(this.T_from_dn(dn)>this.C_from_dn(dn)){
+			dn++;
+		}
+
+		return dn;
+	}.bind(this);
+	this.T_from_dn = function(dn){
+		var r = this.reo;
+		var result = 0;
+		for(var i = 0;i<r.length;i++){
+			if(r[i].isValid()){
+				result += r[i].area * this.fsy;
+			}
+		}
+		return result;
+	}.bind(this);
+	this.C_from_dn = function(dn){
+		return (this.b*dn*this.gamma) * (this.fc*this.alpha2);
+	}.bind(this);
+
+
+
+
+
+
+
+
+
+
+
+
 	
 
 	this.create();
