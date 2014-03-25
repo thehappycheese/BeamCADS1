@@ -38,52 +38,36 @@ function drawCrossSection(ctx, b){
 	
 	
 	var maxwidth	= ctx.canvas.width-190;
-	var maxheight	= ctx.canvas.height-80;
-	var minwidth	= 80;
-	var minheight	= 80;
+	var maxheight	= ctx.canvas.height-80;	
+	var scale = Math.min(maxwidth/b.b, maxheight/b.D);
 	
-	
-	
-	
+	var w = scale*b.b;
+	var h = scale*b.D;
+	var scaled_cover = b.cover*scale;
+	var scaled_dfitments = b.dfitments*scale;
+	// TODO: update this with correct bend radii
+	// AS3600 17.2.3 assuming N12 Bars
+	var fitments_BendRadius = 6*b.dfitments/2*scale; 
 	
 	
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	
 	ctx.save();
 		ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
 		
 		
 		
-		var scale = Math.min(maxwidth/b.b, maxheight/b.D);
-		
-		var w = scale*b.b;
-		var h = scale*b.D;
-		
-		var scaled_cover = b.cover*scale;
-		var scaled_dfitments = b.dfitments*scale;
-		// TODO: update this with correct bend radii
-		// AS3600 17.2.3 assuming N12 Bars
-		var fitments_BendRadius = 6*b.dfitments/2*scale; 
 
 		// Draw beam crossection outline
 		ctx.strokeStyle = "#333333";
 		ctx.lineWidth = 2;
 		ctx.strokeRect(Math.round(-w/2), Math.round(-h/2), Math.round(w), Math.round(h));
-		
-		
-		
-		// TODO: draw cover and steel Layers
-		
-		
-		
-
 
 		// Breadth
 		dim(ctx,-w/2,h/2,w/2,h/2, Math.PI/2, 12,b.b+" mm");
 		// Depth
 		dim(ctx,-w/2,-h/2,-w/2,h/2, 0, -12,b.D+" mm");
 		//Cover
-		dim(ctx,w/2,-h/2,w/2,-h/2+scaled_cover-scaled_dfitments/2, 0, 10,b.cover+" mm cover");
+		dim(ctx,w/2,-h/2,w/2,-h/2+b.cover*scale, 0, 10,b.cover+" mm cover");
 		
 		
 
@@ -101,26 +85,19 @@ function drawCrossSection(ctx, b){
 
 
 		// Draw Fitments
-			drawFitment(ctx,
-						-w/2 + scaled_cover,
-						-h/2 + scaled_cover,
-						 w - 2*scaled_cover,
-						 h - 2*scaled_cover,
-						fitments_BendRadius*scale,
-						30*scale,
-						scaled_dfitments);
+		
 			
 
 
 		
 
-		// Draw required reinforcement
 
+		// TODO: Draw in top two reo bars if not included in the prescribed reo.
 
-		ctx.fillStyle = "#777777";
+		//ctx.fillStyle = "#777777";
 		// Draw top two longitudinal reo bars.
-		ctx.fillCircle(-w/2+scaled_cover+scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
-		ctx.fillCircle( w/2-scaled_cover-scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
+		//ctx.fillCircle(-w/2+scaled_cover+scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
+		//ctx.fillCircle( w/2-scaled_cover-scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
 		
 
 		// Draw other reo bars
@@ -135,13 +112,25 @@ function drawCrossSection(ctx, b){
 			var scaled_dtendons = layer.diameter*scale;
 
 			var offsety = layer.getDepth()*scale;
-			var offsetx = (scaled_dtendons/2+scaled_cover+scaled_dfitments*0.8);
-			
-			var spacing = (w-2*(scaled_cover+scaled_dfitments*0.8)-scaled_dtendons)/(layer.number-1);
-			
+			var offsetx = (b.cover + b.dfitments + layer.diameter/2)*scale;
+			var spacing = (b.b - 2*(b.cover + b.dfitments) - layer.diameter)*scale/(layer.number-1);
+
+
 			for(j=0;j<layer.number;j++){
 				ctx.fillCircle( offsetx+j*spacing-w/2, offsety-h/2, scaled_dtendons/2);
 			}
+
+			if(layer.number>2 || i==3){
+				drawFitment(ctx,
+						-w/2 + (b.cover + b.dfitments/2)*scale,
+						-h/2 + (b.cover + b.dfitments/2)*scale,
+						w - (2*b.cover+b.dfitments)*scale,
+						offsety - (b.cover - b.dfitments)*scale,
+						fitments_BendRadius*scale,
+						30*scale,
+						scaled_dfitments);
+			}
+
 			ctx.fillStyle = "black";
 			ctx.textAlign = "start";
 			ctx.textBaseline = "middle";

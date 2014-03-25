@@ -107,17 +107,5 @@ function ReoLayer(parentbeam,barcode){
 		this.setFromArea(a||this.area-1||1, "less");
 	}.bind(this);
 
-	this.setAreaLess =function(a){
-		var originalarea = this.area;
-
-		var sub = 0;
-		while(originalarea==this.area && a-sub>156){
-			sub+=2;
-			this.setFromArea(a-sub);
-		}
-	}.bind(this);
-
-
-
 	if(barcode)	this.setBarcode(barcode);
 }
