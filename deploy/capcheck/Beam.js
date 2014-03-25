@@ -154,7 +154,10 @@ function Beam(){
 	Object.defineProperty(this,"Cc",{get:function(){
 		return this.Cc_from_dn(this.dn);
 	}.bind(this)});
-
+	
+	this.formulate_Ts = function(){
+		
+	}
 	this.Ts_from_dn = function(dn){
 
 		// AS4671 500MPa Steel && AS3600
