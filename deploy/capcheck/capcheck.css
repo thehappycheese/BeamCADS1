@@ -27,6 +27,10 @@ input{
 	flex-wrap:wrap;
 }
 
+.calcitem{
+	boder:1px solid black;
+}
+
 #lbar{
 	flex: 3 3 0;
 	border: 1px solid black;

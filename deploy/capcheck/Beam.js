@@ -21,13 +21,6 @@ function Beam(){
 				"fsy"		,
 				"reoclass"	,
 
-				//"alpha2"		,
-				//"gamma"			,
-				//"dn"			,
-				//"d"				,
-				//"ku"			,
-				//"phi"			,
-				//"Muo"			,
 			]
 		this.reo = [];
 		this.minbarspacing		= undefined;
@@ -101,6 +94,8 @@ function Beam(){
 
 
 	Object.defineProperty(this,"Muo",{get:function(){
+		this.printed = {};
+		document.getElementById("calcdiv").innerHTML = "";
 		var dn = this.dn;
 		return (this.dsc-this.gamma*dn) * this.Cc_from_dn(dn)/1000; // kNm
 	}.bind(this)});
@@ -119,7 +114,7 @@ function Beam(){
 	}.bind(this)});
 	
 	Object.defineProperty(this,"dn",{get:function(){
-		// TODO: make a beam flag to determine wheather compression steel is considered in this calculation.
+		// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
 		var dn;
 		var top = this.D;
 		var bot = 0;
@@ -135,6 +130,21 @@ function Beam(){
 			}
 			cnt++
 		}while(Math.abs(diff) > 0.0001 && cnt<20);
+		
+		
+		if(!this.printed.dn){
+			this.printed.dn = true;
+			this.showCalc("<hr>");
+			this.showCalc("find depth to neutral axis: dn");
+			this.showCalc("This is found by equating tension and compression forces in the beam. (Ignore moment calculations for now)");
+			this.showCalc("We will also ignore any compression steel for now.");
+			this.showCalc("dn can be found by equating the horizontal actions in the beam: Tension in the steel 'Ts' and the compression in the concrete 'Cc'");
+			this.showCalc("Ts = Cc");
+			
+		}
+		
+		
+		
 
 		return dn;
 	}.bind(this)});
@@ -182,26 +192,39 @@ function Beam(){
 
 	Object.defineProperty(this,"gamma",{get:function(){
 		// TODO: test this
-		return Math.max(0.67,Math.min(0.85,1.05-this.fc*0.007));
+		var r1 = 1.05-this.fc*0.007;
+		var r2 = Math.max(0.67,Math.min(0.85,r1)) 
+		if(!this.printed.gamma){
+			this.printed.gamma = true;
+			this.showCalc("<hr>");
+			this.showCalc("gamma = 1.05 - f'c*0.007");
+			this.showCalc("gamma = 1.05 - "+this.fc+"*0.007 = "+r1.toFixed(3));
+			this.showCalc("gamma< 0.85 AND gamma>0.67");
+			this.showCalc("gamma = "+r2.toFixed(3));
+		}
+		return r2;
 	}.bind(this)});
 
 	Object.defineProperty(this,"alpha2",{get:function(){
 		// TODO: test this
-		return Math.max(0.67,Math.min(0.85,1-this.fc*0.003));
+		var r1 = 1-this.fc*0.003
+		var r2 = Math.max(0.67,Math.min(0.85,r1));
+		if(!this.printed.alpha){
+			this.printed.alpha = true;
+			this.showCalc("<hr>");
+			this.showCalc("alpha2 = 1 - f'c*0.003");
+			this.showCalc("alpha2 = 1 - "+this.fc+"*0.003 = "+r1.toFixed(3));
+			this.showCalc("alpha2< 0.85 AND alpha2>0.67");
+			this.showCalc("alpha2 = "+r2.toFixed(3));
+		}
+		return r2;
 	}.bind(this)});
 
-
-
-
-
-
-
-
-
-
-
-
+	this.showCalc = function(txt){
+		document.getElementById("calcdiv").innerHTML += txt+"<br/>";
+	}.bind(this);
 	
+	this.printed = {};
 
 	this.create();
 };
