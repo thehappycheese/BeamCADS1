@@ -8,35 +8,46 @@
 <template>
 	<style>
 		#rin td {
-			padding: 0px 0.5em;
-			white-space: nowrap;
+			//padding: 0px 0.5em;
+			//white-space: nowrap;
 			//outline:1px black solid;
+		}
+		.spinbut{
+			height:calc(50% - 2px);
+			display:block;
+			width:20px;
+			font-size:3px;
+			padding:0px;
+			margin:0px;
+		}
+		.tableout{
+			text-align:right;
+			font-family:sans-serif;
+			padding-right:0;
+			min-width:50px;
+			font-size:90%;
 		}
 	</style>
 	<div>
 		<table id="rin" style="table-layout:fixed;">
 			<tr>
-				<td rowspan=2 style="padding:0;">
+				<td rowspan=1 style="padding:0;">
 					<input id="enabled" type="checkbox" checked="false"/>
 				</td>
+				<td style="vertical-align:middle;">
+					<input id="barcode" type="text" value="2N10" style="text-align:center;width:5em;font-weight:bold;color:darkblue;"/>
+					<div style="display:inline-block;padding:2px;height:100%;">
+						<button class="spinbut">&#9650;</button>
+						<button class="spinbut">&#9660;</button>
+					</div>
+				</td>
 				<td>
-					<input id="barcode" type="text" value="2N10" style="text-align:center;width:5em;font-weight:bold;"/>
-				</td>
-				<td colspan=2 style="text-align:right;"	>
-					A: <span style="border-bottom:1px solid grey;width:3em;text-align:right;display:inline-block;">30000</span> mm&#178;
-				</td>
-				<td style="text-align:right;">
-					d: <span style="border-bottom:1px solid grey;width:3em;text-align:right;display:inline-block;">1200</span> mm
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align:center;">
 					<input type="text" value="0" style="text-align:right;width:5em;"/>
 				</td>
-				<td style="text-align:left;padding: 0px 0em;">
+				<td style="text-align:left;padding-left:0;">
 					mm
 				</td>
-				<td style="text-align:right;padding: 0em 0em;">
+				<td style="text-align:right;padding-right:0;">
 					from
 				</td>
 				<td>
@@ -46,6 +57,35 @@
 						<option value="lowest" selected>lowest</option>
 						<option value="bottom">bottom</option>
 					</select>
+				</td>
+				<td>
+					<button style="font-weight:bold;font-family:monospace;color:blue;">i</button>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan=5>
+		<table>
+			<tr>
+				<td>Area of steel:</td>
+				<td class="tableout">30000</td>
+				<td>mm&#178;</td>
+			</tr>
+			<tr>
+				<td>Depth from top surface:</td>
+				<td class="tableout">1200</td>
+				<td>mm</td>
+			</tr>
+			<tr>
+				<td>Amount:</td>
+				<td class="tableout">10</td>
+				<td>m</td>
+				<td class="tableout">5</td>
+				<td>kg/m</td>
+				<td class="tableout">400</td>
+				<td>kg</td>
+			</tr>
+		</table>
 				</td>
 			</tr>
 		</table>
