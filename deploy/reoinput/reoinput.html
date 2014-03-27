@@ -6,53 +6,46 @@
 
 
 <template>
-<style>
-		#rin .largerow {
-			font-size:20px;
-			font-family: sans-serif;
-		}
-		#rin .largerow input{
-			font-size:20px;
-		}
+	<style>
 		#rin td {
-			padding: 0px 4px;
+			padding: 0px 0.5em;
 			white-space: nowrap;
 			//outline:1px black solid;
 		}
 	</style>
-	<div style = "margin:4px;padding:4px;border:1px solid black;overflow:auto;">
-		<table id="rin">
-			<tr class="largerow">
-				<td>
-					<input id="minbut" type="button" value="&#9658;"/>
-					
+	<div>
+		<table id="rin" style="table-layout:fixed;">
+			<tr>
+				<td rowspan=2 style="padding:0;">
+					<input id="enabled" type="checkbox" checked="false"/>
 				</td>
 				<td>
-					<input style="width:90px;text=" type="text" placeholder="eg. 2N10" style="font-size:16pt;text-align:center;"/>
+					<input id="barcode" type="text" value="2N10" style="text-align:center;width:5em;font-weight:bold;"/>
 				</td>
-				<td style="border-left:2px solid black;"	><span style="width:60px;text-align:right;display:inline-block;">30</span> mm&#178;</td>
-				<td											>d=<span>1200</span> mm</td>
-				<td style="width:60px;text-align:right;" >
-					<input type="button" value="Del" style="font-size:50%"/>
+				<td colspan=2 style="text-align:right;"	>
+					A: <span style="border-bottom:1px solid grey;width:3em;text-align:right;display:inline-block;">30000</span> mm&#178;
 				</td>
-
+				<td style="text-align:right;">
+					d: <span style="border-bottom:1px solid grey;width:3em;text-align:right;display:inline-block;">1200</span> mm
+				</td>
 			</tr>
 			<tr>
-				<td colspan=7>
-					<table>
-						<tr>
-							<td><input type="text" value="0"/></td>
-							<td>
-								from
-								<select>
-									<option value="top">top</option>
-									<option value="highest">highest</option>
-									<option value="lowest" selected>lowest</option>
-									<option value="bottom">bottom</option>
-								</select>
-							</td>
-						</tr>
-					</table>
+				<td style="text-align:center;">
+					<input type="text" value="0" style="text-align:right;width:5em;"/>
+				</td>
+				<td style="text-align:left;padding: 0px 0em;">
+					mm
+				</td>
+				<td style="text-align:right;padding: 0em 0em;">
+					from
+				</td>
+				<td>
+					<select style="width:100%">
+						<option value="top">top</option>
+						<option value="highest">highest</option>
+						<option value="lowest" selected>lowest</option>
+						<option value="bottom">bottom</option>
+					</select>
 				</td>
 			</tr>
 		</table>
@@ -60,7 +53,7 @@
 	<script>
 //&#9658;
 //&#9660;
-document.querySelector("#minbut");
+var button = document.querySelector("#minbut");
 
 	</script>
 </template>
@@ -68,6 +61,11 @@ document.querySelector("#minbut");
 
 <body>
 	<reo-input> </reo-input>
+	<hr>
+	<reo-input> </reo-input>
+	<hr>
+	<reo-input> </reo-input>
+	<hr>
 	<reo-input> </reo-input>
 	<script>
 	ReoInputPrototype = Object.create(HTMLElement.prototype);
@@ -82,6 +80,11 @@ document.querySelector("#minbut");
 	var ReoInput = document.registerElement("reo-input",{prototype:ReoInputPrototype});
 	
 	ri = document.querySelector("reo-input");
+	
+	var ris = ri.webkitShadowRoot
+	ris.querySelector("#barcode").addEventListener("change",function(e){
+		console.log(e);
+	});
 	
 	</script>
 </body>
