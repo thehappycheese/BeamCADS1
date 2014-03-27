@@ -1,19 +1,15 @@
 <html>
-	<head></head>
+	<head>
+		<link rel="imports" href="temp.htm">
+		<style>
+			body{color:green;}
+		</style>
+	</head>
 	<body>
 		<x-input id="nt" vid="fc" unit="mm" value="10">Hello</x-input>
-		
+		<div class="ninptest">derf</div>
 	</body>
-		<template id="test">
-		<style>
-				.ninptest{
-					width:100;
-					height:100;
-					background-color:red;
-				}
-		</style>
-		<div class="ninptest">hi</div>
-	</template>
+		
 	<script>
 var x_input_prototype = Object.create(HTMLDivElement.prototype);
 x_input_prototype.handleClick = function(e){
@@ -21,9 +17,10 @@ x_input_prototype.handleClick = function(e){
 }
 x_input_prototype.createdCallback = function(){
 	// register events
-	this.shadow = this.webkitCreateShadowRoot().appendChild(
+	this.webkitCreateShadowRoot().appendChild(
 		document.importNode(document.getElementById("test").content)
 	)
+	this.webkitShadowRoot.resetStyleInheritance = true;
 }
 
 
