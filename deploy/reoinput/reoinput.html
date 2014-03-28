@@ -7,9 +7,6 @@
 
 <template>
 	<style>
-		td {
-			border-bottom:1px solid lightgrey;
-		}
 		.spinbut{
 			width:15px;
 			display:block;
@@ -18,23 +15,26 @@
 			padding:0px;
 			text-align:center;
 		}
+		input:invalid{
+			color:red;
+		}
 	</style>
 	<div>
-		<table id="rin" style="min-width:350px;width:100%;" cellspacing=0>
+		<table id="rin" style="color:inherit;min-width:350px;width:100%;" cellspacing=0>
 			<tr>
 				<td rowspan=1 style="padding:0;">
 					<input id="enabled" type="checkbox" checked="false"/>
 				</td>
 				<td style="text-align:right;">
-					<input id="barcode" type="text" value="2N10" style="text-align:center;width:5em;font-weight:bold;color:darkblue;"/>
+					<input id="barcode" type="text" pattern="[0-2]?[0-9]N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="??N??" style="text-align:right;padding-right:0.5em;width:5em;font-weight:bold;color:;"/>
 					
 				</td>
 				<td style="text-align:left;">
-					<button class="spinbut" id="spinbutup">&#9650;</button>
-					<button class="spinbut" id="spinbutdown">&#9660;</button>
+					<button tabindex="-1" class="spinbut" id="spinbutup">&#9650;</button>
+					<button tabindex="-1" class="spinbut" id="spinbutdown">&#9660;</button>
 				</td>
 				<td style="text-align:right;padding-left:1em;">
-					<input type="text" value="0" style="text-align:right;width:5em;"/>
+					<input type="number" min="0" step="10" value="0" style="text-align:right;width:5em;"/>
 				</td>
 				<td style="text-align:left;padding-left:0;">
 					mm
@@ -123,6 +123,49 @@
 			this.doc = this.webkitShadowRoot;
 			
 			this.maindiv = this.doc.querySelector("div");
+			this.enabledCheck = this.doc.querySelector("#enabled");
+			this.enabledCheck.addEventListener("change",function(){
+				this.enabled = this.enabled;
+			}.bind(this));
+			
+			this.barcodeIn = this.doc.querySelector("#barcode");
+			this.barcodeIn.addEventListener("keydown",function(e){
+				if(e.keyCode == 38){	// up button
+					this.more();
+					e.preventDefault();
+				}
+				if(e.keyCode == 40){	// down button
+					this.less();
+					e.preventDefault();
+				}
+			}.bind(this))
+			this.more = function(){}.bind(this);
+			this.barcodeIn.addEventListener("input",function(e){
+				var val = e.target.value;
+				var ss = e.target.selectionStart;
+				var se = e.target.selectionEnd;
+				var arr = val.split("")
+				var flag = false;
+				var noN = true;
+				for(var i=0;i<arr.length;i++){
+					
+					if((/[^0-9nN]/).test(arr[i])){
+						arr.splice(i--,1);
+						;
+						if(i<ss){
+							ss--;
+							se=ss;
+						}
+					}
+					if(arr[i]=="N"){
+						noN = false;
+					}
+				}
+				val = arr.join("");
+				val = val.toUpperCase();
+				e.target.value =  val;
+				e.target.setSelectionRange(ss,se);
+			}.bind(this))
 			
 			this.selected = false;
 			this.addEventListener("mouseup",this.select);
@@ -133,10 +176,21 @@
 		
 		Object.defineProperty(this,"enabled",{
 			get:function(){
-				return this.querySelector("#enabled").checked;
+				return this.enabledCheck.checked;
 			}.bind(this),
 			set:function(newval){
-				this.querySelector("#enabled").checked = newval;
+				this.enabledCheck.checked = newval;
+				var ins = this.doc.querySelectorAll("input, button, select")
+				for(var i = 0; i < ins.length;i++){
+					if(ins[i].id!="enabled"){
+						ins[i].disabled=!newval;
+					}
+				}
+				if(newval){
+					this.maindiv.style.color = "";
+				}else{
+					this.maindiv.style.color = "grey";
+				}
 			}.bind(this),
 		});
 		this.select = function(){
@@ -146,11 +200,11 @@
 				others[i].deselect();
 			}
 			console.log();
-			this.style.backgroundColor = "lightblue";
+			this.maindiv.style.backgroundColor = "highlight";
 		}.bind(this);
 		this.deselect = function(){
 			this.selected = false;
-			this.style.backgroundColor = "";
+			this.maindiv.style.backgroundColor = "";
 		}.bind(this);
 		this.create();
 	};
