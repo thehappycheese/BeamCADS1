@@ -5,8 +5,9 @@
 </head>
 
 
+<!--<iframe src="ReoInputTemplate.htm"></iframe>-->
 <template>
-	<style>
+<style>
 		.spinbut{
 			width:15px;
 			display:block;
@@ -15,18 +16,31 @@
 			padding:0px;
 			text-align:center;
 		}
+		#barcode:enabled{
+			color:darkblue;
+		}
+		#barcode:invalid{
+			color:red;
+			background-color: yellow;
+		}
 		input:invalid{
 			color:red;
+			background-color: yellow;
+		}
+		input[type=number]::-webkit-inner-spin-button,
+		input[type=number]::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
 		}
 	</style>
-	<div>
-		<table id="rin" style="color:inherit;min-width:350px;width:100%;" cellspacing=0>
+	<div style="min-width:350px;max-width:500px;">
+		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
 			<tr>
 				<td rowspan=1 style="padding:0;">
-					<input id="enabled" type="checkbox" checked="false"/>
+					<input id="enabled" type="checkbox" />
 				</td>
 				<td style="text-align:right;">
-					<input id="barcode" type="text" pattern="[0-2]?[0-9]N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="??N??" style="text-align:right;padding-right:0.5em;width:5em;font-weight:bold;color:;"/>
+					<input id="barcode" type="text" required pattern="([1-2][0-9]|[1-9])N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="eg. 2N10" style="text-align:right;padding-right:0.5em;width:5em;font-weight:bold;"/>
 					
 				</td>
 				<td style="text-align:left;">
@@ -34,7 +48,7 @@
 					<button tabindex="-1" class="spinbut" id="spinbutdown">&#9660;</button>
 				</td>
 				<td style="text-align:right;padding-left:1em;">
-					<input type="number" min="0" step="10" value="0" style="text-align:right;width:5em;"/>
+					<input type="number" required min="0" max="10000" value="0" style="text-align:right;width:5em;"/>
 				</td>
 				<td style="text-align:left;padding-left:0;">
 					mm
@@ -78,7 +92,9 @@
 		<reo-input> </reo-input>
 		<reo-input> </reo-input>
 		<reo-input> </reo-input>
-		<table id="rout" style="width:100%;min-width:350px;" cellspacing=0>
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<table id="rout" style="width:100%;min-width:350px;max-width:500px;margin-top:1em;" cellspacing=0>
 			<tr>
 				<td>Depth from top surface:</td>
 				<td class="tableout">1200</td>
@@ -104,9 +120,9 @@
 				<td>kg</td>
 			</tr>
 			<tr>
-				<td style="border-bottom:none;">Depth from top surface:</td>
-				<td style="border-bottom:none;"  class="tableout">1200</td>
-				<td style="border-bottom:none;" >mm</td>
+				<td style="border-bottom:none;">Layer Tension Force:</td>
+				<td style="border-bottom:none;"  class="tableout">200</td>
+				<td style="border-bottom:none;" >kN</td>
 			</tr>
 		</table>
 	</div>
@@ -114,21 +130,44 @@
 	
 	
 		<script>
-	ReoInputPrototype = Object.create(HTMLElement.prototype);
+	
+	ReoInputPrototype = Object.create(HTMLDivElement.prototype);
 	ReoInputPrototype.createdCallback = function(){
 		this.create = function(){
+			// --------
+			// CONSTRUCT
 			this.webkitCreateShadowRoot();
 			var imported = document.importNode(document.querySelector("template").content);
 			this.webkitShadowRoot.appendChild(imported);
 			this.doc = this.webkitShadowRoot;
+
 			
+			
+			
+			
+			// ---------
+			// PROPERTIES
+			this.selected = false;
 			this.maindiv = this.doc.querySelector("div");
 			this.enabledCheck = this.doc.querySelector("#enabled");
+			this.barcodeIn = this.doc.querySelector("#barcode");
+			this.spinbutup = this.doc.querySelector("#spinbutup");
+			this.spinbutdown = this.doc.querySelector("#spinbutdown");
+			this.enabled=false;
+			
+			
+			// -----------------------------------------------------
+			// EVENT LISTENERS
+			this.addEventListener("mouseup",this.select);
+			this.addEventListener("keyup",this.select);
+			this.spinbutup.addEventListener("click",this.more);
+			this.spinbutdown.addEventListener("click",this.less);
+			
 			this.enabledCheck.addEventListener("change",function(){
 				this.enabled = this.enabled;
+				this.select();
 			}.bind(this));
 			
-			this.barcodeIn = this.doc.querySelector("#barcode");
 			this.barcodeIn.addEventListener("keydown",function(e){
 				if(e.keyCode == 38){	// up button
 					this.more();
@@ -139,7 +178,7 @@
 					e.preventDefault();
 				}
 			}.bind(this))
-			this.more = function(){}.bind(this);
+			
 			this.barcodeIn.addEventListener("input",function(e){
 				var val = e.target.value;
 				var ss = e.target.selectionStart;
@@ -167,12 +206,14 @@
 				e.target.setSelectionRange(ss,se);
 			}.bind(this))
 			
-			this.selected = false;
-			this.addEventListener("mouseup",this.select);
-			this.addEventListener("keyup",this.select);
 		}.bind(this)
 		
-		
+		this.more = function(){
+			console.log("more")
+		}.bind(this);
+		this.less = function(){
+			console.log("less")
+		}.bind(this);
 		
 		Object.defineProperty(this,"enabled",{
 			get:function(){
@@ -200,7 +241,11 @@
 				others[i].deselect();
 			}
 			console.log();
-			this.maindiv.style.backgroundColor = "highlight";
+			if(this.enabled){
+				this.maindiv.style.backgroundColor = "lightblue";
+			}else{
+				this.maindiv.style.backgroundColor = "lightgrey";
+			}
 		}.bind(this);
 		this.deselect = function(){
 			this.selected = false;
@@ -212,7 +257,6 @@
 	
 	
 	var ReoInput = document.registerElement("reo-input",{prototype:ReoInputPrototype});
-	
 		</script>
 </body>
 
