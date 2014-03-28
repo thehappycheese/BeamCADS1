@@ -7,47 +7,39 @@
 
 <template>
 	<style>
-		#rin td {
-			//padding: 0px 0.5em;
-			//white-space: nowrap;
-			//outline:1px black solid;
+		td {
+			border-bottom:1px solid lightgrey;
 		}
 		.spinbut{
-			height:calc(50% - 2px);
+			width:15px;
 			display:block;
-			width:20px;
-			font-size:3px;
-			padding:0px;
+			font-size:5px;
 			margin:0px;
-		}
-		.tableout{
-			text-align:right;
-			font-family:sans-serif;
-			padding-right:0;
-			min-width:50px;
-			font-size:90%;
+			padding:0px;
+			text-align:center;
 		}
 	</style>
 	<div>
-		<table id="rin" style="table-layout:fixed;">
+		<table id="rin" style="min-width:350px;width:100%;" cellspacing=0>
 			<tr>
 				<td rowspan=1 style="padding:0;">
 					<input id="enabled" type="checkbox" checked="false"/>
 				</td>
-				<td style="vertical-align:middle;">
+				<td style="text-align:right;">
 					<input id="barcode" type="text" value="2N10" style="text-align:center;width:5em;font-weight:bold;color:darkblue;"/>
-					<div style="display:inline-block;padding:2px;height:100%;">
-						<button class="spinbut">&#9650;</button>
-						<button class="spinbut">&#9660;</button>
-					</div>
+					
 				</td>
-				<td>
+				<td style="text-align:left;">
+					<button class="spinbut" id="spinbutup">&#9650;</button>
+					<button class="spinbut" id="spinbutdown">&#9660;</button>
+				</td>
+				<td style="text-align:right;padding-left:1em;">
 					<input type="text" value="0" style="text-align:right;width:5em;"/>
 				</td>
 				<td style="text-align:left;padding-left:0;">
 					mm
 				</td>
-				<td style="text-align:right;padding-right:0;">
+				<td style="text-align:right;padding-right:0;padding-left:1em;">
 					from
 				</td>
 				<td>
@@ -58,75 +50,116 @@
 						<option value="bottom">bottom</option>
 					</select>
 				</td>
-				<td>
-					<button style="font-weight:bold;font-family:monospace;color:blue;">i</button>
-				</td>
 			</tr>
-			<tr>
-				<td></td>
-				<td colspan=5>
-		<table>
-			<tr>
-				<td>Area of steel:</td>
-				<td class="tableout">30000</td>
-				<td>mm&#178;</td>
-			</tr>
+		</table>
+	</div>
+</template>
+
+
+<body>
+	<style>
+		#rout td{
+			border-bottom:1px solid lightgrey;
+		}
+		.tableout{
+			color:darkblue;
+			text-align:right;
+			font-family:sans-serif;
+			padding-right:0;
+			min-width:50px;
+			font-size:90%;
+		}
+	</style>
+	<div style="width:70%;">
+		
+		
+		
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<table id="rout" style="width:100%;min-width:350px;" cellspacing=0>
 			<tr>
 				<td>Depth from top surface:</td>
 				<td class="tableout">1200</td>
 				<td>mm</td>
 			</tr>
 			<tr>
-				<td>Amount:</td>
+				<td>Crossectional area of steel:</td>
+				<td class="tableout">30000</td>
+				<td>mm&#178;</td>
+			</tr>
+			
+			<tr>
+				<td rowspan=3>Amount:</td>
 				<td class="tableout">10</td>
 				<td>m</td>
+			</tr>
+			<tr>
 				<td class="tableout">5</td>
 				<td>kg/m</td>
+			</tr>
+			<tr>
 				<td class="tableout">400</td>
 				<td>kg</td>
 			</tr>
-		</table>
-				</td>
+			<tr>
+				<td style="border-bottom:none;">Depth from top surface:</td>
+				<td style="border-bottom:none;"  class="tableout">1200</td>
+				<td style="border-bottom:none;" >mm</td>
 			</tr>
 		</table>
 	</div>
-	<script>
-//&#9658;
-//&#9660;
-var button = document.querySelector("#minbut");
-
-	</script>
-</template>
-
-
-<body>
-	<reo-input> </reo-input>
-	<hr>
-	<reo-input> </reo-input>
-	<hr>
-	<reo-input> </reo-input>
-	<hr>
-	<reo-input> </reo-input>
-	<script>
+	
+	
+	
+		<script>
 	ReoInputPrototype = Object.create(HTMLElement.prototype);
 	ReoInputPrototype.createdCallback = function(){
-	console.log(this)
-		this.webkitCreateShadowRoot();
-		var imported = document.importNode(
-			document.querySelector("template").content
-		);
-		this.webkitShadowRoot.appendChild(imported);
+		this.create = function(){
+			this.webkitCreateShadowRoot();
+			var imported = document.importNode(document.querySelector("template").content);
+			this.webkitShadowRoot.appendChild(imported);
+			this.doc = this.webkitShadowRoot;
+			
+			this.maindiv = this.doc.querySelector("div");
+			
+			this.selected = false;
+			this.addEventListener("mouseup",this.select);
+			this.addEventListener("keyup",this.select);
+		}.bind(this)
+		
+		
+		
+		Object.defineProperty(this,"enabled",{
+			get:function(){
+				return this.querySelector("#enabled").checked;
+			}.bind(this),
+			set:function(newval){
+				this.querySelector("#enabled").checked = newval;
+			}.bind(this),
+		});
+		this.select = function(){
+			this.selected = true;
+			var others = document.querySelectorAll("reo-input");
+			for(var i = 0; i<others.length;i++){
+				others[i].deselect();
+			}
+			console.log();
+			this.style.backgroundColor = "lightblue";
+		}.bind(this);
+		this.deselect = function(){
+			this.selected = false;
+			this.style.backgroundColor = "";
+		}.bind(this);
+		this.create();
 	};
+	
+	
+	
 	var ReoInput = document.registerElement("reo-input",{prototype:ReoInputPrototype});
 	
-	ri = document.querySelector("reo-input");
-	
-	var ris = ri.webkitShadowRoot
-	ris.querySelector("#barcode").addEventListener("change",function(e){
-		console.log(e);
-	});
-	
-	</script>
+		</script>
 </body>
 
 
