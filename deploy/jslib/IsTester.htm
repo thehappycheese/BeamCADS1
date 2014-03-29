@@ -1,0 +1,35 @@
+
+<body>
+	<style>
+	input:invalid{
+		color:red;
+		backgounr-color:lightyellow;
+	}
+	</style>
+	<div style="width:300px;">
+	Cover: <input type="number" min="25" max="300" step="5"/>mm
+	<div id="output" style="background-color:highlight;"><div>
+	</div>
+	<script>
+var inp = document.querySelector("input");
+var out = document.querySelector("#output");
+
+inp.addEventListener("input",validate);
+function validate(e){
+	var val = parseInt(inp.value);
+	var o = "";
+	if(Is(val).notnumeric() || val<25){
+		o+="<p>The minimum cover is 25mm depending on concrete strength and exposure classification.</p>"
+	}else{
+		if(val>=70){
+			o+="<p>This value of cover is much higher than the minimum according to AS3600. Unless there is a good reason this may be uneconomical.</p>"
+		}
+		if(val%5!==0){
+			o+="<p>Cover should be rounded to the nearest 5mm at least. Construction tollerances are sometimes only to the nearest centimeter.</p>";
+		}
+	}
+	out.innerHTML = o;
+}
+
+	</script>
+</body>
