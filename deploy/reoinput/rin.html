@@ -1,11 +1,6 @@
 <html>
 
 <head>
-	
-</head>
-
-
-<body>
 	<style>
 		#rout td{
 			border-bottom:1px solid lightgrey;
@@ -18,7 +13,18 @@
 			min-width:50px;
 			font-size:90%;
 		}
+		body{
+			display:flex;
+			
+		}
 	</style>
+</head>
+
+
+<body>
+	<div>
+		<x-input>Erased</x-input>
+	</div>
 	<div style="width:70%;">
 		<reo-input> </reo-input>
 		<reo-input> </reo-input>
@@ -58,9 +64,7 @@
 			</tr>
 		</table>
 	</div>
-	<template>
-	testing?
-	</template>
+</body>
 	<script>
 
 function loadWidget(url){
@@ -78,10 +82,9 @@ function loadWidget(url){
 	}
 	x.send();
 }
-loadWidget("ReoInput.htm")
+loadWidget("ReoInput.htm");
+loadWidget("XInput.htm");
 	</script>
-</body>
-
 
 
 

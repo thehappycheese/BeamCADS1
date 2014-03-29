@@ -1,0 +1,75 @@
+<template id="x-input-template">
+<style>
+	input{
+		width:100%;
+		text-align:right;
+		border:1px solid lightgrey;
+		padding: 2px;
+	}
+	input:invalid{
+		color:red;
+		background-color:lightyellow;
+		border-style:solid;
+		border-width:1px;
+	}
+	div{
+		max-width:200px;
+		display:block;
+		border:1px solid lightgrey;
+		padding: 0 2px;
+	}
+	#err{
+		
+		margin:3px;
+		color:darkred;
+		background-color:lightyellow;
+		//border: 1px solid red;
+		//border-radius: 0.5em;
+		
+	}
+	#unit{
+		width:4em;
+	}
+</style>
+	<div>
+		<table cellspacing="2px">
+			<tr>
+				<td id="nme" colspan=2>A very long and hard to fit varname</td>
+			</tr>
+			<tr>
+				
+				<td><input type="text" required/></td>
+				<td id="unit">mm</td>
+			<tr>
+			<tr  >
+				<td id="err" colspan=2>
+					<p>A long and convoluted error message to teach people things</p>
+					<p>Another longer and convoluted error message to teach people things</p>
+				</td>
+			</tr>
+		</table>
+	</div>
+</template>
+
+<script id="x-input-script">
+var XInputPrototype = Object.create(HTMLDivElement.prototype);
+XInputPrototype.createdCallback = function(){
+	this.create = function(){
+		var imported = document.importNode(
+			document.querySelector("#x-input-template").content
+		);
+		this.webkitCreateShadowRoot();
+		this.webkitShadowRoot.appendChild(imported);
+		
+		this.validationfunction = function(){};
+		console.log(this);
+		
+	}.bind(this);
+	
+	this.validate = function(){}.bind(this);
+	
+	this.create();
+}
+var XInput = document.registerElement("x-input",{prototype:XInputPrototype});
+
+</script>
