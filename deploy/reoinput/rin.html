@@ -1,0 +1,88 @@
+<html>
+
+<head>
+	
+</head>
+
+
+<body>
+	<style>
+		#rout td{
+			border-bottom:1px solid lightgrey;
+		}
+		.tableout{
+			color:darkblue;
+			text-align:right;
+			font-family:sans-serif;
+			padding-right:0;
+			min-width:50px;
+			font-size:90%;
+		}
+	</style>
+	<div style="width:70%;">
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<reo-input> </reo-input>
+		<table id="rout" style="width:100%;min-width:350px;max-width:500px;margin-top:1em;" cellspacing=0>
+			<tr>
+				<td>Depth from top surface:</td>
+				<td class="tableout">1200</td>
+				<td>mm</td>
+			</tr>
+			<tr>
+				<td>Crossectional area of steel:</td>
+				<td class="tableout">30000</td>
+				<td>mm&#178;</td>
+			</tr>
+			
+			<tr>
+				<td rowspan=3>Amount:</td>
+				<td class="tableout">10</td>
+				<td>m</td>
+			</tr>
+			<tr>
+				<td class="tableout">5</td>
+				<td>kg/m</td>
+			</tr>
+			<tr>
+				<td class="tableout">400</td>
+				<td>kg</td>
+			</tr>
+			<tr>
+				<td style="border-bottom:none;">Layer Tension Force:</td>
+				<td style="border-bottom:none;"  class="tableout">200</td>
+				<td style="border-bottom:none;" >kN</td>
+			</tr>
+		</table>
+	</div>
+	<template>
+	testing?
+	</template>
+	<script>
+
+function loadWidget(url){
+	var x = new XMLHttpRequest();
+	x.open("GET",url);
+	x.responseType = "document";
+	x.onload = function(e){
+		var doc = e.target.response;
+		var temp = document.adoptNode(doc.querySelector("template"));
+		document.body.appendChild(temp);
+		
+		var script = document.importNode(doc.querySelector("script"),true);
+		document.body.appendChild(script);
+		
+	}
+	x.send();
+}
+loadWidget("ReoInput.htm")
+	</script>
+</body>
+
+
+
+
+</html>
