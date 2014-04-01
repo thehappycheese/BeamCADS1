@@ -14,16 +14,32 @@
 			font-size:90%;
 		}
 		body{
-			display:flex;
 			
 		}
+		#invardiv{
+			display:flex;
+			flex-wrap:wrap;
+			justify-content:space-around;
+			flex: 3 0 260px;
+			padding:10px;
+		}
+		#varinfodi
 	</style>
 </head>
 
 
 <body>
-	<div>
-		<x-input>Erased</x-input>
+	<div style="display:flex;flex-wrap:wrap;">
+		<div id="invardiv">
+			<x-input varname=""						   notation="Cover" unit="mm" pattern="(1|12|3)"></x-input>
+			<x-input varname="" notation="d" unit="mm" pattern="(1|12|3)"></x-input>
+			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
+			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
+			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
+			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
+			
+		</div>
+		<div style="flex: 1 0 250px;padding:10px;"> ERROR: INFO: ABOUT:</div>
 	</div>
 	<div style="width:70%;">
 		<reo-input> </reo-input>

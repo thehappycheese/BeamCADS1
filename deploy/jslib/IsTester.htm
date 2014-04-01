@@ -18,7 +18,7 @@ inp.addEventListener("input",validate);
 function validate(e){
 	var val = parseInt(inp.value);
 	var o = "";
-	if(Is(val).notnumeric() || val<25){
+	if( val<25){
 		o+="<p>The minimum cover is 25mm depending on concrete strength and exposure classification.</p>"
 	}else{
 		if(val>=70){

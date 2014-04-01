@@ -1,48 +1,48 @@
 <template id="x-input-template">
-<style>
-	input{
-		width:100%;
-		text-align:right;
-		border:1px solid lightgrey;
-		padding: 2px;
-	}
-	input:invalid{
-		color:red;
-		background-color:lightyellow;
-		border-style:solid;
-		border-width:1px;
-	}
-	div{
-		max-width:200px;
-		display:block;
-		border:1px solid lightgrey;
-		padding: 0 2px;
-	}
-	#err{
-		
-		margin:3px;
-		color:darkred;
-		background-color:lightyellow;
-		//border: 1px solid red;
-		//border-radius: 0.5em;
-		
-	}
-	#unit{
-		width:4em;
-	}
-</style>
+	<style>
+		input{
+			width:100%;
+			text-align:right;
+			border:1px solid lightgrey;
+			padding: 2px;
+		}
+		input:invalid{
+			color:red;
+			background-color:lightyellow;
+			border-style:solid;
+			border-width:1px;
+		}
+		div{
+			width:250px;
+			display:block;
+			border:1px solid lightgrey;
+			padding: 0 2px;
+			margin:1px;
+		}
+		#error{
+			display:none;
+			margin:3px;
+			color:darkred;
+			background-color:lightyellow;
+			//border: 1px solid red;
+			//border-radius: 0.5em;			
+		}
+		#unit{
+			width:4em;
+		}
+	</style>
 	<div>
-		<table cellspacing="2px">
+		<table cellspacing="2px" style="width:100%;">
 			<tr>
-				<td id="nme" colspan=2>A very long and hard to fit varname</td>
+				<td id="name" colspan=3>A very long and hard to fit varname</td>
 			</tr>
 			<tr>
-				
+				<td id="notation"></td>
 				<td><input type="text" required/></td>
 				<td id="unit">mm</td>
 			<tr>
 			<tr  >
-				<td id="err" colspan=2>
+				<td id="error" colspan=3>
 					<p>A long and convoluted error message to teach people things</p>
 					<p>Another longer and convoluted error message to teach people things</p>
 				</td>
@@ -55,15 +55,43 @@
 var XInputPrototype = Object.create(HTMLDivElement.prototype);
 XInputPrototype.createdCallback = function(){
 	this.create = function(){
+		//import content from the template element
 		var imported = document.importNode(
 			document.querySelector("#x-input-template").content
 		);
 		this.webkitCreateShadowRoot();
 		this.webkitShadowRoot.appendChild(imported);
 		
+		// Add some event listeners and shit.
 		this.validationfunction = function(){};
-		console.log(this);
+		this.input = this.webkitShadowRoot.querySelector("input");
+		this.input.addEventListener("input",function(e){
+			this.dispatchEvent(new Event("input"));
+		}.bind(this));
 		
+		// Transfer the attributes of this element into the sub elements
+		for(var i=0; i<this.attributes.length;i++){
+			var att = this.attributes[i];
+			switch(att.name){
+				case "varname":
+					this.webkitShadowRoot.querySelector("#name").innerHTML = att.value;
+					break;
+				case "unit":
+					this.webkitShadowRoot.querySelector("#unit").innerHTML = att.value;
+					break;
+				case "notation":
+					this.webkitShadowRoot.querySelector("#notation").innerHTML = att.value;
+					break;
+				default:
+					this.input.setAttribute(att.name,att.value);
+			}
+		}
+		// temp populate with random length of error message
+		//var o = "";
+		//for(var i = Math.random()*250;i>=0;i--){
+		//	o += String.fromCharCode(Math.round(Math.random()*100+8));
+		//}
+		this.webkitShadowRoot.querySelector("#error").innerHTML = o;
 	}.bind(this);
 	
 	this.validate = function(){}.bind(this);
