@@ -2,6 +2,10 @@
 
 <head>
 	<style>
+		body{
+			margin:0;
+			padding:0;
+		}
 		#rout td{
 			border-bottom:1px solid lightgrey;
 		}
@@ -13,17 +17,46 @@
 			min-width:50px;
 			font-size:90%;
 		}
-		body{
-			
-		}
 		#invardiv{
 			display:flex;
 			flex-wrap:wrap;
 			justify-content:space-around;
 			flex: 3 0 260px;
-			padding:10px;
+			padding: 5px;
 		}
-		#varinfodi
+		#varinfodiv{
+			flex: 1 0 250px;
+			padding: 5px;
+			margin: 5px;
+			border: 1px solid lightgrey;
+		}
+		#reoinputoutputdiv{
+			border: 1px solid lightgrey;
+			padding:5px;
+			margin: 5px;
+			flex: 0 0 auto;
+		}
+		
+		#crosssectiondiv{
+			border: 1px solid lightgrey;
+			flex: 1 0 200px;
+			min-width:100px;
+			margin: 5px;
+			padding: 5px;
+		}
+		#elevationdiv{
+			border: 1px solid lightgrey;
+			flex: 2 0 250px;
+			min-width:250px;
+			margin: 5px;
+			padding: 5px;
+		}
+		
+		x-input{
+			flex: 1 1 150px;
+			min-width:100px;
+			max-width:250px;
+		}
 	</style>
 </head>
 
@@ -31,55 +64,82 @@
 <body>
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv">
-			<x-input varname=""						   notation="Cover" unit="mm" pattern="(1|12|3)"></x-input>
-			<x-input varname="" notation="d" unit="mm" pattern="(1|12|3)"></x-input>
-			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
-			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
-			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
-			<x-input varname="Cover" unit="mm" pattern="(1|12|3)"></x-input>
+			<!-- TODO: fix the pattern mathcing here-->
+			<x-input notation="L_n" 	unit="mm"	></x-input>
+			<x-input notation="b"	 	unit="mm"	></x-input>
+			<x-input notation="D"	 	unit="mm"	></x-input>
+			<x-input varname="Cover"	unit="mm"	pattern="[1-9][05]"></x-input>
+			<x-input varname="Exposure Classification"	unit="A/B/C/D"	pattern="[ABCD]"></x-input>
+			<div style="width:100%;"></div>
+			<x-input varname="Fitment Diameter"	unit="mm"	pattern="(10|12|20|32)"></x-input> 
+			<x-input varname="Concrete Density"	unit="kg/m^3"></x-input>
+			<x-input varname="Concrete characteristic strength" notation="f'c" 	unit="MPa"	pattern="[2-9][0-9]"></x-input>
+			<x-input varname="Steel Characteristic Yield Strength" notation="f_sy"	unit="kg/m^3"></x-input>
+			
+			
+			
+
 			
 		</div>
-		<div style="flex: 1 0 250px;padding:10px;"> ERROR: INFO: ABOUT:</div>
+		<div id="varinfodiv">
+			ERROR: INFO: ABOUT:
+		</div>
 	</div>
-	<div style="width:70%;">
-		<reo-input> </reo-input>
-		<reo-input> </reo-input>
-		<reo-input> </reo-input>
-		<reo-input> </reo-input>
-		<reo-input> </reo-input>
-		<reo-input> </reo-input>
-		<table id="rout" style="width:100%;min-width:350px;max-width:500px;margin-top:1em;" cellspacing=0>
-			<tr>
-				<td>Depth from top surface:</td>
-				<td class="tableout">1200</td>
-				<td>mm</td>
-			</tr>
-			<tr>
-				<td>Crossectional area of steel:</td>
-				<td class="tableout">30000</td>
-				<td>mm&#178;</td>
-			</tr>
-			
-			<tr>
-				<td rowspan=3>Amount:</td>
-				<td class="tableout">10</td>
-				<td>m</td>
-			</tr>
-			<tr>
-				<td class="tableout">5</td>
-				<td>kg/m</td>
-			</tr>
-			<tr>
-				<td class="tableout">400</td>
-				<td>kg</td>
-			</tr>
-			<tr>
-				<td style="border-bottom:none;">Layer Tension Force:</td>
-				<td style="border-bottom:none;"  class="tableout">200</td>
-				<td style="border-bottom:none;" >kN</td>
-			</tr>
-		</table>
+	<div style="display:flex;flex-wrap:wrap;justify-content:centre;">
+		<div id="reoinputoutputdiv">
+			<!--<div id="reocontroldiv"></div>-->
+			<div id="reoinputdiv">
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+			</div>
+			<div id="reooutputdiv">
+				<table id="rout" style="width:100%" cellspacing=0>
+					<tr>
+						<td>Depth from top surface:</td>
+						<td class="tableout">1200</td>
+						<td>mm</td>
+					</tr>
+					<tr>
+						<td>Crossectional area of steel:</td>
+						<td class="tableout">30000</td>
+						<td>mm&#178;</td>
+					</tr>
+					
+					<tr>
+						<td rowspan=3>Amount:</td>
+						<td class="tableout">10</td>
+						<td>m</td>
+					</tr>
+					<tr>
+						<td class="tableout">5</td>
+						<td>kg/m</td>
+					</tr>
+					<tr>
+						<td class="tableout">400</td>
+						<td>kg</td>
+					</tr>
+					<tr>
+						<td style="border-bottom:none;">Layer Tension Force:</td>
+						<td style="border-bottom:none;"  class="tableout">200</td>
+						<td style="border-bottom:none;" >kN</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		
+		<div id="crosssectiondiv">
+			CROSSECTION
+		</div>
+		<div id="elevationdiv">
+			ELEVATION
+		</div>
 	</div>
+	<div><hr>Calculation Div<hr></div>
 </body>
 	<script>
 

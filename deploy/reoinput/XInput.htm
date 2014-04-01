@@ -2,6 +2,7 @@
 	<style>
 		input{
 			width:100%;
+			min-width:5em;
 			text-align:right;
 			border:1px solid lightgrey;
 			padding: 2px;
@@ -13,8 +14,6 @@
 			border-width:1px;
 		}
 		div{
-			width:250px;
-			display:block;
 			border:1px solid lightgrey;
 			padding: 0 2px;
 			margin:1px;
@@ -30,18 +29,22 @@
 		#unit{
 			width:4em;
 		}
+		table{
+			border-spacing:0px;
+			width:100%;
+		}
 	</style>
 	<div>
-		<table cellspacing="2px" style="width:100%;">
+		<table>
 			<tr>
-				<td id="name" colspan=3>A very long and hard to fit varname</td>
+				<td id="name" colspan=3></td>
 			</tr>
 			<tr>
 				<td id="notation"></td>
-				<td><input type="text" required/></td>
+				<td style="padding-left:0.3em;"><input type="text" required/></td>
 				<td id="unit">mm</td>
+			</tr>
 			<tr>
-			<tr  >
 				<td id="error" colspan=3>
 					<p>A long and convoluted error message to teach people things</p>
 					<p>Another longer and convoluted error message to teach people things</p>
@@ -50,6 +53,10 @@
 		</table>
 	</div>
 </template>
+
+
+
+
 
 <script id="x-input-script">
 var XInputPrototype = Object.create(HTMLDivElement.prototype);
@@ -63,10 +70,11 @@ XInputPrototype.createdCallback = function(){
 		this.webkitShadowRoot.appendChild(imported);
 		
 		// Add some event listeners and shit.
-		this.validationfunction = function(){};
 		this.input = this.webkitShadowRoot.querySelector("input");
 		this.input.addEventListener("input",function(e){
-			this.dispatchEvent(new Event("input"));
+			var evt = new Event("input")
+			evt.target = this;
+			this.dispatchEvent(evt);
 		}.bind(this));
 		
 		// Transfer the attributes of this element into the sub elements
@@ -82,19 +90,30 @@ XInputPrototype.createdCallback = function(){
 				case "notation":
 					this.webkitShadowRoot.querySelector("#notation").innerHTML = att.value;
 					break;
-				default:
+				case "pattern":
 					this.input.setAttribute(att.name,att.value);
+					break;
+				default:
+					// Invalid attribute error?
 			}
 		}
-		// temp populate with random length of error message
-		//var o = "";
-		//for(var i = Math.random()*250;i>=0;i--){
-		//	o += String.fromCharCode(Math.round(Math.random()*100+8));
-		//}
-		this.webkitShadowRoot.querySelector("#error").innerHTML = o;
 	}.bind(this);
 	
-	this.validate = function(){}.bind(this);
+	
+	// DEFINE VALUE PROPERTY GETTER SETTER
+	Object.defineProperty(this,"value",{
+		get:function(){
+			return this.input.value;
+		}.bind(this),
+		set:function(newval){
+			this.input.value = newval;
+		}.bind(this)
+	});
+	
+	this.validate = function(){
+	}.bind(this);
+	this.getValidityMessages = function(){
+	}.bind(this);
 	
 	this.create();
 }
