@@ -35,14 +35,11 @@
 		}
 		
 		#crosssectiondiv{
-			flex: 1 0 250px;
+			flex: 3 0 250px;
 		}
 		#elevationdiv{
-			border: 1px solid lightgrey;
-			flex: 2 0 250px;
-			min-width:250px;
-			margin: 5px;
-			padding: 5px;
+			flex: 1 0 400px;
+			min-width:400px;
 		}
 		
 		x-input{
@@ -108,6 +105,7 @@
 		</div>
 		<div id="varinfodiv" class="bmpblock">
 			<h1>Variable Info</h1>
+			<iframe src="infos/fc.htm" width="100%" style="border:none;"></iframe>
 		</div>
 	</div>
 	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
@@ -161,13 +159,13 @@
 		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
 			<h1 style="display:block;width:100%">Cross Section</h1>
 			<div style="width:100%;">
-				<canvas width=300 height=300 id="crosssectioncanvas" style="background-color:black;"></canvas>
+				<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
 			</div>
 		</div>
 		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
 			<h1 style="display:block;width:100%">Elevation</h1>
 			<div style="width:100%;">
-				<canvas height="150" width="500" id="elevationcanvas" style="background-color:black;"></canvas>
+				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
 			</div>
 		</div>
 	</div>
@@ -176,20 +174,20 @@
 	</div>
 </body>
 	<script>
-document.querySelector("#crosssectiondiv").addEventListener("resize",handleResize);
-document.querySelector("#elevationdiv").addEventListener("resize",handleResize);
+window.addEventListener("resize",handleResize);
+setTimeout(handleResize,1500);
 function handleResize(e){
-console.log("d");
+	console.log("d");
 	var c=document.querySelector("#crosssectioncanvas");
 	
 	var st=window.getComputedStyle(c.parentElement);
-	c.width = parseInt(st.width)-22;
+	c.width = parseInt(st.width);
 	c.height = 300;
 	
 	var c=document.querySelector("#elevationcanvas");
 	
 	var st=window.getComputedStyle(c.parentElement);
-	c.width = parseInt(st.width)-22;
+	c.width = parseInt(st.width);
 	c.height = 150;
 }
 
