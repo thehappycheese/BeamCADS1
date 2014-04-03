@@ -21,7 +21,8 @@
 			display:flex;
 			flex-wrap:wrap;
 			justify-content:space-around;
-			flex: 3 0 260px;
+			
+			flex: 3 0 280px;
 			padding: 5px;
 		}
 		#varinfodiv{
@@ -35,6 +36,7 @@
 			padding:5px;
 			margin: 5px;
 			flex: 0 0 auto;
+			
 		}
 		
 		#crosssectiondiv{
@@ -53,9 +55,7 @@
 		}
 		
 		x-input{
-			flex: 1 1 150px;
-			min-width:100px;
-			max-width:250px;
+			width:260px;
 		}
 	</style>
 </head>
@@ -68,9 +68,9 @@
 			<x-input notation="L_n" 	unit="mm"	></x-input>
 			<x-input notation="b"	 	unit="mm"	></x-input>
 			<x-input notation="D"	 	unit="mm"	></x-input>
-			<x-input varname="Cover"	unit="mm"	pattern="[1-9][05]"></x-input>
+			<x-input notation="Cover"	unit="mm"	pattern="[1-9][05]"></x-input>
 			<x-input varname="Exposure Classification"	unit="A/B/C/D"	pattern="[ABCD]"></x-input>
-			<div style="width:100%;"></div>
+			
 			<x-input varname="Fitment Diameter"	unit="mm"	pattern="(10|12|20|32)"></x-input> 
 			<x-input varname="Concrete Density"	unit="kg/m^3"></x-input>
 			<x-input varname="Concrete characteristic strength" notation="f'c" 	unit="MPa"	pattern="[2-9][0-9]"></x-input>
@@ -85,7 +85,7 @@
 			ERROR: INFO: ABOUT:
 		</div>
 	</div>
-	<div style="display:flex;flex-wrap:wrap;justify-content:centre;">
+	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
 		<div id="reoinputoutputdiv">
 			<!--<div id="reocontroldiv"></div>-->
 			<div id="reoinputdiv">

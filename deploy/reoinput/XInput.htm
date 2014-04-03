@@ -1,7 +1,7 @@
 <template id="x-input-template">
 	<style>
 		input{
-			width:100%;
+			width:8em;
 			min-width:5em;
 			text-align:right;
 			border:1px solid lightgrey;
@@ -33,6 +33,9 @@
 			border-spacing:0px;
 			width:100%;
 		}
+		div:hover{
+			background-color:#E6E6FF;
+		}
 	</style>
 	<div>
 		<table>
@@ -41,7 +44,7 @@
 			</tr>
 			<tr>
 				<td id="notation"></td>
-				<td style="padding-left:0.3em;"><input type="text" required/></td>
+				<td style="padding-left:0.3em;text-align:right;"><input type="text" required/></td>
 				<td id="unit">mm</td>
 			</tr>
 			<tr>
