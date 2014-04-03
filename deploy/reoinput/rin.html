@@ -90,16 +90,16 @@
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv">
 			<!-- TODO: fix the pattern mathcing here-->
-			<x-input notation="L_n" 	unit="mm"	></x-input>
-			<x-input notation="b"	 	unit="mm"	></x-input>
-			<x-input notation="D"	 	unit="mm"	></x-input>
-			<x-input notation="Cover"	unit="mm"	pattern="[1-9][05]"></x-input>
-			<x-input varname="Exposure Classification"	unit="A/B/C/D"	pattern="[ABCD]"></x-input>
+			<x-input notation ="L_n" 	unit="mm"	    ></x-input>
+			<x-input notation ="b"	 	unit="mm"	    ></x-input>
+			<x-input notation ="D"	 	unit="mm"	    ></x-input>
+			<x-input notation ="Cover"	unit="mm"	    ></x-input>
+			<x-input varname  ="Exposure Classification"></x-input>
 			
-			<x-input varname="Fitment Diameter"	unit="mm"	pattern="(10|12|20|32)"></x-input> 
-			<x-input varname="Concrete Density"	unit="kg/m^3"></x-input>
-			<x-input varname="Concrete characteristic strength" notation="f'c" 	unit="MPa"	pattern="[2-9][0-9]"></x-input>
-			<x-input varname="Steel Characteristic Yield Strength" notation="f_sy"	unit="kg/m^3"></x-input>
+			<x-input varname ="Fitment Diameter"										unit="mm"    ></x-input> 
+			<x-input varname ="Concrete Density"										unit="kg/m^3"></x-input>
+			<x-input varname ="Concrete Characteristic Strength"		notation="f'c" 	unit="MPa"   ></x-input>
+			<x-input varname ="Steel Characteristic Yield Strength"		notation="f_sy"	unit="kg/m^3"></x-input>
 			
 			
 			
@@ -158,12 +158,17 @@
 		</div>
 		
 		
-		<div id="crosssectiondiv" class="bmpblock">
-			<h1>Cross Section</h1>
-			<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
+		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
+			<h1 style="display:block;width:100%">Cross Section</h1>
+			<div style="width:100%;">
+				<canvas width=300 height=300 id="crosssectioncanvas" style="background-color:black;"></canvas>
+			</div>
 		</div>
-		<div id="elevationdiv" class="bmpblock">
-			<h1>Elevation</h1>
+		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
+			<h1 style="display:block;width:100%">Elevation</h1>
+			<div style="width:100%;">
+				<canvas height="150" width="500" id="elevationcanvas" style="background-color:black;"></canvas>
+			</div>
 		</div>
 	</div>
 	<div class="bmpblock">
@@ -171,13 +176,22 @@
 	</div>
 </body>
 	<script>
-window.addEventListner("resize",function(){
-	var c=document.querySelector("#crosssectioncanvas").addEventListner("");
+document.querySelector("#crosssectiondiv").addEventListener("resize",handleResize);
+document.querySelector("#elevationdiv").addEventListener("resize",handleResize);
+function handleResize(e){
+console.log("d");
+	var c=document.querySelector("#crosssectioncanvas");
 	
 	var st=window.getComputedStyle(c.parentElement);
-	c.width = parseInt(st.width);
-	c.height = c.width;
-})
+	c.width = parseInt(st.width)-22;
+	c.height = 300;
+	
+	var c=document.querySelector("#elevationcanvas");
+	
+	var st=window.getComputedStyle(c.parentElement);
+	c.width = parseInt(st.width)-22;
+	c.height = 150;
+}
 
 function loadWidget(url){
 	var x = new XMLHttpRequest();

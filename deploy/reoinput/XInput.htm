@@ -80,29 +80,17 @@ XInputPrototype.createdCallback = function(){
 			this.dispatchEvent(evt);
 		}.bind(this));
 		
-		// Transfer the attributes of this element into the sub elements
-		for(var i=0; i<this.attributes.length;i++){
-			var att = this.attributes[i];
-			switch(att.name){
-				case "varname":
-					this.webkitShadowRoot.querySelector("#name").innerHTML = att.value;
-					break;
-				case "unit":
-					this.webkitShadowRoot.querySelector("#unit").innerHTML = att.value;
-					break;
-				case "notation":
-					this.webkitShadowRoot.querySelector("#notation").innerHTML = att.value;
-					break;
-				case "pattern":
-					this.input.setAttribute(att.name,att.value);
-					break;
-				default:
-					// Invalid attribute error?
-			}
-		}
+		this.isvalid = function(thisval){return true;};
+		
+		this.getAttributes();
 	}.bind(this);
 	
-	
+	this.getAttributes = function(){
+		for(var i=0; i<this.attributes.length;i++){
+			var att = this.attributes[i];
+			this[att.name] = att.value;
+		}
+	}.bind(this);
 	// DEFINE VALUE PROPERTY GETTER SETTER
 	Object.defineProperty(this,"value",{
 		get:function(){
@@ -113,10 +101,35 @@ XInputPrototype.createdCallback = function(){
 		}.bind(this)
 	});
 	
-	this.validate = function(){
-	}.bind(this);
-	this.getValidityMessages = function(){
-	}.bind(this);
+	
+	
+	Object.defineProperty(this,"valid",{
+		get:function(){
+			this.isvalid(this.value);
+		}
+	});
+	
+	
+	
+	Object.defineProperty(this,"varname",{
+		get:function(){
+			return this.webkitShadowRoot.querySelector("#name").innerHTML;
+		},
+		set:function(newval){
+			this.webkitShadowRoot.querySelector("#name").innerHTML = newval;
+		}
+	});
+	
+	
+	
+	Object.defineProperty(this,"notation",{
+		get:function(){
+			return this.webkitShadowRoot.querySelector("#notation").innerHTML;
+		},
+		set:function(newval){
+			this.webkitShadowRoot.querySelector("#notation").innerHTML = newval;
+		}
+	});
 	
 	this.create();
 }
