@@ -5,6 +5,7 @@
 		body{
 			margin:0;
 			padding:0;
+			min-width:550px;
 		}
 		#rout td{
 			border-bottom:1px solid lightgrey;
@@ -22,29 +23,19 @@
 			flex-wrap:wrap;
 			justify-content:space-around;
 			
-			flex: 3 0 280px;
+			flex: 3 0 270px;
 			padding: 5px;
+			min-width:530px;
 		}
 		#varinfodiv{
 			flex: 1 0 250px;
-			padding: 5px;
-			margin: 5px;
-			border: 1px solid lightgrey;
 		}
 		#reoinputoutputdiv{
-			border: 1px solid lightgrey;
-			padding:5px;
-			margin: 5px;
 			flex: 0 0 auto;
-			
 		}
 		
 		#crosssectiondiv{
-			border: 1px solid lightgrey;
-			flex: 1 0 200px;
-			min-width:100px;
-			margin: 5px;
-			padding: 5px;
+			flex: 1 0 250px;
 		}
 		#elevationdiv{
 			border: 1px solid lightgrey;
@@ -56,12 +47,46 @@
 		
 		x-input{
 			width:260px;
+			border-bottom:1px solid lightgrey;
+			padding: 0 2px;
+			margin:1px;
+		}
+		
+		.bmpblock{
+			border: 1px solid lightgrey;
+			border-radius:3px;
+			margin: 5px;
+			padding: 5px;
+		}
+		#apptitlebox{
+			text-align:center;
+			font-family:sans-serif;
+			font-weight:bold;
+			font-size:1.2em;
+			letter-spacing:2px;
+			color:darkblue;
+		}
+		
+		h1{
+			font-family:sans-serif;
+			font-size:1em;
+			font-weight:bold;
+			margin: 0 0 0.2em 0.5em;
+		}
+		h2{
+			font-family:sans-serif;
+			font-size:0.9em;
+			font-weight:bold;
+			margin: 0.3em 0 0.2em 1em;
 		}
 	</style>
 </head>
 
 
 <body>
+	<div id="apptitlebox" class="bmpblock">
+		BEAMCAD v0.2
+	</div>
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv">
 			<!-- TODO: fix the pattern mathcing here-->
@@ -81,12 +106,12 @@
 
 			
 		</div>
-		<div id="varinfodiv">
-			ERROR: INFO: ABOUT:
+		<div id="varinfodiv" class="bmpblock">
+			<h1>Variable Info</h1>
 		</div>
 	</div>
 	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
-		<div id="reoinputoutputdiv">
+		<div id="reoinputoutputdiv" class="bmpblock">
 			<!--<div id="reocontroldiv"></div>-->
 			<div id="reoinputdiv">
 				<reo-input> </reo-input>
@@ -97,6 +122,7 @@
 				<reo-input> </reo-input>
 			</div>
 			<div id="reooutputdiv">
+				<h2>Layer Info</h2>
 				<table id="rout" style="width:100%" cellspacing=0>
 					<tr>
 						<td>Depth from top surface:</td>
@@ -132,16 +158,26 @@
 		</div>
 		
 		
-		<div id="crosssectiondiv">
-			CROSSECTION
+		<div id="crosssectiondiv" class="bmpblock">
+			<h1>Cross Section</h1>
+			<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
 		</div>
-		<div id="elevationdiv">
-			ELEVATION
+		<div id="elevationdiv" class="bmpblock">
+			<h1>Elevation</h1>
 		</div>
 	</div>
-	<div><hr>Calculation Div<hr></div>
+	<div class="bmpblock">
+		<h1>Calculation Div</h1>
+	</div>
 </body>
 	<script>
+window.addEventListner("resize",function(){
+	var c=document.querySelector("#crosssectioncanvas").addEventListner("");
+	
+	var st=window.getComputedStyle(c.parentElement);
+	c.width = parseInt(st.width);
+	c.height = c.width;
+})
 
 function loadWidget(url){
 	var x = new XMLHttpRequest();
