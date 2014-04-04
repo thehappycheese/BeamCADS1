@@ -1,0 +1,12 @@
+h1{
+	font-size:1.2em;
+	font-family:sans-serif;
+	color:darkblue;
+	margin: 0;
+	margin-left:1em;
+	margin-bottom:1em;
+}
+td{
+	padding: 0.4em 0;
+	border-bottom:1px solid lightgrey;
+}

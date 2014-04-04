@@ -30,12 +30,16 @@
 		#varinfodiv{
 			flex: 1 0 250px;
 		}
+		#varinfodiv td{
+			padding:0;
+		}
 		#reoinputoutputdiv{
 			flex: 0 0 auto;
 		}
 		
 		#crosssectiondiv{
 			flex: 3 0 250px;
+			max-width:500px;
 		}
 		#elevationdiv{
 			flex: 1 0 400px;
@@ -62,6 +66,16 @@
 			font-size:1.2em;
 			letter-spacing:2px;
 			color:darkblue;
+		}
+		#errortd{
+			border:1px darkred solid;
+			background-color:lightyellow;
+			padding:5px;
+		}
+		#errortd p{
+			margin: 0.5em 0;
+			font-size:1em;
+			line-height:1em;
 		}
 		
 		h1{
@@ -98,14 +112,18 @@
 			<x-input varname ="Concrete Characteristic Strength"		notation="f'c" 	unit="MPa"   ></x-input>
 			<x-input varname ="Steel Characteristic Yield Strength"		notation="f_sy"	unit="kg/m^3"></x-input>
 			
-			
-			
-
-			
 		</div>
-		<div id="varinfodiv" class="bmpblock">
-			<h1>Variable Info</h1>
-			<iframe src="infos/fc.htm" width="100%" style="border:none;"></iframe>
+		<div id="varinfodiv" class="bmpblock" >
+			<table style="width:100%;height:300px;padding:0;" cellspacing="5px">
+				<tr id="errortr" style="height:8em;display:none" >
+					<td id="errortd" style="padding:5px;">Error:</td>
+				</tr>
+				<tr>
+					<td>
+						<iframe id="varinfoiframe" src="infos/fc.htm" style="border:none;width:100%;height:100%;"></iframe>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
@@ -177,7 +195,6 @@
 window.addEventListener("resize",handleResize);
 setTimeout(handleResize,1500);
 function handleResize(e){
-	console.log("d");
 	var c=document.querySelector("#crosssectioncanvas");
 	
 	var st=window.getComputedStyle(c.parentElement);
@@ -189,6 +206,18 @@ function handleResize(e){
 	var st=window.getComputedStyle(c.parentElement);
 	c.width = parseInt(st.width);
 	c.height = 150;
+}
+function setErrorList(list){
+	if(list===undefined || list.length==0){
+		document.querySelector("#errortr").style.display="none";
+	}else{
+		document.querySelector("#errortr").style.display="";
+		var out = '<h1 style="color:darkred;">Error</h1>'
+		for(var i = 0;i<list.length;i++){
+			out+="<p>"+list[i]+"</p>";
+		}
+		document.querySelector("#errortd").innerHTML = out;
+	}
 }
 
 function loadWidget(url){
