@@ -1,4 +1,4 @@
-<html>
+	<html>
 
 <head>
 	<link rel="stylesheet" href="index.css" type="text/css"/>
@@ -25,7 +25,7 @@
 			
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
-			<table style="width:100%;height:300px;padding:0;" cellspacing="5px">
+			<table style="width:100%;height:300px;padding:0;">
 				<tr id="errortr" style="height:8em;display:none" >
 					<td id="errortd" style="padding:5px;">Error:</td>
 				</tr>
@@ -48,7 +48,7 @@
 				<reo-input> </reo-input>
 				<reo-input> </reo-input>
 			</div>
-			
+			<div style="width:100%;"></div>
 			<div id="reooutputdiv">
 				<reo-output></reo-output>
 			</div>
@@ -57,7 +57,7 @@
 		
 		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
 			<h1 style="display:block;width:100%">Cross Section</h1>
-			<div style="width:100%;">
+			<div style="width:100%;display:flex;justify-content:space-around;">
 				<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
 			</div>
 		</div>
@@ -82,38 +82,49 @@
 
 
 
-	<script>
-window.addEventListener("resize",handleResize);
-setTimeout(handleResize,1500);
-function handleResize(e){
-	var c=document.querySelector("#crosssectioncanvas");
-	
-	var st=window.getComputedStyle(c.parentElement);
-	c.width = parseInt(st.width);
-	c.height = 300;
-	
-	var c=document.querySelector("#elevationcanvas");
-	
-	var st=window.getComputedStyle(c.parentElement);
-	c.width = parseInt(st.width);
-	c.height = 150;
-}
-function setErrorList(list){
-	if(list===undefined || list.length==0){
-		document.querySelector("#errortr").style.display="none";
-	}else{
-		document.querySelector("#errortr").style.display="";
-		var out = '<h1 style="color:darkred;">Error</h1>'
-		for(var i = 0;i<list.length;i++){
-			out+="<p>"+list[i]+"</p>";
-		}
-		document.querySelector("#errortd").innerHTML = out;
+<script>
+
+	//###########################################################################################
+	//###### Canvas resize events ###############################################################
+	//###########################################################################################
+	window.addEventListener("resize",handleResize);
+	setTimeout(handleResize,1500);
+	function handleResize(e){
+		var c=document.querySelector("#crosssectioncanvas");
+		
+		var st=window.getComputedStyle(c.parentElement);
+		c.width = Math.min(500,parseInt(st.width));
+		c.height = 300;
+		
+		var c=document.querySelector("#elevationcanvas");
+		
+		var st=window.getComputedStyle(c.parentElement);
+		c.width = parseInt(st.width);
+		c.height = 150;
 	}
-}
 
 
-	</script>
+
+
+	//###########################################################################################
+	//###### Reo input/output helpers ###########################################################
+	//###########################################################################################
+	function setErrorList(list){
+		if(list===undefined || list.length==0){
+			document.querySelector("#errortr").style.display="none";
+		}else{
+			document.querySelector("#errortr").style.display="";
+			var out = '<h1 style="color:darkred;">Error</h1>'
+			for(var i = 0;i<list.length;i++){
+				out+="<p>"+list[i]+"</p>";
+			}
+			document.querySelector("#errortd").innerHTML = out;
+		}
+	}
+
+
+</script>
 <script data-root="" data-main="cc_v03/main.js" src="../jslib/nickRequire.js"></script>
 
 
-</html>
+	</html>
