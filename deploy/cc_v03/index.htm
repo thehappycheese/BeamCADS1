@@ -1,0 +1,119 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="index.css" type="text/css"/>
+</head>
+
+
+<body>
+	<div id="apptitlebox" class="bmpblock">
+		BEAMCAD v0.2
+	</div>
+	<div style="display:flex;flex-wrap:wrap;">
+		<div id="invardiv" class="bmpblock">
+			<!-- TODO: fix the pattern mathcing here-->
+			<x-input notation ="L_n" 	unit="mm"	    ></x-input>
+			<x-input notation ="b"	 	unit="mm"	    ></x-input>
+			<x-input notation ="D"	 	unit="mm"	    ></x-input>
+			<x-input notation ="Cover"	unit="mm"	    ></x-input>
+			<x-input notation ="EClass"></x-input>
+			
+			<x-input notation="d_f"				unit="mm"    ></x-input> 
+			<x-input notation="rho_c"			unit="kg/m^3"></x-input>
+			<x-input notation="f'c" 			unit="MPa"   ></x-input>
+			<x-input notation="f_sy"			unit="kg/m^3"></x-input>
+			
+		</div>
+		<div id="varinfodiv" class="bmpblock" >
+			<table style="width:100%;height:300px;padding:0;" cellspacing="5px">
+				<tr id="errortr" style="height:8em;display:none" >
+					<td id="errortd" style="padding:5px;">Error:</td>
+				</tr>
+				<tr>
+					<td>
+						<iframe id="varinfoiframe" src="infos/fc.htm" style="border:none;width:100%;height:100%;"></iframe>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
+		<div id="reoinputoutputdiv" class="bmpblock">
+			<!--<div id="reocontroldiv"></div>-->
+			<div id="reoinputdiv">
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+				<reo-input> </reo-input>
+			</div>
+			
+			<div id="reooutputdiv">
+				<reo-output></reo-output>
+			</div>
+		</div>
+		
+		
+		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
+			<h1 style="display:block;width:100%">Cross Section</h1>
+			<div style="width:100%;">
+				<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
+			</div>
+		</div>
+		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
+			<h1 style="display:block;width:100%">Elevation</h1>
+			<div style="width:100%;">
+				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
+			</div>
+		</div>
+	</div>
+	<div style="min-height:300px;" class="bmpblock">
+		<h1>Calculation Div</h1>
+	</div>
+</body>
+
+
+
+
+
+
+
+
+
+
+	<script>
+window.addEventListener("resize",handleResize);
+setTimeout(handleResize,1500);
+function handleResize(e){
+	var c=document.querySelector("#crosssectioncanvas");
+	
+	var st=window.getComputedStyle(c.parentElement);
+	c.width = parseInt(st.width);
+	c.height = 300;
+	
+	var c=document.querySelector("#elevationcanvas");
+	
+	var st=window.getComputedStyle(c.parentElement);
+	c.width = parseInt(st.width);
+	c.height = 150;
+}
+function setErrorList(list){
+	if(list===undefined || list.length==0){
+		document.querySelector("#errortr").style.display="none";
+	}else{
+		document.querySelector("#errortr").style.display="";
+		var out = '<h1 style="color:darkred;">Error</h1>'
+		for(var i = 0;i<list.length;i++){
+			out+="<p>"+list[i]+"</p>";
+		}
+		document.querySelector("#errortd").innerHTML = out;
+	}
+}
+
+
+	</script>
+<script data-root="" data-main="cc_v03/main.js" src="../jslib/nickRequire.js"></script>
+
+
+</html>

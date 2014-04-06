@@ -1,0 +1,70 @@
+<template id="ReoOutputWidgetTemplate">
+	<style>
+		#rout td{
+			border-bottom:1px solid lightgrey;
+		}
+		.tableout{
+			color:darkblue;
+			text-align:right;
+			font-family:sans-serif;
+			padding-right:0;
+			min-width:50px;
+			font-size:90%;
+		}
+	</style>
+	<div style="min-width:315px;max-width:500px;">
+		<table id="rout" style="width:100%" cellspacing=0>
+			<tr>
+				<td>Depth from top surface:</td>
+				<td class="tableout">1200</td>
+				<td>mm</td>
+			</tr>
+			<tr>
+				<td>Crossectional area of steel:</td>
+				<td class="tableout">30000</td>
+				<td>mm&#178;</td>
+			</tr>
+			
+			<tr>
+				<td rowspan=3>Amount:</td>
+				<td class="tableout">10</td>
+				<td>m</td>
+			</tr>
+			<tr>
+				<td class="tableout">5</td>
+				<td>kg/m</td>
+			</tr>
+			<tr>
+				<td class="tableout">400</td>
+				<td>kg</td>
+			</tr>
+			<tr>
+				<td style="border-bottom:none;">Layer Tension Force:</td>
+				<td style="border-bottom:none;"  class="tableout">200</td>
+				<td style="border-bottom:none;" >kN</td>
+			</tr>
+		</table>
+	</div>
+</template>
+<script id="ReoOutputWidgetScript">
+	ReoOutputPrototype = Object.create(HTMLDivElement.prototype);
+	ReoOutputPrototype.createdCallback = function(){
+		this.create = function(){
+			// --------
+			// CONSTRUCT
+			this.webkitCreateShadowRoot();
+			var imported = document.importNode(document.querySelector("#ReoOutputWidgetTemplate").content, true);
+			this.webkitShadowRoot.appendChild(imported);
+			this.doc = this.webkitShadowRoot;
+			
+			
+		}.bind(this)
+		
+		
+		this.create();
+	};
+	
+	
+	
+	var ReoInput = document.registerElement("reo-output",{prototype:ReoOutputPrototype});
+</script>
