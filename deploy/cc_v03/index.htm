@@ -25,7 +25,7 @@
 			
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
-			<table style="width:100%;height:300px;padding:0;">
+			<table style="width:100%;height:350px;padding:0;">
 				<tr id="errortr" style="height:8em;display:none" >
 					<td id="errortd" style="padding:5px;">Error:</td>
 				</tr>
@@ -83,6 +83,32 @@
 
 
 <script>
+
+	function ReoController(host){
+		this.create = function(){
+			this.host = host;
+			this.elems = [];
+			
+			
+			
+		}.bind(this);
+		this.addRowAt = function(){
+			var new_elem = document.createElement("reo-input");
+			this.elems.push()
+			this.render();
+		}.bind(this);
+		
+		
+		this.render = function(){
+			this.host.innerHTML = "";
+			for(var i =0;i++;i<this.elems.length;i++){
+				this.host.appendChild(this.elems[i]);
+			}
+		}.bind(this);
+		
+		this.create();
+	}
+	var rcon = new ReoController();
 
 	//###########################################################################################
 	//###### Canvas resize events ###############################################################
