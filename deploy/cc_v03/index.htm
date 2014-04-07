@@ -41,12 +41,7 @@
 		<div id="reoinputoutputdiv" class="bmpblock">
 			<!--<div id="reocontroldiv"></div>-->
 			<div id="reoinputdiv">
-				<reo-input> </reo-input>
-				<reo-input> </reo-input>
-				<reo-input> </reo-input>
-				<reo-input> </reo-input>
-				<reo-input> </reo-input>
-				<reo-input fixed> </reo-input>
+				<reo-manager></reo-manager>
 			</div>
 			<div style="width:100%;"></div>
 			<div id="reooutputdiv">
@@ -84,22 +79,9 @@
 
 <script>
 
-	function ReoController(host){
-		this.host = host;
-		
-		
-		this.create = function(){
 
-			
-
-		}.bind(this);
-
-		
-		this.create();
-	}
 	
 	
-	var rcon = new ReoController(document.querySelector("#reoinputdiv"));
 
 	//###########################################################################################
 	//###### Canvas resize events ###############################################################
