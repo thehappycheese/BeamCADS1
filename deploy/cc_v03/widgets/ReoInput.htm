@@ -21,6 +21,14 @@
 			color:red;
 			background-color: yellow;
 		}
+		
+		#infobut{
+			font-family:monospace;
+			color:darkblue;
+			font-weight:bold;
+			
+		}
+		
 		input:invalid{
 			color:red;
 			background-color: yellow;
@@ -53,7 +61,7 @@
 					<button tabindex="-1" class="spinbut" id="spinbutdown">&#9660;</button>
 				</td>
 				<td style="text-align:right;padding-left:0.5em;">
-					<input type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;"/>
+					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;"/>
 				</td>
 				<td style="text-align:left;padding-left:0;">
 					mm
@@ -62,12 +70,15 @@
 					from
 				</td>
 				<td>
-					<select style="">
+					<select id="from">
 						<option value="top">top</option>
 						<option value="highest">highest</option>
 						<option value="lowest" selected>lowest</option>
 						<option value="bottom">bottom</option>
 					</select>
+				</td>
+				<td>
+					<button id="infobut">i</button>
 				</td>
 			</tr>
 		</table>
@@ -76,6 +87,12 @@
 <script id="ReoInputWidgetScript">
 	ReoInputPrototype = Object.create(HTMLDivElement.prototype);
 	ReoInputPrototype.createdCallback = function(){
+		
+		
+		this._selected = false;
+		this._enabled = false;
+		
+		
 		this.create = function(){
 			// --------
 			// CONSTRUCT
@@ -88,25 +105,54 @@
 			
 			// ---------
 			// PROPERTIES
-			this.selected = false;
+			
 			this.maindiv = this.doc.querySelector("div");
-			this.enabledCheck = this.doc.querySelector("#enabled");
+			this.enabledIn = this.doc.querySelector("#enabled");
 			this.barcodeIn = this.doc.querySelector("#barcode");
+			this.fromIn = this.doc.querySelector("#from");
+			this.infobutIn = this.doc.querySelector("#infobut");
+			this.offsetIn = this.doc.querySelector("#offset");
 			this.spinbutup = this.doc.querySelector("#spinbutup");
 			this.spinbutdown = this.doc.querySelector("#spinbutdown");
-			this.enabled=false;
 			
+			
+			this.selected = false;
+			this.enabled = false;
+			
+			// ------------------------
+			// ATTRIBUTES
+			if(this.getAttribute("fixed")!=undefined){
+				this.enabled = true;
+				this.enabledIn.disabled = true;
+				this.fromIn.disabled = true;
+				this.offsetIn.disabled = true;
+			}
 			
 			// -----------------------------------------------------
 			// EVENT LISTENERS
-			this.addEventListener("mouseup",this.select);
-			this.addEventListener("keyup",this.select);
+			this.infobutIn.addEventListener("click",function(e){
+				this.toggleSelected();
+			}.bind(this));
 			this.spinbutup.addEventListener("click",this.more);
 			this.spinbutdown.addEventListener("click",this.less);
 			
-			this.enabledCheck.addEventListener("change",function(){
-				this.enabled = this.enabled;
-				this.select();
+			
+			
+			
+			
+			this.offsetoldval = this.offsetIn.value;
+			this.offsetIn.addEventListener("keyup",function(e){
+				if(this.offsetoldval!==this.offsetIn.value){
+					this.offsetoldval = this.offsetIn.value;
+					this.dispatchChangeEvent();
+				}
+			}.bind(this))
+			
+
+			
+			this.enabledIn.addEventListener("change",function(){
+				this.enabled = this.enabledIn.checked;
+				this.dispatchChangeEvent();
 			}.bind(this));
 			
 			this.barcodeIn.addEventListener("keydown",function(e){
@@ -147,21 +193,54 @@
 				e.target.setSelectionRange(ss,se);
 			}.bind(this))
 			
-		}.bind(this)
+		}.bind(this);
+		
+		
+		
+		this.dispatchChangeEvent = function(){
+			var e = new Event("change");
+			e.target = this;
+			this.dispatchEvent(e);
+		}.bind(this);
+		
+		
+		
+		this.toggleSelected = function(e){
+			this.selected = !this.selected && this.enabled;
+		}.bind(this);
+		
+		
 		
 		this.more = function(){
-			console.log("more")
+			console.log("more");
+			this.dispatchChangeEvent();
 		}.bind(this);
 		this.less = function(){
 			console.log("less")
+			this.dispatchChangeEvent();
 		}.bind(this);
+		
+		
 		
 		Object.defineProperty(this,"enabled",{
 			get:function(){
-				return this.enabledCheck.checked;
+				return this._enabled;
 			}.bind(this),
 			set:function(newval){
-				this.enabledCheck.checked = newval;
+				if(this._enabled == false && newval == true){
+					var e = new Event("enabled");
+					e.target = this;
+					this.dispatchEvent(e);
+					this.dispatchChangeEvent();
+				}else if(this._enabled == true && newval == false){
+					var e = new Event("disabled");
+					e.target = this;
+					this.dispatchEvent(e);
+					this.selected = false;
+					//this.dispatchChangeEvent(); this will be dispatched as a result of the line above
+				}
+				this._enabled = newval;
+				this.enabledIn.checked = newval;
 				var ins = this.doc.querySelectorAll("input, button, select")
 				for(var i = 0; i < ins.length;i++){
 					if(ins[i].id!="enabled"){
@@ -175,23 +254,47 @@
 				}
 			}.bind(this),
 		});
-		this.select = function(){
-			this.selected = true;
-			var others = document.querySelectorAll("reo-input");
-			for(var i = 0; i<others.length;i++){
-				others[i].deselect();
-			}
-			console.log();
-			if(this.enabled){
-				this.maindiv.style.backgroundColor = "lightblue";
-			}else{
-				this.maindiv.style.backgroundColor = "lightgrey";
-			}
-		}.bind(this);
-		this.deselect = function(){
-			this.selected = false;
-			this.maindiv.style.backgroundColor = "";
-		}.bind(this);
+		
+		
+		
+		Object.defineProperty(this,"barcode",{
+			get:function(){
+				return this.barcodeIn.value;
+			}.bind(this),
+			set:function(newval){
+				this.barcodeIn.value = newval;
+			}.bind(this),
+		});
+		
+		
+		
+		Object.defineProperty(this,"selected",{
+			get:function(){
+				return this._selected;
+			}.bind(this),
+			set:function(newval){
+				if(!this._selected && newval){
+					
+					if(!this.enabled) return;
+					
+					this.maindiv.style.backgroundColor = "lightblue";
+					this.infobutIn.innerHTML = "-";
+					var e = new Event("select");
+					e.target = this;
+					this.dispatchEvent(e);
+					this.dispatchChangeEvent();
+				}else if(!newval && this._selected){
+					this.maindiv.style.backgroundColor = "";
+					this.infobutIn.innerHTML = "i";
+					var e = new Event("unselect");
+					e.target = this;
+					this.dispatchEvent(e);
+					this.dispatchChangeEvent();
+				}
+				this._selected = newval;
+			}.bind(this),
+		});
+		
 		this.create();
 	};
 	

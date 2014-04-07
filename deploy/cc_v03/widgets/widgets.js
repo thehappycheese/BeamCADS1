@@ -8,6 +8,7 @@ function loadWidget(url){
 		document.body.appendChild(temp);
 		
 		var script = document.importNode(doc.querySelector("script"),true);
+		console.log("Attacthing script:",url);
 		document.body.appendChild(script);
 		
 	}

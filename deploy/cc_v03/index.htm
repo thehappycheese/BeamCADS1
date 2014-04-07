@@ -7,7 +7,7 @@
 
 <body>
 	<div id="apptitlebox" class="bmpblock">
-		BEAMCAD v0.2
+		BEAMCAD v0.3
 	</div>
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv" class="bmpblock">
@@ -46,7 +46,7 @@
 				<reo-input> </reo-input>
 				<reo-input> </reo-input>
 				<reo-input> </reo-input>
-				<reo-input> </reo-input>
+				<reo-input fixed> </reo-input>
 			</div>
 			<div style="width:100%;"></div>
 			<div id="reooutputdiv">
@@ -85,30 +85,21 @@
 <script>
 
 	function ReoController(host){
+		this.host = host;
+		
+		
 		this.create = function(){
-			this.host = host;
-			this.elems = [];
+
 			
-			
-			
+
 		}.bind(this);
-		this.addRowAt = function(){
-			var new_elem = document.createElement("reo-input");
-			this.elems.push()
-			this.render();
-		}.bind(this);
-		
-		
-		this.render = function(){
-			this.host.innerHTML = "";
-			for(var i =0;i++;i<this.elems.length;i++){
-				this.host.appendChild(this.elems[i]);
-			}
-		}.bind(this);
+
 		
 		this.create();
 	}
-	var rcon = new ReoController();
+	
+	
+	var rcon = new ReoController(document.querySelector("#reoinputdiv"));
 
 	//###########################################################################################
 	//###### Canvas resize events ###############################################################
