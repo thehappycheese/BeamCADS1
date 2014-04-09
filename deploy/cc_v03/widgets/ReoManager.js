@@ -18,9 +18,74 @@ addEventListener("widgetsloaded",function(){
 			firstrow.enabledIn.disabled = true;
 			firstrow.offsetIn.disabled = true;
 			firstrow.fromIn.disabled = true;
+			
+			this.rows.push(this.createReoInput());
+			this.rows.push(this.createReoInput());
+			this.rows.push(this.createReoInput());
+			this.rows.push(this.createReoInput());
 			this.rows.push(firstrow);
+			
+			
+			for(var i = 0;i<this.rows.length;i++){
+				this.appendChild(this.rows[i]);
+			}
+			
 			this.update();
 		}.bind(this);
+		
+		
+		
+		
+		
+		
+		this.getEnabledSelectedRows = function(){
+			var result = [];
+			for(var i = 0;i<this.rows.length;i++){
+				if(this.rows[i].enabled && this.rows[i].selected){
+					result.push(this.rows[i]);
+				}
+			}
+			return result;
+		}.bind(this);
+		
+		
+		
+		this.getEnabledRows = function(){
+			var result = [];
+			for(var i = 0;i<this.rows.length;i++){
+				if(this.rows[i].enabled){
+					result.push(this.rows[i]);
+				}
+			}
+			return result;
+		}.bind(this);
+		
+		
+		
+		
+		
+		
+		this.getBottomRow = function(){
+			return this.rows[this.rows.length-1];
+		}.bind(this);
+		
+		
+		
+		this.getDepthOfRow = function(){
+			var br = this.getBottomRow();
+			var r = this.getEnabledRows();
+			
+			
+			// TODO: get the depth of the bottom row
+		}.bind(this);
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		this.createReoInput = function(){
 			var nr = new ReoInput();
@@ -28,7 +93,21 @@ addEventListener("widgetsloaded",function(){
 			return nr;
 		}.bind(this);
 		
+		
+		
+		
+		
+		
+		
+		
 		this.update = function(){
+			
+			
+		}.bind(this);
+		
+		
+		
+		this.adjustLength = function(){
 			if(this.rows.length==1){
 				this.rows.unshift(this.createReoInput())
 			}
@@ -51,15 +130,9 @@ addEventListener("widgetsloaded",function(){
 					//i--;
 				}
 			}
-			this.render();
 		}.bind(this);
 		
-		this.render = function(){
-			for(var i = 0;i<this.rows.length;i++){
-				this.appendChild(this.rows[i]);
-			}
-			
-		}.bind(this);
+		
 
 		this.create();
 	};

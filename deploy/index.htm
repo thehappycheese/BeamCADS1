@@ -2,6 +2,7 @@
 	<head>
 		<title>BeamCAD Suit</title>
 		<style>
+
 body{
 	display:flex;
 	flex-wrap:wrap;
@@ -29,11 +30,19 @@ h1{
 	justify-content:space-around;
 	
 }
-
+#butts{
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:space-around;
+}
 a{
+	display:table-cell;
 	padding:1em;
 	margin:1em;
-	width:300px;
+	width:200px;
+	height:50px;
+	text-align:center;
+	vertical-align:middle;
 	border:1px solid black;
 	border-radius:1em;
 	box-shadow: -2px -2px 3px black inset;
@@ -44,14 +53,15 @@ a{
 a:hover{
 	background-color:#F0F8FF;
 }
+
 		</style>
 	</head>
 	<body>
 <div id="main">
 	<h1 style="width:100%;">BeamCAD Suit</h1>
-	<div>
-	<a href="cc_v02/index.htm">Capacity Checker v0.2</a>
-	<a href="cc_v03/">Capacity Checker v0.3</a>
+	<div id="butts">
+		<a href="cc_v02/index.htm">Capacity Checker v0.2</a>
+		<a href="cc_v03/">Capacity Checker v0.3</a>
 	</div>
 </div>
 	</body>

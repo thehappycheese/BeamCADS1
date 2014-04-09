@@ -54,7 +54,7 @@ h2{
 
 
 #reoinputoutputdiv{
-	flex: 1 0 340px;
+	flex: 1 0 370px;
 	flex-wrap:wrap;
 	align-content:flex-end;
 	justify-content:space-around;
@@ -62,13 +62,13 @@ h2{
 	
 }
 #reooutputdiv{
-	width:320px;
+	width:370px;
 	margin-top:0.5em;
 	padding-top:0.5em;
 	border-top:2px dashed lightgrey;
 }
 #reoinputdiv{
-	width:320px;
+	width:350px;
 }
 x-input{
 	width:260px;

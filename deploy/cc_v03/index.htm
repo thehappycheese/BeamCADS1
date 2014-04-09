@@ -12,16 +12,16 @@
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv" class="bmpblock">
 			<!-- TODO: fix the pattern mathcing here-->
-			<x-input notation ="L_n" 	unit="mm"	    ></x-input>
-			<x-input notation ="b"	 	unit="mm"	    ></x-input>
-			<x-input notation ="D"	 	unit="mm"	    ></x-input>
-			<x-input notation ="Cover"	unit="mm"	    ></x-input>
-			<x-input notation ="EClass"></x-input>
+			<x-input id="Ln"		notation ="L_n" 	unit="mm"	    value="1000"></x-input>
+			<x-input id="b"		notation ="b"	 	unit="mm"	    value="300"></x-input>
+			<x-input id="D"		notation ="D"	 	unit="mm"	    value="600"></x-input>
+			<x-input id="cover"	notation ="Cover"	unit="mm"	    value="25"></x-input>
+			<x-input id="eclass"	notation ="EClass"					 value="A"></x-input>
 			
-			<x-input notation="d_f"				unit="mm"    ></x-input> 
-			<x-input notation="rho_c"			unit="kg/m^3"></x-input>
-			<x-input notation="f'c" 			unit="MPa"   ></x-input>
-			<x-input notation="f_sy"			unit="kg/m^3"></x-input>
+			<x-input id="df"		notation="d_f"				unit="mm"    	value="10"></x-input> 
+			<x-input id="rhoc"	notation="rho_c"			unit="kg/m^3"	value="2400"></x-input>
+			<x-input id="fc"		notation="f'c" 			unit="MPa"   	value="32"></x-input>
+			<x-input id="fsy"		notation="f_sy"			unit="kg/m^3"	value="500"></x-input>
 			
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
