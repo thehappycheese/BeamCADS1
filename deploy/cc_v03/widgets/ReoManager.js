@@ -71,11 +71,13 @@ addEventListener("widgetsloaded",function(){
 		
 		
 		
-		this.getDepthOfRow = function(){
+		this.getDepthOfRow = function(row){
 			var br = this.getBottomRow();
-			var r = this.getEnabledRows();
+			var bottomDepth = D-cover-df-br.diameter/2;
 			
-			
+			for(var i = rows.length-2;i>=0;i--){
+				
+			}
 			// TODO: get the depth of the bottom row
 		}.bind(this);
 		
