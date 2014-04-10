@@ -28,6 +28,8 @@ h2{
 }
 /* Tex src = http://fc07.deviantart.net/fs19/i/2007/291/6/b/Concrete_Texture_by_MartinIsaac.jpg*/
 #apptitlebox{
+	display:flex;
+	justify-content:space-around;
 	text-align:center;
 	font-family:sans-serif;
 	font-weight:bold;
