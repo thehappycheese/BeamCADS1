@@ -45,17 +45,18 @@
 						value="600"
 						type="number"
 						min="200"
-						max="3000"></x-input>
+						max="3000"
+						data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
 						
 			<x-input	id="cover"
 						notation ="$$$\text{Cover}$$$"
 						unit="mm"
 						value="25"
 						type="number"
-						min="25"
-						max="200"
+						min="20"
+						max="100"
 						step="5"
-						pattern="(25|30)"></x-input>
+						data-tooltip="Distance from the outer surface of concrete to the reo bars"></x-input>
 						
 			<x-input	id="$$$\text{eclass}$$$"
 						notation ="E-Class"
@@ -94,7 +95,7 @@
 				</tr>
 				<tr>
 					<td>
-						<iframe id="varinfoiframe" src="infos/fc.htm" style="border:none;width:100%;height:100%;"></iframe>
+						<iframe id="varinfoiframe" src="infos/index.htm" style="border:none;width:100%;height:100%;"></iframe>
 					</td>
 				</tr>
 			</table>
@@ -130,7 +131,7 @@
 		<h1>Calculation Div</h1>
 	</div>
 	<div id="tooltipbar">
-		Tool-tip bar
+		Pro-tips bar
 	</div>
 	
 </body>
@@ -210,7 +211,7 @@
 						targ=targ.parentNode;
 					}
 					var ttb = document.querySelector("#tooltipbar")
-					ttb.innerHTML = targ.getAttribute("data-tooltip");
+					ttb.innerHTML = "Pro-tip: "+targ.getAttribute("data-tooltip");
 				});
 				els[i].addEventListener("mouseout",function(e){
 					var ttb = document.querySelector("#tooltipbar")
@@ -236,10 +237,16 @@
 	
 	function setHelpLoc(url){
 		if(document.querySelector("#varinfoiframe").getAttribute("src") != url){
-			document.querySelector("#varinfoiframe").src = url;
+			document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
 		}
 	}
+	document.querySelector("#varinfoiframe").addEventListener("load",function(e){
+		if(e.target.contentDocument.querySelector("meta")!=null){
+			e.target.contentWindow.location.replace("infos/404.htm");
+		}
+	});
 	
+	var ifrm = document.querySelector("#varinfoiframe");
 </script>
 <script data-root="" data-main="cc_v03/main.js" src="../jslib/nickRequire.js"></script>
 

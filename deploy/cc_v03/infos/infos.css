@@ -23,3 +23,8 @@ p{
 	margin:0.2em;
 	margin-left:2em;
 }
+nav{
+	position:fixed;
+	top:0;
+	right:0;
+}
