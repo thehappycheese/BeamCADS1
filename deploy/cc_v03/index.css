@@ -26,15 +26,17 @@ h2{
 	background-color:white;
 	box-shadow: 1px 1px 3px black;
 }
+/* Tex src = http://fc07.deviantart.net/fs19/i/2007/291/6/b/Concrete_Texture_by_MartinIsaac.jpg*/
 #apptitlebox{
 	text-align:center;
 	font-family:sans-serif;
 	font-weight:bold;
-	font-size:1.2em;
-	letter-spacing:2px;
+	font-size:2em;
+	letter-spacing:1.6px;
 	color:darkblue;
-	padding:20px;
-	background-color:#FFCC11;
+	padding:10px;
+	background-color:lightyellow;
+	//background:url('img/conc_banner.jpg');
 }
 
 
@@ -105,10 +107,19 @@ x-input{
 	height:25px;
 	width:100%;
 	border-top:1px solid grey;
-	background-color:#FFCC11;
+	background-color:#FFFFE5;
 	color:darkblue;
 	box-shadow: 0 0px 4px black;
 	padding-top:5px;
 	text-align:center;
 	font-family:sans-serif;
+}
+@-webkit-keyframes flashyellow{
+	0%{background:white;}
+	50%{background:#FFCC11;}
+	100%{background:white;}
+}
+@-webkit-keyframes towhite{
+	from{background:#FFCC11;}
+	to	{background:white;}
 }

@@ -66,7 +66,7 @@
 	<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
 		<h1>Calculation Div</h1>
 	</div>
-	<div id="tooltipbar" title="bla">
+	<div id="tooltipbar">
 		Tool-tip bar
 	</div>
 	
@@ -132,13 +132,19 @@
 		for(var i = 0;i<els.length;i++){
 			if(els[i].webkitShadowRoot!=null){
 				addTooltipTo(els[i].webkitShadowRoot);
-				console.log(els[i])
-			}else if(els[i].title!=""){
+				//console.log(els[i]);
+			}else if(els[i].getAttribute("data-tooltip")){
 				els[i].addEventListener("mouseover",function(e){
-					document.querySelector("#tooltipbar").innerHTML = e.target.title;
+					var targ = e.target; 
+					while(targ.getAttribute("data-tooltip")===null){
+						targ=targ.parentNode;
+					}
+					var ttb = document.querySelector("#tooltipbar")
+					ttb.innerHTML = targ.getAttribute("data-tooltip");
 				});
 				els[i].addEventListener("mouseout",function(e){
-					document.querySelector("#tooltipbar").innerHTML = "";
+					var ttb = document.querySelector("#tooltipbar")
+					ttb.innerHTML = "";
 				});
 			}
 		}
