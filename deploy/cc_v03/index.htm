@@ -2,6 +2,15 @@
 
 <head>
 	<link rel="stylesheet" href="index.css" type="text/css"/>
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			extensions: ["tex2jax.js"],
+			jax: ["input/TeX","output/HTML-CSS"],
+			tex2jax: {inlineMath: [["$$","$$"],["$$$","$$$"]]},
+			messageStyle: "none"
+		});
+	</script>
+	<script type="text/javascript" src="../../jslib/mathjax/MathJax.js"></script>
 </head>
 
 
@@ -12,16 +21,70 @@
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv" class="bmpblock">
 			<!-- TODO: fix the pattern mathcing here-->
-			<x-input id="Ln"		notation ="L_n" 	unit="mm"	    value="1000"></x-input>
-			<x-input id="b"		notation ="b"	 	unit="mm"	    value="300"></x-input>
-			<x-input id="D"		notation ="D"	 	unit="mm"	    value="600"></x-input>
-			<x-input id="cover"	notation ="Cover"	unit="mm"	    value="25"></x-input>
-			<x-input id="eclass"	notation ="EClass"					 value="A"></x-input>
+			<x-input	id="Ln"		
+						notation ="$$$L_n$$$" 
+						unit="mm"
+						value="1000"
+						type="number"
+						min="1000"
+						max="50000"
+						step="100"></x-input>
+						
+			<x-input	id="b"
+						notation ="$$$b$$$"
+						unit="mm"
+						value="300"
+						type="number"
+						min="200"
+						max="5000"
+						step="10"></x-input>
+						
+			<x-input	id="D"
+						notation ="$$$D$$$"
+						unit="mm"
+						value="600"
+						type="number"
+						min="200"
+						max="3000"></x-input>
+						
+			<x-input	id="cover"
+						notation ="$$$\text{Cover}$$$"
+						unit="mm"
+						value="25"
+						type="number"
+						min="25"
+						max="200"
+						step="5"
+						pattern="(25|30)"></x-input>
+						
+			<x-input	id="$$$\text{eclass}$$$"
+						notation ="E-Class"
+						value="A"
+						pattern="(A|B|C|D)"
+						data-tooltip="Exposure Classification determined by exposure to natural environment. Use A | B | C | D"></x-input>
 			
-			<x-input id="df"		notation="d_f"				unit="mm"    	value="10"></x-input> 
-			<x-input id="rhoc"	notation="rho_c"			unit="kg/m^3"	value="2400"></x-input>
-			<x-input id="fc"		notation="f'c" 			unit="MPa"   	value="32"></x-input>
-			<x-input id="fsy"		notation="f_sy"			unit="kg/m^3"	value="500"></x-input>
+			<x-input	id="df"
+						notation="$$$d_f$$$"
+						unit="mm"
+						value="10"
+						data-tooltip="Diameter of figment bars which from the reo 'ribcage'"></x-input> 
+						
+			<x-input	id="rhoc"
+						notation="$$$\rho_c$$$"
+						unit="kg/m^3"
+						value="2400"
+						type="number"
+						min="2100"
+						max="2800"
+						step="10"
+						data-tooltip="Concrete Density"></x-input>
+						
+			<x-input	id="fc"
+						notation="$$$f'_c$$$"
+						unit="MPa"
+						value="32"
+						pattern="(20|25|32|40|50|65|80|100)"
+						data-tooltip="Concrete Strength"></x-input>
 			
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
@@ -91,7 +154,9 @@
 	//###### Canvas resize events ###############################################################
 	//###########################################################################################
 	window.addEventListener("resize",handleResize);
+	setTimeout(handleResize,500);
 	setTimeout(handleResize,1500);
+	setTimeout(handleResize,5000);
 	function handleResize(e){
 		var c=document.querySelector("#crosssectioncanvas");
 		
@@ -104,6 +169,8 @@
 		var st=window.getComputedStyle(c.parentElement);
 		c.width = parseInt(st.width);
 		c.height = 150;
+		
+		// TODO: Update drawing
 	}
 
 
@@ -124,9 +191,12 @@
 			document.querySelector("#errortd").innerHTML = out;
 		}
 	}
+	//##################################################################3
+	//##### Tooltips ###################################################3
+	//##################################################################3
 	setTimeout(function(){
 		addTooltipTo(document.body);
-	},4000);
+	},5000);
 	function addTooltipTo(d){
 		var els = d.querySelectorAll("*");
 		for(var i = 0;i<els.length;i++){
@@ -149,7 +219,27 @@
 			}
 		}
 	}
-
+	
+	
+	//##########################################################
+	//#### Contextual Help View ################################
+	//##########################################################
+	
+	(function(){
+		var xins = document.querySelectorAll("x-input");
+		for(i=0;i<xins.length;i++){
+			xins[i].addEventListener("mousedown",function(e){
+				setHelpLoc("infos/"+e.target.id+".htm");
+			})
+		}
+	})()
+	
+	function setHelpLoc(url){
+		if(document.querySelector("#varinfoiframe").getAttribute("src") != url){
+			document.querySelector("#varinfoiframe").src = url;
+		}
+	}
+	
 </script>
 <script data-root="" data-main="cc_v03/main.js" src="../jslib/nickRequire.js"></script>
 

@@ -1,4 +1,4 @@
-h1{
+h1, h2{
 	font-size:1.2em;
 	font-family:sans-serif;
 	color:darkblue;
@@ -6,7 +6,20 @@ h1{
 	margin-left:1em;
 	margin-bottom:1em;
 }
+h2{
+	font-size:1em;
+}
 td{
-	padding: 0.4em 0;
+	padding: 0.4em;
 	border-bottom:1px solid lightgrey;
+	border-top:1px solid lightgrey;
+}
+table{
+	border-collapse:collapse;
+	margin:1em 0;
+	width:100%;
+}
+p{
+	margin:0.2em;
+	margin-left:2em;
 }
