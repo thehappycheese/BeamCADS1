@@ -62,35 +62,35 @@
 		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
 			<tr>
 				<td id="enabledtd" rowspan=1 style="padding:0;">
-					<input id="enabled" type="checkbox"/>
+					<input id="enabled" type="checkbox" title="Enable/Disable Reo Layer."/>
 				</td>
 				<td style="text-align:right;">
-					<input id="barcode" type="text" required pattern="([1-2][0-9]|[1-9])N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="eg. 2N10" />
+					<input id="barcode" type="text" required pattern="([1-2][0-9]|[1-9])N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="eg. 2N10" title="Number, Grade, Nominal Diameter. (This version only allows grade N)"/>
 					
 				</td>
 				<td style="text-align:left;">
-					<button tabindex="-1" class="spinbut" id="spinbutup"	><!--&#9650;--></button>
-					<button tabindex="-1" class="spinbut" id="spinbutdown"><!--&#9660;--></button>
+					<button tabindex="-1" class="spinbut" id="spinbutup"	title="more"><!--&#9650;--></button>
+					<button tabindex="-1" class="spinbut" id="spinbutdown"	title="less"><!--&#9660;--></button>
 				</td>
 				<td style="text-align:right;padding-left:0.5em;">
-					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;"/>
+					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;" title="Offset: Space between the bars of this layer and the next."/>
 				</td>
 				<td style="text-align:left;padding-left:0;">
 					mm
 				</td>
-				<td style="text-align:right;padding-right:0;padding-left:0.5em;">
+				<td style="text-align:right;padding-right:0;padding-left:0.5em;" >
 					from
 				</td>
 				<td>
-					<select id="from">
-						<option value="top">top</option>
+					<select id="from" title="Where to offset this layer from.">
+						<option value="top" title="???">top</option>
 						<option value="highest">highest</option>
 						<option value="lowest" selected>lowest</option>
 						<option value="bottom">bottom</option>
 					</select>
 				</td>
 				<td style="padding-left:0.5em;">
-					<button id="infobut">&#8721;</button>
+					<button id="infobut" title="Add/Remove from summary table below.">&#8721;</button>
 				</td>
 			</tr>
 		</table>

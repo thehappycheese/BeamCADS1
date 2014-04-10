@@ -63,9 +63,13 @@
 			</div>
 		</div>
 	</div>
-	<div style="min-height:300px;" class="bmpblock">
+	<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
 		<h1>Calculation Div</h1>
 	</div>
+	<div id="tooltipbar" title="bla">
+		Tool-tip bar
+	</div>
+	
 </body>
 
 
@@ -120,7 +124,25 @@
 			document.querySelector("#errortd").innerHTML = out;
 		}
 	}
-
+	setTimeout(function(){
+		addTooltipTo(document.body);
+	},4000);
+	function addTooltipTo(d){
+		var els = d.querySelectorAll("*");
+		for(var i = 0;i<els.length;i++){
+			if(els[i].webkitShadowRoot!=null){
+				addTooltipTo(els[i].webkitShadowRoot);
+				console.log(els[i])
+			}else if(els[i].title!=""){
+				els[i].addEventListener("mouseover",function(e){
+					document.querySelector("#tooltipbar").innerHTML = e.target.title;
+				});
+				els[i].addEventListener("mouseout",function(e){
+					document.querySelector("#tooltipbar").innerHTML = "";
+				});
+			}
+		}
+	}
 
 </script>
 <script data-root="" data-main="cc_v03/main.js" src="../jslib/nickRequire.js"></script>

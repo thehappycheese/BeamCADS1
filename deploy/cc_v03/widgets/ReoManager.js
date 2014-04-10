@@ -104,7 +104,9 @@ addEventListener("widgetsloaded",function(){
 		
 		this.update = function(){
 			
-			
+			var e = new Event("update");
+			e.target = this;
+			this.dispatchEvent(e);
 		}.bind(this);
 		
 		

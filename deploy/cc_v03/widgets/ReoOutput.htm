@@ -10,37 +10,42 @@
 			padding-right:0;
 			min-width:50px;
 			font-size:90%;
+			padding-right:0.5em;
 		}
 	</style>
 	<div style="min-width:315px;max-width:500px;">
 		<table id="rout" style="width:100%" cellspacing=0>
 			<tr>
-				<td>Depth from top surface:</td>
-				<td class="tableout">1200</td>
+				<td id="depthlable">Depth from top surface:</td>
+				<td class="tableout" id="depth">1200</td>
 				<td>mm</td>
 			</tr>
 			<tr>
-				<td>Crossectional area of steel:</td>
-				<td class="tableout">30000</td>
+				<td id="arealable">Cross-sectional area of steel:</td>
+				<td id="area" class="tableout">30000</td>
 				<td>mm&#178;</td>
 			</tr>
 			
 			<tr>
-				<td rowspan=3>Amount:</td>
-				<td class="tableout">10</td>
+				<td id="amountlable" rowspan=4>Amount:</td>
+				<td id="nbars" class="tableout">10</td>
+				<td>bars</td>
+			</tr>
+			<tr>
+				<td id="length" class="tableout">10</td>
 				<td>m</td>
 			</tr>
 			<tr>
-				<td class="tableout">5</td>
+				<td id="masspermeter" class="tableout">5</td>
 				<td>kg/m</td>
 			</tr>
 			<tr>
-				<td class="tableout">400</td>
+				<td id="mass" class="tableout">400</td>
 				<td>kg</td>
 			</tr>
 			<tr>
-				<td style="border-bottom:none;">Layer Tension Force:</td>
-				<td style="border-bottom:none;"  class="tableout">200</td>
+				<td id="tforcelable" style="border-bottom:none;">Layer Tension Force:</td>
+				<td id="tforce" style="border-bottom:none;"  class="tableout">200</td>
 				<td style="border-bottom:none;" >kN</td>
 			</tr>
 		</table>
@@ -57,9 +62,41 @@
 			this.webkitShadowRoot.appendChild(imported);
 			this.doc = this.webkitShadowRoot;
 			
-			
-		}.bind(this)
+			this.oneLables();
+			this.blank();
+		}.bind(this);
 		
+		
+		this.setIdContent=function(id, content){
+			var elem = this.webkitShadowRoot.querySelector("#"+id);
+			if(elem!=null){
+				elem.innerHTML = content;
+			}else{
+				throw new Error("ReoOutput: No id of: "+id);
+			}
+		}.bind(this);
+		
+		this.oneLables = function(){
+			this.setIdContent("depthlable",		"Depth to layer:");
+			this.setIdContent("arealable",		"Layer Cross-sectional Area:");
+			this.setIdContent("amountlable",	"Amount:");
+			this.setIdContent("tforcelable",	"Layer Tension Force:");
+		}.bind(this);
+		this.avgLables = function(){
+			this.setIdContent("depthlable",		"Depth to <i>centroid</i>:");
+			this.setIdContent("arealable",		"&#8721; Cross-sectional Area:");
+			this.setIdContent("amountlable",	"&#8721; Amount:");
+			this.setIdContent("tforcelable",	"&#8721; Tension Force:");
+		}
+		this.blank = function(){
+			this.setIdContent("depth",			"--");
+			this.setIdContent("area",			"--");
+			this.setIdContent("nbars",			"--");
+			this.setIdContent("length",			"--");
+			this.setIdContent("masspermeter",	"--");
+			this.setIdContent("mass",			"--");
+			this.setIdContent("tforce",			"--");
+		}
 		
 		this.create();
 	};
