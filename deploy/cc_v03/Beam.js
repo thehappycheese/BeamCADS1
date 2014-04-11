@@ -7,111 +7,58 @@
 "use strict";
 function Beam(){
 	this.create = function(){
-		this.ioelems = [];
-		this.reoelems = [];
-		this.ioelemIds = [
-				"Ln"		,
-				"b"			,
-				"D"			,
-				"cover"		,
-				"eclass"	,
-				"dfitments"	,
-				"rhoc"		,
-				"fc"		,
-				"fsy"		,
-				"reoclass"	,
-
-			]
-		this.reo = [];
+		
+		this.reo = [
+			{number:2, diameter:10, area:156, depth:25+10+10/2,		tension:},
+			{number:2, diameter:10, area:156, depth:600-25-10-10/2,	tension:},
+		];
 		this.minbarspacing		= undefined;
-		this.minnumberofbars	= undefined;
-		this.maxnumberofbars	= undefined;
-		this.onupdate		= function(){};
-
-
-		this.ioelemIds.forEach(function(i){
-			this.ioelems.push(
-				new BeamIOElem(
-					data_AS3600Variables({id:i}).first(),
-					this
-				)
-			);
-		}.bind(this));
-
-		this.reoelems.push(
-			new BeamReoInput(3,	this),
-			new BeamReoInput(2,	this),
-			new BeamReoInput(1,	this),
-			new BeamReoInput(0,	this)
-		);
+		
+		
+		// geom
+		this.b		= 300;
+		this.D		= 600;
+		this.cover	= 25;
+		this.rohc	= 2400;
+		
+		// 
+		this.fc		= 32;
+		this.Ln		= 3000;
+		this.df		= 10;
+		
+		
+		this.elcass = "A";
+		this.Ec		= undefined;
+		
 	}.bind(this);
 
-	this.getData = function(){
-		var i;
-		this.ioelems.forEach(function(item){
-			this[item.varinfo.id] = item.getValue();
-		}.bind(this));
-		this.reo = [];
-		this.reoelems.forEach(function  (item) {
-			this.reo.push(item.getValue());
-		}.bind(this))
-	}.bind(this);
-	this.processData = function(){
-		// TODO: List this as a design assumption:
-		// AS3600+A2 8.1.9 Spacing of tendons
-		// AS3600+A2 17.1.3 has a shpeel about all the ways concete shoul be handeled and how it should minimise air gaps etc.
-		// 20mm is a reasonable number since it is a nominal aggregate size
-		this.minbarspacing		= 20;
-		// AS3600+A2 8.1.9 Spacing of tendons: max 300 on tension face. never allow less than 2 bars
-		this.minnumberofbars	= Math.max(2,Math.ceil((this.b-2*(this.cover+this.dfitments))/300));
-		// Limit the number of bars to 10 - arbitrary but reduces number of area intervals
-		this.maxnumberofbars	= 10;
-		// AS3600+A2 8.1.2(d) Concrete maximum strain is 0.003
-		this.epsiloncmax = 0.003;
-	}.bind(this);
-	this.update = function(){
-		this.getData();
-		this.processData();
-		this.onupdate();
-	}.bind(this);
+	
+	Object.defineProperty(this,"innerWidth",{
+		get:function(){
+			return this.b - 2*(this.cover+this.df);
+		}.bind(this)}
+	);
 
+	
+	
+	Object.defineProperty(this,"Muo",{
+		get:function(){
+			return (this.dsc-this.gamma*this.dn) * this.Cc_from_dn(this.dn)/1000; // kNm
+		}.bind(this)}
+	);
 
-
-	this.getFitWidth = function(){
-		return this.b - 2*(this.cover+this.dfitments);
-	}.bind(this);
-
-
-
-
-
-
-
-
-
-
-
-
-
-	Object.defineProperty(this,"Muo",{get:function(){
-		this.printed = {};
-		document.getElementById("calcdiv").innerHTML = "";
-		var dn = this.dn;
-		return (this.dsc-this.gamma*dn) * this.Cc_from_dn(dn)/1000; // kNm
-	}.bind(this)});
-
-	Object.defineProperty(this,"dsc",{get:function(){
-		//depth to steel centroid
-		var sum_area_times_depth = 0;
-		var sum_area = 0;
-		for(var i=0;i<this.reo.length;i++){
-			if(this.reo[i].isValid()){
+	Object.defineProperty(this,"depthToTensionSteelCentroid",{
+		get:function(){
+			//depth to steel centroid
+			var sum_area_times_depth = 0;
+			var sum_area = 0;
+			for(var i=0;i<this.reo.length;i++){
 				sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
 				sum_area += this.reo[i].area;
 			}
-		}
-		return sum_area_times_depth/sum_area;
-	}.bind(this)});
+			return sum_area_times_depth/sum_area;
+		}.bind(this)
+	});
 	
 	Object.defineProperty(this,"dn",{get:function(){
 		// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
