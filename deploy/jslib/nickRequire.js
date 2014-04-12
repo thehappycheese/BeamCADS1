@@ -35,8 +35,15 @@
 				xreq.open("GET", root+"/"+url, true);
 				xreq.onreadystatechange = textLoaded;
 				xreq.ontimeout = function () { alert("nickReqire.js --> Build timed out!"); };
+				xreq.onerror = function(e){
+					// pass
+				}
 				xreq.timeout = 4000;
-				xreq.send(null);
+				try{
+					xreq.send(null);
+				}catch(e){
+					// pass
+				}
 		}else{
 			//console.log("nickReqire.js --> Inspection Complete!");
 			order(rules);
@@ -64,7 +71,7 @@
 				}
 				loopInspect();
 			}else{
-				console.error("nickReqire.js --> Terminating. Could not inspect file: "+currentFile.url);
+				console.warn("nickReqire.js --> File inspection failed: "+currentFile.url);
 			}
 		}
 	}

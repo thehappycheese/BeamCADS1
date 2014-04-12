@@ -1,4 +1,4 @@
-///* ReoManager.js
+///.
 function loadWidget(url){
 	var x = new XMLHttpRequest();
 	x.open("GET",url);
@@ -20,5 +20,6 @@ function loadWidget(url){
 }
 var widgets_to_load = 3
 loadWidget("widgets/ReoInput.htm");
+loadWidget("widgets/ReoManager.htm");
 loadWidget("widgets/ReoOutput.htm");
 loadWidget("widgets/XInput.htm");

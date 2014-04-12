@@ -1,12 +1,5 @@
-
-
-
-addEventListener("widgetsloaded",function(){
-
-
-
-
-
+<template id="reoManagerTemplate"></template>
+<script id="reoManagerScript">
 	ReoManagerPrototype = Object.create(HTMLDivElement.prototype);
 	ReoManagerPrototype.createdCallback = function(){
 
@@ -18,9 +11,6 @@ addEventListener("widgetsloaded",function(){
 			firstrow.enabledIn.disabled = true;
 			firstrow.offsetIn.disabled = true;
 			firstrow.fromIn.disabled = true;
-			
-			this.rows.push(this.createReoInput());
-			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
 			this.rows.push(firstrow);
@@ -144,12 +134,4 @@ addEventListener("widgetsloaded",function(){
 	
 	
 	window.ReoManager = document.registerElement("reo-manager",{prototype:ReoManagerPrototype});
-
-
-
-
-
-
-
-
-});
+</script>

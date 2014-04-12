@@ -800,7 +800,7 @@ if (document.getElementById && document.childNodes && document.createElement) {
 						if (h.nodeName === "STYLE" && h.styleSheet && typeof(h.styleSheet.cssText) !== "undefined") {
 							i(this.STATUS.OK)
 						} else {
-							if (window.chrome && typeof(window.sessionStorage) !== "undefined" && h.nodeName === "STYLE") {
+							if (false && window.chrome && typeof(window.sessionStorage) !== "undefined" && h.nodeName === "STYLE") {// NICK EDIT
 								i(this.STATUS.OK)
 							} else {
 								if (c) {

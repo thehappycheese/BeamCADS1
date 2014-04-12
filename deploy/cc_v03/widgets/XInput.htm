@@ -74,11 +74,9 @@ var XInputPrototype = Object.create(HTMLDivElement.prototype);
 XInputPrototype.createdCallback = function(){
 	this.create = function(){
 		//import content from the template element
-		var imported = document.importNode(
-			document.querySelector("#x-input-template").content
-		);
+		var imported = document.querySelector("#x-input-template").innerHTML;
 		this.webkitCreateShadowRoot();
-		this.webkitShadowRoot.appendChild(imported);
+		this.webkitShadowRoot.innerHTML = imported;
 		
 		// Add some event listeners and shit.
 		this.input = this.webkitShadowRoot.querySelector("input");
