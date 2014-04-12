@@ -46,7 +46,15 @@ def crawl(path,filename):
 					curfile+= crawl(importingfolder,importingfile);
 			elif line[3]=="~":
 				# Use absolute path
-				print ("From root to"+line[5:]);
+				importingfolder	= os.path.join(".",os.path.split(line[5:].replace("\n",""))[0]);
+				importingfile	= os.path.split(line[5:].replace("\n",""))[1];
+				importingpath	= os.path.join(importingfolder,importingfile);
+				if importingpath in crawled:
+					print ("...already imported "+importingpath);
+				else:
+					print ("Absolute import "+importingpath);
+					header += "// \t\t\t"+importingpath+"\n";
+					curfile+= crawl(importingfolder,importingfile);
 			elif line[3]==".":
 				# Disregard the remainder of this file.
 				if filename[-4:]=="html" or filename[-3:]=="htm":
