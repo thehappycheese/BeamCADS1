@@ -27,7 +27,7 @@ def crawl(path,filename):
 		curfile+= "\n\n\n<!--#########\t\t Crawling:"+os.path.join(path,filename)+"\t\t#########-->\n";
 	elif filename[-2:]=="js":
 		curfile+= "\n\n\n// #########\t\t Crawling:"+os.path.join(path,filename)+"\t\t#########\n";
-	header = ""
+	header = "";
 	imports = "";
 	
 	mf = open(path+"\\"+filename, "r");
