@@ -1,7 +1,3 @@
-///* BeamIOElem.js
-///* BeamReoInput.js
-///* ReoLayer.js
-
 
 "use strict";
 function Beam(){
@@ -10,6 +6,7 @@ function Beam(){
 		// #########################################################
 		// Misc considerations
 		this.elcass 			= "A";
+		this.minbarspacing		= undefined;
 		
 		
 		// #########################################################
@@ -18,7 +15,6 @@ function Beam(){
 			{number:2, diameter:10, area:156, depth:25+10+10/2,		tension:undefined},
 			{number:2, diameter:10, area:156, depth:600-25-10-10/2,	tension:undefined},
 		];
-		this.minbarspacing		= undefined;
 		this.df		= 10;
 		
 		
@@ -39,7 +35,7 @@ function Beam(){
 		this.fsy = 500;// Steel characteristic yield stress: MPa
 		// AS3600 3.2.2 taken to be (or determined by test)
 		// TODO: add Es to variable inputs (commit with35mins)
-		this.Es = 200000;// Steel youngs modulus of elasticity: MPa
+		this.Es = 200000;// Steel Young's modulus of elasticity: MPa
 		this.epsilonsy = this.fsy/this.Es; // 0.0025 or there-abouts
 		
 	}.bind(this);
@@ -58,19 +54,63 @@ function Beam(){
 	);
 	
 	
-	
+	// TODO: Which layers of steel should be disregarded? Surely steel 'close' to the centroid should be left out.
 	Object.defineProperty(this,"depthToTensionSteelCentroid",{
 		get:function depthToTensionSteelCentroid(){
-			//depth to tension steel centroid
 			var sum_area_times_depth = 0;
 			var sum_area = 0;
+			var layer_strain;
+			var dn = this.dn;
 			for(var i=0;i<this.reo.length;i++){
-				sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
-				sum_area += this.reo[i].area;
+				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
+				if(layer_strain>0){
+					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
+					sum_area += this.reo[i].area;
+				}
 			}
 			return sum_area_times_depth/sum_area;
 		}.bind(this)
 	});
+	Object.defineProperty(this,"depthToCompressionSteelCentroid",{
+		get:function depthToCompressionSteelCentroid(){
+			var sum_area_times_depth = 0;
+			var sum_area = 0;
+			var layer_strain;
+			var dn = this.dn;
+			for(var i=0;i<this.reo.length;i++){
+				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
+				if(layer_strain<0){
+					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
+					sum_area += this.reo[i].area;
+				}
+			}
+			return sum_area_times_depth/sum_area;
+		}.bind(this)
+	});
+	
+	
+	
+	this.get_tension_reo = function(){
+		var result = [];
+		var dn = this.dn ;
+		for(var i = 0; i < this.reo.length;i++){
+			if(this.layer_strain_from_layer_dn(this.reo[i], dn)>0){
+				result.push(this.reo[i]);
+			}
+		}
+		return result;
+	}.bind(this);
+	
+	this.get_compression_reo = function(){
+		var result = [];
+		var dn = this.dn ;
+		for(var i = 0; i < this.reo.length;i++){
+			if(this.layer_strain_from_layer_dn(this.reo[i], dn)<0){
+				result.push(this.reo[i]);
+			}
+		}
+		return result;
+	}.bind(this);
 	
 	
 	// #############################################################################
@@ -93,7 +133,7 @@ function Beam(){
 		var cnt = 0;
 		do{
 			dn = (top+bot)/2;
-			diff = this.Ts_from_dn(dn)-this.Cc_from_dn(dn);
+			diff = this.Ts_from_dn(dn)-this.Cs_from_dn(dn)-this.Cc_from_dn(dn);
 			if(diff>0){
 				bot = dn;
 			}else{
