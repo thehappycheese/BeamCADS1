@@ -61,7 +61,7 @@
 	<div style="min-width:360px;max-width:500px;">
 		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
 			<tr>
-				<td id="enabledtd" rowspan=1 style="padding:0;">
+				<td id="enabledtd" style="padding:0;">
 					<input id="enabled" type="checkbox" data-tooltip="Enable/Disable Reo Layer."/>
 				</td>
 				<td style="text-align:right;">
@@ -70,6 +70,9 @@
 				<td style="text-align:left;">
 					<button tabindex="-1" class="spinbut" id="spinbutup"	data-tooltip="more"><!--&#9650;--></button>
 					<button tabindex="-1" class="spinbut" id="spinbutdown"	data-tooltip="less"><!--&#9660;--></button>
+				</td>
+				<td id="asttd" style="text-align:left;">
+					= <span id="ast">0000</span> mm&#178;
 				</td>
 				<td style="text-align:right;padding-left:0.5em;">
 					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;" data-tooltip="Offset: Space between the bars of this layer and the next."/>

@@ -25,7 +25,6 @@
 	</div>
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv" class="bmpblock">
-			<!-- TODO: fix the pattern mathcing here-->
 			<x-input	id="Ln"		
 						notation ="$$$L_n$$$" 
 						unit="mm"
@@ -71,7 +70,7 @@
 						data-tooltip="Diameter of figment bars which from the reo 'ribcage'"></x-input> 
 			<x-input	id="rhoc"
 						notation="$$$\rho_c$$$"
-						unit="kg/m^3"
+						unit="kg/m&#179;"
 						value="2400"
 						type="number"
 						min="2100"
@@ -84,6 +83,9 @@
 						value="32"
 						pattern="(20|25|32|40|50|65|80|100)"
 						data-tooltip="Concrete Strength"></x-input>
+			<div id="invardivtooltipbar" class="tooltipbar">
+				Pro-tips bar
+			</div>
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
 			<table style="width:100%;height:350px;padding:0;">
@@ -108,6 +110,9 @@
 			<div id="reooutputdiv">
 				<reo-output></reo-output>
 			</div>
+			<div id="reoinputoutputtooltipbar" class="tooltipbar">
+				Pro-tips bar
+			</div>
 		</div>
 		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
 			<h1 style="display:block;width:100%">Cross Section</h1>
@@ -125,128 +130,8 @@
 	<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
 		<h1>Calculation Div</h1>
 	</div>
-	<div id="tooltipbar">
-		Pro-tips bar
-	</div>
 </body>
-<script>
-	//###########################################################################################
-	//###### Canvas resize events ###############################################################
-	//###########################################################################################
-	window.addEventListener("resize",handleResize);
-	setTimeout(handleResize,500);
-	setTimeout(handleResize,1500);
-	setTimeout(handleResize,5000);
-
-	function handleResize(e){
-		var c=document.querySelector("#crosssectioncanvas");
-		var st=window.getComputedStyle(c.parentElement);
-		c.width = Math.min(500,parseInt(st.width));
-		c.height = 300;
-		var c=document.querySelector("#elevationcanvas");
-		var st=window.getComputedStyle(c.parentElement);
-		c.width = parseInt(st.width);
-		c.height = 150;
-		// TODO: Update drawing
-	}
-
-	//###########################################################################################
-	//###### Reo input/output helpers ###########################################################
-	//###########################################################################################
-
-	function setErrorList(list){
-
-		if(list===undefined || list.length==0){
-			document.querySelector("#errortr").style.display="none";
-
-		}else{
-			document.querySelector("#errortr").style.display="";
-			var out = '<h1 style="color:darkred;">Error</h1>'
-
-			for(var i = 0;i<list.length;i++){
-				out+="<p>"+list[i]+"</p>";
-			}
-
-			document.querySelector("#errortd").innerHTML = out;
-		}
-
-	}
-
-	//##################################################################3
-	//##### Tooltips ###################################################3
-	//##################################################################3
-
-	setTimeout(function(){
-		addTooltipTo(document.body);
-	},5000);
-
-	function addTooltipTo(d){
-		var els = d.querySelectorAll("*");
-
-		for(var i = 0;i<els.length;i++){
-
-			if(els[i].webkitShadowRoot!=null){
-				addTooltipTo(els[i].webkitShadowRoot);
-				//console.log(els[i]);
-
-			}else if(els[i].getAttribute("data-tooltip")){
-
-				els[i].addEventListener("mouseover",function(e){
-					var targ = e.target; 
-
-					while(targ.getAttribute("data-tooltip")===null){
-						targ=targ.parentNode;
-					}
-
-					var ttb = document.querySelector("#tooltipbar")
-					ttb.innerHTML = "Pro-tip: "+targ.getAttribute("data-tooltip");
-				});
-
-				els[i].addEventListener("mouseout",function(e){
-					var ttb = document.querySelector("#tooltipbar")
-					ttb.innerHTML = "";
-				});
-			}
-
-		}
-
-	}
-
-	//##########################################################
-	//#### Contextual Help View ################################
-	//##########################################################
-
-	(function(){
-		var xins = document.querySelectorAll("x-input");
-
-		for(i=0;i<xins.length;i++){
-
-			xins[i].addEventListener("mousedown",function(e){
-				setHelpLoc("infos/"+e.target.id+".htm");
-			})
-		}
-
-	})()
-
-	function setHelpLoc(url){
-
-		if(document.querySelector("#varinfoiframe").getAttribute("src") != url){
-			document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
-		}
-
-	}
-
-
-	document.querySelector("#varinfoiframe").addEventListener("load",function(e){
-
-		if(e.target.contentDocument.querySelector("meta")!=null){
-			e.target.contentWindow.location.replace("infos/404.htm");
-		}
-
-	});
-	var ifrm = document.querySelector("#varinfoiframe");
-</script>
- <script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
+<script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
 <script>
 
 
@@ -395,124 +280,370 @@ function Vector(x,y){
 
 
 
-// #########		 Crawling:.\ReoLayer.js		#########
-
-function ReoLayer(parentbeam,barcode){
-	this.parentbeam = parentbeam;
-	this.number		= undefined;
-	this.diameter	= undefined;
-	this.offset		= undefined;
-	this.bartype	= "N";
-	this.from		= undefined;
-	this.diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
-	this.areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-
-	Object.defineProperty(this,"area",{get:function(){
-		return this.number * this.areas[this.diameters.indexOf(this.diameter)];
-	}.bind(this)})
-
-	this.setBarcode = function(barcode){
-		var bs = barcode.split("N");
-		this.diameter = parseInt(bs[1]);
-		this.number = parseInt(bs[0]);
-	}.bind(this);
-
-	this.getBarCode = function(){
-		return this.number + this.bartype + this.diameter;
-	}.bind(this);
-
-	this.isValid = function(){
-		// TODO: validate this object
-		return typeof this.offset == "number"
-				&& !isNaN(this.area)
-				&& (this.from=="top" || this.from=="bottom" || this.from=="highest" || this.from=="lowest");
-	}.bind(this);
-
-	this.getDepth = function(){
-
-		switch(this.from){
-			case "top":
-				return this.offset;
-			case "bottom":
-				return this.parentbeam.D-this.offset;
-			case "lowest":
-				return this.parentbeam.D-this.parentbeam.cover - this.parentbeam.dfitments - this.offset - this.diameter/2;
-			case "highest":
-				return this.parentbeam.cover + this.parentbeam.dfitments + this.offset + this.diameter/2-1;
-			default:
-				throw new Error("Can't get depth: this.from is not correct.");
-		}
-
-		return undefined;
-	}.bind(this);
-
-	this.setFromArea = function (a,moreless){
-		// TODO: subject this function to further testing
-		var result = []
-		var fitwidth = this.parentbeam.getFitWidth();
-		// AS4671 Table 5A in section 7
-		var ndia = [10,	12,		16,		20,		24,		28,		32,		36,		40];
-		var area = [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-		// Search for a bunch of solutions that will get more than or equal to required area 'a':
-		var n, d;
-
-		for(d = area.length-1; d>=0; d--){
-
-			switch(moreless){
-				case "less":
-					n = Math.max(this.parentbeam.minnumberofbars,Math.floor(a/area[d]));
-					break
-				case "more":
-				default:
-					n = Math.max(this.parentbeam.minnumberofbars,Math.ceil(a/area[d]));
-			}
-
-
-			if(n<this.parentbeam.maxnumberofbars && ndia[d]*n+this.parentbeam.minbarspacing*(n-1)<fitwidth){
-				// There are not too many bars, and the number of bars fits within the required width
-				result.push({number:n,diameter:ndia[d],area:area[d]*n});
-			}
-
-		}
-
-		// Sort by area
-
-		result.sort(function(a,b){
-			// 50mm^2 is median difference in the available areas for less than 10 bars
-			// If the difference between areas is less than 50 and the number of bars is less, reverse the sort decision
-			var diff = Math.abs(a.area-b.area);
-
-			if(a.area<b.area){
-				// TODO: fix up this sorting thing. Sorting by area seems to be just fine.
-				if(diff<20 && b.number<a.number) return 1;
-				return -1;
-
-			}else{
-				if(diff<20 && a.number<b.number)	return -1;
-				return 1;
-			}
-
-		});
-		this.diameter	= result[0].diameter;
-		this.number		= result[0].number;
-	}.bind(this);
-
-	this.morethan = function(a){
-		this.setFromArea(a||this.area+1||1, "more");
-	}.bind(this);
-
-	this.lessthan = function(a){
-		this.setFromArea(a||this.area-1||1, "less");
-	}.bind(this);
-	if(barcode)	this.setBarcode(barcode);
-}
-
-
-
 // #########		 Crawling:.\widgets\widgets.js		#########
 
 // ####### remainder of .\widgets\widgets.js has not been imported ########
-</script>
+
+
+
+// #########		 Crawling:.\Beam.js		#########
+"use strict";
+
+function Beam(){
+
+	this.create = function(){
+		// #########################################################
+		// Misc considerations
+		this.elcass 			= "A";
+		this.minbarspacing		= undefined;
+		// #########################################################
+		// Reinforcement considerations
+		this.reo = [
+			{number:2, diameter:10, area:156, depth:25+10+10/2		},
+			{number:2, diameter:10, area:200, depth:600-25-10-10/2	},
+		];
+		this.df		= 10;
+		// #########################################################
+		// Geometric considerations
+		this.b		= 300;
+		this.D		= 600;
+		this.cover	= 25;
+		this.Ln		= 3000;
+		// #########################################################
+		// Material considerations
+		this.fc		= 32;
+		this.Ec		= undefined;
+		this.epsiloncmax = 0.003;// TODO: getcorrect code ref. AS3600 8.1.3??
+		this.rohc	= 2400;
+		// AS4671 500MPa Steel && AS3600
+		this.fsy = 500;// Steel characteristic yield stress: MPa
+		// AS3600 3.2.2 taken to be (or determined by test)
+		// TODO: add Es to variable inputs (commit with35mins)
+		this.Es = 200000;// Steel Young's modulus of elasticity: MPa
+		this.epsilonsy = this.fsy/this.Es; // 0.0025 or there-abouts
+	}.bind(this);
+	// #############################################################################
+	// ### GEOMETRIC HELPER FUNCTIONS ##############################################
+	// #############################################################################
+
+	Object.defineProperty(this,"innerWidth",{
+
+		get:function innerWidth(){
+			return this.b - 2*(this.cover+this.df);
+		}.bind(this)}
+
+	);
+	// TODO: Which layers of steel should be disregarded? Surely steel 'close' to the centroid should be left out.
+
+	Object.defineProperty(this,"depthToTensionSteelCentroid",{
+
+		get:function depthToTensionSteelCentroid(){
+			var sum_area_times_depth = 0;
+			var sum_area = 0;
+			var layer_strain;
+			var dn = this.dn;
+
+			for(var i=0;i<this.reo.length;i++){
+				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
+
+				if(layer_strain>0){
+					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
+					sum_area += this.reo[i].area;
+				}
+
+			}
+
+			return sum_area_times_depth/sum_area;
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"depthToCompressionSteelCentroid",{
+
+		get:function depthToCompressionSteelCentroid(){
+			var sum_area_times_depth = 0;
+			var sum_area = 0;
+			var layer_strain;
+			var dn = this.dn;
+
+			for(var i=0;i<this.reo.length;i++){
+				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
+
+				if(layer_strain<0){
+					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
+					sum_area += this.reo[i].area;
+				}
+
+			}
+
+			return sum_area_times_depth/sum_area;
+		}.bind(this)
+	});
+
+	this.get_tension_reo = function(){
+		var result = [];
+		var dn = this.dn ;
+
+		for(var i = 0; i < this.reo.length;i++){
+
+			if(this.layer_strain_from_layer_dn(this.reo[i], dn)>0){
+				result.push(this.reo[i]);
+			}
+
+		}
+
+		return result;
+	}.bind(this);
+
+	this.get_compression_reo = function(){
+		var result = [];
+		var dn = this.dn ;
+
+		for(var i = 0; i < this.reo.length;i++){
+
+			if(this.layer_strain_from_layer_dn(this.reo[i], dn)<0){
+				result.push(this.reo[i]);
+			}
+
+		}
+
+		return result;
+	}.bind(this);
+	// #############################################################################
+	// ### HIGH LEVEL CAPACITY FUNCTIONS ###########################################
+	// #############################################################################
+
+	Object.defineProperty(this,"Muo",{
+
+		get:function Muo(){
+			return (this.dsc-this.gamma*this.dn) * this.Cc_from_dn(this.dn)/1000; // kNm
+		}.bind(this)}
+
+	);
+
+	Object.defineProperty(this,"dn",{get:function(){
+		// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
+		// TODO: make a check to see that reo that is too small is never fed into this beam calculator
+		var dn;
+		var top = this.D;
+		var bot = 0;
+		var diff;
+		var cnt = 0;
+
+		do{
+			dn = (top+bot)/2;
+			diff = this.Ts_from_dn(dn)-this.Cs_from_dn(dn)-this.Cc_from_dn(dn);
+
+			if(diff>0){
+				bot = dn;
+
+			}else{
+				top = dn;
+			}
+
+			cnt++
+		}while(Math.abs(diff) > 0.0001 && cnt<20);
+		return dn;
+	}.bind(this)});
+	// #############################################################################
+	// ### GET TOTAL STEEL FORCES ##################################################
+	// #############################################################################
+
+	Object.defineProperty(this,"Ts",{get:function(){
+		return this.Ts_from_dn(this.dn);
+	}.bind(this)});
+
+	Object.defineProperty(this,"Cs",{get:function(){
+		return this.Cs_from_dn(this.dn);
+	}.bind(this)});
+
+	Object.defineProperty(this,"Cc",{get:function(){
+		return this.Cc_from_dn(this.dn);
+	}.bind(this)});
+
+	this.Ts_from_dn = function(dn){
+		return this.Fs_from_dn(dn,true);
+	}.bind(this);
+
+	this.Cs_from_dn = function(dn){
+		return this.Fs_from_dn(dn,false);
+	}.bind(this);
+
+	this.Fs_from_dn = function(dn, returntension){
+		var result = 0;
+		var epsilonsi;
+
+		for(var i = 0;i<this.reo.length;i++){
+			// First get strain in the steel layer according to similar triangles:
+			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
+			// Limit the strain to a range of -0.0025 to 0.0025
+
+			if(returntension){
+				epsilonsi = Math.max(0, Math.min(epsilonsi, this.epsilonsy));
+
+			}else{
+				epsilonsi = Math.max(-this.epsilonsy, Math.min(epsilonsi, 0));
+			}
+
+			result += this.reo[i].area * this.Es * epsilonsi/1000; // kN
+		}
+
+		return result;
+	}.bind(this);
+	// #############################################################################
+	// ### GET INDIVIDUAL STEEL FORCES #############################################
+	// #############################################################################
+
+	this.layer_strain_from_layer_dn = function(layer,dn){
+		// First get strain in the steel layer according to similar triangles:
+		var epsilonsi = this.epsiloncmax/dn*(layer.depth - dn);
+		// Limit the strain to a range of -0.0025 to 0.0025
+		// (The stress does not increase after yielding at fsy)
+		epsilonsi = Math.max(-this.epsilonsy, Math.min(epsilonsi, this.epsilonsy));
+		return epsilonsi
+	}.bind(this);
+
+	this.layer_force_from_layer_dn = function(layer,dn){
+		var layer_strain = this.layer_strain_from_layer_dn(layer,dn);
+		return layer.area * this.Es * layer_strain/1000; // kN
+	}.bind(this);
+
+	this.layer_yielded_from_layer_dn = function(layer,dn){
+		var layer_strain = this.layer_strain_from_layer_dn(layer, dn);
+		return layer_strain<=-0.0025 || layer_strain>=0.0025;
+	}.bind(this);
+	// ########################################################################
+	// ####### GET CONCRETE FORCE #############################################
+	// ########################################################################
+
+	this.Cc_from_dn = function(dn){
+		return (this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
+	}.bind(this);
+	// ########################################################################
+	// #### MISC COEFICIENTS ##################################################
+	// ########################################################################
+
+	Object.defineProperty(this,"gamma",{get:function(){
+		var r1 = 1.05-this.fc*0.007;
+		var r2 = Math.max(0.67,Math.min(0.85,r1)) 
+		return r2;
+	}.bind(this)});
+
+	Object.defineProperty(this,"alpha2",{get:function(){
+		var r1 = 1-this.fc*0.003
+		var r2 = Math.max(0.67,Math.min(0.85,r1));
+		return r2;
+	}.bind(this)});
+	this.create();
+	/*
+	*/
+};
+//###########################################################################################
+//###### Canvas resize events ###############################################################
+//###########################################################################################
+window.addEventListener("resize",handleResize);
+setTimeout(handleResize,500);
+setTimeout(handleResize,1500);
+setTimeout(handleResize,5000);
+
+function handleResize(e){
+	var c=document.querySelector("#crosssectioncanvas");
+	var st=window.getComputedStyle(c.parentElement);
+	c.width = Math.min(500,parseInt(st.width));
+	c.height = 300;
+	var c=document.querySelector("#elevationcanvas");
+	var st=window.getComputedStyle(c.parentElement);
+	c.width = parseInt(st.width);
+	c.height = 150;
+	// TODO: Update drawing
+}
+
+//###########################################################################################
+//###### Reo input/output helpers ###########################################################
+//###########################################################################################
+
+function setErrorList(list){
+
+	if(list===undefined || list.length==0){
+		document.querySelector("#errortr").style.display="none";
+
+	}else{
+		document.querySelector("#errortr").style.display="";
+		var out = '<h1 style="color:darkred;">Error</h1>'
+
+		for(var i = 0;i<list.length;i++){
+			out+="<p>"+list[i]+"</p>";
+		}
+
+		document.querySelector("#errortd").innerHTML = out;
+	}
+
+}
+
+//##################################################################3
+//##### Tooltips ###################################################3
+//##################################################################3
+
+setTimeout(function(){
+	addTooltipTo(document.body);
+},5000);
+
+function addTooltipTo(d){
+	var els = d.querySelectorAll("*");
+
+	for(var i = 0;i<els.length;i++){
+
+		if(els[i].webkitShadowRoot!=null){
+			addTooltipTo(els[i].webkitShadowRoot);
+			//console.log(els[i]);
+
+		}else if(els[i].getAttribute("data-tooltip")){
+
+			els[i].addEventListener("mouseover",function(e){
+				var targ = e.target; 
+
+				while(targ.getAttribute("data-tooltip")===null){
+					targ=targ.parentNode;
+				}
+
+				var ttb = document.querySelector("#reoinputoutputtooltipbar")
+				ttb.innerHTML = "Pro-tip: "+targ.getAttribute("data-tooltip");
+			});
+
+			els[i].addEventListener("mouseout",function(e){
+				var ttb = document.querySelector("#reoinputoutputtooltipbar")
+				ttb.innerHTML = "";
+			});
+		}
+
+	}
+
+}
+
+//##########################################################
+//#### Contextual Help View ################################
+//##########################################################
+
+(function(){
+	var xins = document.querySelectorAll("x-input");
+
+	for(i=0;i<xins.length;i++){
+
+		xins[i].addEventListener("mousedown",function(e){
+			setHelpLoc("infos/"+e.target.id+".htm");
+		})
+	}
+
+})()
+
+function setHelpLoc(url){
+
+	if(document.querySelector("#varinfoiframe").getAttribute("src") != url){
+		document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
+	}
+
+}
+
+var ifrm = document.querySelector("#varinfoiframe");</script>
 
 
 
@@ -603,7 +734,7 @@ function ReoLayer(parentbeam,barcode){
 	<div style="min-width:360px;max-width:500px;">
 		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
 			<tr>
-				<td id="enabledtd" rowspan=1 style="padding:0;">
+				<td id="enabledtd" style="padding:0;">
 					<input id="enabled" type="checkbox" data-tooltip="Enable/Disable Reo Layer."/>
 				</td>
 				<td style="text-align:right;">
@@ -612,6 +743,9 @@ function ReoLayer(parentbeam,barcode){
 				<td style="text-align:left;">
 					<button tabindex="-1" class="spinbut" id="spinbutup"	data-tooltip="more"><!--&#9650;--></button>
 					<button tabindex="-1" class="spinbut" id="spinbutdown"	data-tooltip="less"><!--&#9660;--></button>
+				</td>
+				<td id="asttd" style="text-align:left;">
+					= <span id="ast">0000</span> mm&#178;
 				</td>
 				<td style="text-align:right;padding-left:0.5em;">
 					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;" data-tooltip="Offset: Space between the bars of this layer and the next."/>
@@ -1118,7 +1252,6 @@ function ReoLayer(parentbeam,barcode){
 
 		input{
 			width:100%;
-			min-width:5em;
 			text-align:right;
 			border:1px solid lightgrey;
 			padding: 2px;
@@ -1151,7 +1284,8 @@ function ReoLayer(parentbeam,barcode){
 
 
 		#unit{
-			width:4em;
+			width:3em;
+			font-family: Palatino, serif;
 		}
 
 
@@ -1179,8 +1313,8 @@ function ReoLayer(parentbeam,barcode){
 				<td id="name" colspan=3></td>
 			</tr>
 			<tr>
-				<td id="notation" style="padding:0.5em 0;text-align:right;width:8em;"></td>
-				<td style="padding-left:0.3em;text-align:right;"><input type="text" required/></td>
+				<td id="notation" style="padding-right:0.5em;text-align:right;width:4em;"></td>
+				<td style="padding-left:0.3em;text-align:right;width:5em;"><input type="text" required/></td>
 				<td id="unit"></td>
 			</tr>
 			<tr>

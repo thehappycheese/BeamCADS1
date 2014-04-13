@@ -75,7 +75,7 @@
 						
 			<x-input	id="rhoc"
 						notation="$$$\rho_c$$$"
-						unit="kg/m^3"
+						unit="kg/m&#179;"
 						value="2400"
 						type="number"
 						min="2100"
@@ -89,6 +89,10 @@
 						value="32"
 						pattern="(20|25|32|40|50|65|80|100)"
 						data-tooltip="Concrete Strength"></x-input>
+						
+			<div id="invardivtooltipbar" class="tooltipbar">
+				Pro-tips bar
+			</div>
 			
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
@@ -114,6 +118,9 @@
 			<div id="reooutputdiv">
 				<reo-output></reo-output>
 			</div>
+			<div id="reoinputoutputtooltipbar" class="tooltipbar">
+				Pro-tips bar
+			</div>
 		</div>
 		
 		
@@ -133,9 +140,7 @@
 	<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
 		<h1>Calculation Div</h1>
 	</div>
-	<div id="tooltipbar">
-		Pro-tips bar
-	</div>
+	
 	
 </body>
 

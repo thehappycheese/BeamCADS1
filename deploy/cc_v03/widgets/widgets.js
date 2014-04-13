@@ -20,6 +20,6 @@ function loadWidget(url){
 }
 var widgets_to_load = 3
 loadWidget("widgets/ReoInput.htm");
-loadWidget("widgets/ReoManager.htm");
 loadWidget("widgets/ReoOutput.htm");
 loadWidget("widgets/XInput.htm");
+loadWidget("widgets/ReoManager.htm");

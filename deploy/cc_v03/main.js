@@ -1,6 +1,6 @@
 ///~ ../jslib/Vector.js
-///* ReoLayer.js
 ///* widgets/widgets.js
+///* Beam.js
 
 
 //###########################################################################################
@@ -62,11 +62,11 @@ function addTooltipTo(d){
 				while(targ.getAttribute("data-tooltip")===null){
 					targ=targ.parentNode;
 				}
-				var ttb = document.querySelector("#tooltipbar")
+				var ttb = document.querySelector("#reoinputoutputtooltipbar")
 				ttb.innerHTML = "Pro-tip: "+targ.getAttribute("data-tooltip");
 			});
 			els[i].addEventListener("mouseout",function(e){
-				var ttb = document.querySelector("#tooltipbar")
+				var ttb = document.querySelector("#reoinputoutputtooltipbar")
 				ttb.innerHTML = "";
 			});
 		}
@@ -92,10 +92,4 @@ function setHelpLoc(url){
 		document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
 	}
 }
-document.querySelector("#varinfoiframe").addEventListener("load",function(e){
-	if(e.target.contentDocument.querySelector("meta")!=null){
-		e.target.contentWindow.location.replace("infos/404.htm");
-	}
-});
-
 var ifrm = document.querySelector("#varinfoiframe");

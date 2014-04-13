@@ -12,8 +12,8 @@ function Beam(){
 		// #########################################################
 		// Reinforcement considerations
 		this.reo = [
-			{number:2, diameter:10, area:156, depth:25+10+10/2,		tension:undefined},
-			{number:2, diameter:10, area:156, depth:600-25-10-10/2,	tension:undefined},
+			{number:2, diameter:10, area:156, depth:25+10+10/2		},
+			{number:2, diameter:10, area:200, depth:600-25-10-10/2	},
 		];
 		this.df		= 10;
 		
@@ -30,6 +30,7 @@ function Beam(){
 		// Material considerations
 		this.fc		= 32;
 		this.Ec		= undefined;
+		this.epsiloncmax = 0.003;// TODO: getcorrect code ref. AS3600 8.1.3??
 		this.rohc	= 2400;
 		// AS4671 500MPa Steel && AS3600
 		this.fsy = 500;// Steel characteristic yield stress: MPa
@@ -87,7 +88,6 @@ function Beam(){
 			return sum_area_times_depth/sum_area;
 		}.bind(this)
 	});
-	
 	
 	
 	this.get_tension_reo = function(){
@@ -175,7 +175,7 @@ function Beam(){
 	}.bind(this);
 	
 	
-	this.Fs_from_dn = funciton(dn, returntension){
+	this.Fs_from_dn = function(dn, returntension){
 		var result = 0;
 		var epsilonsi;
 		for(var i = 0;i<this.reo.length;i++){
@@ -190,7 +190,7 @@ function Beam(){
 			result += this.reo[i].area * this.Es * epsilonsi/1000; // kN
 		}
 		return result;
-	}.binc(this);
+	}.bind(this);
 	
 	
 	
@@ -255,6 +255,9 @@ function Beam(){
 	
 	
 	this.create();
+	
+	/*
+	*/
 };
 
 
