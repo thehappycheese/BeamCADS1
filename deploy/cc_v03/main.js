@@ -48,27 +48,32 @@ function setErrorList(list){
 //##### Tooltips ###################################################3
 //##################################################################3
 setTimeout(function(){
-	addTooltipTo(document.body);
-},5000);
-function addTooltipTo(d){
+	addTooltipTo(document.querySelector("#invardiv"),document.querySelector("#invardivtooltipbar"));
+},1500);
+function addTooltipTo(d, output){
+	this.output = output;
 	var els = d.querySelectorAll("*");
 	for(var i = 0;i<els.length;i++){
 		if(els[i].webkitShadowRoot!=null){
-			addTooltipTo(els[i].webkitShadowRoot);
+			addTooltipTo(els[i].webkitShadowRoot, output);
 			//console.log(els[i]);
 		}else if(els[i].getAttribute("data-tooltip")){
+			
+			els[i].output = output;
+			
 			els[i].addEventListener("mouseover",function(e){
 				var targ = e.target; 
 				while(targ.getAttribute("data-tooltip")===null){
 					targ=targ.parentNode;
 				}
-				var ttb = document.querySelector("#reoinputoutputtooltipbar")
+				var ttb = this.output;
 				ttb.innerHTML = "Pro-tip: "+targ.getAttribute("data-tooltip");
-			});
+			}.bind(els[i]));
+			
 			els[i].addEventListener("mouseout",function(e){
-				var ttb = document.querySelector("#reoinputoutputtooltipbar")
+				var ttb = this.output;
 				ttb.innerHTML = "";
-			});
+			}.bind(els[i]));
 		}
 	}
 }

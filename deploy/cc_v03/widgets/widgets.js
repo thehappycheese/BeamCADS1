@@ -1,5 +1,5 @@
 ///.
-function loadWidget(url){
+function loadWidget(url, on_done){
 	var x = new XMLHttpRequest();
 	x.open("GET",url);
 	x.responseType = "document";
@@ -11,15 +11,19 @@ function loadWidget(url){
 		var script = document.importNode(doc.querySelector("script"),true);
 		console.log("Attacthing script:",url);
 		document.body.appendChild(script);
-		widgets_to_load--;
-		if(widgets_to_load==0){
-			window.dispatchEvent(new Event("widgetsloaded"));
-		}
+		on_done();
 	}
 	x.send();
 }
-var widgets_to_load = 3
-loadWidget("widgets/ReoInput.htm");
-loadWidget("widgets/ReoOutput.htm");
-loadWidget("widgets/XInput.htm");
-loadWidget("widgets/ReoManager.htm");
+loadWidget("widgets/ReoInput.htm",function(){
+	loadWidget("widgets/ReoOutput.htm",function(){
+		loadWidget("widgets/XInput.htm",function(){
+			loadWidget("widgets/ReoManager.htm",function(){
+				console.log("widgets loaded in order")
+				window.dispatchEvent(new Event("widgetsloaded"));
+			});
+		});
+	});
+});
+
+

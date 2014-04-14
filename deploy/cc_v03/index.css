@@ -51,6 +51,13 @@ h2{
 	flex: 3 0 270px;
 	padding: 5px;
 }
+#invardivdiv{
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:space-around;
+	align-content:space-around;
+	height:300px;
+}
 #varinfodiv{
 	flex: 1 0 500px;
 	padding:0;
@@ -103,18 +110,20 @@ x-input{
 
 
 .tooltipbar {
-	height:30px;
-	line-height:30px;
+	height:2.2em;
 	width:100%;
 	border:1px solid grey;
 	border-radius:4px;
 	background-color:#FFFFE5;
 	color:darkblue;
 	margin-top:5px;
-	text-align:center;
+	text-align:left;
 	font-family:sans-serif;
 	font-size: 0.9em;
-	align-self:flex-end;
+	padding:5px;
+	padding-left:55px;
+	text-indent:-50px;
+	
 }
 @-webkit-keyframes flashyellow{
 	0%{background:white;}
