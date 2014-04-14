@@ -49,6 +49,7 @@ function setErrorList(list){
 //##################################################################3
 setTimeout(function(){
 	addTooltipTo(document.querySelector("#invardiv"),document.querySelector("#invardivtooltipbar"));
+	addTooltipTo(document.querySelector("#reoinputoutputdiv"),document.querySelector("#reoinputoutputtooltipbar"));
 },1500);
 function addTooltipTo(d, output){
 	this.output = output;

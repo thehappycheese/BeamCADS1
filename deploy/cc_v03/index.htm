@@ -32,7 +32,8 @@
 							type="number"
 							min="1000"
 							max="50000"
-							step="100"></x-input>
+							step="100"
+							data-tooltip="Clear Span from edge to edge of supports"></x-input>
 							
 				<x-input	id="b"
 							notation ="$$$b$$$"
@@ -41,7 +42,8 @@
 							type="number"
 							min="200"
 							max="5000"
-							step="10"></x-input>
+							step="10"
+							data-tooltip="Breadth (horizontal width) of rectangular beam cross section"></x-input>
 							
 				<x-input	id="D"
 							notation ="$$$D$$$"
@@ -60,7 +62,7 @@
 							min="20"
 							max="100"
 							step="5"
-							data-tooltip="Distance from the outer surface of concrete to the reo bars"></x-input>
+							data-tooltip="Distance from the outer surface of concrete to the reo bars (all around)"></x-input>
 							
 				<x-input	id="$$$\text{eclass}$$$"
 							notation ="E-Class"
@@ -72,7 +74,7 @@
 							notation="$$$d_f$$$"
 							unit="mm"
 							value="10"
-							data-tooltip="Diameter of figment bars which from the reo 'ribcage'"></x-input> 
+							data-tooltip="Diameter of fitment bars which from the beam's 'ribcage'"></x-input> 
 							
 				<x-input	id="rhoc"
 							notation="$$$\rho_c$$$"
@@ -119,7 +121,6 @@
 				<reo-output></reo-output>
 			</div>
 			<div id="reoinputoutputtooltipbar" class="tooltipbar">
-				Pro-tips bar
 			</div>
 		</div>
 		

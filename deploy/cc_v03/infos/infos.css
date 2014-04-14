@@ -21,7 +21,8 @@ table{
 }
 p{
 	margin:0.2em;
-	margin-left:2em;
+	margin-left:5em;
+	text-indent:-3em;
 }
 nav{
 	position:fixed;
