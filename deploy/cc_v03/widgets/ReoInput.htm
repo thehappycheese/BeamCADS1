@@ -105,13 +105,14 @@
 <script id="ReoInputWidgetScript">
 	ReoInputPrototype = Object.create(HTMLDivElement.prototype);
 	ReoInputPrototype.createdCallback = function(){
-		
+
 		
 		this._selected = false;
 		this._enabled = false;
 		
 		
 		this.create = function(){
+			
 			// --------
 			// CONSTRUCT
 			this.webkitCreateShadowRoot();
@@ -123,8 +124,8 @@
 			
 			// ---------
 			// PROPERTIES
-			
-			this.manager = this.parentElement(;
+			console.log(this, this.parentElement);
+			this.manager = this.parentElement;
 			
 			this.maindiv = this.doc.querySelector("div");
 			this.enabledIn = this.doc.querySelector("#enabled");
@@ -347,7 +348,33 @@
 			this.dispatchEvent(e);
 			this.update();
 			
-			console.log(this.manager.getBottomRow()==this);
+			var manager = this.parentElement;
+			var b = document.querySelector("#b");
+			var D = document.querySelector("#D");
+			var df = document.querySelector("#df");
+			var cover = document.querySelector("#cover");
+			
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			
+			var combs = [];
+			var num,dia,diai;
+			for(num = 2; num<=10;num++){
+				for(diai=0;diai<diameters.length;diai++){
+					dia = diameters[diai];
+					combs.push({number:num, diameter:dia, area:areas[diai]*num})
+				}
+			}
+			combs.sort(function(a,b){
+				return a.area-b.area;
+			})
+			console.table(combs);
+			
+			if(manager.getBottomRow()===this){
+				
+			}else{
+				
+			}
 			
 			
 			
