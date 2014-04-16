@@ -57,7 +57,12 @@
 		
 		
 		this.getBottomRow = function(){
-			return this.rows[this.rows.length-1];
+			var r = this.getEnabledRows();
+			return r[r.length-1];
+		}.bind(this);
+		this.getTopRow = function(){
+			var r = this.getEnabledRows();
+			return r[0];
 		}.bind(this);
 		
 		
@@ -83,6 +88,12 @@
 		this.createReoInput = function(){
 			var nr = new ReoInput();
 			nr.addEventListener("change",this.update);
+			nr.addEventListener("gimmemore",function(e){
+				// TODO:
+			});
+			nr.addEventListener("gimmeless",function(e){
+				// TODO: 
+			});
 			return nr;
 		}.bind(this);
 		

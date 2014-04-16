@@ -61,8 +61,8 @@
 							max="100"
 							step="5"
 							data-tooltip="Distance from the outer surface of concrete to the reo bars (all around)"></x-input>
-				<x-input	id="$$$\text{eclass}$$$"
-							notation ="E-Class"
+				<x-input	id="eclass"
+							notation ="$$$\text{E. Class}$$$"
 							value="A"
 							pattern="(A|B|C|D)"
 							data-tooltip="Exposure Classification determined by exposure to natural environment. Use A | B | C | D"></x-input>
@@ -70,7 +70,7 @@
 							notation="$$$d_f$$$"
 							unit="mm"
 							value="10"
-							data-tooltip="Diameter of fitment bars which from the beam's 'ribcage'"></x-input> 
+							data-tooltip="Diameter of fitment bars which from the 'ribcage' of the beam."></x-input> 
 				<x-input	id="rhoc"
 							notation="$$$\rho_c$$$"
 							unit="kg/m&#179;"
@@ -133,12 +133,13 @@
 		<h1>Calculation Div</h1>
 	</div>
 </body>
-
+<script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
 <script>
 
 
 
 // #########		 Crawling:.\main.js		#########
+"use strict";
 
 
 
@@ -552,6 +553,26 @@ function Beam(){
 	/*
 	*/
 };
+// Create global beam object
+var b = new Beam();
+
+function intakeBeamValues(){
+	b.Ln		= document.getElementById("Ln").value;
+	b.b			= document.getElementById("b").value;
+	b.D			= document.getElementById("D").value;
+	b.cover		= document.getElementById("cover").value;
+	b.eclass	= document.getElementById("eclass").value;
+	b.df		= document.getElementById("df").value;
+	b.rohc		= document.getElementById("rohc").value;
+	b.fc		= document.getElementById("fc").value;
+}
+
+
+function intakeBeamReo(){
+	var rm = document.querySelector("reo-manager");
+	console.log(rm.getEnabledRows())
+}
+
 //###########################################################################################
 //###### Canvas resize events ###############################################################
 //###########################################################################################
@@ -559,6 +580,7 @@ window.addEventListener("resize",handleResize);
 setTimeout(handleResize,500);
 setTimeout(handleResize,1500);
 setTimeout(handleResize,5000);
+setTimeout(handleResize,10000);
 
 function handleResize(e){
 	var c=document.querySelector("#crosssectioncanvas");
@@ -604,7 +626,6 @@ setTimeout(function(){
 },1500);
 
 function addTooltipTo(d, output){
-	this.output = output;
 	var els = d.querySelectorAll("*");
 
 	for(var i = 0;i<els.length;i++){
@@ -675,7 +696,7 @@ document.body.addEventListener("mousewheel",function(e){
 (function(){
 	var xins = document.querySelectorAll("x-input");
 
-	for(i=0;i<xins.length;i++){
+	for(var i = 0;i<xins.length;i++){
 
 		xins[i].addEventListener("mousedown",function(e){
 			setHelpLoc("infos/"+e.target.id+".htm");
@@ -794,7 +815,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 					<button tabindex="-1" class="spinbut" id="spinbutdown"	data-tooltip="less"><!--&#9660;--></button>
 				</td>
 				<td id="asttd" style="text-align:left;">
-					= <span id="ast">0000</span> mm&#178;
+					= <span id="area">0000</span> mm&#178;
 				</td>
 				<td style="text-align:right;padding-left:0.5em;">
 					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;" data-tooltip="Offset: Space between the bars of this layer and the next."/>
@@ -826,6 +847,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 	ReoInputPrototype.createdCallback = function(){
 		this._selected = false;
 		this._enabled = false;
+		/*
 
 		this.create = function(){
 			// --------
@@ -839,6 +861,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			this.maindiv = this.doc.querySelector("div");
 			this.enabledIn = this.doc.querySelector("#enabled");
 			this.barcodeIn = this.doc.querySelector("#barcode");
+			this.areaOut = this.doc.querySelector("#area");
 			this.fromIn = this.doc.querySelector("#from");
 			this.infobutIn = this.doc.querySelector("#infobut");
 			this.offsetIn = this.doc.querySelector("#offset");
@@ -920,6 +943,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				val = val.toUpperCase();
 				e.target.value =  val;
 				e.target.setSelectionRange(ss,se);
+				this.area = this.area_from_barcode(this.barcode);
 			}.bind(this))
 		}.bind(this);
 
@@ -966,6 +990,35 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			}.bind(this),
 		});
 
+		this.reo_info_a_from_d = function(d){
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			return areas[diameters.indexOf(d)];
+		}
+
+
+		this.area_from_barcode = function(barcode){
+			var arr = barcode.split("N");
+			var num = parseInt(arr[0]);
+			var dia = parseInt(arr[1]);
+
+			if(arr.length == 2 && num !==NaN && dia!=NaN){
+				return this.reo_info_a_from_d(dia)*num || undefined;
+
+			}else{
+				return undefined;
+			}
+
+		}
+
+
+		Object.defineProperty(this,"area",{
+
+			get:function(){
+				return this.area_from_barcode(this.barcode);
+			}.bind(this)
+		});
+
 		Object.defineProperty(this,"barcode",{
 
 			get:function(){
@@ -974,17 +1027,20 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			set:function(newval){
 				this.barcodeIn.value = newval;
+				// TODO: this will not cause an update or a change event. An update should occur.
 			}.bind(this),
 		});
 
 		this.more = function(){
 			var e = new Event("gimmemore");
+			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
 		}.bind(this);
 
 		this.less = function(){
 			var e = new Event("gimmeless");
+			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
 		}.bind(this);
@@ -1044,8 +1100,13 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 		});
 
 		this.toggleSelected = function(e){
-			this.selected = !this.selected && this.enabled;
+
+			if(this.enabled){
+				this.selected = !this.selected;
+			}
+
 		}.bind(this);
+		*/
 		this.create();
 	};
 	var ReoInput = document.registerElement("reo-input",{prototype:ReoInputPrototype});
@@ -1107,7 +1168,13 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 		}.bind(this);
 
 		this.getBottomRow = function(){
-			return this.rows[this.rows.length-1];
+			var r = this.getEnabledRows();
+			return r[r.length-1];
+		}.bind(this);
+
+		this.getTopRow = function(){
+			var r = this.getEnabledRows();
+			return r[0];
 		}.bind(this);
 
 		this.getDepthOfRow = function(row){
@@ -1123,6 +1190,13 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 		this.createReoInput = function(){
 			var nr = new ReoInput();
 			nr.addEventListener("change",this.update);
+
+			nr.addEventListener("gimmemore",function(e){
+				if(e.target.
+			});
+
+			nr.addEventListener("gimmeless",function(e){
+			});
 			return nr;
 		}.bind(this);
 

@@ -5,11 +5,20 @@
 
 // Create global beam object
 var b = new Beam();
-function updateBeamValues(){
-	b.b			= document.getElementById("b");
-	b.D			= document.getElementById("D");
-	b.eclass	= document.getElementById("eclass");
-	b.b			= document.getElementById("b");
+function intakeBeamValues(){
+	b.Ln		= document.getElementById("Ln").value;
+	b.b			= document.getElementById("b").value;
+	b.D			= document.getElementById("D").value;
+	b.cover		= document.getElementById("cover").value;
+	b.eclass	= document.getElementById("eclass").value;
+	b.df		= document.getElementById("df").value;
+	b.rohc		= document.getElementById("rohc").value;
+	b.fc		= document.getElementById("fc").value;
+}
+
+function intakeBeamReo(){
+	var rm = document.querySelector("reo-manager");
+	console.log(rm.getEnabledRows())
 }
 
 

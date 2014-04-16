@@ -54,11 +54,12 @@
 			background-color:lightgreen;
 		}
 		div{
-			cursor:default;
+			border-radius:4px;
+			cursor:pointer;
 			-webkit-user-select:none;
 		}
 	</style>
-	<div style="min-width:360px;max-width:500px;">
+	<div style="min-width:360px;max-width:500px;color:grey;" data-tooltip="Click on this row to add it to the summary table below.">
 		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
 			<tr>
 				<td id="enabledtd" style="padding:0;">
@@ -72,7 +73,7 @@
 					<button tabindex="-1" class="spinbut" id="spinbutdown"	data-tooltip="less"><!--&#9660;--></button>
 				</td>
 				<td id="asttd" style="text-align:left;">
-					= <span id="ast">0000</span> mm&#178;
+					= <span id="area">0000</span> mm&#178;
 				</td>
 				<td style="text-align:right;padding-left:0.5em;">
 					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;" data-tooltip="Offset: Space between the bars of this layer and the next."/>
@@ -92,7 +93,7 @@
 					</select>
 				</td>
 				<td style="padding-left:0.5em;">
-					<button id="infobut" data-tooltip="Add/Remove from summary table below.">&#8721;</button>
+					<div id="infobut" data-tooltip="Shows if this row is included in the summary below" style="width:1.5em;height:100%;line-height:100%;text-align:center;"></div>
 				</td>
 			</tr>
 		</table>
@@ -123,6 +124,7 @@
 			this.maindiv = this.doc.querySelector("div");
 			this.enabledIn = this.doc.querySelector("#enabled");
 			this.barcodeIn = this.doc.querySelector("#barcode");
+			this.areaOut = this.doc.querySelector("#area");
 			this.fromIn = this.doc.querySelector("#from");
 			this.infobutIn = this.doc.querySelector("#infobut");
 			this.offsetIn = this.doc.querySelector("#offset");
@@ -135,8 +137,18 @@
 			
 			// -----------------------------------------------------
 			// EVENT LISTENERS
-			this.infobutIn.addEventListener("click",function(e){
-				this.toggleSelected();
+			this.webkitShadowRoot.addEventListener("click",function(e){
+				switch(e.target.nodeName){
+					case "INPUT":
+					case "BUTTON":
+					case "SELECT":
+						break;
+					default:
+						if(this.enabled == false){
+							this.enabled = true;
+						}
+						this.toggleSelected();
+				}
 			}.bind(this));
 			this.spinbutup.addEventListener("click",this.more);
 			this.spinbutdown.addEventListener("click",this.less);
@@ -156,7 +168,7 @@
 				}
 			}.bind(this))
 			
-
+			
 			
 			this.enabledIn.addEventListener("change",function(){
 				this.enabled = this.enabledIn.checked;
@@ -200,6 +212,8 @@
 				val = val.toUpperCase();
 				e.target.value =  val;
 				e.target.setSelectionRange(ss,se);
+				
+				this.area = this.area_from_barcode(this.barcode);
 			}.bind(this))
 			
 		}.bind(this);
@@ -213,6 +227,14 @@
 		}.bind(this);
 		
 		
+		this.update = function(){
+			var e = new Event("update");
+			e.target = this;
+			e.bubbles = true;
+			this.dispatchEvent(e);
+			
+			this.areaOut.innerHTML = this.area_from_barcode(this.barcode);
+		}.bind(this);
 		
 		
 		
@@ -233,7 +255,9 @@
 					e.target = this;
 					this.dispatchEvent(e);
 					this.dispatchChangeEvent();
+					this.webkitShadowRoot.querySelector("div").style.color = "";
 				}else if(newval == false){
+					this.webkitShadowRoot.querySelector("div").style.color = "grey";
 					var e = new Event("disabled");
 					e.target = this;
 					this.dispatchEvent(e);
@@ -247,10 +271,39 @@
 						ins[i].disabled=!newval;
 					}
 				}
+				this.update();
 			}.bind(this),
 		});
 		
 		
+		
+		this.reo_info_a_from_d = function(d){
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			return areas[diameters.indexOf(d)];
+		}
+		
+		
+		
+		this.area_from_barcode = function(barcode){
+			
+			var arr = barcode.split("N");
+			var num = parseInt(arr[0]);
+			var dia = parseInt(arr[1]);
+			if(arr.length == 2 && num !==NaN && dia!=NaN){
+				return this.reo_info_a_from_d(dia)*num || undefined;
+			}else{
+				return undefined;
+			}
+		}
+		
+		
+		
+		Object.defineProperty(this,"area",{
+			get:function(){
+				return this.area_from_barcode(this.barcode);
+			}.bind(this)
+		});
 		
 		Object.defineProperty(this,"barcode",{
 			get:function(){
@@ -258,17 +311,26 @@
 			}.bind(this),
 			set:function(newval){
 				this.barcodeIn.value = newval;
+				this.update();
 			}.bind(this),
 		});
+		
+		
 		this.more = function(){
 			var e = new Event("gimmemore");
+			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
+			this.update();
 		}.bind(this);
+		
+		
 		this.less = function(){
 			var e = new Event("gimmeless");
+			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
+			this.update();
 		}.bind(this);
 		
 		
@@ -279,6 +341,7 @@
 			}.bind(this),
 			set:function(newval){
 				this.offsetIn.value = Math.abs(Math.round(parseFloat(newval)));
+				this.update();
 			}.bind(this),
 		});
 		
@@ -290,6 +353,7 @@
 			}.bind(this),
 			set:function(newval){
 				this.fromIn.value = newval;
+				this.update();
 			}.bind(this),
 		});
 		
@@ -305,7 +369,7 @@
 					if(!this.enabled) return;
 					
 					this.maindiv.style.backgroundColor = "lightblue";
-					this.infobutIn.innerHTML = "-";
+					this.infobutIn.innerHTML = "&#8721;";
 					//this.infobutIn.style.fontWeight = "bold";
 					var e = new Event("select");
 					e.target = this;
@@ -313,7 +377,7 @@
 					this.dispatchChangeEvent();
 				}else if(!newval && this._selected){
 					this.maindiv.style.backgroundColor = "";
-					this.infobutIn.innerHTML = "&#8721;";
+					this.infobutIn.innerHTML = "";
 					//this.infobutIn.style.fontWeight = "";
 					var e = new Event("unselect");
 					e.target = this;
@@ -321,6 +385,7 @@
 					this.dispatchChangeEvent();
 				}
 				this._selected = newval;
+				this.update();
 			}.bind(this),
 		});
 		
@@ -328,7 +393,9 @@
 		
 		
 		this.toggleSelected = function(e){
-			this.selected = !this.selected && this.enabled;
+			if(this.enabled){
+				this.selected = !this.selected;
+			}
 		}.bind(this);
 		
 		
