@@ -87,8 +87,7 @@
 							pattern="(20|25|32|40|50|65|80|100)"
 							data-tooltip="Concrete Strength"></x-input>
 			</div>
-			<div id="invardivtooltipbar" class="tooltipbar">
-			</div>
+			<div id="invardivtooltipbar" class="tooltipbar" style="align-self:flex-end;"></div>
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
 			<table style="width:100%;height:350px;padding:0;">
@@ -113,8 +112,7 @@
 			<div id="reooutputdiv">
 				<reo-output></reo-output>
 			</div>
-			<div id="reoinputoutputtooltipbar" class="tooltipbar">
-			</div>
+			<div id="reoinputoutputtooltipbar" class="tooltipbar" style="height:4em;"></div>
 		</div>
 		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
 			<h1 style="display:block;width:100%">Cross Section</h1>
@@ -791,39 +789,43 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 
 		div:hover #enabledtd{
+			border-radius:4px;
 			background-color:lightgreen;
 		}
 
 
 		div{
-			cursor:default;
+			border-radius:4px;
+			cursor:pointer;
 			-webkit-user-select:none;
 		}
 
 	</style>
-	<div style="min-width:360px;max-width:500px;">
+	<div style="min-width:360px;max-width:520px;color:grey;" data-tooltip="Click to include in summary table below">
 		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
 			<tr>
 				<td id="enabledtd" style="padding:0;">
 					<input id="enabled" type="checkbox" data-tooltip="Enable/Disable Reo Layer."/>
 				</td>
 				<td style="text-align:right;">
-					<input id="barcode" type="text" required pattern="(([1-2][0-9])|[2-9])N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="eg. 2N10" data-tooltip="Number, Grade, Nominal Diameter. (This version only allows grade N)"/>
+					<input id="barcode" type="text" required pattern="(([1-2][0-9])|[2-9])N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="eg. 2N10"
+							data-tooltip="Number of bars, Grade, Nominal Diameter. eg 3N24<br> Only N grade bars are allowed in this software.<br>Avaliable bar diameters are:<br>[10, 12, 16, 20, 24, 28, 32, 36, 40]mm"/>
 				</td>
 				<td style="text-align:left;">
 					<button tabindex="-1" class="spinbut" id="spinbutup"	data-tooltip="more"><!--&#9650;--></button>
 					<button tabindex="-1" class="spinbut" id="spinbutdown"	data-tooltip="less"><!--&#9660;--></button>
 				</td>
-				<td id="asttd" style="text-align:left;">
+				<td id="asttd" style="text-align:left;width:6em;"
+						data-tooltip="Area calculated by multiplying the number of bars by the perscribed cross sectional areas defined in AS4671.">
 					= <span id="area">0000</span> mm&#178;
 				</td>
 				<td style="text-align:right;padding-left:0.5em;">
 					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;" data-tooltip="Offset: Space between the bars of this layer and the next."/>
 				</td>
-				<td style="text-align:left;padding-left:0;">
+				<td style="text-align:left;padding-left:0;" id="mmlable">
 					mm
 				</td>
-				<td style="text-align:right;padding-right:0;padding-left:0.5em;" >
+				<td style="text-align:right;padding-right:0;padding-left:0.5em;" id ="fromlable">
 					from
 				</td>
 				<td>
@@ -835,7 +837,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 					</select>
 				</td>
 				<td style="padding-left:0.5em;">
-					<button id="infobut" data-tooltip="Add/Remove from summary table below.">&#8721;</button>
+					<button id="infobut" data-tooltip="Click to include in summary table below" style="width:1.8em;height:100%;line-height:100%;"></button>
 				</td>
 			</tr>
 		</table>
@@ -847,7 +849,6 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 	ReoInputPrototype.createdCallback = function(){
 		this._selected = false;
 		this._enabled = false;
-		/*
 
 		this.create = function(){
 			// --------
@@ -858,6 +859,8 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			this.doc = this.webkitShadowRoot;
 			// ---------
 			// PROPERTIES
+			console.log(this, this.parentElement);
+			this.manager = this.parentElement;
 			this.maindiv = this.doc.querySelector("div");
 			this.enabledIn = this.doc.querySelector("#enabled");
 			this.barcodeIn = this.doc.querySelector("#barcode");
@@ -874,6 +877,24 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			this.infobutIn.addEventListener("click",function(e){
 				this.toggleSelected();
+			}.bind(this));
+
+			this.webkitShadowRoot.addEventListener("click",function(e){
+
+				switch(e.target.nodeName){
+					case "INPUT":
+					case "BUTTON":
+					case "SELECT":
+						break;
+					default:
+
+						if(this.enabled == false){
+							this.enabled = true;
+						}
+
+						this.toggleSelected();
+				}
+
 			}.bind(this));
 			this.spinbutup.addEventListener("click",this.more);
 			this.spinbutdown.addEventListener("click",this.less);
@@ -910,6 +931,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				}
 
 			}.bind(this))
+			this.barcodeIn.addEventListener("change",this.update);
 
 			this.barcodeIn.addEventListener("input",function(e){
 				var val = e.target.value;
@@ -943,7 +965,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				val = val.toUpperCase();
 				e.target.value =  val;
 				e.target.setSelectionRange(ss,se);
-				this.area = this.area_from_barcode(this.barcode);
+				this.update();
 			}.bind(this))
 		}.bind(this);
 
@@ -951,6 +973,25 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			var e = new Event("change");
 			e.target = this;
 			this.dispatchEvent(e);
+		}.bind(this);
+
+		this.update = function(){
+			var e = new Event("update");
+			e.target = this;
+			e.bubbles = true;
+			this.dispatchEvent(e);
+			this.areaOut.innerHTML = this.area || "--";
+		}.bind(this);
+
+		this.makeFirstRow = function(){
+			this.enabled = true;
+			this.enabledIn.disabled = true;
+			this.offsetIn.disabled = true;
+			this.fromIn.disabled = true;
+			this.offsetIn.style.visibility = "hidden";
+			this.fromIn.style.visibility = "hidden";
+			this.webkitShadowRoot.querySelector("#mmlable").style.visibility = "hidden";
+			this.webkitShadowRoot.querySelector("#fromlable").style.visibility = "hidden";
 		}.bind(this);
 
 		Object.defineProperty(this,"enabled",{
@@ -967,8 +1008,10 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 					e.target = this;
 					this.dispatchEvent(e);
 					this.dispatchChangeEvent();
+					this.webkitShadowRoot.querySelector("div").style.color = "";
 
 				}else if(newval == false){
+					this.webkitShadowRoot.querySelector("div").style.color = "grey";
 					var e = new Event("disabled");
 					e.target = this;
 					this.dispatchEvent(e);
@@ -987,35 +1030,53 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 				}
 
+				this.update();
 			}.bind(this),
 		});
-
-		this.reo_info_a_from_d = function(d){
-			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
-			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-			return areas[diameters.indexOf(d)];
-		}
-
-
-		this.area_from_barcode = function(barcode){
-			var arr = barcode.split("N");
-			var num = parseInt(arr[0]);
-			var dia = parseInt(arr[1]);
-
-			if(arr.length == 2 && num !==NaN && dia!=NaN){
-				return this.reo_info_a_from_d(dia)*num || undefined;
-
-			}else{
-				return undefined;
-			}
-
-		}
-
 
 		Object.defineProperty(this,"area",{
 
 			get:function(){
-				return this.area_from_barcode(this.barcode);
+				var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+				var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+				return areas[diameters.indexOf(this.diameter)]*this.number || undefined;
+			}.bind(this)
+		});
+
+		Object.defineProperty(this,"diameter",{
+
+			get:function(){
+				return parseInt(this.barcode.split("N")[1])||undefined;
+			}.bind(this),
+
+			set:function(newval){
+				var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+
+				if(diameters.indexOf(newval)!==-1){
+					this.barcode = this.number + "N" + newval;
+
+				}else{
+					console.warn("Invalid assignment to reo-input diameter: "+newval);
+				}
+
+			}.bind(this)
+		});
+
+		Object.defineProperty(this,"number",{
+
+			get:function(){
+				return parseInt(this.barcode.split("N")[0])||undefined;
+			}.bind(this),
+
+			set:function(newval){
+
+				if(typeof newval == "number" && newval!==NaN && newval!==undefined && newval>=2 && newval<100){
+					this.barcode = newval + "N" + this.diameter;
+
+				}else{
+					console.warn("Invalid assignment to reo-input number: "+newval);
+				}
+
 			}.bind(this)
 		});
 
@@ -1027,7 +1088,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			set:function(newval){
 				this.barcodeIn.value = newval;
-				// TODO: this will not cause an update or a change event. An update should occur.
+				this.update();
 			}.bind(this),
 		});
 
@@ -1036,6 +1097,26 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
+			var b = document.querySelector("#b").value;
+			var D = document.querySelector("#D").value;
+			var df = document.querySelector("#df").value;
+			var cover = document.querySelector("#cover").value;
+			var fitwidth = b-2*cover-2*df;
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			var manager = this.parentElement;
+			if(manager.getBottomRow()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+				// TODO: assume minimum spacing of 20mm between
+				// TODO: assume maximum spacing of 300mm c-c
+				// TODO: assume maximum of 10 bars
+				this.barcode = this._more_less_barcode(true, 10, 300, 20, fitwidth, this.area);
+
+			}else{
+				// TODO: assume maximum of 2 bars
+				this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area);
+			}
+
+			this.update();
 		}.bind(this);
 
 		this.less = function(){
@@ -1043,6 +1124,102 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
+			var b = document.querySelector("#b").value;
+			var D = document.querySelector("#D").value;
+			var df = document.querySelector("#df").value;
+			var cover = document.querySelector("#cover").value;
+			var fitwidth = b-2*cover-2*df;
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			var manager = this.parentElement;
+			if(manager.getBottomRow()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+				// TODO: assume minimum spacing of 20mm between
+				// TODO: assume maximum spacing of 300mm c-c
+				// TODO: assume maximum of 10 bars
+				this.barcode = this._more_less_barcode(false, 10, 300, 20, fitwidth, this.area);
+
+			}else{
+				// TODO: assume maximum of 2 bars
+				this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area);
+			}
+
+			this.update();
+		}.bind(this);
+
+		this._more_less_barcode = function(getmore, maxbar, max_spacing, min_gap fitwidth, current_area){
+		/*
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			var combs = [];
+			var num,dia,diai,minw,maxw;
+
+			for(num = 2; num<=maxbar;num++){
+
+				for(diai=0;diai<diameters.length;diai++){
+					dia = diameters[diai];
+					minw = dia*num+(num-1)*min_gap;
+					maxw = dia*num+(num-1)*max_spacing;
+
+					if(fitwidth>=minw && fitwidth<=maxw){
+						combs.push({number:num, diameter:dia, area:areas[diai]*num})
+					}
+
+				}
+
+			}
+
+
+			combs.sort(function(a,b){
+
+				if(getmore){
+					return a.area-b.area;
+
+				}else{
+					return b.area-a.area;
+				}
+
+			})
+
+			for(var i = 0;i<combs.length;i++){
+
+				if(getmore){
+
+					if(combs[i].area>current_area){
+
+						if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i+1].area-combs[i].area<50){
+							i++;
+
+							if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i+1].area-combs[i].area<10){
+								i++;
+							}
+
+						}
+
+						return combs[i].number+"N"+combs[i].diameter;
+					}
+
+
+				}else{
+
+					if(combs[i].area<current_area){
+
+						if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i].area-combs[i+1].area<50){
+							i++;
+
+							if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i].area-combs[i+1].area<10){
+								i++;
+							}
+
+						}
+
+						return combs[i].number+"N"+combs[i].diameter;
+					}
+
+				}
+
+			}
+
+		*/
 		}.bind(this);
 
 		Object.defineProperty(this,"offset",{
@@ -1053,6 +1230,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			set:function(newval){
 				this.offsetIn.value = Math.abs(Math.round(parseFloat(newval)));
+				this.update();
 			}.bind(this),
 		});
 
@@ -1064,6 +1242,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			set:function(newval){
 				this.fromIn.value = newval;
+				this.update();
 			}.bind(this),
 		});
 
@@ -1078,7 +1257,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				if(!this._selected && newval){
 					if(!this.enabled) return;
 					this.maindiv.style.backgroundColor = "lightblue";
-					this.infobutIn.innerHTML = "-";
+					this.infobutIn.innerHTML = "&#8721;";
 					//this.infobutIn.style.fontWeight = "bold";
 					var e = new Event("select");
 					e.target = this;
@@ -1087,7 +1266,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 				}else if(!newval && this._selected){
 					this.maindiv.style.backgroundColor = "";
-					this.infobutIn.innerHTML = "&#8721;";
+					this.infobutIn.innerHTML = "";
 					//this.infobutIn.style.fontWeight = "";
 					var e = new Event("unselect");
 					e.target = this;
@@ -1096,6 +1275,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				}
 
 				this._selected = newval;
+				this.update();
 			}.bind(this),
 		});
 
@@ -1106,7 +1286,6 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			}
 
 		}.bind(this);
-		*/
 		this.create();
 	};
 	var ReoInput = document.registerElement("reo-input",{prototype:ReoInputPrototype});
@@ -1123,10 +1302,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 		this.create = function(){
 			var firstrow = this.createReoInput();
-			firstrow.enabled = true;
-			firstrow.enabledIn.disabled = true;
-			firstrow.offsetIn.disabled = true;
-			firstrow.fromIn.disabled = true;
+			firstrow.makeFirstRow();
 			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
@@ -1192,10 +1368,11 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			nr.addEventListener("change",this.update);
 
 			nr.addEventListener("gimmemore",function(e){
-				if(e.target.
+				// TODO:
 			});
 
 			nr.addEventListener("gimmeless",function(e){
+				// TODO: 
 			});
 			return nr;
 		}.bind(this);

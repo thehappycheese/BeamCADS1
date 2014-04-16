@@ -60,7 +60,7 @@
 			-webkit-user-select:none;
 		}
 	</style>
-	<div style="min-width:360px;max-width:500px;color:grey;" data-tooltip="Click to include in summary table below">
+	<div style="min-width:360px;max-width:520px;color:grey;" data-tooltip="Click to include in summary table below">
 		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
 			<tr>
 				<td id="enabledtd" style="padding:0;">
@@ -74,7 +74,7 @@
 					<button tabindex="-1" class="spinbut" id="spinbutup"	data-tooltip="more"><!--&#9650;--></button>
 					<button tabindex="-1" class="spinbut" id="spinbutdown"	data-tooltip="less"><!--&#9660;--></button>
 				</td>
-				<td id="asttd" style="text-align:left;width:5em;"
+				<td id="asttd" style="text-align:left;width:6em;"
 						data-tooltip="Area calculated by multiplying the number of bars by the perscribed cross sectional areas defined in AS4671.">
 					= <span id="area">0000</span> mm&#178;
 				</td>
@@ -346,48 +346,120 @@
 			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
-			this.update();
 			
-			var manager = this.parentElement;
-			var b = document.querySelector("#b");
-			var D = document.querySelector("#D");
-			var df = document.querySelector("#df");
-			var cover = document.querySelector("#cover");
+			var b = document.querySelector("#b").value;
+			var D = document.querySelector("#D").value;
+			var df = document.querySelector("#df").value;
+			var cover = document.querySelector("#cover").value;
+			var fitwidth = b-2*cover-2*df;
 			
 			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
 			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
 			
-			var combs = [];
-			var num,dia,diai;
-			for(num = 2; num<=10;num++){
-				for(diai=0;diai<diameters.length;diai++){
-					dia = diameters[diai];
-					combs.push({number:num, diameter:dia, area:areas[diai]*num})
-				}
-			}
-			combs.sort(function(a,b){
-				return a.area-b.area;
-			})
-			console.table(combs);
-			
-			if(manager.getBottomRow()===this){
-				
+			var manager = this.parentElement;
+			if(manager.getBottomRow()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+				// TODO: assume minimum spacing of 20mm between
+				// TODO: assume maximum spacing of 300mm c-c
+				// TODO: assume maximum of 10 bars
+				this.barcode = this._more_less_barcode(true, 10, 300, 20, fitwidth, this.area) || this.barcode;
 			}else{
-				
+				// TODO: assume maximum of 2 bars
+				this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area) || this.barcode;
 			}
 			
 			
-			
+			this.update();
 		}.bind(this);
-		
 		
 		this.less = function(){
 			var e = new Event("gimmeless");
 			e.bubbles = false;
 			e.target = this;
 			this.dispatchEvent(e);
+			
+			var b = document.querySelector("#b").value;
+			var D = document.querySelector("#D").value;
+			var df = document.querySelector("#df").value;
+			var cover = document.querySelector("#cover").value;
+			var fitwidth = b-2*cover-2*df;
+			
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			
+			var manager = this.parentElement;
+			if(manager.getBottomRow()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+				// TODO: assume minimum spacing of 20mm between
+				// TODO: assume maximum spacing of 300mm c-c
+				// TODO: assume maximum of 10 bars
+				this.barcode = this._more_less_barcode(false, 10, 300, 20, fitwidth, this.area) || this.barcode;
+			}else{
+				// TODO: assume maximum of 2 bars
+				this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area) || this.barcode;
+			}
+			
+			
 			this.update();
 		}.bind(this);
+		
+		
+		
+		this._more_less_barcode = function (getmore, maxbar, max_spacing, min_gap, fitwidth, current_area){
+		
+			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+			
+			
+			var combs = [];
+			var num,dia,diai,minw,maxw;
+			for(num = 2; num<=maxbar;num++){
+				for(diai=0;diai<diameters.length;diai++){
+					dia = diameters[diai];
+					
+					minw = dia*num+(num-1)*min_gap;
+					maxw = dia*num+(num-1)*max_spacing;
+					if(fitwidth>=minw && fitwidth<=maxw){
+						combs.push({number:num, diameter:dia, area:areas[diai]*num})
+					}
+				}
+			}
+			
+			combs.sort(function(a,b){
+				if(getmore){
+					return a.area-b.area;
+				}else{
+					return b.area-a.area;
+				}
+			})
+			
+			for(var i = 0;i<combs.length;i++){
+				if(getmore){
+					if(combs[i].area>current_area){
+						if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i+1].area-combs[i].area<50){
+							i++;
+							if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i+1].area-combs[i].area<10){
+								i++;
+							}
+						}
+						return combs[i].number+"N"+combs[i].diameter;
+					}
+				}else{
+					if(combs[i].area<current_area){
+						if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i].area-combs[i+1].area<50){
+							i++;
+							if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i].area-combs[i+1].area<10){
+								i++;
+							}
+						}
+						return combs[i].number+"N"+combs[i].diameter;
+					}
+				}
+			}
+		
+		}.bind(this);
+		
+		
+		
+		
 		
 		
 		
