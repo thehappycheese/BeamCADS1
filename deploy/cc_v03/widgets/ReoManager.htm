@@ -7,10 +7,7 @@
 		
 		this.create = function(){
 			var firstrow = this.createReoInput();
-			firstrow.enabled = true;
-			firstrow.enabledIn.disabled = true;
-			firstrow.offsetIn.disabled = true;
-			firstrow.fromIn.disabled = true;
+			firstrow.makeFirstRow();
 			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
