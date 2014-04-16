@@ -1,6 +1,16 @@
+"use strict";
 ///~ ../jslib/Vector.js
 ///* widgets/widgets.js
 ///* Beam.js
+
+// Create global beam object
+var b = new Beam();
+function updateBeamValues(){
+	b.b			= document.getElementById("b");
+	b.D			= document.getElementById("D");
+	b.eclass	= document.getElementById("eclass");
+	b.b			= document.getElementById("b");
+}
 
 
 //###########################################################################################
@@ -10,6 +20,7 @@ window.addEventListener("resize",handleResize);
 setTimeout(handleResize,500);
 setTimeout(handleResize,1500);
 setTimeout(handleResize,5000);
+setTimeout(handleResize,10000);
 function handleResize(e){
 	var c=document.querySelector("#crosssectioncanvas");
 	
@@ -52,7 +63,6 @@ setTimeout(function(){
 	addTooltipTo(document.querySelector("#reoinputoutputdiv"),document.querySelector("#reoinputoutputtooltipbar"));
 },1500);
 function addTooltipTo(d, output){
-	this.output = output;
 	var els = d.querySelectorAll("*");
 	for(var i = 0;i<els.length;i++){
 		if(els[i].webkitShadowRoot!=null){
@@ -109,7 +119,7 @@ document.body.addEventListener("mousewheel",function(e){
 
 (function(){
 	var xins = document.querySelectorAll("x-input");
-	for(i=0;i<xins.length;i++){
+	for(var i = 0;i<xins.length;i++){
 		xins[i].addEventListener("mousedown",function(e){
 			setHelpLoc("infos/"+e.target.id+".htm");
 		})
