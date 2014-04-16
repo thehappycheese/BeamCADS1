@@ -25,66 +25,69 @@
 	</div>
 	<div style="display:flex;flex-wrap:wrap;">
 		<div id="invardiv" class="bmpblock">
-			<x-input	id="Ln"		
-						notation ="$$$L_n$$$" 
-						unit="mm"
-						value="1000"
-						type="number"
-						min="1000"
-						max="50000"
-						step="100"></x-input>
-			<x-input	id="b"
-						notation ="$$$b$$$"
-						unit="mm"
-						value="300"
-						type="number"
-						min="200"
-						max="5000"
-						step="10"></x-input>
-			<x-input	id="D"
-						notation ="$$$D$$$"
-						unit="mm"
-						value="600"
-						type="number"
-						min="200"
-						max="3000"
-						data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
-			<x-input	id="cover"
-						notation ="$$$\text{Cover}$$$"
-						unit="mm"
-						value="25"
-						type="number"
-						min="20"
-						max="100"
-						step="5"
-						data-tooltip="Distance from the outer surface of concrete to the reo bars"></x-input>
-			<x-input	id="$$$\text{eclass}$$$"
-						notation ="E-Class"
-						value="A"
-						pattern="(A|B|C|D)"
-						data-tooltip="Exposure Classification determined by exposure to natural environment. Use A | B | C | D"></x-input>
-			<x-input	id="df"
-						notation="$$$d_f$$$"
-						unit="mm"
-						value="10"
-						data-tooltip="Diameter of figment bars which from the reo 'ribcage'"></x-input> 
-			<x-input	id="rhoc"
-						notation="$$$\rho_c$$$"
-						unit="kg/m&#179;"
-						value="2400"
-						type="number"
-						min="2100"
-						max="2800"
-						step="10"
-						data-tooltip="Concrete Density"></x-input>
-			<x-input	id="fc"
-						notation="$$$f'_c$$$"
-						unit="MPa"
-						value="32"
-						pattern="(20|25|32|40|50|65|80|100)"
-						data-tooltip="Concrete Strength"></x-input>
+			<div id="invardivdiv">
+				<x-input	id="Ln"		
+							notation ="$$$L_n$$$" 
+							unit="mm"
+							value="1000"
+							type="number"
+							min="1000"
+							max="50000"
+							step="100"
+							data-tooltip="Clear Span from edge to edge of supports"></x-input>
+				<x-input	id="b"
+							notation ="$$$b$$$"
+							unit="mm"
+							value="300"
+							type="number"
+							min="200"
+							max="5000"
+							step="10"
+							data-tooltip="Breadth (horizontal width) of rectangular beam cross section"></x-input>
+				<x-input	id="D"
+							notation ="$$$D$$$"
+							unit="mm"
+							value="600"
+							type="number"
+							min="200"
+							max="3000"
+							data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
+				<x-input	id="cover"
+							notation ="$$$\text{Cover}$$$"
+							unit="mm"
+							value="25"
+							type="number"
+							min="20"
+							max="100"
+							step="5"
+							data-tooltip="Distance from the outer surface of concrete to the reo bars (all around)"></x-input>
+				<x-input	id="$$$\text{eclass}$$$"
+							notation ="E-Class"
+							value="A"
+							pattern="(A|B|C|D)"
+							data-tooltip="Exposure Classification determined by exposure to natural environment. Use A | B | C | D"></x-input>
+				<x-input	id="df"
+							notation="$$$d_f$$$"
+							unit="mm"
+							value="10"
+							data-tooltip="Diameter of fitment bars which from the beam's 'ribcage'"></x-input> 
+				<x-input	id="rhoc"
+							notation="$$$\rho_c$$$"
+							unit="kg/m&#179;"
+							value="2400"
+							type="number"
+							min="2100"
+							max="2800"
+							step="10"
+							data-tooltip="Concrete Density"></x-input>
+				<x-input	id="fc"
+							notation="$$$f'_c$$$"
+							unit="MPa"
+							value="32"
+							pattern="(20|25|32|40|50|65|80|100)"
+							data-tooltip="Concrete Strength"></x-input>
+			</div>
 			<div id="invardivtooltipbar" class="tooltipbar">
-				Pro-tips bar
 			</div>
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
@@ -111,7 +114,6 @@
 				<reo-output></reo-output>
 			</div>
 			<div id="reoinputoutputtooltipbar" class="tooltipbar">
-				Pro-tips bar
 			</div>
 		</div>
 		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
@@ -131,7 +133,7 @@
 		<h1>Calculation Div</h1>
 	</div>
 </body>
-<script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
+
 <script>
 
 
@@ -544,7 +546,7 @@ function Beam(){
 	// STARTOFF: 4:35 14 04 14
 
 	this.toString = function(){
-		return JSON.stringify(this).replaceAll(/,/g,",\n");
+		return JSON.stringify(this).replace(/,/g,",\n");
 	}.bind(this);
 	this.create();
 	/*
@@ -597,19 +599,22 @@ function setErrorList(list){
 //##################################################################3
 
 setTimeout(function(){
-	addTooltipTo(document.body);
-},5000);
+	addTooltipTo(document.querySelector("#invardiv"),document.querySelector("#invardivtooltipbar"));
+	addTooltipTo(document.querySelector("#reoinputoutputdiv"),document.querySelector("#reoinputoutputtooltipbar"));
+},1500);
 
-function addTooltipTo(d){
+function addTooltipTo(d, output){
+	this.output = output;
 	var els = d.querySelectorAll("*");
 
 	for(var i = 0;i<els.length;i++){
 
 		if(els[i].webkitShadowRoot!=null){
-			addTooltipTo(els[i].webkitShadowRoot);
+			addTooltipTo(els[i].webkitShadowRoot, output);
 			//console.log(els[i]);
 
 		}else if(els[i].getAttribute("data-tooltip")){
+			els[i].output = output;
 
 			els[i].addEventListener("mouseover",function(e){
 				var targ = e.target; 
@@ -618,20 +623,51 @@ function addTooltipTo(d){
 					targ=targ.parentNode;
 				}
 
-				var ttb = document.querySelector("#reoinputoutputtooltipbar")
+				var ttb = this.output;
 				ttb.innerHTML = "Pro-tip: "+targ.getAttribute("data-tooltip");
-			});
+			}.bind(els[i]));
 
 			els[i].addEventListener("mouseout",function(e){
-				var ttb = document.querySelector("#reoinputoutputtooltipbar")
+				var ttb = this.output;
 				ttb.innerHTML = "";
-			});
+			}.bind(els[i]));
 		}
 
 	}
 
 }
 
+//##########################################################
+//#### iFrame Scroll behaviour #############################
+//##########################################################
+var scroll_disabled = false;
+
+document.querySelector("#varinfoiframe").addEventListener("mouseover",function(e){
+
+	try{
+
+		if(e.target.contentDocument.body.scrollHeight> e.target.contentDocument.body.clientHeight){
+			scroll_disabled = true;
+		}
+
+
+	}catch(e){
+		console.warn("iFrame Scroll prevention doesnt work :(");
+	}
+
+});
+
+document.querySelector("#varinfoiframe").addEventListener("mouseout",function(e){
+	scroll_disabled = false;
+});
+
+document.body.addEventListener("mousewheel",function(e){
+
+	if(scroll_disabled){
+		e.preventDefault();
+	}
+
+});
 //##########################################################
 //#### Contextual Help View ################################
 //##########################################################
@@ -739,7 +775,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 
 		div{
-			cursor:pointer;
+			cursor:default;
 			-webkit-user-select:none;
 		}
 
@@ -1030,6 +1066,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			firstrow.enabledIn.disabled = true;
 			firstrow.offsetIn.disabled = true;
 			firstrow.fromIn.disabled = true;
+			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
 			this.rows.push(this.createReoInput());
 			this.rows.push(firstrow);

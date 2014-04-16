@@ -79,6 +79,29 @@ function addTooltipTo(d, output){
 	}
 }
 
+//##########################################################
+//#### iFrame Scroll behaviour #############################
+//##########################################################
+
+var scroll_disabled = false;
+document.querySelector("#varinfoiframe").addEventListener("mouseover",function(e){
+	try{
+		if(e.target.contentDocument.body.scrollHeight> e.target.contentDocument.body.clientHeight){
+			scroll_disabled = true;
+		}
+	}catch(e){
+		console.warn("iFrame Scroll prevention doesnt work :(");
+	}
+});
+document.querySelector("#varinfoiframe").addEventListener("mouseout",function(e){
+	scroll_disabled = false;
+});
+document.body.addEventListener("mousewheel",function(e){
+	if(scroll_disabled){
+		e.preventDefault();
+	}
+});
+
 
 //##########################################################
 //#### Contextual Help View ################################

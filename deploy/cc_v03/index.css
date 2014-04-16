@@ -47,7 +47,6 @@ h2{
 	display:flex;
 	flex-wrap:wrap;
 	justify-content:space-around;
-	align-content:space-around;
 	flex: 3 0 270px;
 	padding: 5px;
 }
@@ -66,7 +65,7 @@ h2{
 
 
 #reoinputoutputdiv{
-	flex: 1 0 370px;
+	flex: 0 0 400px;
 	flex-wrap:wrap;
 	align-content:flex-end;
 	justify-content:space-around;
@@ -110,7 +109,7 @@ x-input{
 
 
 .tooltipbar {
-	height:2.2em;
+	min-height:2.2em;
 	width:100%;
 	border:1px solid grey;
 	border-radius:4px;
