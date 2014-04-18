@@ -178,11 +178,17 @@
 			
 			// MORE AND LESS BUTTONS
 			this.spinbutup.addEventListener("click",function(){
+				if(this.enabled == false){
+					this.enabled = true;
+				}
 				this.more();
 				this.update();
 				this.dispatchChangeEvent();
 			}.bind(this));
 			this.spinbutdown.addEventListener("click",function(){
+				if(this.enabled == false){
+					this.enabled = true;
+				}
 				this.less();
 				this.update();
 				this.dispatchChangeEvent();
@@ -322,7 +328,7 @@
 					this.selected = false;
 				}
 				this.enabledIn.checked = newval;
-				var ins = this.doc.querySelectorAll("input, button, select")
+				var ins = this.doc.querySelectorAll("input, select")
 				for(var i = 0; i < ins.length;i++){
 					if(ins[i].id!="enabled"){
 						ins[i].disabled=!newval;
@@ -341,6 +347,20 @@
 				var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
 				var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
 				return areas[diameters.indexOf(this.diameter)]*this.number || undefined;
+			}.bind(this)
+		});
+		
+		
+		// ##########################################################################################
+		// 			GET/SET mass_per_meter
+		// ##########################################################################################
+		
+		Object.defineProperty(this,"mass_per_meter",{
+			get:function(){
+				var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+				var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+				var masses		= [0.632,0.910,1.619,2.528,3.640,4.955,6.471,8.910,10.112];
+				return masses[diameters.indexOf(this.diameter)]*this.number || undefined;
 			}.bind(this)
 		});
 		

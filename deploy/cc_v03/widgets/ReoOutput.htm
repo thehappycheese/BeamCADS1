@@ -27,18 +27,18 @@
 			</tr>
 			
 			<tr>
-				<td id="amountlable" rowspan=4>Amount:</td>
-				<td id="nbars" class="tableout" data-tooltip="Number of reo bars in layer[s]">10</td>
+				<td id="amountlable" rowspan=3>Amount:</td>
+				<td id="number" class="tableout" data-tooltip="Number of reo bars in layer[s]">10</td>
 				<td>bars</td>
 			</tr>
 			<tr>
 				<td id="length" class="tableout" data-tooltip="Total length of reo bars based on clear span L_n with no overlap">10</td>
 				<td>m</td>
 			</tr>
-			<tr>
+			<!--<tr>
 				<td id="masspermeter" class="tableout" data-tooltip="Total mass/meter of layer[s]">5</td>
 				<td>kg/m</td>
-			</tr>
+			</tr>-->
 			<tr>
 				<td id="mass" class="tableout" data-tooltip="Total mass of layer[s]">400</td>
 				<td>kg</td>
@@ -63,7 +63,7 @@
 			this.doc = this.webkitShadowRoot;
 			
 			this.oneLables();
-			this.blank();
+			this.clear();
 		}.bind(this);
 		
 		
@@ -88,12 +88,12 @@
 			this.setIdContent("amountlable",	"&#8721; Amount:");
 			this.setIdContent("tforcelable",	"&#8721; Tension Force:");
 		}
-		this.blank = function(){
+		this.clear = function(){
 			this.setIdContent("depth",			"--");
 			this.setIdContent("area",			"--");
-			this.setIdContent("nbars",			"--");
+			this.setIdContent("number",			"--");
 			this.setIdContent("length",			"--");
-			this.setIdContent("masspermeter",	"--");
+			//this.setIdContent("masspermeter",	"--");
 			this.setIdContent("mass",			"--");
 			this.setIdContent("tforce",			"--");
 		}

@@ -178,8 +178,34 @@
 					rw = {
 						number:		rs[i].number,
 						diameter:	rs[i].diameter,
-						area:		rs[i].area,
+						area:			rs[i].area,
 						depth:		this.getDepthOfRow(rs[i])
+					}
+					result.push(rw);
+				}
+				return result;
+				
+			},
+			set:function(newval){
+				// TODO: DESERIELIZEEEE :|
+			}
+		});
+		
+		Object.defineProperty(this,"selected_value",{
+			get:function(){
+				var result = [];
+				var rs = this.getEnabledSelectedRows(); 
+				var rw;
+				for(var i = 0;i<rs.length;i++){
+					rw = {
+						number:		rs[i].number,
+						diameter:	rs[i].diameter,
+						area:			rs[i].area,
+						depth:		this.getDepthOfRow(rs[i]),
+						mass_per_meter:	rs[i].mass_per_meter,
+						from:			rs[i].from,
+						offset:			rs[i].offset,
+						
 					}
 					result.push(rw);
 				}

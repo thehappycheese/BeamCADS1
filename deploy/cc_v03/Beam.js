@@ -5,7 +5,7 @@ function Beam(){
 		
 		// #########################################################
 		// Misc considerations
-		this.elcass 			= "A";
+		this.eclass 			= "A";
 		this.minbarspacing		= undefined;
 		
 		
