@@ -89,10 +89,10 @@
 				</td>
 				<td>
 					<select id="from" data-tooltip="Where to offset this layer from.">
-						<option value="top">top</option>
+						<!--<option value="top">top</option>-->
 						<option value="highest">highest</option>
 						<option value="lowest" selected>lowest</option>
-						<option value="bottom">bottom</option>
+						<!--<option value="bottom">bottom</option>-->
 					</select>
 				</td>
 				<td style="padding-left:0.5em;">
@@ -106,15 +106,18 @@
 	ReoInputPrototype = Object.create(HTMLDivElement.prototype);
 	ReoInputPrototype.createdCallback = function(){
 
-		
 		this._selected = false;
 		this._enabled = false;
 		
-		
+		// ##########################################################################################
+		// 			DEFERED CONTRUCTOR
+		// ##########################################################################################
 		this.create = function(){
 			
-			// --------
-			// CONSTRUCT
+			
+			// ##########################################################################################
+			// 			CONSTRUCT SHADOW ROOT
+			// ##########################################################################################
 			this.webkitCreateShadowRoot();
 			var imported = document.importNode(document.querySelector("#ReoInputWidgetTemplate").content, true);
 			this.webkitShadowRoot.appendChild(imported);
@@ -122,9 +125,10 @@
 			
 			
 			
-			// ---------
-			// PROPERTIES
-			console.log(this, this.parentElement);
+			
+			// ##########################################################################################
+			// 			PROPERTIES
+			// ##########################################################################################
 			this.manager = this.parentElement;
 			
 			this.maindiv = this.doc.querySelector("div");
@@ -137,15 +141,25 @@
 			this.spinbutup = this.doc.querySelector("#spinbutup");
 			this.spinbutdown = this.doc.querySelector("#spinbutdown");
 			
-			
+			// use these getter setters to initiate their respective side effects and styling
 			this.selected = false;
 			this.enabled = false;
 			
-			// -----------------------------------------------------
-			// EVENT LISTENERS
+			
+			// ##########################################################################################
+			// 			EVENT LISTENERS
+			// ##########################################################################################
+			// INFO BUTTON LISTENER
 			this.infobutIn.addEventListener("click",function(e){
-				this.toggleSelected();
+				if(this.enabled == false){
+					this.enabled = true;
+				}
+				this.selected = !this.selected;
+				this.update();
+				this.dispatchChangeEvent();
 			}.bind(this));
+			
+			// "ROW" CLICK LISTENER
 			this.webkitShadowRoot.addEventListener("click",function(e){
 				switch(e.target.nodeName){
 					case "INPUT":
@@ -153,49 +167,73 @@
 					case "SELECT":
 						break;
 					default:
-						if(this.enabled == false){
-							this.enabled = true;
+						if(this.enabled){
+							this.selected = !this.selected;
 						}
-						this.toggleSelected();
+						this.update();
+						this.dispatchChangeEvent();
 				}
 			}.bind(this));
-			this.spinbutup.addEventListener("click",this.more);
-			this.spinbutdown.addEventListener("click",this.less);
 			
-			this.fromIn.addEventListener("change",function(e){
+			
+			// MORE AND LESS BUTTONS
+			this.spinbutup.addEventListener("click",function(){
+				this.more();
+				this.update();
+				this.dispatchChangeEvent();
+			}.bind(this));
+			this.spinbutdown.addEventListener("click",function(){
+				this.less();
+				this.update();
 				this.dispatchChangeEvent();
 			}.bind(this));
 			
 			
-		
+			// "FROM" SELECTION INPUT LISTENER
+			this.fromIn.addEventListener("change",function(e){
+				this.update();
+				this.dispatchChangeEvent();
+			}.bind(this));
 			
+			
+			// "FROM" SELECTION INPUT LISTENER
 			this.offsetoldval = this.offsetIn.value;
 			this.offsetIn.addEventListener("keyup",function(e){
 				if(this.offsetoldval!==this.offsetIn.value){
 					this.offsetoldval = this.offsetIn.value;
+					this.update();
 					this.dispatchChangeEvent();
 				}
 			}.bind(this))
 			
 			
-			
+			// ENABLED CHACKBOX LISTENER
 			this.enabledIn.addEventListener("change",function(){
 				this.enabled = this.enabledIn.checked;
-				console.log("change")
+				this.update();
 				this.dispatchChangeEvent();
 			}.bind(this));
 			
+			
+			// BARCODE CHANGE EVENT LISTENERs
 			this.barcodeIn.addEventListener("keydown",function(e){
 				if(e.keyCode == 38){	// up button
 					this.more();
 					e.preventDefault();
+					this.update();
+					this.dispatchChangeEvent();
 				}
 				if(e.keyCode == 40){	// down button
 					this.less();
 					e.preventDefault();
+					this.update();
+					this.dispatchChangeEvent();
 				}
 			}.bind(this))
-			this.barcodeIn.addEventListener("change",this.update);
+			this.barcodeIn.addEventListener("change",function(){
+				this.update();
+				this.dispatchChangeEvent();
+			}.bind(this));
 			this.barcodeIn.addEventListener("input",function(e){
 				var val = e.target.value;
 				var ss = e.target.selectionStart;
@@ -221,31 +259,40 @@
 				val = val.toUpperCase();
 				e.target.value =  val;
 				e.target.setSelectionRange(ss,se);
-				
 				this.update();
+				this.dispatchChangeEvent();
 			}.bind(this))
 			
-		}.bind(this);
+		}.bind(this);//end create();
 		
-		
+		// ##########################################################################################
+		// 			DISPATCHCHANGEEVENT
+		// ##########################################################################################
 		
 		this.dispatchChangeEvent = function(){
+			//console.log("reo-input change")
 			var e = new Event("change");
 			e.target = this;
+			e.bubbles = true;
 			this.dispatchEvent(e);
 		}.bind(this);
 		
+		// ##########################################################################################
+		// 			UPDATE
+		// ##########################################################################################
 		
 		this.update = function(){
+			this.areaOut.innerHTML = this.area || "--";
+			//console.log("reo-input update");
 			var e = new Event("update");
 			e.target = this;
 			e.bubbles = true;
 			this.dispatchEvent(e);
-			
-			this.areaOut.innerHTML = this.area || "--";
 		}.bind(this);
 		
-		
+		// ##########################################################################################
+		// 			HELPER WHICH DISABLS A BUNCH OF FEATURES IN THIS ROW
+		// ##########################################################################################
 		
 		this.makeFirstRow = function(){
 			this.enabled = true;
@@ -258,9 +305,9 @@
 			this.webkitShadowRoot.querySelector("#fromlable").style.visibility = "hidden";
 		}.bind(this);
 		
-		
-		
-		
+		// ##########################################################################################
+		// 			GET/SET enabled
+		// ##########################################################################################
 		
 		Object.defineProperty(this,"enabled",{
 			get:function(){
@@ -269,18 +316,10 @@
 			set:function(newval){
 				this._enabled = newval;
 				if(newval == true){
-					var e = new Event("enabled");
-					e.target = this;
-					this.dispatchEvent(e);
-					this.dispatchChangeEvent();
 					this.webkitShadowRoot.querySelector("div").style.color = "";
 				}else if(newval == false){
 					this.webkitShadowRoot.querySelector("div").style.color = "grey";
-					var e = new Event("disabled");
-					e.target = this;
-					this.dispatchEvent(e);
 					this.selected = false;
-					//this.dispatchChangeEvent(); this will be dispatched as a result of the line above
 				}
 				this.enabledIn.checked = newval;
 				var ins = this.doc.querySelectorAll("input, button, select")
@@ -293,9 +332,9 @@
 			}.bind(this),
 		});
 		
-		
-
-		
+		// ##########################################################################################
+		// 			GET/SET area
+		// ##########################################################################################
 		
 		Object.defineProperty(this,"area",{
 			get:function(){
@@ -304,6 +343,11 @@
 				return areas[diameters.indexOf(this.diameter)]*this.number || undefined;
 			}.bind(this)
 		});
+		
+		// ##########################################################################################
+		// 			GET/SET diameter
+		// ##########################################################################################
+		
 		Object.defineProperty(this,"diameter",{
 			get:function(){
 				return parseInt(this.barcode.split("N")[1])||undefined;
@@ -317,6 +361,11 @@
 				}
 			}.bind(this)
 		});
+		
+		// ##########################################################################################
+		// 			GET/SET number
+		// ##########################################################################################
+		
 		Object.defineProperty(this,"number",{
 			get:function(){
 				return parseInt(this.barcode.split("N")[0])||undefined;
@@ -330,6 +379,10 @@
 			}.bind(this)
 		});
 		
+		// ##########################################################################################
+		// 			GET/SET barcode
+		// ##########################################################################################
+		
 		Object.defineProperty(this,"barcode",{
 			get:function(){
 				return this.barcodeIn.value;
@@ -340,13 +393,63 @@
 			}.bind(this),
 		});
 		
+		// ##########################################################################################
+		// 			GET/SET offset
+		// ##########################################################################################
+		
+		Object.defineProperty(this,"offset",{
+			get:function(){
+				return parseInt(this.offsetIn.value);
+			}.bind(this),
+			set:function(newval){
+				this.offsetIn.value = Math.abs(Math.round(parseFloat(newval)));
+				this.update();
+			}.bind(this),
+		});
+		
+		// ##########################################################################################
+		// 			GET/SET from
+		// ##########################################################################################
+		
+		Object.defineProperty(this,"from",{
+			get:function(){
+				return this.fromIn.value;
+			}.bind(this),
+			set:function(newval){
+				this.fromIn.value = newval;
+				this.update();
+			}.bind(this),
+		});
+		
+		// ##########################################################################################
+		// 			GET/SET selected
+		// ##########################################################################################
+		
+		Object.defineProperty(this,"selected",{
+			get:function(){
+				return this._selected;
+			}.bind(this),
+			set:function(newval){
+				if(!this._selected && newval){
+					this.maindiv.style.backgroundColor = "lightblue";
+					this.infobutIn.innerHTML = "&#8721;";
+					//this.infobutIn.style.fontWeight = "bold";
+				}else if(!newval && this._selected){
+					this.maindiv.style.backgroundColor = "";
+					this.infobutIn.innerHTML = "";
+					//this.infobutIn.style.fontWeight = "";
+				}
+				this._selected = newval;
+				this.update();
+			}.bind(this),
+		});
+		
+		
+		// ##########################################################################################
+		// 			MORE AND LESS HELPER FUNCTIONS
+		// ##########################################################################################
 		
 		this.more = function(){
-			var e = new Event("gimmemore");
-			e.bubbles = false;
-			e.target = this;
-			this.dispatchEvent(e);
-			
 			var b = document.querySelector("#b").value;
 			var D = document.querySelector("#D").value;
 			var df = document.querySelector("#df").value;
@@ -366,17 +469,12 @@
 				// TODO: assume maximum of 2 bars
 				this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area) || this.barcode;
 			}
-			
-			
-			this.update();
 		}.bind(this);
 		
+		
+		
+		
 		this.less = function(){
-			var e = new Event("gimmeless");
-			e.bubbles = false;
-			e.target = this;
-			this.dispatchEvent(e);
-			
 			var b = document.querySelector("#b").value;
 			var D = document.querySelector("#D").value;
 			var df = document.querySelector("#df").value;
@@ -396,9 +494,6 @@
 				// TODO: assume maximum of 2 bars
 				this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area) || this.barcode;
 			}
-			
-			
-			this.update();
 		}.bind(this);
 		
 		
@@ -455,76 +550,8 @@
 				}
 			}
 		
-		}.bind(this);
+		}.bind(this);// end _more_less_barcode
 		
-		
-		
-		
-		
-		
-		
-		Object.defineProperty(this,"offset",{
-			get:function(){
-				return parseInt(this.offsetIn.value);
-			}.bind(this),
-			set:function(newval){
-				this.offsetIn.value = Math.abs(Math.round(parseFloat(newval)));
-				this.update();
-			}.bind(this),
-		});
-		
-		
-		
-		Object.defineProperty(this,"from",{
-			get:function(){
-				return this.fromIn.value;
-			}.bind(this),
-			set:function(newval){
-				this.fromIn.value = newval;
-				this.update();
-			}.bind(this),
-		});
-		
-		
-		
-		Object.defineProperty(this,"selected",{
-			get:function(){
-				return this._selected;
-			}.bind(this),
-			set:function(newval){
-				if(!this._selected && newval){
-					
-					if(!this.enabled) return;
-					
-					this.maindiv.style.backgroundColor = "lightblue";
-					this.infobutIn.innerHTML = "&#8721;";
-					//this.infobutIn.style.fontWeight = "bold";
-					var e = new Event("select");
-					e.target = this;
-					this.dispatchEvent(e);
-					this.dispatchChangeEvent();
-				}else if(!newval && this._selected){
-					this.maindiv.style.backgroundColor = "";
-					this.infobutIn.innerHTML = "";
-					//this.infobutIn.style.fontWeight = "";
-					var e = new Event("unselect");
-					e.target = this;
-					this.dispatchEvent(e);
-					this.dispatchChangeEvent();
-				}
-				this._selected = newval;
-				this.update();
-			}.bind(this),
-		});
-		
-		
-		
-		
-		this.toggleSelected = function(e){
-			if(this.enabled){
-				this.selected = !this.selected;
-			}
-		}.bind(this);
 		
 		
 		

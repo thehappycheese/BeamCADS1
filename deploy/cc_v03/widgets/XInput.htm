@@ -44,6 +44,11 @@
 			-webkit-user-select:none;
 			border-radius:4px;
 		}
+		input[type=number]::-webkit-inner-spin-button,
+		input[type=number]::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
 	</style>
 	<div>
 		<table>
@@ -72,18 +77,26 @@
 <script id="x-input-script">
 var XInputPrototype = Object.create(HTMLDivElement.prototype);
 XInputPrototype.createdCallback = function(){
+	// ##########################################################################################
+	// 			DEFERED CONSTRUCTOR
+	// ##########################################################################################
 	this.create = function(){
 		//import content from the template element
 		var imported = document.querySelector("#x-input-template").innerHTML;
 		this.webkitCreateShadowRoot();
 		this.webkitShadowRoot.innerHTML = imported;
 		
-		// Add some event listeners and shit.
+		// ##########################################################################################
+		// 			EVENT LISTENERS
+		// ##########################################################################################
 		this.input = this.webkitShadowRoot.querySelector("input");
 		this.input.addEventListener("input",function(e){
-			var evt = new Event("input")
-			evt.target = this;
-			this.dispatchEvent(evt);
+			this.update();
+			this.change();
+		}.bind(this));
+		this.input.addEventListener("change",function(e){
+			this.update();
+			this.change();
 		}.bind(this));
 		
 		this.webkitShadowRoot.querySelector("div").addEventListener("mousedown",function(e){
@@ -97,15 +110,40 @@ XInputPrototype.createdCallback = function(){
 		
 		this.getAttributes();
 		MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.webkitShadowRoot]);
+	}.bind(this); // end create();
+	
+	// ##########################################################################################
+	// 			EVENT Dispatchers
+	// ##########################################################################################
+	this.update = function(e){
+		var evt = new Event("update");
+		evt.target = this;
+		evt.bubbles = true;
+		this.dispatchEvent(evt);
+	}.bind(this);
+	this.change = function(e){
+		var evt = new Event("change");
+		evt.target = this;
+		evt.bubbles = true;
+		this.dispatchEvent(evt);
 	}.bind(this);
 	
+	
+	// ##########################################################################################
+	// 			Calibrate this input based on the value of its attributes
+	// ##########################################################################################
 	this.getAttributes = function(){
 		for(var i=0; i<this.attributes.length;i++){
 			var att = this.attributes[i];
 			this[att.name] = att.value;
 		}
 	}.bind(this);
-	// DEFINE VALUE PROPERTY GETTER SETTER
+	
+	
+	// ##########################################################################################
+	// 			GETTERS AND SETTERS
+	// ##########################################################################################
+	// VALUE
 	Object.defineProperty(this,"value",{
 		get:function(){
 			return this.input.value;
@@ -116,7 +154,7 @@ XInputPrototype.createdCallback = function(){
 	});
 	
 	
-	
+	// VALID
 	Object.defineProperty(this,"valid",{
 		get:function(){
 			this.isvalid(this.value);
@@ -124,7 +162,7 @@ XInputPrototype.createdCallback = function(){
 	});
 	
 	
-	
+	// VARNAME
 	Object.defineProperty(this,"varname",{
 		get:function(){
 			return this.webkitShadowRoot.querySelector("#name").innerHTML;
@@ -135,7 +173,7 @@ XInputPrototype.createdCallback = function(){
 	});
 	
 	
-	
+	// NOTATION
 	Object.defineProperty(this,"notation",{
 		get:function(){
 			return this.webkitShadowRoot.querySelector("#notation").innerHTML;
@@ -145,6 +183,8 @@ XInputPrototype.createdCallback = function(){
 		}
 	});
 	
+	
+	// UNIT
 	Object.defineProperty(this,"unit",{
 		get:function(){
 			return this.webkitShadowRoot.querySelector("#unit").innerHTML;
@@ -155,6 +195,7 @@ XInputPrototype.createdCallback = function(){
 	});
 	
 	
+	// PATTERN
 	Object.defineProperty(this,"pattern",{
 		get:function(){
 			return this.input.pattern;
@@ -164,6 +205,8 @@ XInputPrototype.createdCallback = function(){
 		}
 	});
 	
+	
+	// TYPE
 	Object.defineProperty(this,"type",{
 		get:function(){
 			return this.input.type;
@@ -173,6 +216,8 @@ XInputPrototype.createdCallback = function(){
 		}
 	});
 	
+	
+	// MIN
 	Object.defineProperty(this,"min",{
 		get:function(){
 			return this.input.min;
@@ -181,6 +226,9 @@ XInputPrototype.createdCallback = function(){
 			this.input.min = newval;
 		}
 	});
+	
+	
+	// MAX
 	Object.defineProperty(this,"max",{
 		get:function(){
 			return this.input.max;
@@ -189,6 +237,9 @@ XInputPrototype.createdCallback = function(){
 			this.input.max = newval;
 		}
 	});
+	
+	
+	// STEP
 	Object.defineProperty(this,"step",{
 		get:function(){
 			return this.input.step;
@@ -198,6 +249,8 @@ XInputPrototype.createdCallback = function(){
 		}
 	});
 	
+	
+	// DATA-TOOLTIP
 	Object.defineProperty(this,"data-tooltip",{
 		get:function(){
 			return this.webkitShadowRoot.querySelector("div").getAttribute("data-tooltip");

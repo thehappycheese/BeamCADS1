@@ -31,7 +31,7 @@ function Beam(){
 		this.fc		= 32;
 		this.Ec		= undefined;
 		this.epsiloncmax = 0.003;// TODO: getcorrect code ref. AS3600 8.1.3??
-		this.rohc	= 2400;
+		this.rhoc	= 2400;
 		// AS4671 500MPa Steel && AS3600
 		this.fsy = 500;// Steel characteristic yield stress: MPa
 		// AS3600 3.2.2 taken to be (or determined by test)
@@ -130,64 +130,73 @@ function Beam(){
 	// #############################################################################
 	Object.defineProperty(this,"Muo",{
 		get:function Muo(){
-			return (this.dsc-this.gamma*this.dn) * this.Cc_from_dn(this.dn)/1000; // kNm
+			var dn		= this.dn;
+			var cc		= this.Cc_from_dn(dn);
+			var ccd		= this.Cc_centroid_depth_from_dn(dn);
+			var ts		= this.Ts_from_dn(dn);
+			var tsd		= this.Ts_centroid_depth_from_dn(dn);
+			var cs		= this.Cs_from_dn(dn);
+			var csd		= this.Cs_centroid_depth_from_dn(dn);
+			
+			return (cc*ccd + ts*tsd + (cs*csd || 0)) / 1000; //kNm
 		}.bind(this)}
 	);
 
 	
-	Object.defineProperty(this,"dn",{get:function(){
-		// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
-		// TODO: make a check to see that reo that is too small is never fed into this beam calculator
-		var dn;
-		var top = this.D;
-		var bot = 0;
-		var diff;
-		var cnt = 0;
-		do{
-			dn = (top+bot)/2;
-			diff = this.Ts_from_dn(dn)-this.Cs_from_dn(dn)-this.Cc_from_dn(dn);
-			if(diff>0){
-				bot = dn;
-			}else{
-				top = dn;
-			}
-			cnt++
-		}while(Math.abs(diff) > 0.0001 && cnt<20);
+	Object.defineProperty(this,"dn",{
+		get:function(){
+			// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
+			// TODO: make a check to see that reo that is too small is never fed into this beam calculator
+			var dn;
+			var top = this.D;
+			var bot = 0;
+			var diff;
+			var cnt = 0;
+			do{
+				dn = (top+bot)/2;
+				diff = this.Ts_from_dn(dn)+this.Cs_from_dn(dn)+this.Cc_from_dn(dn);
+				if(diff>0){
+					bot = dn;
+				}else{
+					top = dn;
+				}
+				cnt++
+			}while(Math.abs(diff) > 0.0001 && cnt<20);
 
-		return dn;
-	}.bind(this)});
+			return dn;
+		}.bind(this)
+	});
 	
 	
 	
 	
 	// #############################################################################
-	// ### GET TOTAL STEEL FORCES ##################################################
+	// ### GET TOTAL FORCES ########################################################
 	// #############################################################################
 	
 	Object.defineProperty(this,"Ts",{get:function(){
 		return this.Ts_from_dn(this.dn);
 	}.bind(this)});
-	
 	Object.defineProperty(this,"Cs",{get:function(){
 		return this.Cs_from_dn(this.dn);
 	}.bind(this)});
-	
 	Object.defineProperty(this,"Cc",{get:function(){
 		return this.Cc_from_dn(this.dn);
 	}.bind(this)});
 	
 	
 	this.Ts_from_dn = function(dn){
-		return this.Fs_from_dn(dn,true);
+		return this.Fs_from_dn_tension(dn,true);
 	}.bind(this);
-	
-	
 	this.Cs_from_dn = function(dn){
-		return this.Fs_from_dn(dn,false);
+		return this.Fs_from_dn_tension(dn,false);
+	}.bind(this);
+	this.Cc_from_dn = function(dn){
+		return -(this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
 	}.bind(this);
 	
 	
-	this.Fs_from_dn = function(dn, returntension){
+	this.Fs_from_dn_tension = function(dn, returntension){
 		var result = 0;
 		var epsilonsi;
 		for(var i = 0;i<this.reo.length;i++){
@@ -202,6 +211,50 @@ function Beam(){
 			result += this.reo[i].area * this.Es * epsilonsi/1000; // kN
 		}
 		return result;
+	}.bind(this);
+	
+	
+	// #############################################################################
+	// ### GET FORCE CENTROIDS #####################################################
+	// #############################################################################
+	
+	
+	Object.defineProperty(this,"Ts_centroid_depth",{get:function(){
+		return this.Ts_centroid_depth_from_dn(this.dn);
+	}.bind(this)});
+	Object.defineProperty(this,"Cs_centroid_depth",{get:function(){
+		return this.Cs_centroid_depth_from_dn(this.dn);
+	}.bind(this)});
+	Object.defineProperty(this,"Cc_centroid_depth",{get:function(){
+		return this.Cc_centroid_depth_from_dn(this.dn)
+	}.bind(this)});
+	
+	
+	this.Ts_centroid_depth_from_dn = function(dn){
+		return this.Fs_centroid_from_dn_tension(dn, true);
+	}.bind(this);
+	this.Cs_centroid_depth_from_dn = function(dn){
+		return this.Fs_centroid_from_dn_tension(dn, false);
+	}.bind(this);
+	this.Cc_centroid_depth_from_dn = function(dn){
+		return this.gamma * dn / 2;
+	}.bind(this);
+	
+	
+	this.Fs_centroid_from_dn_tension = function(dn, returntension){
+		var epsilonsi;
+		var sum_area = 0;
+		var sum_area_times_depth = 0;
+		for(var i = 0;i<this.reo.length;i++){
+			// First get strain in the steel layer according to similar triangles:
+			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
+			// Then depending on if we are looking for tension or compression steel, get weighted average depth
+			if(  (returntension && epsilonsi>0)  ||  (!returntension && epsilonsi<0)  ){
+				sum_area += this.reo[i].area;
+				sum_area_times_depth += this.reo[i].area * this.reo[i].depth;
+			}
+		}
+		return sum_area_times_depth/sum_area || undefined;
 	}.bind(this);
 	
 	
@@ -234,15 +287,6 @@ function Beam(){
 	}.bind(this);
 	
 	
-	
-	
-	// ########################################################################
-	// ####### GET CONCRETE FORCE #############################################
-	// ########################################################################
-	
-	this.Cc_from_dn = function(dn){
-		return (this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
-	}.bind(this);
 
 	
 

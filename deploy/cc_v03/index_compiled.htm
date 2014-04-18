@@ -129,6 +129,7 @@
 	</div>
 	<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
 		<h1>Calculation Div</h1>
+		<div id="calcdivcontent"></div>
 	</div>
 </body>
 <script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
@@ -315,7 +316,7 @@ function Beam(){
 		this.fc		= 32;
 		this.Ec		= undefined;
 		this.epsiloncmax = 0.003;// TODO: getcorrect code ref. AS3600 8.1.3??
-		this.rohc	= 2400;
+		this.rhoc	= 2400;
 		// AS4671 500MPa Steel && AS3600
 		this.fsy = 500;// Steel characteristic yield stress: MPa
 		// AS3600 3.2.2 taken to be (or determined by test)
@@ -561,7 +562,7 @@ function intakeBeamValues(){
 	b.cover		= document.getElementById("cover").value;
 	b.eclass	= document.getElementById("eclass").value;
 	b.df		= document.getElementById("df").value;
-	b.rohc		= document.getElementById("rohc").value;
+	b.rhoc		= document.getElementById("rhoc").value;
 	b.fc		= document.getElementById("fc").value;
 }
 
@@ -569,6 +570,22 @@ function intakeBeamValues(){
 function intakeBeamReo(){
 	var rm = document.querySelector("reo-manager");
 	console.log(rm.getEnabledRows())
+}
+
+
+(function _attatch_input_listners(){
+	// attach event listeners to inputs
+	var inps = document.querySelectorAll("reo-manager, x-input");
+
+	for(var i = 0;i < inps.length;i++){
+		inps[i].addEventListener("update",mainUpdateListener);
+	}
+
+})();
+
+function mainUpdateListener(e){
+	intakeBeamValues();
+	document.querySelector("#calcdivcontent").innerHTML= b.dn;
 }
 
 //###########################################################################################
@@ -593,7 +610,7 @@ function handleResize(e){
 }
 
 //###########################################################################################
-//###### Reo input/output helpers ###########################################################
+//###### validation error text box ###########################################################
 //###########################################################################################
 
 function setErrorList(list){
@@ -702,10 +719,12 @@ document.body.addEventListener("mousewheel",function(e){
 	}
 
 })()
+var _current_help_url = "";
 
 function setHelpLoc(url){
 
-	if(document.querySelector("#varinfoiframe").getAttribute("src") != url){
+	if(_current_help_url != url){
+		_current_help_url = url;
 		document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
 	}
 
@@ -830,10 +849,10 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				</td>
 				<td>
 					<select id="from" data-tooltip="Where to offset this layer from.">
-						<option value="top">top</option>
+						<!--<option value="top">top</option>-->
 						<option value="highest">highest</option>
 						<option value="lowest" selected>lowest</option>
-						<option value="bottom">bottom</option>
+						<!--<option value="bottom">bottom</option>-->
 					</select>
 				</td>
 				<td style="padding-left:0.5em;">
@@ -849,17 +868,21 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 	ReoInputPrototype.createdCallback = function(){
 		this._selected = false;
 		this._enabled = false;
+		// ##########################################################################################
+		// 			DEFERED CONTRUCTOR
+		// ##########################################################################################
 
 		this.create = function(){
-			// --------
-			// CONSTRUCT
+			// ##########################################################################################
+			// 			CONSTRUCT SHADOW ROOT
+			// ##########################################################################################
 			this.webkitCreateShadowRoot();
 			var imported = document.importNode(document.querySelector("#ReoInputWidgetTemplate").content, true);
 			this.webkitShadowRoot.appendChild(imported);
 			this.doc = this.webkitShadowRoot;
-			// ---------
-			// PROPERTIES
-			console.log(this, this.parentElement);
+			// ##########################################################################################
+			// 			PROPERTIES
+			// ##########################################################################################
 			this.manager = this.parentElement;
 			this.maindiv = this.doc.querySelector("div");
 			this.enabledIn = this.doc.querySelector("#enabled");
@@ -870,14 +893,25 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			this.offsetIn = this.doc.querySelector("#offset");
 			this.spinbutup = this.doc.querySelector("#spinbutup");
 			this.spinbutdown = this.doc.querySelector("#spinbutdown");
+			// use these getter setters to initiate their respective side effects and styling
 			this.selected = false;
 			this.enabled = false;
-			// -----------------------------------------------------
-			// EVENT LISTENERS
+			// ##########################################################################################
+			// 			EVENT LISTENERS
+			// ##########################################################################################
+			// INFO BUTTON LISTENER
 
 			this.infobutIn.addEventListener("click",function(e){
-				this.toggleSelected();
+
+				if(this.enabled == false){
+					this.enabled = true;
+				}
+
+				this.selected = !this.selected;
+				this.update();
+				this.dispatchChangeEvent();
 			}.bind(this));
+			// "ROW" CLICK LISTENER
 
 			this.webkitShadowRoot.addEventListener("click",function(e){
 
@@ -888,50 +922,76 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 						break;
 					default:
 
-						if(this.enabled == false){
-							this.enabled = true;
+						if(this.enabled){
+							this.selected = !this.selected;
 						}
 
-						this.toggleSelected();
+						this.update();
+						this.dispatchChangeEvent();
 				}
 
 			}.bind(this));
-			this.spinbutup.addEventListener("click",this.more);
-			this.spinbutdown.addEventListener("click",this.less);
+			// MORE AND LESS BUTTONS
 
-			this.fromIn.addEventListener("change",function(e){
+			this.spinbutup.addEventListener("click",function(){
+				this.more();
+				this.update();
 				this.dispatchChangeEvent();
 			}.bind(this));
+
+			this.spinbutdown.addEventListener("click",function(){
+				this.less();
+				this.update();
+				this.dispatchChangeEvent();
+			}.bind(this));
+			// "FROM" SELECTION INPUT LISTENER
+
+			this.fromIn.addEventListener("change",function(e){
+				this.update();
+				this.dispatchChangeEvent();
+			}.bind(this));
+			// "FROM" SELECTION INPUT LISTENER
 			this.offsetoldval = this.offsetIn.value;
 
 			this.offsetIn.addEventListener("keyup",function(e){
 
 				if(this.offsetoldval!==this.offsetIn.value){
 					this.offsetoldval = this.offsetIn.value;
+					this.update();
 					this.dispatchChangeEvent();
 				}
 
 			}.bind(this))
+			// ENABLED CHACKBOX LISTENER
 
 			this.enabledIn.addEventListener("change",function(){
 				this.enabled = this.enabledIn.checked;
-				console.log("change")
+				this.update();
 				this.dispatchChangeEvent();
 			}.bind(this));
+			// BARCODE CHANGE EVENT LISTENERs
 
 			this.barcodeIn.addEventListener("keydown",function(e){
 				if(e.keyCode == 38){	// up button
 					this.more();
 					e.preventDefault();
+					this.update();
+					this.dispatchChangeEvent();
 				}
 
 				if(e.keyCode == 40){	// down button
 					this.less();
 					e.preventDefault();
+					this.update();
+					this.dispatchChangeEvent();
 				}
 
 			}.bind(this))
-			this.barcodeIn.addEventListener("change",this.update);
+
+			this.barcodeIn.addEventListener("change",function(){
+				this.update();
+				this.dispatchChangeEvent();
+			}.bind(this));
 
 			this.barcodeIn.addEventListener("input",function(e){
 				var val = e.target.value;
@@ -966,22 +1026,35 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				e.target.value =  val;
 				e.target.setSelectionRange(ss,se);
 				this.update();
+				this.dispatchChangeEvent();
 			}.bind(this))
-		}.bind(this);
+		}.bind(this);//end create();
+		// ##########################################################################################
+		// 			DISPATCHCHANGEEVENT
+		// ##########################################################################################
 
 		this.dispatchChangeEvent = function(){
+			console.log("reo-input change")
 			var e = new Event("change");
 			e.target = this;
+			e.bubbles = true;
 			this.dispatchEvent(e);
 		}.bind(this);
+		// ##########################################################################################
+		// 			UPDATE
+		// ##########################################################################################
 
 		this.update = function(){
+			this.areaOut.innerHTML = this.area || "--";
+			console.log("reo-input update");
 			var e = new Event("update");
 			e.target = this;
 			e.bubbles = true;
 			this.dispatchEvent(e);
-			this.areaOut.innerHTML = this.area || "--";
 		}.bind(this);
+		// ##########################################################################################
+		// 			HELPER WHICH DISABLS A BUNCH OF FEATURES IN THIS ROW
+		// ##########################################################################################
 
 		this.makeFirstRow = function(){
 			this.enabled = true;
@@ -993,6 +1066,9 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			this.webkitShadowRoot.querySelector("#mmlable").style.visibility = "hidden";
 			this.webkitShadowRoot.querySelector("#fromlable").style.visibility = "hidden";
 		}.bind(this);
+		// ##########################################################################################
+		// 			GET/SET enabled
+		// ##########################################################################################
 
 		Object.defineProperty(this,"enabled",{
 
@@ -1004,19 +1080,11 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				this._enabled = newval;
 
 				if(newval == true){
-					var e = new Event("enabled");
-					e.target = this;
-					this.dispatchEvent(e);
-					this.dispatchChangeEvent();
 					this.webkitShadowRoot.querySelector("div").style.color = "";
 
 				}else if(newval == false){
 					this.webkitShadowRoot.querySelector("div").style.color = "grey";
-					var e = new Event("disabled");
-					e.target = this;
-					this.dispatchEvent(e);
 					this.selected = false;
-					//this.dispatchChangeEvent(); this will be dispatched as a result of the line above
 				}
 
 				this.enabledIn.checked = newval;
@@ -1033,6 +1101,9 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				this.update();
 			}.bind(this),
 		});
+		// ##########################################################################################
+		// 			GET/SET area
+		// ##########################################################################################
 
 		Object.defineProperty(this,"area",{
 
@@ -1042,6 +1113,9 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				return areas[diameters.indexOf(this.diameter)]*this.number || undefined;
 			}.bind(this)
 		});
+		// ##########################################################################################
+		// 			GET/SET diameter
+		// ##########################################################################################
 
 		Object.defineProperty(this,"diameter",{
 
@@ -1061,6 +1135,9 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			}.bind(this)
 		});
+		// ##########################################################################################
+		// 			GET/SET number
+		// ##########################################################################################
 
 		Object.defineProperty(this,"number",{
 
@@ -1079,6 +1156,9 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			}.bind(this)
 		});
+		// ##########################################################################################
+		// 			GET/SET barcode
+		// ##########################################################################################
 
 		Object.defineProperty(this,"barcode",{
 
@@ -1091,12 +1171,68 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				this.update();
 			}.bind(this),
 		});
+		// ##########################################################################################
+		// 			GET/SET offset
+		// ##########################################################################################
+
+		Object.defineProperty(this,"offset",{
+
+			get:function(){
+				return parseInt(this.offsetIn.value);
+			}.bind(this),
+
+			set:function(newval){
+				this.offsetIn.value = Math.abs(Math.round(parseFloat(newval)));
+				this.update();
+			}.bind(this),
+		});
+		// ##########################################################################################
+		// 			GET/SET from
+		// ##########################################################################################
+
+		Object.defineProperty(this,"from",{
+
+			get:function(){
+				return this.fromIn.value;
+			}.bind(this),
+
+			set:function(newval){
+				this.fromIn.value = newval;
+				this.update();
+			}.bind(this),
+		});
+		// ##########################################################################################
+		// 			GET/SET selected
+		// ##########################################################################################
+
+		Object.defineProperty(this,"selected",{
+
+			get:function(){
+				return this._selected;
+			}.bind(this),
+
+			set:function(newval){
+
+				if(!this._selected && newval){
+					this.maindiv.style.backgroundColor = "lightblue";
+					this.infobutIn.innerHTML = "&#8721;";
+					//this.infobutIn.style.fontWeight = "bold";
+
+				}else if(!newval && this._selected){
+					this.maindiv.style.backgroundColor = "";
+					this.infobutIn.innerHTML = "";
+					//this.infobutIn.style.fontWeight = "";
+				}
+
+				this._selected = newval;
+				this.update();
+			}.bind(this),
+		});
+		// ##########################################################################################
+		// 			MORE AND LESS HELPER FUNCTIONS
+		// ##########################################################################################
 
 		this.more = function(){
-			var e = new Event("gimmemore");
-			e.bubbles = false;
-			e.target = this;
-			this.dispatchEvent(e);
 			var b = document.querySelector("#b").value;
 			var D = document.querySelector("#D").value;
 			var df = document.querySelector("#df").value;
@@ -1109,21 +1245,16 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				// TODO: assume minimum spacing of 20mm between
 				// TODO: assume maximum spacing of 300mm c-c
 				// TODO: assume maximum of 10 bars
-				this.barcode = this._more_less_barcode(true, 10, 300, 20, fitwidth, this.area);
+				this.barcode = this._more_less_barcode(true, 10, 300, 20, fitwidth, this.area) || this.barcode;
 
 			}else{
 				// TODO: assume maximum of 2 bars
-				this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area);
+				this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area) || this.barcode;
 			}
 
-			this.update();
 		}.bind(this);
 
 		this.less = function(){
-			var e = new Event("gimmeless");
-			e.bubbles = false;
-			e.target = this;
-			this.dispatchEvent(e);
 			var b = document.querySelector("#b").value;
 			var D = document.querySelector("#D").value;
 			var df = document.querySelector("#df").value;
@@ -1136,18 +1267,16 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 				// TODO: assume minimum spacing of 20mm between
 				// TODO: assume maximum spacing of 300mm c-c
 				// TODO: assume maximum of 10 bars
-				this.barcode = this._more_less_barcode(false, 10, 300, 20, fitwidth, this.area);
+				this.barcode = this._more_less_barcode(false, 10, 300, 20, fitwidth, this.area) || this.barcode;
 
 			}else{
 				// TODO: assume maximum of 2 bars
-				this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area);
+				this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area) || this.barcode;
 			}
 
-			this.update();
 		}.bind(this);
 
-		this._more_less_barcode = function(getmore, maxbar, max_spacing, min_gap fitwidth, current_area){
-		/*
+		this._more_less_barcode = function (getmore, maxbar, max_spacing, min_gap, fitwidth, current_area){
 			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
 			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
 			var combs = [];
@@ -1219,73 +1348,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 			}
 
-		*/
-		}.bind(this);
-
-		Object.defineProperty(this,"offset",{
-
-			get:function(){
-				return parseInt(this.offsetIn.value);
-			}.bind(this),
-
-			set:function(newval){
-				this.offsetIn.value = Math.abs(Math.round(parseFloat(newval)));
-				this.update();
-			}.bind(this),
-		});
-
-		Object.defineProperty(this,"from",{
-
-			get:function(){
-				return this.fromIn.value;
-			}.bind(this),
-
-			set:function(newval){
-				this.fromIn.value = newval;
-				this.update();
-			}.bind(this),
-		});
-
-		Object.defineProperty(this,"selected",{
-
-			get:function(){
-				return this._selected;
-			}.bind(this),
-
-			set:function(newval){
-
-				if(!this._selected && newval){
-					if(!this.enabled) return;
-					this.maindiv.style.backgroundColor = "lightblue";
-					this.infobutIn.innerHTML = "&#8721;";
-					//this.infobutIn.style.fontWeight = "bold";
-					var e = new Event("select");
-					e.target = this;
-					this.dispatchEvent(e);
-					this.dispatchChangeEvent();
-
-				}else if(!newval && this._selected){
-					this.maindiv.style.backgroundColor = "";
-					this.infobutIn.innerHTML = "";
-					//this.infobutIn.style.fontWeight = "";
-					var e = new Event("unselect");
-					e.target = this;
-					this.dispatchEvent(e);
-					this.dispatchChangeEvent();
-				}
-
-				this._selected = newval;
-				this.update();
-			}.bind(this),
-		});
-
-		this.toggleSelected = function(e){
-
-			if(this.enabled){
-				this.selected = !this.selected;
-			}
-
-		}.bind(this);
+		}.bind(this);// end _more_less_barcode
 		this.create();
 	};
 	var ReoInput = document.registerElement("reo-input",{prototype:ReoInputPrototype});
@@ -1343,6 +1406,16 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			return result;
 		}.bind(this);
 
+		this.getTopmostTop = function(){
+			var r = this.getEnabledRows();
+
+			for(var i = 0;i<r.length;i++){
+				// TODO: finish this and swim through the mire that is determining the order and fit of the bars.
+				// LEFTOFF: 2014 04 16 23:25
+			}
+
+		}.bind(this);
+
 		this.getBottomRow = function(){
 			var r = this.getEnabledRows();
 			return r[r.length-1];
@@ -1365,19 +1438,18 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 		this.createReoInput = function(){
 			var nr = new ReoInput();
-			nr.addEventListener("change",this.update);
-
-			nr.addEventListener("gimmemore",function(e){
-				// TODO:
-			});
-
-			nr.addEventListener("gimmeless",function(e){
-				// TODO: 
-			});
+			nr.addEventListener("update",this.update);
+			nr.addEventListener("change",this.change);
 			return nr;
 		}.bind(this);
 
-		this.update = function(){
+		this.change = function(e){
+			console.log("reo-manager change");
+		}
+
+
+		this.update = function(e){
+			console.log("reo-manager update");
 			var e = new Event("update");
 			e.target = this;
 			this.dispatchEvent(e);
@@ -1419,6 +1491,29 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			}
 
 		}.bind(this);
+
+		Object.defineProperty(this,"value",{get:function(){
+			var result = [];
+			var rs = this.getEnabledRows(); 
+			var rw;
+
+			for(var i = 0;i<rs.length;i++){
+
+				rw = {
+					number:		rs.number,
+					diameter:	rs.diameter,
+					area:		rs.area,
+					depth:		this.getDepth(rs)
+				}
+
+				result.push();
+			}
+
+		},
+
+		set:function(newval){
+			// TODO: DESERIELIZEEEE :|
+		}})l
 		this.create();
 	};
 	window.ReoManager = document.registerElement("reo-manager",{prototype:ReoManagerPrototype});
@@ -1607,6 +1702,13 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 			border-radius:4px;
 		}
 
+		input[type=number]::-webkit-inner-spin-button,
+
+		input[type=number]::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
 	</style>
 	<div>
 		<table>
@@ -1631,19 +1733,28 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 var XInputPrototype = Object.create(HTMLDivElement.prototype);
 
 XInputPrototype.createdCallback = function(){
+	// ##########################################################################################
+	// 			DEFERED CONSTRUCTOR
+	// ##########################################################################################
 
 	this.create = function(){
 		//import content from the template element
 		var imported = document.querySelector("#x-input-template").innerHTML;
 		this.webkitCreateShadowRoot();
 		this.webkitShadowRoot.innerHTML = imported;
-		// Add some event listeners and shit.
+		// ##########################################################################################
+		// 			EVENT LISTENERS
+		// ##########################################################################################
 		this.input = this.webkitShadowRoot.querySelector("input");
 
 		this.input.addEventListener("input",function(e){
-			var evt = new Event("input")
-			evt.target = this;
-			this.dispatchEvent(evt);
+			this.update();
+			this.change();
+		}.bind(this));
+
+		this.input.addEventListener("change",function(e){
+			this.update();
+			this.change();
 		}.bind(this));
 
 		this.webkitShadowRoot.querySelector("div").addEventListener("mousedown",function(e){
@@ -1657,7 +1768,27 @@ XInputPrototype.createdCallback = function(){
 		this.isvalid = function(thisval){return true;};
 		this.getAttributes();
 		MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.webkitShadowRoot]);
+	}.bind(this); // end create();
+	// ##########################################################################################
+	// 			EVENT Dispatchers
+	// ##########################################################################################
+
+	this.update = function(e){
+		var evt = new Event("update");
+		evt.target = this;
+		evt.bubbles = true;
+		this.dispatchEvent(evt);
 	}.bind(this);
+
+	this.change = function(e){
+		var evt = new Event("change");
+		evt.target = this;
+		evt.bubbles = true;
+		this.dispatchEvent(evt);
+	}.bind(this);
+	// ##########################################################################################
+	// 			Calibrate this input based on the value of its attributes
+	// ##########################################################################################
 
 	this.getAttributes = function(){
 
@@ -1667,7 +1798,10 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	}.bind(this);
-	// DEFINE VALUE PROPERTY GETTER SETTER
+	// ##########################################################################################
+	// 			GETTERS AND SETTERS
+	// ##########################################################################################
+	// VALUE
 
 	Object.defineProperty(this,"value",{
 
@@ -1679,6 +1813,7 @@ XInputPrototype.createdCallback = function(){
 			this.input.value = newval;
 		}.bind(this)
 	});
+	// VALID
 
 	Object.defineProperty(this,"valid",{
 
@@ -1687,6 +1822,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// VARNAME
 
 	Object.defineProperty(this,"varname",{
 
@@ -1699,6 +1835,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// NOTATION
 
 	Object.defineProperty(this,"notation",{
 
@@ -1711,6 +1848,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// UNIT
 
 	Object.defineProperty(this,"unit",{
 
@@ -1723,6 +1861,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// PATTERN
 
 	Object.defineProperty(this,"pattern",{
 
@@ -1735,6 +1874,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// TYPE
 
 	Object.defineProperty(this,"type",{
 
@@ -1747,6 +1887,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// MIN
 
 	Object.defineProperty(this,"min",{
 
@@ -1759,6 +1900,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// MAX
 
 	Object.defineProperty(this,"max",{
 
@@ -1771,6 +1913,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// STEP
 
 	Object.defineProperty(this,"step",{
 
@@ -1783,6 +1926,7 @@ XInputPrototype.createdCallback = function(){
 		}
 
 	});
+	// DATA-TOOLTIP
 
 	Object.defineProperty(this,"data-tooltip",{
 

@@ -12,13 +12,25 @@ function intakeBeamValues(){
 	b.cover		= document.getElementById("cover").value;
 	b.eclass	= document.getElementById("eclass").value;
 	b.df		= document.getElementById("df").value;
-	b.rohc		= document.getElementById("rohc").value;
+	b.rhoc		= document.getElementById("rhoc").value;
 	b.fc		= document.getElementById("fc").value;
+	b.reo		= document.getElementById("reomanagerelement").value;
 }
 
 function intakeBeamReo(){
 	var rm = document.querySelector("reo-manager");
 	console.log(rm.getEnabledRows())
+}
+(function _attatch_input_listners(){
+	// attach event listeners to inputs
+	var inps = document.querySelectorAll("reo-manager, x-input");
+	for(var i = 0;i < inps.length;i++){
+		inps[i].addEventListener("update",mainUpdateListener);
+	}
+})();
+function mainUpdateListener(e){
+	intakeBeamValues();
+	document.querySelector("#calcdivcontent").innerHTML= b.dn;
 }
 
 
@@ -50,7 +62,7 @@ function handleResize(e){
 
 
 //###########################################################################################
-//###### Reo input/output helpers ###########################################################
+//###### validation error text box ###########################################################
 //###########################################################################################
 function setErrorList(list){
 	if(list===undefined || list.length==0){
@@ -134,10 +146,14 @@ document.body.addEventListener("mousewheel",function(e){
 		})
 	}
 })()
-
+var _current_help_url = "";
 function setHelpLoc(url){
-	if(document.querySelector("#varinfoiframe").getAttribute("src") != url){
+	if(_current_help_url != url){
+		_current_help_url = url;
 		document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
 	}
 }
+
+
 var ifrm = document.querySelector("#varinfoiframe");
+var rm = document.querySelector("reo-manager");
