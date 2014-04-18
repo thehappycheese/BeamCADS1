@@ -2,6 +2,7 @@
 ///~ ../jslib/Vector.js
 ///* widgets/widgets.js
 ///* Beam.js
+///* validation.js
 
 // Create global beam object
 var b = new Beam();
@@ -126,10 +127,15 @@ document.querySelector("#varinfoiframe").addEventListener("mouseover",function(e
 });
 document.querySelector("#varinfoiframe").addEventListener("mouseout",function(e){
 	scroll_disabled = false;
+	document.querySelector("#varinfoiframe").style.outline="";
 });
 document.body.addEventListener("mousewheel",function(e){
 	if(scroll_disabled){
 		e.preventDefault();
+		document.querySelector("#varinfoiframe").style.outline="1px solid orange";
+		setTimeout(function(){
+			document.querySelector("#varinfoiframe").style.outline="";
+		},200)
 	}
 });
 
@@ -148,9 +154,17 @@ document.body.addEventListener("mousewheel",function(e){
 })()
 var _current_help_url = "";
 function setHelpLoc(url){
-	if(_current_help_url != url){
-		_current_help_url = url;
-		document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
+	// console.log(_current_help_url,document.querySelector("#varinfoiframe").contentWindow.location.pathname)
+	// console.log(document.querySelector("#varinfoiframe").getAttribute("src"),url)
+	// console.log(_current_help_url === document.querySelector("#varinfoiframe").contentWindow.location.pathname)
+	// console.log(document.querySelector("#varinfoiframe").getAttribute("src") === url)
+	if(document.querySelector("#varinfoiframe").contentWindow.location.pathname !== _current_help_url ||
+			document.querySelector("#varinfoiframe").getAttribute("src")!==url){
+		
+		document.querySelector("#varinfoiframe").onload = function(){
+			_current_help_url = document.querySelector("#varinfoiframe").contentWindow.location.pathname;
+		};
+		document.querySelector("#varinfoiframe").setAttribute("src",url);
 	}
 }
 

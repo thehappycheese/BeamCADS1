@@ -51,6 +51,7 @@
 							type="number"
 							min="200"
 							max="3000"
+							step="10"
 							data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
 				<x-input	id="cover"
 							notation ="$$$\text{Cover}$$$"
@@ -106,7 +107,7 @@
 		<div id="reoinputoutputdiv" class="bmpblock">
 			<!--<div id="reocontroldiv"></div>-->
 			<div id="reoinputdiv">
-				<reo-manager></reo-manager>
+				<reo-manager id="reomanagerelement"></reo-manager>
 			</div>
 			<div style="width:100%;"></div>
 			<div id="reooutputdiv">
@@ -425,37 +426,47 @@ function Beam(){
 	Object.defineProperty(this,"Muo",{
 
 		get:function Muo(){
-			return (this.dsc-this.gamma*this.dn) * this.Cc_from_dn(this.dn)/1000; // kNm
+			var dn		= this.dn;
+			var cc		= this.Cc_from_dn(dn);
+			var ccd		= this.Cc_centroid_depth_from_dn(dn);
+			var ts		= this.Ts_from_dn(dn);
+			var tsd		= this.Ts_centroid_depth_from_dn(dn);
+			var cs		= this.Cs_from_dn(dn);
+			var csd		= this.Cs_centroid_depth_from_dn(dn);
+			return (cc*ccd + ts*tsd + (cs*csd || 0)) / 1000; //kNm
 		}.bind(this)}
 
 	);
 
-	Object.defineProperty(this,"dn",{get:function(){
-		// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
-		// TODO: make a check to see that reo that is too small is never fed into this beam calculator
-		var dn;
-		var top = this.D;
-		var bot = 0;
-		var diff;
-		var cnt = 0;
+	Object.defineProperty(this,"dn",{
 
-		do{
-			dn = (top+bot)/2;
-			diff = this.Ts_from_dn(dn)-this.Cs_from_dn(dn)-this.Cc_from_dn(dn);
+		get:function(){
+			// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
+			// TODO: make a check to see that reo that is too small is never fed into this beam calculator
+			var dn;
+			var top = this.D;
+			var bot = 0;
+			var diff;
+			var cnt = 0;
 
-			if(diff>0){
-				bot = dn;
+			do{
+				dn = (top+bot)/2;
+				diff = this.Ts_from_dn(dn)+this.Cs_from_dn(dn)+this.Cc_from_dn(dn);
 
-			}else{
-				top = dn;
-			}
+				if(diff>0){
+					bot = dn;
 
-			cnt++
-		}while(Math.abs(diff) > 0.0001 && cnt<20);
-		return dn;
-	}.bind(this)});
+				}else{
+					top = dn;
+				}
+
+				cnt++
+			}while(Math.abs(diff) > 0.0001 && cnt<20);
+			return dn;
+		}.bind(this)
+	});
 	// #############################################################################
-	// ### GET TOTAL STEEL FORCES ##################################################
+	// ### GET TOTAL FORCES ########################################################
 	// #############################################################################
 
 	Object.defineProperty(this,"Ts",{get:function(){
@@ -471,14 +482,18 @@ function Beam(){
 	}.bind(this)});
 
 	this.Ts_from_dn = function(dn){
-		return this.Fs_from_dn(dn,true);
+		return this.Fs_from_dn_tension(dn,true);
 	}.bind(this);
 
 	this.Cs_from_dn = function(dn){
-		return this.Fs_from_dn(dn,false);
+		return this.Fs_from_dn_tension(dn,false);
 	}.bind(this);
 
-	this.Fs_from_dn = function(dn, returntension){
+	this.Cc_from_dn = function(dn){
+		return -(this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
+	}.bind(this);
+
+	this.Fs_from_dn_tension = function(dn, returntension){
 		var result = 0;
 		var epsilonsi;
 
@@ -498,6 +513,53 @@ function Beam(){
 		}
 
 		return result;
+	}.bind(this);
+	// #############################################################################
+	// ### GET FORCE CENTROIDS #####################################################
+	// #############################################################################
+
+	Object.defineProperty(this,"Ts_centroid_depth",{get:function(){
+		return this.Ts_centroid_depth_from_dn(this.dn);
+	}.bind(this)});
+
+	Object.defineProperty(this,"Cs_centroid_depth",{get:function(){
+		return this.Cs_centroid_depth_from_dn(this.dn);
+	}.bind(this)});
+
+	Object.defineProperty(this,"Cc_centroid_depth",{get:function(){
+		return this.Cc_centroid_depth_from_dn(this.dn)
+	}.bind(this)});
+
+	this.Ts_centroid_depth_from_dn = function(dn){
+		return this.Fs_centroid_from_dn_tension(dn, true);
+	}.bind(this);
+
+	this.Cs_centroid_depth_from_dn = function(dn){
+		return this.Fs_centroid_from_dn_tension(dn, false);
+	}.bind(this);
+
+	this.Cc_centroid_depth_from_dn = function(dn){
+		return this.gamma * dn / 2;
+	}.bind(this);
+
+	this.Fs_centroid_from_dn_tension = function(dn, returntension){
+		var epsilonsi;
+		var sum_area = 0;
+		var sum_area_times_depth = 0;
+
+		for(var i = 0;i<this.reo.length;i++){
+			// First get strain in the steel layer according to similar triangles:
+			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
+			// Then depending on if we are looking for tension or compression steel, get weighted average depth
+
+			if(  (returntension && epsilonsi>0)  ||  (!returntension && epsilonsi<0)  ){
+				sum_area += this.reo[i].area;
+				sum_area_times_depth += this.reo[i].area * this.reo[i].depth;
+			}
+
+		}
+
+		return sum_area_times_depth/sum_area || undefined;
 	}.bind(this);
 	// #############################################################################
 	// ### GET INDIVIDUAL STEEL FORCES #############################################
@@ -520,13 +582,6 @@ function Beam(){
 	this.layer_yielded_from_layer_dn = function(layer,dn){
 		var layer_strain = this.layer_strain_from_layer_dn(layer, dn);
 		return layer_strain<=-0.0025 || layer_strain>=0.0025;
-	}.bind(this);
-	// ########################################################################
-	// ####### GET CONCRETE FORCE #############################################
-	// ########################################################################
-
-	this.Cc_from_dn = function(dn){
-		return (this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
 	}.bind(this);
 	// ########################################################################
 	// #### MISC COEFICIENTS ##################################################
@@ -564,6 +619,7 @@ function intakeBeamValues(){
 	b.df		= document.getElementById("df").value;
 	b.rhoc		= document.getElementById("rhoc").value;
 	b.fc		= document.getElementById("fc").value;
+	b.reo		= document.getElementById("reomanagerelement").value;
 }
 
 
@@ -730,7 +786,8 @@ function setHelpLoc(url){
 
 }
 
-var ifrm = document.querySelector("#varinfoiframe");</script>
+var ifrm = document.querySelector("#varinfoiframe");
+var rm = document.querySelector("reo-manager");</script>
 
 
 
@@ -1034,7 +1091,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 		// ##########################################################################################
 
 		this.dispatchChangeEvent = function(){
-			console.log("reo-input change")
+			//console.log("reo-input change")
 			var e = new Event("change");
 			e.target = this;
 			e.bubbles = true;
@@ -1046,7 +1103,7 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 		this.update = function(){
 			this.areaOut.innerHTML = this.area || "--";
-			console.log("reo-input update");
+			//console.log("reo-input update");
 			var e = new Event("update");
 			e.target = this;
 			e.bubbles = true;
@@ -1427,13 +1484,45 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 		}.bind(this);
 
 		this.getDepthOfRow = function(row){
+			var D = document.querySelector("#D").value;
+			var cover = document.querySelector("#cover").value;
+			var df = document.querySelector("#df").value;
+			var rs = this.getEnabledRows();
 			var br = this.getBottomRow();
-			var bottomDepth = D-cover-df-br.diameter/2;
+			var last_low_depth = bottomDepth D-cover-df;
+			var last_high_depth = cover+df;
 
-			for(var i = rows.length-2;i>=0;i--){
+			for(var i = rs.length-;i>=0;i--){
+
+				if(rs[i].from === "lowest"){
+
+					if(rs[i] === row){
+						return last_low_depth + rs[i].from + rs[i].diameter/2;
+
+					}else{
+						last_low_depth += rs[i].from + rs[i].diameter;
+					}
+
+				}
+
 			}
 
-			// TODO: get the depth of the bottom row
+
+			for(var i = 0; i<rs.length-1; i--){
+
+				if(rs[i].from === "highest"){
+
+					if(rs[i] === row){
+						return last_high_depth + rs[i].from + rs[i].diameter/2;
+
+					}else{
+						last_high_depth += rs[i].from + rs[i].diameter;
+					}
+
+				}
+
+			}
+
 		}.bind(this);
 
 		this.createReoInput = function(){
@@ -1444,12 +1533,13 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 		}.bind(this);
 
 		this.change = function(e){
-			console.log("reo-manager change");
+			// TODO: ??
+			//console.log("reo-manager change");
 		}
 
 
 		this.update = function(e){
-			console.log("reo-manager update");
+			//console.log("reo-manager update");
 			var e = new Event("update");
 			e.target = this;
 			this.dispatchEvent(e);
@@ -1492,28 +1582,33 @@ var ifrm = document.querySelector("#varinfoiframe");</script>
 
 		}.bind(this);
 
-		Object.defineProperty(this,"value",{get:function(){
-			var result = [];
-			var rs = this.getEnabledRows(); 
-			var rw;
+		Object.defineProperty(this,"value",{
 
-			for(var i = 0;i<rs.length;i++){
+			get:function(){
+				var result = [];
+				var rs = this.getEnabledRows(); 
+				var rw;
 
-				rw = {
-					number:		rs.number,
-					diameter:	rs.diameter,
-					area:		rs.area,
-					depth:		this.getDepth(rs)
+				for(var i = 0;i<rs.length;i++){
+
+					rw = {
+						number:		rs[i].number,
+						diameter:	rs[i].diameter,
+						area:		rs[i].area,
+						depth:		this.getDepthOfRow(rs[i])
+					}
+
+					result.push(rw);
 				}
 
-				result.push();
+				return result;
+			},
+
+			set:function(newval){
+				// TODO: DESERIELIZEEEE :|
 			}
 
-		},
-
-		set:function(newval){
-			// TODO: DESERIELIZEEEE :|
-		}})l
+		});
 		this.create();
 	};
 	window.ReoManager = document.registerElement("reo-manager",{prototype:ReoManagerPrototype});

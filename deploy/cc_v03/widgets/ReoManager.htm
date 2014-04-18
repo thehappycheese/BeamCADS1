@@ -72,29 +72,31 @@
 		
 		this.getDepthOfRow = function(row){
 			
-			var D = document.querySelector("#D").value;
-			var cover = document.querySelector("#cover").value;
-			var df = document.querySelector("#df").value;
+			var D =		parseInt(document.querySelector("#D").value);
+			var cover =	parseInt(document.querySelector("#cover").value);
+			var df =		parseInt(document.querySelector("#df").value);
 			
 			var rs = this.getEnabledRows();
 			var br = this.getBottomRow();
-			var bottomDepth = D-cover-df-br.diameter/2;
-			if(row===br) return bottomDepth;
-			var last_low_depth = bottomDepth + br.diameter/2;
-			var last_high_depth = 0;
 			
-			for(var i = rs.length-2;i>=0;i--){
+			var last_low_depth = D-cover-df;
+			var last_high_depth = cover+df;
+			
+			for(var i = rs.length-1;i>=0;i--){
 				if(rs[i].from === "lowest"){
 					if(rs[i] === row){
-						return last_low_depth + rs[i].from + rs[i].diameter/2;
+						return last_low_depth - rs[i].offset - rs[i].diameter/2;
 					}else{
-						last_low_depth += rs[i].from + rs[i].diameter;
+						last_low_depth -= rs[i].offset + rs[i].diameter;
 					}
-				}else if(rs[i].from === "highest"){
+				}
+			}
+			for(var i = 0; i<rs.length-1; i--){
+				if(rs[i].from === "highest"){
 					if(rs[i] === row){
-						return last_high_depth + rs[i].from + rs[i].diameter/2;
+						return last_high_depth + rs[i].offset + rs[i].diameter/2;
 					}else{
-						last_high_depth += rs[i].from + rs[i].diameter;
+						last_high_depth += rs[i].offset + rs[i].diameter;
 					}
 				}
 			}

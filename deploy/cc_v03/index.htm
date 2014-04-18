@@ -75,7 +75,8 @@
 							notation="$$$d_f$$$"
 							unit="mm"
 							value="10"
-							data-tooltip="Diameter of fitment bars which from the 'ribcage' of the beam."></x-input> 
+							pattern="(10|12|16|20|24|28|32|36|40)"
+							data-tooltip="Diameter of fitment bars (the 'ribcage') of the beam. Standard nominal diameters: [10, 12, 16, 20, 24, 28, 32, 36, 40]mm"></x-input> 
 							
 				<x-input	id="rhoc"
 							notation="$$$\rho_c$$$"
@@ -98,7 +99,7 @@
 			
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
-			<table style="width:100%;height:350px;padding:0;">
+			<table style="width:100%;height:400px;padding:0;">
 				<tr id="errortr" style="height:8em;display:none" >
 					<td id="errortd" style="padding:5px;">Error:</td>
 				</tr>
