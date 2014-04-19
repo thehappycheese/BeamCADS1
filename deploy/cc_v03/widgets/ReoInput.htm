@@ -470,10 +470,10 @@
 		// ##########################################################################################
 		
 		this.more = function(){
-			var b = document.querySelector("#b").value;
-			var D = document.querySelector("#D").value;
-			var df = document.querySelector("#df").value;
-			var cover = document.querySelector("#cover").value;
+			var b = parseInt(document.querySelector("#b").value);
+			var D = parseInt(document.querySelector("#D").value);
+			var df = parseInt(document.querySelector("#df").value);
+			var cover = parseInt(document.querySelector("#cover").value);
 			var fitwidth = b-2*cover-2*df;
 			
 			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
@@ -495,10 +495,10 @@
 		
 		
 		this.less = function(){
-			var b = document.querySelector("#b").value;
-			var D = document.querySelector("#D").value;
-			var df = document.querySelector("#df").value;
-			var cover = document.querySelector("#cover").value;
+			var b = parseInt(document.querySelector("#b").value);
+			var D = parseInt(document.querySelector("#D").value);
+			var df = parseInt(document.querySelector("#df").value);
+			var cover = parseInt(document.querySelector("#cover").value);
 			var fitwidth = b-2*cover-2*df;
 			
 			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
