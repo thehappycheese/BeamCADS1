@@ -112,6 +112,7 @@ function outputReoSummary(){
 	}
 })();
 function mainUpdateListener(e){
+	DoValidation(); // see validation.js
 	intakeBeamValues();
 	outputCalculations();
 	outputReoSummary();
@@ -205,20 +206,26 @@ document.querySelector("#varinfoiframe").addEventListener("mouseover",function(e
 			scroll_disabled = true;
 		}
 	}catch(e){
-		console.warn("iFrame Scroll prevention doesnt work :(");
+		//	console.warn("iFrame Scroll prevention doesnt work :(");
+		//fail silently
 	}
 });
 document.querySelector("#varinfoiframe").addEventListener("mouseout",function(e){
 	scroll_disabled = false;
-	document.querySelector("#varinfoiframe").style.outline="";
+	document.querySelector("#varinfoiframe").style.borderColor="";
 });
 document.body.addEventListener("mousewheel",function(e){
 	if(scroll_disabled){
 		e.preventDefault();
-		document.querySelector("#varinfoiframe").style.outline="1px solid orange";
-		setTimeout(function(){
-			document.querySelector("#varinfoiframe").style.outline="";
-		},200)
+		try{
+			document.querySelector("#varinfoiframe").style.borderColor="orange";
+			setTimeout(function(){
+				document.querySelector("#varinfoiframe").style.borderColor="";
+			},200);
+		}catch(e){
+			//	console.warn("iFrame Scroll prevention doesnt work :(");
+			// fail silently
+		}
 	}
 });
 

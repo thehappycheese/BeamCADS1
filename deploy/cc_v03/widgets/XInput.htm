@@ -139,6 +139,10 @@ XInputPrototype.createdCallback = function(){
 		}
 	}.bind(this);
 	
+	this.setCustomValidity = function(str){
+		this.webkitShadowRoot.querySelector("input").setCustomValidity(str);
+	}.bind(this)
+	
 	
 	// ##########################################################################################
 	// 			GETTERS AND SETTERS
@@ -146,7 +150,27 @@ XInputPrototype.createdCallback = function(){
 	// VALUE
 	Object.defineProperty(this,"value",{
 		get:function(){
+			// TODO: hunt down and fix all of this nonsense
+			//console.warn("depricated");
 			return this.input.value;
+		}.bind(this),
+		set:function(newval){
+			//console.warn("depricated");
+			this.input.value = newval;
+		}.bind(this)
+	});
+	Object.defineProperty(this,"textValue",{
+		get:function(){
+			return this.input.value;
+		}.bind(this),
+		set:function(newval){
+			this.input.value = newval;
+		}.bind(this)
+	});
+	
+	Object.defineProperty(this,"integerValue",{
+		get:function(){
+			return parseInt(this.input.value);
 		}.bind(this),
 		set:function(newval){
 			this.input.value = newval;
