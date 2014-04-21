@@ -117,6 +117,7 @@ function outputReoSummary(){
 		inps[i].addEventListener("update",mainUpdateListener);
 	}
 })();
+setTimeout(mainUpdateListener,500);
 function mainUpdateListener(e){
 	DoValidation(); // see validation.js
 	intakeBeamValues();

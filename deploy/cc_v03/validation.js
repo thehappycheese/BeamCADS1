@@ -9,10 +9,14 @@ function DoValidation(){
 	var D = document.getElementById("D");
 	var b = document.getElementById("b");
 	var cover = document.getElementById("cover");
+	var eclass = document.getElementById("eclass");
+	var fc = document.getElementById("fc");
 	Ln.setCustomValidity("");
 	D.setCustomValidity("");
 	b.setCustomValidity("");
 	cover.setCustomValidity("");
+	eclass.setCustomValidity("");
+	fc.setCustomValidity("");
 	
 	/** Ln
 				too short
@@ -110,7 +114,55 @@ function DoValidation(){
 				chosen from list
 				matches f'c accroding to Table 4.4
 	**/
-
+	var class_index = [
+		"A1",
+		"A2",
+		"B1",
+		"B2",
+		"C1",
+		"C2"
+	];
+	var fc_index = 	[20,25,32,40,50];
+	var coverdata_standard = [ // AS3600+A2 T4.10.3.2
+		[20,20,20,20,20],
+		[  ,30,25,20,20],
+		[  ,  ,40,30,25],
+		[  ,  ,  ,45,35],
+		[  ,  ,  ,  ,50],
+		[  ,  ,  ,  ,65]
+	];
+	var coverdata_nonstandard = [ // AS3600+A2 T4.10.3.3
+		[20,20,20,20,20],
+		[  ,30,20,20,20],
+		[  ,  ,30,25,20],
+		[  ,  ,  ,35,25],
+		[  ,  ,  ,  ,45],
+		[  ,  ,  ,  ,60]
+	];
+	
+	// find standard cover requirement:
+	for(var fc_index_i=0;fc_index_i<fc_index.length-1;fc_index_i++){
+		if(fc.integerValue>=fc_index[fc_index_i] && fc.integerValue<fc_index[fc_index_i+1]){
+			break;
+		}
+	}
+	var standard_min_cover 		= coverdata_standard[class_index.indexOf(eclass.textValue)][fc_index_i];
+	var nonstandard_min_cover	= coverdata_nonstandard[class_index.indexOf(eclass.textValue)][fc_index_i];
+	if(standard_min_cover === undefined){
+		requed_fc = fc_index_i;
+		while(coverdata_standard[class_index.indexOf(eclass.textValue)][requed_fc] === undefined){
+			requed_fc++;
+		}
+		error_list.push("f'c insufficient for Exposure classification without special considerations. Increase f'c to "+fc_index[requed_fc]+"MPa. See AS3600 Table 4.10.3.2 and Table 4.10.3.3");
+		fc.setCustomValidity("Mismatch with eclass.");
+		eclass.setCustomValidity("Mismatch with cover.");
+	}else	if(cover.integerValue<standard_min_cover){
+		error_list.push("Cover insufficient for f'c and Exposure classification without special considerations. Increase cover to "+standard_min_cover+"mm. See AS3600 Table 4.10.3.2 and Table 4.10.3.3");
+		cover.setCustomValidity("Insufficint for fc and eclass");
+		eclass.setCustomValidity("Mismatch with cover.");
+	}
+	
+	
 	/** df
 				chosen from list
 	**/
