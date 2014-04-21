@@ -1,6 +1,7 @@
 
 
 function DoValidation(){
+
 	var error_list = []
 	var warning_list = []
 	
@@ -39,7 +40,7 @@ function DoValidation(){
 		Ln.setCustomValidity("Ln/D too small.");
 		D.setCustomValidity("Ln/D too small.");
 	}else if(span_to_depth<0.25 && Ln.integerValue!==0){
-		error_list.push("Ln/D =  "+span_to_depth.toFixed(2)+" (< 0.25) This is a very low span on depth ratio. This may be a 'deep beam' [See AS3600 Section 12 - Non Fexural members]");
+		error_list.push("Ln/D =  "+span_to_depth.toFixed(2)+" (< 0.25) This is a very low span on depth ratio. This software does not support 'deep' beams [See AS3600 Section 12 - Non Fexural members]");
 		Ln.setCustomValidity("Ln/D too high.");
 		D.setCustomValidity("Ln/D too high.");
 	}
@@ -58,7 +59,7 @@ function DoValidation(){
 	// TODO: confirm these values of bread/depth
 	var breadth_on_depth = b.integerValue/D.integerValue;
 	if(breadth_on_depth>5 && D.integerValue<300){
-		warning_list.push("b/D =  "+breadth_on_depth.toFixed(1)+" (> 5) This looks more like a slab than a beam. This software does not support slabs properly. [See AS3600 Section 9]");
+		warning_list.push("b/D =  "+breadth_on_depth.toFixed(1)+" (> 5) This looks more like a slab than a beam. This software does not support slabs. [See AS3600 Section 9]");
 		//b.setCustomValidity("b/D looks like slab.");
 		//D.setCustomValidity("b/D looks like slab.");
 	}
@@ -73,16 +74,25 @@ function DoValidation(){
 				reasonabled multiple
 				underasonably large: 2000??
 				deep beam limitation: ??
-				breadth/depth ratio: ??
-				span/depth ratio:	??
+				breadth/depth ratio: (see above)
+				span/depth ratio:	(see above)
 	**/
+	// TODO: check the
+	if(D.integerValue<200){
+	}else if(D.integerValue<300){
+		warning_list.push("D<300mm. This is probably a bit shallow a beam.");
+	}else if(D.integerValue>3000 && D.integerValue<5000){
+		warning_list.push("D>3000mm. This is probably a bit too deep for a beam.");
+	}else if(D.integerValue>=5000){
+		error_list.push("D>3000mm. This is probably a bit too deep for a beam.");
+	}
 	
 	if(D.integerValue%5!==0){
 		error_list.push("D should be rounded to the nearest 5mm. Some construction tollerances are > 5mm.");
 	}
 
 	/** cover
-				match with eclass
+				match with eclass 4.10.3.2
 				resonable multiple
 				not too big ?? how big is too big?
 				not too small
@@ -96,8 +106,9 @@ function DoValidation(){
 		error_list.push("Cover should be rounded to the nearest 5mm. Some construction tollerances are > 5mm.");
 	}
 	/** eclass
-				match with cover
+				match with cover fromt able
 				chosen from list
+				matches f'c accroding to Table 4.4
 	**/
 
 	/** df

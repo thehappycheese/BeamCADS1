@@ -51,8 +51,8 @@
 							unit="mm"
 							value="600"
 							type="number"
-							min="200"
-							max="3000"
+							min="0"
+							max="10000"
 							step="10"
 							data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
 							
@@ -68,9 +68,9 @@
 							
 				<x-input	id="eclass"
 							notation ="$$$\text{E. Class}$$$"
-							value="A"
+							options='["A1","A2","B1","B2","C1","C2"]'
 							pattern="(A|B|C|D)"
-							data-tooltip="Exposure Classification determined by exposure to natural environment. Use A | B | C | D"></x-input>
+							data-tooltip="Exposure Classification determined by exposure to natural environment. See AS3600 Table 4.3."></x-input>
 				
 				<x-input	id="df"
 							notation="$$$d_f$$$"

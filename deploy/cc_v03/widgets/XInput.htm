@@ -1,15 +1,15 @@
 <template id="x-input-template">
 	<style>
-		td,input{
+		td,input,select{
 			font-size:1.1em;
 		}
-		input{
+		input, select{
 			width:100%;
 			text-align:right;
 			border:1px solid lightgrey;
 			padding: 2px;
 		}
-		input:invalid{
+		input:invalid, select:invalid{
 			color:red;
 			background-color:lightyellow;
 			border-style:solid;
@@ -140,7 +140,7 @@ XInputPrototype.createdCallback = function(){
 	}.bind(this);
 	
 	this.setCustomValidity = function(str){
-		this.webkitShadowRoot.querySelector("input").setCustomValidity(str);
+		this.input.setCustomValidity(str);
 	}.bind(this)
 	
 	
@@ -182,7 +182,7 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"valid",{
 		get:function(){
 			this.isvalid(this.value);
-		}
+		}.bind(this)
 	});
 	
 	
@@ -190,10 +190,10 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"varname",{
 		get:function(){
 			return this.webkitShadowRoot.querySelector("#name").innerHTML;
-		},
+		}.bind(this),
 		set:function(newval){
 			this.webkitShadowRoot.querySelector("#name").innerHTML = newval;
-		}
+		}.bind(this)
 	});
 	
 	
@@ -201,10 +201,10 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"notation",{
 		get:function(){
 			return this.webkitShadowRoot.querySelector("#notation").innerHTML;
-		},
+		}.bind(this),
 		set:function(newval){
 			this.webkitShadowRoot.querySelector("#notation").innerHTML = newval;
-		}
+		}.bind(this)
 	});
 	
 	
@@ -212,10 +212,10 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"unit",{
 		get:function(){
 			return this.webkitShadowRoot.querySelector("#unit").innerHTML;
-		},
+		}.bind(this),
 		set:function(newval){
 			this.webkitShadowRoot.querySelector("#unit").innerHTML = newval;
-		}
+		}.bind(this)
 	});
 	
 	
@@ -223,10 +223,10 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"pattern",{
 		get:function(){
 			return this.input.pattern;
-		},
+		}.bind(this),
 		set:function(newval){
 			this.input.pattern = newval;
-		}
+		}.bind(this)
 	});
 	
 	
@@ -234,10 +234,10 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"type",{
 		get:function(){
 			return this.input.type;
-		},
+		}.bind(this),
 		set:function(newval){
 			this.input.type = newval;
-		}
+		}.bind(this)
 	});
 	
 	
@@ -245,10 +245,10 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"min",{
 		get:function(){
 			return this.input.min;
-		},
+		}.bind(this),
 		set:function(newval){
 			this.input.min = newval;
-		}
+		}.bind(this)
 	});
 	
 	
@@ -256,10 +256,33 @@ XInputPrototype.createdCallback = function(){
 	Object.defineProperty(this,"max",{
 		get:function(){
 			return this.input.max;
-		},
+		}.bind(this),
 		set:function(newval){
 			this.input.max = newval;
-		}
+		}.bind(this)
+	});
+	
+	// OPTIONS
+	Object.defineProperty(this,"options",{
+		set:function(newval){
+			var ops = newval;
+			if(typeof newval == "string"){
+				ops = JSON.parse(newval);
+			}
+			var sel = document.createElement("select");
+			this.input.parentElement.appendChild(sel);
+			this.input.remove();
+			this.input = sel;
+			this.input.addEventListener("change",function(e){
+				this.update();
+				this.change();
+			}.bind(this));
+			for(var i = 0;i<ops.length;i++){
+				var op = document.createElement("option");
+				op.innerHTML = ops[i];
+				this.input.appendChild(op);
+			}
+		}.bind(this)
 	});
 	
 	

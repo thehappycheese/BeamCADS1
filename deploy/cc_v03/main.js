@@ -5,6 +5,12 @@
 ///* Beam.js
 ///* validation.js
 
+// ///* varinput.js
+// var i1 = new VarInput('b','$$$b$$$',"length",300,"infos/b.htm","varinfoiframe");
+// document.querySelector("#invardivdiv").appendChild(i1.body);
+
+
+
 // Create global beam object
 var b = new Beam();
 function intakeBeamValues(){

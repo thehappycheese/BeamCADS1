@@ -23,6 +23,40 @@ h3{
 
 
 
+
+
+
+
+.varinput{
+	width:250px;
+	border:1px solid grey;
+	display:flex;
+	align-items:middle;
+	font-size:1em;
+	padding:5px;
+	margin:5px 0px;
+}
+.varinput .varinput-notation-div{
+	line-height:100%;
+	vertical-align:middle;
+	text-align:right;
+}
+.varinput .varinput-value-div, .varinput-unit-div{
+	margin-left:0.2em;
+}
+.varinput input, select{
+	width:100%;
+	height:20px;
+}
+
+.varinput div{
+	flex:1;
+	height:20px;
+}
+
+
+
+
 .bmpblock{
 	border: 1px solid grey;
 	border-radius:4px;
