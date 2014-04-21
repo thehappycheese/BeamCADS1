@@ -177,10 +177,12 @@ function DoValidation(){
 		eclass.setCustomValidity("Mismatch with cover.");
 	}else	if(cover.integerValue<standard_min_cover){
 		error_list.push("Cover insufficient for f'c and Exposure classification without special considerations. Increase cover to "+standard_min_cover+"mm. See AS3600 Table 4.10.3.2 and Table 4.10.3.3");
+		// TODO: or increase f_c to ^^
 		cover.setCustomValidity("Insufficint for fc and eclass");
 		eclass.setCustomValidity("Mismatch with cover.");
 	}
-	
+	// TODO: more and less buttons still dont work.
+	// Slab recognition doesnt really work too well.
 	
 	/** df
 				chosen from list
