@@ -24,27 +24,27 @@ function DoValidation(){
 				span/depth ratio
 	**/
 	if(Ln.integerValue<500){
-		error_list.push("Ln<0.5 m. This is too short to be considered a beam.");
+		error_list.push("Ln<500mm. This is too short to be considered a beam.");
 		Ln.setCustomValidity("Ln too short.");
 	}else if(Ln.integerValue<1000){
-		warning_list.push("Ln<1 m. This may be a bit short for the type of analysis used in this software.");
+		warning_list.push("Ln<1000mm. This may be a bit short for the type of analysis used in this software.");
 		//Ln.setCustomValidity("Ln too short.");
-	}else if(Ln.integerValue>=15000 && Ln.integerValue<25000){
-		warning_list.push("Ln>15 m. This is pretty long for a clear-span. Consider some columns!");
+	}else if(Ln.integerValue>15000 && Ln.integerValue<25000){
+		warning_list.push("Ln>15m. This is pretty long for a clear-span. Consider some columns!");
 		//Ln.setCustomValidity("Ln too long.");
 	}else if(Ln.integerValue>=25000){
-		error_list.push("Ln>25 m. This is too long for a clear-span. Columns would be needed.");
+		error_list.push("Ln>25m. This is too long for a clear-span. Columns would be needed.");
 		Ln.setCustomValidity("Ln too long.");
 	}
 	// AS3600 8.5 - deflection span to depth ratio limits
 	// TODO: confirm these values
 	var span_to_depth = (Ln.integerValue/D.integerValue);
 	if(span_to_depth>10){
-		error_list.push("Ln/D =  "+span_to_depth.toFixed(1)+" (>10) This is a very small span to depth ratio. Consider deepening the beam.");
+		error_list.push("Ln/D =  "+span_to_depth.toFixed(1)+" (>10) This is a very small span to depth ratio. D should be more than "+(Math.ceil(Ln.integerValue/10/10)*10).toFixed(0)+"mm");
 		Ln.setCustomValidity("Ln/D too small.");
 		D.setCustomValidity("Ln/D too small.");
 	}else if(span_to_depth<0.25 && Ln.integerValue!==0){
-		error_list.push("Ln/D =  "+span_to_depth.toFixed(2)+" (< 0.25) This is a very low span on depth ratio. This software does not support 'deep' beams [See AS3600 Section 12 - Non Fexural members]");
+		error_list.push("Ln/D =  "+span_to_depth.toFixed(2)+" (< 0.25) This is a very low span on depth ratio. D should be less than "+(Math.ceil(Ln.integerValue/0.25/10)*10).toFixed(0)+"mm This software does not support 'deep' beams [See AS3600 Section 12 - Non Fexural members]");
 		Ln.setCustomValidity("Ln/D too high.");
 		D.setCustomValidity("Ln/D too high.");
 	}
@@ -63,12 +63,28 @@ function DoValidation(){
 	// TODO: confirm these values of bread/depth
 	var breadth_on_depth = b.integerValue/D.integerValue;
 	if(breadth_on_depth>5 && D.integerValue<300){
-		warning_list.push("b/D =  "+breadth_on_depth.toFixed(1)+" (> 5) This looks more like a slab than a beam. This software does not support slabs. [See AS3600 Section 9]");
-		//b.setCustomValidity("b/D looks like slab.");
-		//D.setCustomValidity("b/D looks like slab.");
+		error_list.push("b/D =  "+breadth_on_depth.toFixed(1)+" (> 5) This looks more like a slab than a beam. This software does not support slabs. [See AS3600 Section 9]");
+		b.setCustomValidity("b/D looks like slab.");
+		D.setCustomValidity("b/D looks like slab.");
 	}
+	// TODO: verify this bs
+	if(breadth_on_depth<0.2){
+		error_list.push("b/D =  "+breadth_on_depth.toFixed(1)+" (< 0.2) This looks more like a wall than a beam. The b should be greater than "+(Math.ceil(0.2*D.integerValue/10)*10).toFixed(0));
+		b.setCustomValidity("b/D looks like slab.");
+		D.setCustomValidity("b/D looks like slab.");
+	}
+	if(b.integerValue<200){
+		error_list.push("b<200mm. This is not wide enough to be a beam.");
+		b.setCustomValidity("Not wide enough");
+	}else if(b.integerValue>1500 && b.integerValue<3000){
+		warning_list.push("b>1500mm. This is probably a bit too wide for a beam.");
+	}else if(b.integerValue>=2500){
+		error_list.push("b>3000mm. This is too wide to be designed as a normal beam.");
+		b.setCustomValidity("Too wide");
+	}
+	
 	if(b.integerValue%5!==0){
-		error_list.push("b should be rounded to the nearest 5mm. Some construction tollerances are > 5mm.");
+		warning_list.push("b should be rounded to the nearest 5mm. Construction tollerances are not milimeter accurate.");
 	}
 	
 
@@ -83,16 +99,19 @@ function DoValidation(){
 	**/
 	// TODO: check the
 	if(D.integerValue<200){
+		error_list.push("D<200mm. This is too shallow for a beam.");
+		D.setCustomValidity("Too shallow");
 	}else if(D.integerValue<300){
-		warning_list.push("D<300mm. This is probably a bit shallow a beam.");
-	}else if(D.integerValue>3000 && D.integerValue<5000){
-		warning_list.push("D>3000mm. This is probably a bit too deep for a beam.");
-	}else if(D.integerValue>=5000){
-		error_list.push("D>3000mm. This is probably a bit too deep for a beam.");
+		warning_list.push("D<300mm. This is probably a bit shallow for a beam.");
+	}else if(D.integerValue>2000 && D.integerValue<3000){
+		warning_list.push("D>2000mm. This is probably a bit too deep for a beam.");
+	}else if(D.integerValue>=3000){
+		error_list.push("D>3000mm. This is too deep to be designed as a normal beam.");
+		D.setCustomValidity("Too deep");
 	}
 	
 	if(D.integerValue%5!==0){
-		error_list.push("D should be rounded to the nearest 5mm. Some construction tollerances are > 5mm.");
+		warning_list.push("D should be rounded to the nearest 5mm.  Construction tollerances are not milimeter accurate.");
 	}
 
 	/** cover
@@ -107,7 +126,7 @@ function DoValidation(){
 		
 	}
 	if(cover.integerValue%5!==0){
-		error_list.push("Cover should be rounded to the nearest 5mm. Some construction tollerances are > 5mm.");
+		warning_list.push("Cover should be rounded to the nearest 5mm.  Construction tollerances are not milimeter accurate.");
 	}
 	/** eclass
 				match with cover fromt able
