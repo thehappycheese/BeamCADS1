@@ -1,11 +1,15 @@
 
-function VarInput(arg_id,arg_notation,arg_unit,arg_type,arg_value,arg_href,arg_target){
+function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_target){
 
 	this._options = [];
 	this._notation = "";
 	
+	this.validate = function(v){return v;};
 	
 	
+	// ##########################################################################################
+	// 			BUILD INTERFACE
+	// ##########################################################################################
 	this.buildInterface = function(){
 		this.body = document.createElement("table");
 		this.row = document.createElement("tr");
@@ -18,10 +22,10 @@ function VarInput(arg_id,arg_notation,arg_unit,arg_type,arg_value,arg_href,arg_t
 		this.unitDiv.className = "unit-div";
 		
 		this.notationAnchor = document.createElement("a");
-		
-		if(typeof arg_type == "array"){
+
+		if(typeof arg_type === "object"){
 			this.valueInput	= document.createElement("select");
-			this.options == arg_type;
+			this.options 		= arg_type;
 		}else if(arg_type == "number"){
 			this.valueInput		= document.createElement("input");
 			this.valueInput.type = "number";
@@ -30,7 +34,7 @@ function VarInput(arg_id,arg_notation,arg_unit,arg_type,arg_value,arg_href,arg_t
 			this.valueInput.type = "text";
 		}else{
 			this.valueInput		= document.createElement("input");
-			this.valueInput.type = "text";
+			this.valueInput.type = "none";
 			this.valueInput.readonly=true;
 		}
 		
@@ -49,18 +53,44 @@ function VarInput(arg_id,arg_notation,arg_unit,arg_type,arg_value,arg_href,arg_t
 		this.href		= arg_href;
 		this.target		= arg_target;
 		
-		this.options
+		
 		this.id		= arg_id
 		this.unit	= arg_unit;
 		this.value	= arg_value;
 		
 		
 		
+		
+		
+		
+		
 	}.bind(this);
+	// ##########################################################################################
+	// 			EVENT LISTENERS
+	// ##########################################################################################
+	this.configureEvents = function(){
+		this.valueInput.addEventListener("change",function(e){
+			var val = {value:this.value, error:[], warning:[], info:[]};
+			val = this.validate(val);
+			this.value = val.value;
+		}.bind(this));
+		
+		this.body.addEventListener("click", function(e){
+			if(e.target.tagName!=="INPUT" && e.target.tagName!=="SELECT"){
+				//e.preventDefault();
+				this.notationAnchor.click();
+			}
+		}.bind(this))
+	}.bind(this);
+	
+	// ##########################################################################################
+	// 			HELPER FUNCTIONS
+	// ##########################################################################################
 	
 	this.appendTo = function(dom){
 		dom.appendChild(this.body)
 		this.updateMathJax();
+		this.configureEvents();
 	}.bind(this);
 	
 	this.updateMathJax = function(){
@@ -74,6 +104,10 @@ function VarInput(arg_id,arg_notation,arg_unit,arg_type,arg_value,arg_href,arg_t
 		}
 	}.bind(this);
 	
+	
+	// ##########################################################################################
+	// 			GETTERS AND SETTERS
+	// ##########################################################################################
 	
 	Object.defineProperty(this,"notation",{
 		get:function(){
@@ -105,11 +139,7 @@ function VarInput(arg_id,arg_notation,arg_unit,arg_type,arg_value,arg_href,arg_t
 	
 	Object.defineProperty(this,"value",{
 		get:function(){
-			if(this._type == "text"){
-				return this.valueInput.value+"";
-			}else{
-				return Math.round(parseFloat(this.valueInput.value)*parseFloat(this.unitSelect.value));
-			}
+			return this.valueInput.value;
 		}.bind(this),
 		set:function(newval){
 			this.valueInput.value = newval;

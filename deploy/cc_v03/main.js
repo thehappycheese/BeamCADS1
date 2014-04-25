@@ -3,11 +3,12 @@
 ///* widgets/widgets.js
 ///* drawBeam.js
 ///* Beam.js
+///* varinput.js
+///* setup_varinputs.js
 ///* validation.js
 
-///* varinput.js
-var i1 = new VarInput('b',"$$$(f'_c)$$$","mm","number",300,"infos/b.htm","varinfoiframe");
-i1.appendTo(document.querySelector("#invardivdiv"));
+
+
 
 
 // Create global beam object
@@ -122,31 +123,6 @@ function mainUpdateListener(e){
 	intakeBeamValues();
 	outputCalculations();
 	outputReoSummary();
-}
-
-
-//###########################################################################################
-//###### Canvas resize events ###############################################################
-//###########################################################################################
-window.addEventListener("resize",handleResize);
-setTimeout(handleResize,500);
-setTimeout(handleResize,1500);
-setTimeout(handleResize,5000);
-setTimeout(handleResize,10000);
-function handleResize(e){
-	var c=document.querySelector("#crosssectioncanvas");
-	
-	var st=window.getComputedStyle(c.parentElement);
-	c.width = Math.min(500,parseInt(st.width));
-	c.height = 300;
-	
-	var c=document.querySelector("#elevationcanvas");
-	
-	var st=window.getComputedStyle(c.parentElement);
-	c.width = parseInt(st.width);
-	c.height = 150;
-	
-	// TODO: Update drawing
 }
 
 

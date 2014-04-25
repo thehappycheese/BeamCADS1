@@ -22,10 +22,13 @@
 		<div><a target="_blank" href="https://www.surveymonkey.com/s/FBLMLHG">2. Survey	</a></div>
 		
 	</div>
-	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
+	<div style="display:flex;flex-wrap:wrap;justify-content:center;">	
 		<div id="invardiv" class="bmpblock">
-			<div style="width:100%;"><h2>General Variables</h2></div>
+			<div style="width:100%;">
+				<h2>General Variables</h2>
+			</div>
 			<div id="invardivdiv">
+				<!--
 				<x-input	id="Ln"		
 							notation ="$$$L_n$$$" 
 							unit="mm"
@@ -95,19 +98,26 @@
 							value="32"
 							options="[20, 25, 32, 40, 50, 65, 80, 100]"
 							data-tooltip="Concrete Strength. This software only uses standard grades."></x-input>
+					-->
 			</div>
-			<div id="invardivtooltipbar" class="tooltipbar""></div>
+			
+			<div id="invardivtooltipbar" class="tooltipbar">
+				.
+			</div>
+			
 			<div id="invardiverrorbar">
-				--No errors--<br>
-				--No errors--
+				.
 			</div>
+			
 		</div>
+		
+		
 		<div id="varinfodiv" class="bmpblock" >
 			<h2>Variable Reference Information</h2>
 			<iframe id="varinfoiframe" src="infos/index.htm" style="border:1px solid grey;width:calc(100% - 10px);height:300px;margin:5px;"></iframe>
 		</div>
-	</div>
-	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
+
+	
 		<div id="reoinputoutputdiv" class="bmpblock">
 			<!--<div id="reocontroldiv"></div>-->
 			<div id="reoinputdiv">
@@ -127,16 +137,20 @@
 				<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
 			</div>
 		</div>
+		
+		
 		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
 			<h1 style="display:block;width:100%">Elevation</h1>
 			<div style="width:100%;">
 				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
 			</div>
 		</div>
-	</div>
-	<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
-		<h1>Calculation Div</h1>
-		<div id="calcdivcontent"></div>
+		
+		
+		<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
+			<h1>Calculation Div</h1>
+			<div id="calcdivcontent"></div>
+		</div>
 	</div>
 	
 	
