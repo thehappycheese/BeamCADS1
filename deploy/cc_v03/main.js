@@ -5,24 +5,23 @@
 ///* Beam.js
 ///* validation.js
 
-// ///* varinput.js
-// var i1 = new VarInput('b','$$$b$$$',"length",300,"infos/b.htm","varinfoiframe");
-// document.querySelector("#invardivdiv").appendChild(i1.body);
-
+///* varinput.js
+var i1 = new VarInput('b',"$$$(f'_c)$$$","mm","number",300,"infos/b.htm","varinfoiframe");
+i1.appendTo(document.querySelector("#invardivdiv"));
 
 
 // Create global beam object
 var b = new Beam();
 function intakeBeamValues(){
-	b.Ln			= parseInt(document.getElementById("Ln").value);
+	b.Ln		= parseInt(document.getElementById("Ln").value);
 	b.b			= parseInt(document.getElementById("b").value);
 	b.D			= parseInt(document.getElementById("D").value);
 	b.cover		= parseInt(document.getElementById("cover").value);
-	b.eclass		= document.getElementById("eclass").value;
-	b.df			= parseInt(document.getElementById("df").value);
+	b.eclass	= document.getElementById("eclass").value;
+	b.df		= parseInt(document.getElementById("df").value);
 	b.rhoc		= parseInt(document.getElementById("rhoc").value);
-	b.fc			= parseInt(document.getElementById("fc").value);
-	b.reo			= document.getElementById("reomanagerelement").value;
+	b.fc		= parseInt(document.getElementById("fc").value);
+	b.reo		= document.getElementById("reomanagerelement").value;
 }
 
 

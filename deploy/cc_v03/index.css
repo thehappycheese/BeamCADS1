@@ -29,29 +29,54 @@ h3{
 
 .varinput{
 	width:250px;
-	border:1px solid grey;
-	display:flex;
-	align-items:middle;
-	font-size:1em;
-	padding:5px;
+	height:1.5em;
+	border:1px solid transparent;
+	border-radius: 4px;
+	padding:2px;
 	margin:5px 0px;
+	display:flex;
+	align-items:center;
+	cursor:pointer;
 }
-.varinput .varinput-notation-div{
-	line-height:100%;
-	vertical-align:middle;
+.varinput:hover{
+	border:1px solid lightgrey;
+}
+.varinput:hover a{
+	color:blue;
+}
+.varinput .notation-div{
 	text-align:right;
+	padding-right:0.5em;
+	font-size:1.2em;
+	height:100%;
 }
-.varinput .varinput-value-div, .varinput-unit-div{
+.varinput a{
+	vertical-align:center;
+}
+.varinput .value-div{
 	margin-left:0.2em;
+	font-size:1.2em;
+	width:30%;
+}
+.varinput .unit-div{
+	margin-left:0.2em;
+	font-size:1.2em;
+	width:35%;
 }
 .varinput input, select{
 	width:100%;
-	height:20px;
+	height:100%;
+	font-size:1em;
+	text-align:right;
+	padding-top:0em;
+	padding-bottom:0em;
+	cursor:default;
 }
 
 .varinput div{
+	float:left;
+	width:30%;
 	flex:1;
-	height:20px;
 }
 
 
