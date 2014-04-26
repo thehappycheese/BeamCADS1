@@ -11,10 +11,7 @@ function ReoInput(){
 		this.body.innerHTML = 
 		'<td><input type="checkbox" class="enabled"></td>\
 		<td><input class="barcode" required value="2N10"\></td>\
-		<td>\
-			<button class="more" tabindex="-1">+</button>\
-			<button class="less" tabindex="-1">-</button>\
-		</td>\
+		<td><button class="more" tabindex="-1">+</button><button class="less" tabindex="-1">-</button></td>\
 		<td class="area">--</td>\
 		<td><input type="number" class="offset" /></td>\
 		<td><select class="from"><option>lowest</option><option>highest</option></select></td>\
@@ -32,8 +29,15 @@ function ReoInput(){
 		console.log(this)
 		this.enabled = false;
 	}.bind(this);
-	
-	//
+	// ##########################################################################################
+	// 			BIND EVENTS
+	// ##########################################################################################
+	this.appendTo = function(dom){
+		dom.appendChild(this.body);
+		this.enabledCheckbox.addEventListener("change",function(){
+			
+		}.bind(this));
+	}.bind(this);
 	// ##########################################################################################
 	// 			GETTER/SETTERS
 	// ##########################################################################################
@@ -72,7 +76,7 @@ function ReoInput(){
 	// ##########################################################################################
 	
 	this.update = function(){
-		this.areaOutput.innerHTML = "";
+		this.areaOutput.innerHTML = "todo";
 	}.bind(this);
 	
 	
@@ -82,10 +86,7 @@ function ReoInput(){
 		
 	}.bind(this);
 
-	this.appendTo = function(dom){
-		dom.appendChild(this.body);
-		// TODO attach events/apply mathjax etc
-	}.bind(this);
+	
 
 	this.create();
 }

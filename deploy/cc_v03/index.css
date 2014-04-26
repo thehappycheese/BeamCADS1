@@ -34,6 +34,7 @@ h3{
 .reotable td{
 	border-top:1px solid lightgrey;
 	border-bottom:1px solid lightgrey;
+	padding:2px;
 }
 .reotable tbody tr:hover{
 	background-color:#E6E6FF;
@@ -49,7 +50,7 @@ h3{
 	text-align:center;
 }
 .reoinput button{
-	width:calc(50% - 2px);
+	width:13px;
 	height:100%;
 	border-width:1px;
 	padding:0em;
