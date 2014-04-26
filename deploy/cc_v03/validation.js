@@ -1,7 +1,8 @@
 
 
 function DoValidation(){
-
+	
+	return
 	var error_list = []
 	var warning_list = []
 	

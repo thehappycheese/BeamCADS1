@@ -17,18 +17,194 @@
 
 <body>
 	<div id="apptitlebox" class="bmpblock">
-		<div>BeamCAD v0.3</div>
+		<div>Beam CC</div>
 		<div><a target="_blank" href="task/index.htm">1. Task	</a></div>
 		<div><a target="_blank" href="https://www.surveymonkey.com/s/FBLMLHG">2. Survey	</a></div>
 		
 	</div>
+	
 	<div style="display:flex;flex-wrap:wrap;justify-content:center;">	
+		
+		
 		<div id="invardiv" class="bmpblock">
 			<div style="width:100%;">
 				<h2>General Variables</h2>
 			</div>
 			<div id="invardivdiv">
-				<!--
+				
+			</div>
+			
+			<div id="invardivtooltipbar" class="tooltipbar">
+				.
+			</div>
+			
+			<div id="invardiverrorbar">
+				.
+			</div>
+			
+		</div>
+		
+		<div id="varinfodiv" class="bmpblock" >
+			<h2>Variable Reference Information</h2>
+			<iframe id="varinfoiframe" src="infos/index.htm" style="border:1px solid grey;width:calc(100% - 10px);height:460px;margin:5px;"></iframe>
+		</div>
+		
+		
+		<div id="reoinputoutputdiv" class="bmpblock">
+			<div style="width:100%;">
+				<h2>Reinforcement Information</h2>
+			</div>
+			<div id="reoinputdiv">
+				<table class="reotable" style="">
+					<thead>
+						<tr style="font-family:sans-serif;">
+							<td style="width:2em;"><img src="img/power_icon.png"/></td>
+							<td style="width:3em;">bars</td>
+							<td style="width:30px;border-left:none;"></td>
+							<td style="width:3em;">area<br>(mm&sup2;)</td>
+							<td>gap<br>(mm)</td>
+							<td>position<br>(mm)</td>
+							<td  style="width:2em;"><img src="img/sum_icon.png"/></td>
+						</tr>
+					</thead>
+					<tbody id="reorows">
+					
+					</tbody>
+				</table>
+			</div>
+			<div style="width:100%;"></div>
+			<div id="reooutputdiv">
+				
+				
+				<!-- TODO ressurect this-->
+				<table id="reoouttable" style="width:100%" cellspacing=0>
+					<thead>
+						<tr>
+							<th>Value:</th>
+							<th>Hover:</th>
+							<th>Sum:</th>
+							<th>Unit:</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-tooltip="Depth measured from top surface of beam to centroid of layer[s].">
+							<td id="depthlable">Depth from top surface:</td>
+							<td>.</td>
+							<td class="tableout" id="depth">1200</td>
+							<td>mm</td>
+						</tr>
+						<tr data-tooltip="Cross-sectional area of reo-bar layer[s]">
+							<td id="arealable">Cross-sectional area of steel:</td>
+							<td>.</td>
+							<td id="area" class="tableout">30000</td>
+							<td>mm&#178;</td>
+						</tr>
+						
+						<tr>
+							<td id="amountlable">Number of bars</td>
+							<td>10</td>
+							<td id="number" class="tableout" data-tooltip="Number of reo bars in layer[s]">10</td>
+							<td>bars</td>
+						</tr>
+						<tr>
+							<td>.</td>
+							<td>.</td>
+							<td id="length" class="tableout" data-tooltip="Total length of reo bars based on clear span L_n with no overlap">10</td>
+							<td>m</td>
+						</tr>
+						<tr>
+							<td>.</td>
+							<td>.</td>
+							<td id="mass" class="tableout" data-tooltip="Total mass of layer[s]">400</td>
+							<td>kg</td>
+						</tr>
+						<tr data-tooltip="Total tensile force in layer[s]. Compressive force is shown negative." >
+							<td id="tforcelable" style="border-bottom:none;">Layer Tension Force:</td>
+							<td>.</td>
+							<td id="tforce" style="border-bottom:none;"  class="tableout">200</td>
+							<td style="border-bottom:none;" >kN</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				
+				
+				
+				
+			</div>
+			<div id="reoinputoutputtooltipbar" class="tooltipbar" style="height:4em;"></div>
+		</div>
+		
+		
+
+
+		
+		<div id="crosssectiondiv" class="bmpblock" style="">
+			<div style="width:100%;align-self:flex-start;">
+				<h2>Cross Section</h2>
+			</div>
+			<canvas width="400" height="300" id="crosssectioncanvas" style="background-color:black;"></canvas>
+		</div>
+		
+		
+
+		
+		
+		<div style="flex: 1 0 500px;min-height:300px;margin-bottom:40px;" class="bmpblock">
+			<div style="width:100%;">
+				<h2>Calculations</h2>
+			</div>
+			<div id="calcdivcontent"></div>
+		</div>
+	</div>
+	
+	
+</body>
+
+
+
+<script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
+
+<script>
+///* main.js
+</script>
+	</html>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+			<!--
+		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
+			<h1 style="display:block;width:100%">Elevation</h1>
+			<div style="width:100%;">
+				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
+			</div>
+		</div>
+		-->
+	
+	
+	
+	
+	
+	<!--
 				<x-input	id="Ln"		
 							notation ="$$$L_n$$$" 
 							unit="mm"
@@ -99,92 +275,3 @@
 							options="[20, 25, 32, 40, 50, 65, 80, 100]"
 							data-tooltip="Concrete Strength. This software only uses standard grades."></x-input>
 					-->
-			</div>
-			
-			<div id="invardivtooltipbar" class="tooltipbar">
-				.
-			</div>
-			
-			<div id="invardiverrorbar">
-				.
-			</div>
-			
-		</div>
-		
-		
-		<div id="varinfodiv" class="bmpblock" >
-			<h2>Variable Reference Information</h2>
-			<iframe id="varinfoiframe" src="infos/index.htm" style="border:1px solid grey;width:calc(100% - 10px);height:300px;margin:5px;"></iframe>
-		</div>
-
-	
-		<div id="reoinputoutputdiv" class="bmpblock">
-			<!--<div id="reocontroldiv"></div>-->
-			<div id="reoinputdiv">
-				<table class="reotable" style="">
-					<thead>
-						<tr style="font-family:sans-serif;">
-							<td style="width:4em;">&#x23FB;</td>
-							<td style="width:3em;">bars</td>
-							<td style="width:30px;border-left:none;"></td>
-							<td style="">area<br>(mm^2)</td>
-							<td>space<br>(mm)</td>
-							<td>position<br>(mm)</td>
-							<td  style="width:3em;">sum</td>
-						</tr>
-					</thead>
-					<tbody id="reorows">
-					
-					</tbody>
-				</table>
-				<reo-manager id="reomanagerelement"></reo-manager>
-			</div>
-			<div style="width:100%;"></div>
-			<div id="reooutputdiv">
-				<reo-output></reo-output>
-			</div>
-			<div id="reoinputoutputtooltipbar" class="tooltipbar" style="height:4em;"></div>
-		</div>
-		
-		
-		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
-			<h1 style="display:block;width:100%">Cross Section</h1>
-			<div style="width:100%;display:flex;justify-content:space-around;">
-				<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
-			</div>
-		</div>
-		
-		
-		<!--
-		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
-			<h1 style="display:block;width:100%">Elevation</h1>
-			<div style="width:100%;">
-				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
-			</div>
-		</div>
-		-->
-		
-		
-		<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
-			<h1>Calculation Div</h1>
-			<div id="calcdivcontent"></div>
-		</div>
-	</div>
-	
-	
-</body>
-
-
-
-<script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
-
-<script>
-///* main.js
-</script>
-<!--
-///* widgets/ReoInput.htm
-///* widgets/ReoManager.htm
-///* widgets/ReoOutput.htm
-///* widgets/XInput.htm
--->
-	</html>

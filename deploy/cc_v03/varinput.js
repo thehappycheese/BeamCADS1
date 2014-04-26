@@ -1,8 +1,14 @@
+///* EventDispatcher.js
 
-function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_target){
 
-	this._options = [];
+function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_target,arg_options){
+	
+	
+	EventDispatcher.call(this);
+	
+	this._options = arg_options;
 	this._notation = "";
+	this._type = arg_type;
 	
 	this.validate = function(v){return v;};
 	
@@ -22,10 +28,10 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		this.unitDiv.className = "unit-div";
 		
 		this.notationAnchor = document.createElement("a");
-
-		if(typeof arg_type === "object"){
+	
+		if(arg_options){
 			this.valueInput	= document.createElement("select");
-			this.options 		= arg_type;
+			this.options 		= arg_options;
 		}else if(arg_type == "number"){
 			this.valueInput		= document.createElement("input");
 			this.valueInput.type = "number";
@@ -69,10 +75,26 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	// 			EVENT LISTENERS
 	// ##########################################################################################
 	this.configureEvents = function(){
+		
 		this.valueInput.addEventListener("change",function(e){
 			var val = {value:this.value, error:[], warning:[], info:[]};
 			val = this.validate(val);
 			this.value = val.value;
+			if(val.error.length>0){
+				this.valueInput.setCustomValidity("NO")
+			}
+			this.update();
+			this.change();
+		}.bind(this));
+		
+		this.valueInput.addEventListener("input",function(e){
+			var val = {value:this.value, error:[], warning:[], info:[]};
+			val = this.validate(val);
+			if(val.error.length>0){
+				this.valueInput.setCustomValidity("NO")
+			}
+			this.update();
+			this.change();
 		}.bind(this));
 		
 		this.body.addEventListener("click", function(e){
@@ -85,8 +107,19 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 					this.valueInput.select();
 				}
 			}
+			this.update();
+			this.change();
 		}.bind(this))
 	}.bind(this);
+	
+	
+	this.update = function(){
+		this.dispatch("update",this);
+	}.bind(this);
+	this.change = function(){
+		this.dispatch("change",this);
+	}.bind(this);
+	
 	
 	// ##########################################################################################
 	// 			HELPER FUNCTIONS
@@ -144,6 +177,9 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	
 	Object.defineProperty(this,"value",{
 		get:function(){
+			if(this._type == "number"){
+				return parseInt(this.valueInput.value);
+			}
 			return this.valueInput.value;
 		}.bind(this),
 		set:function(newval){

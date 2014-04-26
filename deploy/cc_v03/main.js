@@ -1,39 +1,35 @@
 "use strict";
 ///~ ../jslib/Vector.js
-///* widgets/widgets.js
 ///* drawBeam.js
 ///* Beam.js
 ///* varinput.js
 ///* setup_varinputs.js
 ///* validation.js
 ///* reoinput.js
+///* ReoManager.js
+
+var rman = new ReoManager(document.querySelector("#reorows"));
+rman.on("change",mainUpdateListener);
 
 
-var rr = new ReoInput();
-
-rr.appendTo(document.querySelector("#reorows"));
-var rr = new ReoInput();
-
-rr.appendTo(document.querySelector("#reorows"));
-var rr = new ReoInput();
-
-rr.appendTo(document.querySelector("#reorows"));
-
-
+for(var i in vin){
+	vin[i].appendTo(document.querySelector("#invardivdiv"));
+	vin[i].on("change",mainUpdateListener);
+}
 
 
 // Create global beam object
 var b = new Beam();
 function intakeBeamValues(){
-	b.Ln		= parseInt(document.getElementById("Ln").value);
-	b.b			= parseInt(document.getElementById("b").value);
-	b.D			= parseInt(document.getElementById("D").value);
-	b.cover		= parseInt(document.getElementById("cover").value);
-	b.eclass	= document.getElementById("eclass").value;
-	b.df		= parseInt(document.getElementById("df").value);
-	b.rhoc		= parseInt(document.getElementById("rhoc").value);
-	b.fc		= parseInt(document.getElementById("fc").value);
-	b.reo		= document.getElementById("reomanagerelement").value;
+	b.Ln		= vin.Ln.value;
+	b.b		= vin.b.value;
+	b.D		= vin.D.value;
+	b.cover	= vin.cover.value;
+	b.eclass	= vin.eclass.value;
+	b.df		= vin.df.value;
+	b.rhoc	= vin.rhoc.value;
+	b.fc		= vin.fc.value;
+	b.reo		= rman.value;
 }
 
 
@@ -47,21 +43,34 @@ function outputCalculations(){
 		}
 	}
 	var calc = [];
-	calc.push("dn: "	+f(b.dn)		);
-	calc.push("Muo: "	+f(b.Muo)		);
+	calc.push("alpha2: "	+b.alpha2.toFixed(2)		);
+	calc.push("gamma: "	+b.gamma.toFixed(2)		);
+	calc.push("");
 	
+	calc.push("dn: "	+f(b.dn)+" mm"		);
+	calc.push("Muo: "	+f(b.Muo)+" kNm");
+	calc.push("Muo min: "	+f(b.Muo_min)+" kNm");
+	calc.push("Ast min (Alternative to meeting Muo_min): "	+f(b.Muo_min_Ast_min)+" mm^2");
+	calc.push("");
+	
+	calc.push("Ag: "	+f(b.Ag)+" mm^2");
+	calc.push("Ast: "	+f(b.Ast)+" mm^2");
+	calc.push("Asc: "	+f(b.Asc)+" mm^2");
+	calc.push("Acc: "	+f(b.Acc)+" mm^2");
+	calc.push("Ixx: "	+f(b.Ixx)+" mm^4");
+	calc.push("Ze: "	+f(b.Ze)+" mm^3");
+	
+	calc.push("Tensile reo ratio (Ast/Ag): "	+(b.p*100).toFixed(3)+"%");
 	calc.push("");
 	
 	calc.push("Ts: "	+f(b.Ts)		);
 	calc.push("Cs: "	+f(b.Cs)		);
 	calc.push("Cc: "	+f(b.Cc)		);
-	
 	calc.push("");
 	
 	calc.push("Ts_centroid_depth: "	+ f(b.Ts_centroid_depth)		);
 	calc.push("Cs_centroid_depth: "	+ f(b.Cs_centroid_depth)		);
 	calc.push("Cc_centroid_depth: "	+ 	  f(b.Cc_centroid_depth)		);
-	
 	calc.push("");
 	
 	document.querySelector("#calcdivcontent").innerHTML = calc.join("<br>");
@@ -77,9 +86,11 @@ function outputCalculations(){
 }
 
 function outputReoSummary(){
+	// TODO: fix this bs :(
+	return
 	var rm = document.querySelector("reo-manager");
 	var om = document.querySelector("reo-output");
-	var rs = rm.selected_value;
+	var rs = rman.selected_value;
 	if(rs.length == 0){
 		om.clear();
 		om.oneLables();
@@ -121,14 +132,7 @@ function outputReoSummary(){
 }
 
 
-(function _attatch_input_listners(){
-	// attach event listeners to inputs
-	var inps = document.querySelectorAll("reo-manager, x-input");
-	for(var i = 0;i < inps.length;i++){
-		inps[i].addEventListener("update",mainUpdateListener);
-	}
-})();
-setTimeout(mainUpdateListener,500);
+mainUpdateListener()
 function mainUpdateListener(e){
 	DoValidation(); // see validation.js
 	intakeBeamValues();

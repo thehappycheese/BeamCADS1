@@ -67,42 +67,11 @@ function Beam(){
 	);
 	
 	
-	// TODO: Which layers of steel should be disregarded? Surely steel 'close' to the centroid should be left out.
-	Object.defineProperty(this,"depthToTensionSteelCentroid",{
-		get:function depthToTensionSteelCentroid(){
-			var sum_area_times_depth = 0;
-			var sum_area = 0;
-			var layer_strain;
-			var dn = this.dn;
-			for(var i=0;i<this.reo.length;i++){
-				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
-				if(layer_strain>0){
-					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
-					sum_area += this.reo[i].area;
-				}
-			}
-			return sum_area_times_depth/sum_area;
-		}.bind(this)
-	});
-	Object.defineProperty(this,"depthToCompressionSteelCentroid",{
-		get:function depthToCompressionSteelCentroid(){
-			var sum_area_times_depth = 0;
-			var sum_area = 0;
-			var layer_strain;
-			var dn = this.dn;
-			for(var i=0;i<this.reo.length;i++){
-				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
-				if(layer_strain<0){
-					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
-					sum_area += this.reo[i].area;
-				}
-			}
-			return sum_area_times_depth/sum_area;
-		}.bind(this)
-	});
+	
 	
 	
 	this.get_tension_reo = function(){
+		console.warn("check this function before use")
 		var result = [];
 		var dn = this.dn ;
 		for(var i = 0; i < this.reo.length;i++){
@@ -114,6 +83,7 @@ function Beam(){
 	}.bind(this);
 	
 	this.get_compression_reo = function(){
+		console.warn("check this function before use")
 		var result = [];
 		var dn = this.dn ;
 		for(var i = 0; i < this.reo.length;i++){
@@ -141,6 +111,24 @@ function Beam(){
 			return (cc*ccd + ts*tsd + (cs*csd || 0)) / 1000; //kNm
 		}.bind(this)}
 	);
+	
+	// AS3600 8.1.6.1(1)
+	Object.defineProperty(this,"Muo_min",{
+		get:function(){
+			// no prestress only.
+			return 1.2*this.Ze*this.fctf/1000000; //mm^3*MPa => Nmm /1000/1000 => kNm
+		}.bind(this)}
+	);
+	// AS3600 8.1.6.1(2)
+	Object.defineProperty(this,"Muo_min_Ast_min",{
+		get:function(){
+			// rect sections only
+			// TODO: fix this probalem:
+			//console.warn("Check this function before use. 'd' may be wrong here. Using Ts_centroid_depth instead");
+			return 0.2*Math.pow(  this.D/this.Ts_centroid_depth   ,2)*this.fctf/this.fsy*this.b*this.Ts_centroid_depth;
+		}.bind(this)}
+	);
+	// TODO: create a proper getter for d, ku and kuo
 
 	
 	Object.defineProperty(this,"dn",{
@@ -219,6 +207,7 @@ function Beam(){
 	// #############################################################################
 	
 	
+	// TODO: Which layers of steel should be disregarded? Surely steel 'close' to the centroid should be left out.
 	Object.defineProperty(this,"Ts_centroid_depth",{get:function(){
 		return this.Ts_centroid_depth_from_dn(this.dn);
 	}.bind(this)});
@@ -288,8 +277,44 @@ function Beam(){
 	
 	
 
+	// #############################################################################
+	// ### GET STEEL AREAS #########################################################
+	// #############################################################################
 	
-
+	Object.defineProperty(this,"Ast",{get:function(){
+		return this.Ast_from_dn(this.dn);
+	}.bind(this)});
+	
+	Object.defineProperty(this,"Asc",{get:function(){
+		return this.Asc_from_dn(this.dn);
+	}.bind(this)});
+	Object.defineProperty(this,"Acc",{get:function(){
+		return this.gamma*this.dn*this.b;
+	}.bind(this)});
+	
+	
+	this.Ast_from_dn = function(dn){
+		return this.As_from_dn_tension(dn,true);
+	}.bind(this);
+	this.Asc_from_dn = function(dn){
+		return this.As_from_dn_tension(dn,false);
+	}.bind(this);
+	
+	this.As_from_dn_tension = function(dn, returntension){
+		var epsilonsi;
+		var sum_area = 0;
+		for(var i = 0;i<this.reo.length;i++){
+			// First get strain in the steel layer according to similar triangles:
+			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
+			// Then depending on if we are looking for tension or compression steel, get weighted average depth
+			if(  (returntension && epsilonsi>0)  ||  (!returntension && epsilonsi<0)  ){
+				sum_area += this.reo[i].area;
+			}
+		}
+		return sum_area || undefined;
+	}.bind(this);
+	
+	
 	// ########################################################################
 	// #### MISC COEFICIENTS ##################################################
 	// ########################################################################
@@ -307,11 +332,50 @@ function Beam(){
 		return r2;
 	}.bind(this)});
 	
+	// TODO: note that this is only when no better info is avaliable.
+	// TODO: sort
+	Object.defineProperty(this,"fctf",{get:function(){
+		return 0.6*Math.sqrt(this.fc);
+	}.bind(this)});
+	
+	
+	
+	// ########################################################################
+	// #### SECTION PROPERTIES ################################################
+	// ########################################################################
+	Object.defineProperty(this,"Ze",{get:function(){
+		// Rectangular section only
+		return this.b*Math.pow(this.D,2)/6;
+	}.bind(this)});
+	
+	Object.defineProperty(this,"Ixx",{get:function(){
+		// Rectangular section only
+		return this.b*Math.pow(this.D,3)/12;
+	}.bind(this)});
+	
 	
 	// STARTOFF: 4:35 14 04 14
 	this.toString = function(){
 		return JSON.stringify(this).replace(/,/g,",\n");
 	}.bind(this);
+	
+	Object.defineProperty(this,"Ag",{get:function(){
+		// Rectangular section only
+		return this.b*this.D;
+	}.bind(this)});
+	
+	// TODO: sort
+	// Reo ratio
+	Object.defineProperty(this,"p",{get:function(){
+		// rect section only
+		return this.Ast/this.b/this.D;
+	}.bind(this)});
+	
+	// AS3600 8.5.3.1
+	Object.defineProperty(this,"beta",{get:function(){
+		// rect section only
+		return this.Ast/this.b/this.D;
+	}.bind(this)});
 	
 	
 	this.create();
