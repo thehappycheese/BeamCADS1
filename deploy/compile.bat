@@ -6,4 +6,4 @@ echo COMPILING...
 echo ------------------
 python compiler2.py
 cd cc_v03
-timeout 4
+timeout 8

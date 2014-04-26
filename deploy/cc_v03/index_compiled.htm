@@ -19,121 +19,118 @@
 </head>
 <body>
 	<div id="apptitlebox" class="bmpblock">
-		<div>BeamCAD v0.3</div>
+		<div>Beam CC</div>
 		<div><a target="_blank" href="task/index.htm">1. Task	</a></div>
 		<div><a target="_blank" href="https://www.surveymonkey.com/s/FBLMLHG">2. Survey	</a></div>
 	</div>
-	<div style="display:flex;flex-wrap:wrap;">
+	<div style="display:flex;flex-wrap:wrap;justify-content:center;">	
 		<div id="invardiv" class="bmpblock">
-			<div id="invardivdiv">
-				<x-input	id="Ln"		
-							notation ="$$$L_n$$$" 
-							unit="mm"
-							value="1000"
-							type="number"
-							min="1000"
-							max="50000"
-							step="100"
-							data-tooltip="Clear Span from edge to edge of supports"></x-input>
-				<x-input	id="b"
-							notation ="$$$b$$$"
-							unit="mm"
-							value="300"
-							type="number"
-							min="200"
-							max="5000"
-							step="10"
-							data-tooltip="Breadth (horizontal width) of rectangular beam cross section"></x-input>
-				<x-input	id="D"
-							notation ="$$$D$$$"
-							unit="mm"
-							value="600"
-							type="number"
-							min="200"
-							max="3000"
-							step="10"
-							data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
-				<x-input	id="cover"
-							notation ="$$$\text{Cover}$$$"
-							unit="mm"
-							value="25"
-							type="number"
-							min="20"
-							max="100"
-							step="5"
-							data-tooltip="Distance from the outer surface of concrete to the reo bars (all around)"></x-input>
-				<x-input	id="eclass"
-							notation ="$$$\text{E. Class}$$$"
-							value="A"
-							pattern="(A|B|C|D)"
-							data-tooltip="Exposure Classification determined by exposure to natural environment. Use A | B | C | D"></x-input>
-				<x-input	id="df"
-							notation="$$$d_f$$$"
-							unit="mm"
-							value="10"
-							data-tooltip="Diameter of fitment bars which from the 'ribcage' of the beam."></x-input> 
-				<x-input	id="rhoc"
-							notation="$$$\rho_c$$$"
-							unit="kg/m&#179;"
-							value="2400"
-							type="number"
-							min="2100"
-							max="2800"
-							step="10"
-							data-tooltip="Concrete Density"></x-input>
-				<x-input	id="fc"
-							notation="$$$f'_c$$$"
-							unit="MPa"
-							value="32"
-							pattern="(20|25|32|40|50|65|80|100)"
-							data-tooltip="Concrete Strength"></x-input>
+			<div style="width:100%;">
+				<h2>General Variables</h2>
 			</div>
-			<div id="invardivtooltipbar" class="tooltipbar" style="align-self:flex-end;"></div>
+			<div id="invardivdiv">
+			</div>
+			<div id="invardivtooltipbar" class="tooltipbar">
+				.
+			</div>
+			<div id="invardiverrorbar">
+				.
+			</div>
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
-			<table style="width:100%;height:350px;padding:0;">
-				<tr id="errortr" style="height:8em;display:none" >
-					<td id="errortd" style="padding:5px;">Error:</td>
-				</tr>
-				<tr>
-					<td>
-						<iframe id="varinfoiframe" src="infos/index.htm" style="border:none;width:100%;height:100%;"></iframe>
-					</td>
-				</tr>
-			</table>
+			<h2>Variable Reference Information</h2>
+			<iframe id="varinfoiframe" src="infos/index.htm" style="border:1px solid grey;width:calc(100% - 10px);height:460px;margin:5px;"></iframe>
 		</div>
-	</div>
-	<div style="display:flex;flex-wrap:wrap;justify-content:center;">
 		<div id="reoinputoutputdiv" class="bmpblock">
-			<!--<div id="reocontroldiv"></div>-->
+			<div style="width:100%;">
+				<h2>Reinforcement Information</h2>
+			</div>
 			<div id="reoinputdiv">
-				<reo-manager id="reomanagerelement"></reo-manager>
+				<table class="reotable" style="">
+					<thead>
+						<tr style="font-family:sans-serif;">
+							<td style="width:2em;"><img src="img/power_icon.png"/></td>
+							<td style="width:3em;">bars</td>
+							<td style="width:30px;border-left:none;"></td>
+							<td style="width:3em;">area<br>(mm&sup2;)</td>
+							<td>gap<br>(mm)</td>
+							<td>position<br>(mm)</td>
+							<td  style="width:2em;"><img src="img/sum_icon.png"/></td>
+						</tr>
+					</thead>
+					<tbody id="reorows">
+					</tbody>
+				</table>
 			</div>
 			<div style="width:100%;"></div>
 			<div id="reooutputdiv">
-				<reo-output></reo-output>
+				<!-- TODO ressurect this-->
+				<table id="reoouttable" style="width:100%" cellspacing=0>
+					<thead>
+						<tr>
+							<th>Value:</th>
+							<th>Hover:</th>
+							<th>Sum:</th>
+							<th>Unit:</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-tooltip="Depth measured from top surface of beam to centroid of layer[s].">
+							<td id="depthlable">Depth from top surface:</td>
+							<td>.</td>
+							<td class="tableout" id="depth">1200</td>
+							<td>mm</td>
+						</tr>
+						<tr data-tooltip="Cross-sectional area of reo-bar layer[s]">
+							<td id="arealable">Cross-sectional area of steel:</td>
+							<td>.</td>
+							<td id="area" class="tableout">30000</td>
+							<td>mm&#178;</td>
+						</tr>
+						<tr>
+							<td id="amountlable">Number of bars</td>
+							<td>10</td>
+							<td id="number" class="tableout" data-tooltip="Number of reo bars in layer[s]">10</td>
+							<td>bars</td>
+						</tr>
+						<tr>
+							<td>.</td>
+							<td>.</td>
+							<td id="length" class="tableout" data-tooltip="Total length of reo bars based on clear span L_n with no overlap">10</td>
+							<td>m</td>
+						</tr>
+						<tr>
+							<td>.</td>
+							<td>.</td>
+							<td id="mass" class="tableout" data-tooltip="Total mass of layer[s]">400</td>
+							<td>kg</td>
+						</tr>
+						<tr data-tooltip="Total tensile force in layer[s]. Compressive force is shown negative." >
+							<td id="tforcelable" style="border-bottom:none;">Layer Tension Force:</td>
+							<td>.</td>
+							<td id="tforce" style="border-bottom:none;"  class="tableout">200</td>
+							<td style="border-bottom:none;" >kN</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<div id="reoinputoutputtooltipbar" class="tooltipbar" style="height:4em;"></div>
 		</div>
-		<div id="crosssectiondiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
-			<h1 style="display:block;width:100%">Cross Section</h1>
-			<div style="width:100%;display:flex;justify-content:space-around;">
-				<canvas id="crosssectioncanvas" style="background-color:black;"></canvas>
+		<div id="crosssectiondiv" class="bmpblock" style="">
+			<div style="width:100%;align-self:flex-start;">
+				<h2>Cross Section</h2>
 			</div>
+			<canvas width="400" height="300" id="crosssectioncanvas" style="background-color:black;"></canvas>
 		</div>
-		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
-			<h1 style="display:block;width:100%">Elevation</h1>
+		<div style="flex: 1 0 500px;min-height:300px;margin-bottom:40px;" class="bmpblock">
 			<div style="width:100%;">
-				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
+				<h2>Calculations</h2>
 			</div>
+			<div id="calcdivcontent"></div>
 		</div>
-	</div>
-	<div style="min-height:300px;margin-bottom:40px;" class="bmpblock">
-		<h1>Calculation Div</h1>
-		<div id="calcdivcontent"></div>
 	</div>
 </body>
-<script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>
+<!--<script data-root="../" data-main="../cc_v03/main.js" src="../jslib/nickRequire.js"></script>-->
 <script>
 
 
@@ -283,12 +280,6 @@ function Vector(x,y){
 
 
 
-// #########		 Crawling:.\widgets\widgets.js		#########
-
-// ####### remainder of .\widgets\widgets.js has not been imported ########
-
-
-
 // #########		 Crawling:.\Beam.js		#########
 "use strict";
 
@@ -297,7 +288,7 @@ function Beam(){
 	this.create = function(){
 		// #########################################################
 		// Misc considerations
-		this.elcass 			= "A";
+		this.eclass 			= "A";
 		this.minbarspacing		= undefined;
 		// #########################################################
 		// Reinforcement considerations
@@ -344,53 +335,9 @@ function Beam(){
 		}.bind(this)}
 
 	);
-	// TODO: Which layers of steel should be disregarded? Surely steel 'close' to the centroid should be left out.
-
-	Object.defineProperty(this,"depthToTensionSteelCentroid",{
-
-		get:function depthToTensionSteelCentroid(){
-			var sum_area_times_depth = 0;
-			var sum_area = 0;
-			var layer_strain;
-			var dn = this.dn;
-
-			for(var i=0;i<this.reo.length;i++){
-				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
-
-				if(layer_strain>0){
-					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
-					sum_area += this.reo[i].area;
-				}
-
-			}
-
-			return sum_area_times_depth/sum_area;
-		}.bind(this)
-	});
-
-	Object.defineProperty(this,"depthToCompressionSteelCentroid",{
-
-		get:function depthToCompressionSteelCentroid(){
-			var sum_area_times_depth = 0;
-			var sum_area = 0;
-			var layer_strain;
-			var dn = this.dn;
-
-			for(var i=0;i<this.reo.length;i++){
-				layer_strain = this.layer_force_from_layer_dn(reo[i], dn);
-
-				if(layer_strain<0){
-					sum_area_times_depth += this.reo[i].getDepth()*this.reo[i].area;
-					sum_area += this.reo[i].area;
-				}
-
-			}
-
-			return sum_area_times_depth/sum_area;
-		}.bind(this)
-	});
 
 	this.get_tension_reo = function(){
+		console.warn("check this function before use")
 		var result = [];
 		var dn = this.dn ;
 
@@ -406,6 +353,7 @@ function Beam(){
 	}.bind(this);
 
 	this.get_compression_reo = function(){
+		console.warn("check this function before use")
 		var result = [];
 		var dn = this.dn ;
 
@@ -437,6 +385,29 @@ function Beam(){
 		}.bind(this)}
 
 	);
+	// AS3600 8.1.6.1(1)
+
+	Object.defineProperty(this,"Muo_min",{
+
+		get:function(){
+			// no prestress only.
+			return 1.2*this.Ze*this.fctf/1000000; //mm^3*MPa => Nmm /1000/1000 => kNm
+		}.bind(this)}
+
+	);
+	// AS3600 8.1.6.1(2)
+
+	Object.defineProperty(this,"Muo_min_Ast_min",{
+
+		get:function(){
+			// rect sections only
+			// TODO: fix this probalem:
+			//console.warn("Check this function before use. 'd' may be wrong here. Using Ts_centroid_depth instead");
+			return 0.2*Math.pow(  this.D/this.Ts_centroid_depth   ,2)*this.fctf/this.fsy*this.b*this.Ts_centroid_depth;
+		}.bind(this)}
+
+	);
+	// TODO: create a proper getter for d, ku and kuo
 
 	Object.defineProperty(this,"dn",{
 
@@ -517,6 +488,7 @@ function Beam(){
 	// #############################################################################
 	// ### GET FORCE CENTROIDS #####################################################
 	// #############################################################################
+	// TODO: Which layers of steel should be disregarded? Surely steel 'close' to the centroid should be left out.
 
 	Object.defineProperty(this,"Ts_centroid_depth",{get:function(){
 		return this.Ts_centroid_depth_from_dn(this.dn);
@@ -583,6 +555,47 @@ function Beam(){
 		var layer_strain = this.layer_strain_from_layer_dn(layer, dn);
 		return layer_strain<=-0.0025 || layer_strain>=0.0025;
 	}.bind(this);
+	// #############################################################################
+	// ### GET STEEL AREAS #########################################################
+	// #############################################################################
+
+	Object.defineProperty(this,"Ast",{get:function(){
+		return this.Ast_from_dn(this.dn);
+	}.bind(this)});
+
+	Object.defineProperty(this,"Asc",{get:function(){
+		return this.Asc_from_dn(this.dn);
+	}.bind(this)});
+
+	Object.defineProperty(this,"Acc",{get:function(){
+		return this.gamma*this.dn*this.b;
+	}.bind(this)});
+
+	this.Ast_from_dn = function(dn){
+		return this.As_from_dn_tension(dn,true);
+	}.bind(this);
+
+	this.Asc_from_dn = function(dn){
+		return this.As_from_dn_tension(dn,false);
+	}.bind(this);
+
+	this.As_from_dn_tension = function(dn, returntension){
+		var epsilonsi;
+		var sum_area = 0;
+
+		for(var i = 0;i<this.reo.length;i++){
+			// First get strain in the steel layer according to similar triangles:
+			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
+			// Then depending on if we are looking for tension or compression steel, get weighted average depth
+
+			if(  (returntension && epsilonsi>0)  ||  (!returntension && epsilonsi<0)  ){
+				sum_area += this.reo[i].area;
+			}
+
+		}
+
+		return sum_area || undefined;
+	}.bind(this);
 	// ########################################################################
 	// #### MISC COEFICIENTS ##################################################
 	// ########################################################################
@@ -598,71 +611,1390 @@ function Beam(){
 		var r2 = Math.max(0.67,Math.min(0.85,r1));
 		return r2;
 	}.bind(this)});
+	// TODO: note that this is only when no better info is avaliable.
+	// TODO: sort
+
+	Object.defineProperty(this,"fctf",{get:function(){
+		return 0.6*Math.sqrt(this.fc);
+	}.bind(this)});
+	// ########################################################################
+	// #### SECTION PROPERTIES ################################################
+	// ########################################################################
+
+	Object.defineProperty(this,"Ze",{get:function(){
+		// Rectangular section only
+		return this.b*Math.pow(this.D,2)/6;
+	}.bind(this)});
+
+	Object.defineProperty(this,"Ixx",{get:function(){
+		// Rectangular section only
+		return this.b*Math.pow(this.D,3)/12;
+	}.bind(this)});
 	// STARTOFF: 4:35 14 04 14
 
 	this.toString = function(){
 		return JSON.stringify(this).replace(/,/g,",\n");
 	}.bind(this);
+
+	Object.defineProperty(this,"Ag",{get:function(){
+		// Rectangular section only
+		return this.b*this.D;
+	}.bind(this)});
+	// TODO: sort
+	// Reo ratio
+
+	Object.defineProperty(this,"p",{get:function(){
+		// rect section only
+		return this.Ast/this.b/this.D;
+	}.bind(this)});
+	// AS3600 8.5.3.1
+
+	Object.defineProperty(this,"beta",{get:function(){
+		// rect section only
+		return this.Ast/this.b/this.D;
+	}.bind(this)});
 	this.create();
 	/*
 	*/
 };
+
+
+
+// #########		 Crawling:.\varinput.js		#########
+
+
+
+// #########		 Crawling:.\EventDispatcher.js		#########
+/**
+ * This mixin is used to lend primative event management to another class. The maintenance of this class is important!
+ * @class EventDispatcher
+ * @example
+ * 	var ev = new EventDispatcher();
+
+ * 	ev.on("run",function(e){
+ * 		console.log(e);
+ * 	});
+ */
+
+function EventDispatcher() {
+	"use strict";
+ /**
+	 * This is set automotically when the mixin is instantiated. It is used to prevent repeated instantiation.
+	 * @property isEventDispatcher
+	 * @private
+	 */
+
+	if(this.__isEventDispatcher == true){
+		return;
+	}
+
+	this.__isEventDispatcher = true;
+	/**
+	 * Used as an internal dictionary to relate event names to event functions.
+	 * @property events
+	 * @type {Object}
+
+	 */
+	this.__events = {};
+	/**
+	 * @method on
+	 * @param EventName {String}
+
+	 * @param ListenerFunction {String}
+
+	 */
+
+	this.on = (function (eventName, eventFunction) {
+
+		if (typeof eventName !== "string" || typeof eventFunction !== "function") {
+			console.log("Invalid event registration, " + eventName);
+			return;
+		}
+
+
+		if (this.__events[eventName] === undefined) {
+			this.__events[eventName] = [];
+		}
+
+		this.__events[eventName].push(eventFunction);
+	}).bind(this);
+	/**
+	 * @method clearListeners
+	 * @param EventName {String}
+
+	 */
+
+	this.clearListeners = (function (eventName) {
+
+		if (this.__events[eventName] !== undefined) {
+			this.__events[eventName] = [];
+		}
+
+	}).bind(this);
+	/**
+	 * If the event name is unknown, this method will fail quietly, like a fish.
+	 * @method dispatch
+	 * @param EventName {String}
+
+	 * @param EventData {Any}
+
+	 */
+
+	this.dispatch = function (eventName, eventData) {
+
+		if (this.__events[eventName] !== undefined) {
+
+			for (var i = 0; i < this.__events[eventName].length; i++) {
+				this.__events[eventName][i](eventData);
+			}
+
+
+		} else {
+			//fail quietly, like a fish.
+		}
+
+	}.bind(this);
+}
+
+function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_target,arg_options){
+	EventDispatcher.call(this);
+	this._options = arg_options;
+	this._notation = "";
+	this._type = arg_type;
+	this.validate = function(v){return v;};
+	// ##########################################################################################
+	// 			BUILD INTERFACE
+	// ##########################################################################################
+
+	this.buildInterface = function(){
+		this.body = document.createElement("table");
+		this.row = document.createElement("tr");
+		this.body.className = "varinput";
+		this.notationDiv = document.createElement("td");
+		this.notationDiv.className = "notation-div";
+		this.valueDiv = document.createElement("td");
+		this.valueDiv.className = "value-div";
+		this.unitDiv = document.createElement("td");
+		this.unitDiv.className = "unit-div";
+		this.notationAnchor = document.createElement("a");
+
+		if(arg_options){
+			this.valueInput	= document.createElement("select");
+			this.options 		= arg_options;
+
+		}else if(arg_type == "number"){
+			this.valueInput		= document.createElement("input");
+			this.valueInput.type = "number";
+
+		}else if(arg_type == "text"){
+			this.valueInput		= document.createElement("input");
+			this.valueInput.type = "text";
+
+		}else{
+			this.valueInput		= document.createElement("input");
+			this.valueInput.type = "none";
+			this.valueInput.readonly=true;
+		}
+
+		this.valueDiv.appendChild(this.valueInput);
+		this.notationDiv.appendChild(this.notationAnchor);
+		this.row.appendChild(this.notationDiv);
+		this.row.appendChild(this.valueDiv);
+		this.row.appendChild(this.unitDiv);
+		this.body.appendChild(this.row);
+		this.notation	= arg_notation;
+		this.href		= arg_href;
+		this.target		= arg_target;
+		this.id		= arg_id
+		this.unit	= arg_unit;
+		this.value	= arg_value;
+		this.notationAnchor.tabIndex=-1;
+	}.bind(this);
+	// ##########################################################################################
+	// 			EVENT LISTENERS
+	// ##########################################################################################
+
+	this.configureEvents = function(){
+
+		this.valueInput.addEventListener("change",function(e){
+			var val = {value:this.value, error:[], warning:[], info:[]};
+			val = this.validate(val);
+			this.value = val.value;
+
+			if(val.error.length>0){
+				this.valueInput.setCustomValidity("NO")
+			}
+
+			this.update();
+			this.change();
+		}.bind(this));
+
+		this.valueInput.addEventListener("input",function(e){
+			var val = {value:this.value, error:[], warning:[], info:[]};
+			val = this.validate(val);
+
+			if(val.error.length>0){
+				this.valueInput.setCustomValidity("NO")
+			}
+
+			this.update();
+			this.change();
+		}.bind(this));
+
+		this.body.addEventListener("click", function(e){
+
+			if(e.target.tagName!=="INPUT" && e.target.tagName!=="SELECT"){
+				//e.preventDefault();
+				this.notationAnchor.click();
+
+				if(this.valueInput.tagName == "SELECT"){
+					this.valueInput.focus();
+
+				}else{
+					this.valueInput.select();
+				}
+
+			}
+
+			this.update();
+			this.change();
+		}.bind(this))
+	}.bind(this);
+
+	this.update = function(){
+		this.dispatch("update",this);
+	}.bind(this);
+
+	this.change = function(){
+		this.dispatch("change",this);
+	}.bind(this);
+	// ##########################################################################################
+	// 			HELPER FUNCTIONS
+	// ##########################################################################################
+
+	this.appendTo = function(dom){
+		dom.appendChild(this.body)
+		this.updateMathJax();
+		this.configureEvents();
+	}.bind(this);
+
+	this.updateMathJax = function(){
+
+		if(document.body.contains(this.body)){
+
+			try{
+				MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.body]);
+
+			}catch(e){
+				this.notation = this.id;
+				// Fail gracefully sort of
+			}
+
+		}
+
+	}.bind(this);
+	// ##########################################################################################
+	// 			GETTERS AND SETTERS
+	// ##########################################################################################
+
+	Object.defineProperty(this,"notation",{
+
+		get:function(){
+			this._notation;
+		}.bind(this),
+
+		set:function(newval){
+			this.notationAnchor.innerHTML	= newval;
+			this.updateMathJax();
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"target",{
+
+		get:function(){
+			this.notationAnchor.target;
+		}.bind(this),
+
+		set:function(newval){
+			this.notationAnchor.target	= newval;
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"href",{
+
+		get:function(){
+			this.notationAnchor.href;
+		}.bind(this),
+
+		set:function(newval){
+			this.notationAnchor.href	= newval;
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"value",{
+
+		get:function(){
+
+			if(this._type == "number"){
+				return parseInt(this.valueInput.value);
+			}
+
+			return this.valueInput.value;
+		}.bind(this),
+
+		set:function(newval){
+			this.valueInput.value = newval;
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"options",{
+
+		get:function(){
+			return this._options;
+		}.bind(this),
+
+		set:function(newval){
+			this._options = newval;
+
+			for(var i=0;i<this._options.length;i++){
+				var o = document.createElement("option");
+				o.innerHTML = this._options[i];
+				this.valueInput.appendChild(o);
+			}
+
+		}.bind(this),
+	});
+
+	Object.defineProperty(this,"unit",{
+
+		get:function(){
+			this.unitDiv.innerHTML;
+		}.bind(this),
+
+		set:function(newval){
+			this.unitDiv.innerHTML = newval;
+		}.bind(this)
+	});
+	this.buildInterface();
+}
+
+
+
+
+// #########		 Crawling:.\setup_varinputs.js		#########
+var vin = {};
+vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm", "infos/Ln.htm", "varinfoiframe");
+vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm", "infos/b.htm", "varinfoiframe");
+vin.D      = new VarInput('D' , "$$$D$$$" , "number" , 600, "mm", "infos/D.htm", "varinfoiframe");
+vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm", "infos/cover.htm", "varinfoiframe");
+vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "", "infos/eclass.htm", "varinfoiframe",["A1","A2","B1","B2","C1","C2"]);
+vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 16, 20, 24, 28, 32, 36, 40]);
+vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;", "infos/rhoc.htm", "varinfoiframe");
+vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa", "infos/fc.htm", "varinfoiframe",[20, 25, 32, 40, 50, 65, 80, 100]);
+vin.Ln
+
+vin.b.validate = function(e){
+	//var e = {value:this.value, error:[], warning:[], info:[]};
+
+	if(e.value%5!==0){
+		e.error.push("b should be a rounded to the nearest 5mm");
+	}
+
+
+	if(e.value<100){
+		e.value=100;
+	}
+
+
+	if(e.value>3000){
+		e.value=3000;
+	}
+
+	return e;
+}
+
+
+
+
+// #########		 Crawling:.\validation.js		#########
+
+function DoValidation(){
+	return
+	var error_list = []
+	var warning_list = []
+	var Ln = document.getElementById("Ln");
+	var D = document.getElementById("D");
+	var b = document.getElementById("b");
+	var cover = document.getElementById("cover");
+	var eclass = document.getElementById("eclass");
+	var fc = document.getElementById("fc");
+	Ln.setCustomValidity("");
+	D.setCustomValidity("");
+	b.setCustomValidity("");
+	cover.setCustomValidity("");
+	eclass.setCustomValidity("");
+	fc.setCustomValidity("");
+	/** Ln
+				too short
+				too long
+				span/depth ratio
+	**/
+
+	if(Ln.integerValue<500){
+		error_list.push("Ln<500mm. This is too short to be considered a beam.");
+		Ln.setCustomValidity("Ln too short.");
+
+	}else if(Ln.integerValue<1000){
+		warning_list.push("Ln<1000mm. This may be a bit short for the type of analysis used in this software.");
+		//Ln.setCustomValidity("Ln too short.");
+
+	}else if(Ln.integerValue>15000 && Ln.integerValue<25000){
+		warning_list.push("Ln>15m. This is pretty long for a clear-span. Consider some columns!");
+		//Ln.setCustomValidity("Ln too long.");
+
+	}else if(Ln.integerValue>=25000){
+		error_list.push("Ln>25m. This is too long for a clear-span. Columns would be needed.");
+		Ln.setCustomValidity("Ln too long.");
+	}
+
+	// AS3600 8.5 - deflection span to depth ratio limits
+	// TODO: confirm these values
+	var span_to_depth = (Ln.integerValue/D.integerValue);
+
+	if(span_to_depth>10){
+		error_list.push("Ln/D =  "+span_to_depth.toFixed(1)+" (>10) This is a very small span to depth ratio. D should be more than "+(Math.ceil(Ln.integerValue/10/10)*10).toFixed(0)+"mm");
+		Ln.setCustomValidity("Ln/D too small.");
+		D.setCustomValidity("Ln/D too small.");
+
+	}else if(span_to_depth<0.25 && Ln.integerValue!==0){
+		error_list.push("Ln/D =  "+span_to_depth.toFixed(2)+" (< 0.25) This is a very low span on depth ratio. D should be less than "+(Math.ceil(Ln.integerValue/0.25/10)*10).toFixed(0)+"mm This software does not support 'deep' beams [See AS3600 Section 12 - Non Fexural members]");
+		Ln.setCustomValidity("Ln/D too high.");
+		D.setCustomValidity("Ln/D too high.");
+	}
+
+	/** b
+				minimum: 200 - arbitrary
+				maxumum: 5000 - arbitrary
+				underasonably large: 1500??
+				breadth/depth ratio: ?? slab vs deep beam
+				reasonabled multiple
+	**/
+	// TODO: confirm these values of bread/depth
+	var breadth_on_depth = b.integerValue/D.integerValue;
+
+	if(breadth_on_depth>5 && D.integerValue<300){
+		error_list.push("b/D =  "+breadth_on_depth.toFixed(1)+" (> 5) This looks more like a slab than a beam. This software does not support slabs. [See AS3600 Section 9]");
+		b.setCustomValidity("b/D looks like slab.");
+		D.setCustomValidity("b/D looks like slab.");
+	}
+
+	// TODO: verify this bs
+
+	if(breadth_on_depth<0.2){
+		error_list.push("b/D =  "+breadth_on_depth.toFixed(1)+" (< 0.2) This looks more like a wall than a beam. The b should be greater than "+(Math.ceil(0.2*D.integerValue/10)*10).toFixed(0));
+		b.setCustomValidity("b/D looks like slab.");
+		D.setCustomValidity("b/D looks like slab.");
+	}
+
+
+	if(b.integerValue<200){
+		error_list.push("b<200mm. This is not wide enough to be a beam.");
+		b.setCustomValidity("Not wide enough");
+
+	}else if(b.integerValue>1500 && b.integerValue<3000){
+		warning_list.push("b>1500mm. This is probably a bit too wide for a beam.");
+
+	}else if(b.integerValue>=2500){
+		error_list.push("b>3000mm. This is too wide to be designed as a normal beam.");
+		b.setCustomValidity("Too wide");
+	}
+
+
+	if(b.integerValue%5!==0){
+		warning_list.push("b should be rounded to the nearest 5mm. Construction tollerances are not milimeter accurate.");
+	}
+
+	/** D
+				minimum: 200 - arbitrary
+				maxumum: 3000 - arbitrary
+				reasonabled multiple
+				underasonably large: 2000??
+				deep beam limitation: ??
+				breadth/depth ratio: (see above)
+				span/depth ratio:	(see above)
+	**/
+	// TODO: check the
+
+	if(D.integerValue<200){
+		error_list.push("D<200mm. This is too shallow for a beam.");
+		D.setCustomValidity("Too shallow");
+
+	}else if(D.integerValue<300){
+		warning_list.push("D<300mm. This is probably a bit shallow for a beam.");
+
+	}else if(D.integerValue>2000 && D.integerValue<3000){
+		warning_list.push("D>2000mm. This is probably a bit too deep for a beam.");
+
+	}else if(D.integerValue>=3000){
+		error_list.push("D>3000mm. This is too deep to be designed as a normal beam.");
+		D.setCustomValidity("Too deep");
+	}
+
+
+	if(D.integerValue%5!==0){
+		warning_list.push("D should be rounded to the nearest 5mm.  Construction tollerances are not milimeter accurate.");
+	}
+
+	/** cover
+				match with eclass 4.10.3.2
+				resonable multiple
+				not too big ?? how big is too big?
+				not too small
+	**/
+
+	if(cover.integerValue<25){
+
+	}if(cover.integerValue<25){
+	}
+
+
+	if(cover.integerValue%5!==0){
+		warning_list.push("Cover should be rounded to the nearest 5mm.  Construction tollerances are not milimeter accurate.");
+	}
+
+	/** eclass
+				match with cover fromt able
+				chosen from list
+				matches f'c accroding to Table 4.4
+	**/
+	var class_index = [
+		"A1",
+		"A2",
+		"B1",
+		"B2",
+		"C1",
+		"C2"
+	];
+	var fc_index = 	[20,25,32,40,50];
+	var coverdata_standard = [ // AS3600+A2 T4.10.3.2
+		[20,20,20,20,20],
+		[  ,30,25,20,20],
+		[  ,  ,40,30,25],
+		[  ,  ,  ,45,35],
+		[  ,  ,  ,  ,50],
+		[  ,  ,  ,  ,65]
+	];
+	var coverdata_nonstandard = [ // AS3600+A2 T4.10.3.3
+		[20,20,20,20,20],
+		[  ,30,20,20,20],
+		[  ,  ,30,25,20],
+		[  ,  ,  ,35,25],
+		[  ,  ,  ,  ,45],
+		[  ,  ,  ,  ,60]
+	];
+	// find standard cover requirement:
+
+	for(var fc_index_i=0;fc_index_i<fc_index.length-1;fc_index_i++){
+
+		if(fc.integerValue>=fc_index[fc_index_i] && fc.integerValue<fc_index[fc_index_i+1]){
+			break;
+		}
+
+	}
+
+	var standard_min_cover 		= coverdata_standard[class_index.indexOf(eclass.textValue)][fc_index_i];
+	var nonstandard_min_cover	= coverdata_nonstandard[class_index.indexOf(eclass.textValue)][fc_index_i];
+
+	if(standard_min_cover === undefined){
+		requed_fc = fc_index_i;
+
+		while(coverdata_standard[class_index.indexOf(eclass.textValue)][requed_fc] === undefined){
+			requed_fc++;
+		}
+
+		error_list.push("f'c insufficient for Exposure classification without special considerations. Increase f'c to "+fc_index[requed_fc]+"MPa. See AS3600 Table 4.10.3.2 and Table 4.10.3.3");
+		fc.setCustomValidity("Mismatch with eclass.");
+		eclass.setCustomValidity("Mismatch with cover.");
+
+	}else	if(cover.integerValue<standard_min_cover){
+		error_list.push("Cover insufficient for f'c and Exposure classification without special considerations. Increase cover to "+standard_min_cover+"mm. See AS3600 Table 4.10.3.2 and Table 4.10.3.3");
+		// TODO: or increase f_c to ^^
+		cover.setCustomValidity("Insufficint for fc and eclass");
+		eclass.setCustomValidity("Mismatch with cover.");
+	}
+
+	// TODO: more and less buttons still dont work.
+	// Slab recognition doesnt really work too well.
+	/** df
+				chosen from list
+	**/
+	/** rhoc
+				resonable multiple
+				within perscribed range
+	**/
+	/** REO
+				second row of reo on wide shallow beams is stupid
+	**/
+	var ebar = document.querySelector("#invardiverrorbar");
+	ebar.innerHTML = "";
+
+	if(error_list.length>0){
+		ebar.innerHTML += '<ul class="errorlist"><li>'+error_list.join("</li><li>")+'</li></ul>';
+	}
+
+
+	if(warning_list.length>0){
+		ebar.innerHTML += '<ul class="warninglist"><li>'+warning_list.join("</li><li>")+'</li></ul>';
+	}
+
+}
+
+
+
+// #########		 Crawling:.\reoinput.js		#########
+
+function ReoInput(){
+	EventDispatcher.call(this);
+	this.diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
+	this.areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
+	this.masses		= [0.632,0.910,1.619,2.528,3.640,4.955,6.471,8.910,10.112];
+
+	this.create = function(){
+		this.body = document.createElement("tr");
+		this.body.className = "reoinput";
+		this.body.innerHTML = 
+		'<td><input type="checkbox" class="enabled"></td>\
+		<td><input class="barcode" required value="2N10"\></td>\
+		<td><button class="more" tabindex="-1">+</button><button class="less" tabindex="-1">-</button></td>\
+		<td class="area">--</td>\
+		<td><input type="number" class="offset" value="0" required/></td>\
+		<td><select class="from"><option>lowest</option><option>highest</option></select></td>\
+		<td><input type="checkbox" class="selected"/></td>';
+		this.enabledCheckbox = this.body.querySelector(".enabled");
+		this.barcodeInput = this.body.querySelector(".barcode");
+		this.moreButton = this.body.querySelector(".more");
+		this.lessButton = this.body.querySelector(".less");
+		this.areaOutput = this.body.querySelector(".area");
+		this.offsetInput = this.body.querySelector(".offset");
+		this.fromInput = this.body.querySelector(".from");
+		this.selectedCheckbox = this.body.querySelector(".selected");
+		this.enabled = false;
+	}.bind(this);
+	// ##########################################################################################
+	// 			BIND EVENTS
+	// ##########################################################################################
+
+	this.appendTo = function(dom){
+		dom.appendChild(this.body);
+
+		this.enabledCheckbox.addEventListener("change",function(e){
+			this.enabled = this.enabledCheckbox.checked;
+			this.change();
+		}.bind(this));
+
+		this.selectedCheckbox.addEventListener("change",function(e){
+			this.selected = this.selectedCheckbox.checked;
+			this.change();
+		}.bind(this));
+
+		this.moreButton.addEventListener("click",function(){
+			this.more();
+			this.update();
+			this.change();
+		}.bind(this));
+
+		this.lessButton.addEventListener("click",function(){
+			this.less();
+			this.update();
+			this.change();
+		}.bind(this));
+		// BARCODE CHANGE EVENT LISTENERs
+
+		this.barcodeInput.addEventListener("keydown",function(e){
+			if(e.keyCode == 38){	// up button
+				this.more();
+				e.preventDefault();
+				this.update();
+				this.change();
+			}
+
+			if(e.keyCode == 40){	// down button
+				this.less();
+				e.preventDefault();
+				this.update();
+				this.change();
+			}
+
+		}.bind(this))
+
+		this.barcodeInput.addEventListener("change",function(){
+			this.update();
+			this.change();
+		}.bind(this));
+
+		this.barcodeInput.addEventListener("input",function(e){
+			var val = e.target.value;
+			var ss = e.target.selectionStart;
+			var se = e.target.selectionEnd;
+			var arr = val.split("")
+			var flag = false;
+			var noN = true;
+
+			for(var i=0;i<arr.length;i++){
+
+				if((/[^0-9nN]/).test(arr[i])){
+					arr.splice(i--,1);
+					;
+
+					if(i<ss){
+						ss--;
+						se=ss;
+					}
+
+				}
+
+
+				if(arr[i]=="N"){
+					noN = false;
+				}
+
+			}
+
+			val = arr.join("");
+			val = val.toUpperCase();
+			e.target.value =  val;
+			e.target.setSelectionRange(ss,se);
+			this.update();
+			this.change();
+		}.bind(this))
+	}.bind(this);
+	// ##########################################################################################
+	// 			GETTER/SETTERS
+	// ##########################################################################################
+	//				GET/SET ENABLED
+
+	Object.defineProperty(this,"enabled",{
+
+		get:function(){
+			return this.enabledCheckbox.checked;
+		}.bind(this),
+
+		set:function(newval){
+			this.enabledCheckbox.checked = newval;
+
+			if(newval == true){
+				this.body.style.color = "";
+
+			}else if(newval == false){
+				this.body.style.color = "grey";
+				this.selected = false;
+			}
+
+			this.barcodeInput.disabled		= !newval;
+			this.moreButton.disabled		= !newval;
+			this.lessButton.disabled		= !newval;
+			this.areaOutput.disabled		= !newval;
+			this.offsetInput.disabled		= !newval;
+			this.fromInput.disabled			= !newval;
+			this.selectedCheckbox.disabled= !newval;
+			this.update();
+		}.bind(this),
+	});
+	//				GET/SET SELECTED
+
+	Object.defineProperty(this,"selected",{
+
+		get:function(){
+			return this.selectedCheckbox.checked;
+		}.bind(this),
+
+		set:function(newval){
+			this.selectedCheckbox.checked = newval;
+			this.update();
+		}.bind(this),
+	});
+	// 			GET/SET barcode
+
+	Object.defineProperty(this,"barcode",{
+
+		get:function(){
+			return this.barcodeInput.value;
+		}.bind(this),
+
+		set:function(newval){
+			this.barcodeInput.value = newval;
+			this.update();
+		}.bind(this),
+	});
+	// 			GET/SET area
+
+	Object.defineProperty(this,"area",{
+
+		get:function(){
+			return this.areas[this.diameters.indexOf(this.diameter)]*this.number || undefined;
+		}.bind(this)
+	});
+	// 			GET/SET mass_per_meter
+
+	Object.defineProperty(this,"mass_per_meter",{
+
+		get:function(){
+			return this.masses[this.diameters.indexOf(this.diameter)]*this.number || undefined;
+		}.bind(this)
+	});
+	// 			GET/SET diameter
+
+	Object.defineProperty(this,"diameter",{
+
+		get:function(){
+			return parseInt(this.barcode.split("N")[1]) || undefined;
+		}.bind(this),
+
+		set:function(newval){
+
+			if(this.diameters.indexOf(newval)!==-1){
+				this.barcode = this.number + "N" + newval;
+
+			}else{
+				console.warn("Invalid assignment to reo-input diameter: "+newval);
+			}
+
+		}.bind(this)
+	});
+	// 			GET/SET number
+
+	Object.defineProperty(this,"number",{
+
+		get:function(){
+			return parseInt(this.barcode.split("N")[0]);
+		}.bind(this),
+
+		set:function(newval){
+
+			if(typeof newval == "number" && newval!==NaN && newval!==undefined && newval>=2 && newval<100){
+				this.barcode = newval + "N" + this.diameter;
+
+			}else{
+				console.warn("Invalid assignment to reo-input number: "+newval);
+			}
+
+		}.bind(this)
+	});
+	// 			GET/SET OFFSET
+
+	Object.defineProperty(this,"offset",{
+
+		get:function(){
+			return parseInt(this.offsetInput.value);
+		}.bind(this),
+
+		set:function(newval){
+			this.offsetInput.value = Math.abs(Math.round(parseFloat(newval)));
+			this.update();
+		}.bind(this),
+	});
+	// 			GET/SET FROM
+
+	Object.defineProperty(this,"from",{
+
+		get:function(){
+			return this.fromInput.value;
+		}.bind(this),
+
+		set:function(newval){
+			this.fromInput.value = newval;
+			this.update();
+		}.bind(this),
+	});
+	// ##########################################################################################
+	// 			UPDATE
+	// ##########################################################################################
+
+	this.update = function(){
+		this.areaOutput.innerHTML = this.area || "--";
+		this.dispatch("update",this);
+	}.bind(this);
+
+	this.change = function(){
+		this.dispatch("change",this);
+	}.bind(this);
+	// ##########################################################################################
+	// 			HELPERS
+	// ##########################################################################################
+
+	this.makeFirstRow = function(){
+		this.enabled = true;
+		this.enabledCheckbox.disabled = true;
+		this.offsetInput.disabled = true;
+		this.fromInput.disabled = true;
+		this.offsetInput.style.visibility = "hidden";
+		this.fromInput.style.visibility = "hidden";
+	}.bind(this);
+	// ##########################################################################################
+	// 			MORE AND LESS HELPER FUNCTIONS
+	// ##########################################################################################
+
+	this.more = function(){
+		var b = parseInt(vin.b.value);
+		var D = parseInt(vin.D.value);
+		var df = parseInt(vin.df.value);
+		var cover = parseInt(vin.cover.value);
+		var fitwidth = b-2*cover-2*df;
+		var manager = this.manager;
+		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+			// TODO: assume minimum spacing of 20mm between
+			// TODO: assume maximum spacing of 300mm c-c
+			// TODO: assume maximum of 10 bars
+			this.barcode = this._more_less_barcode(true, 10, 300, 20, fitwidth, this.area) || this.barcode;
+
+		}else{
+			// TODO: assume maximum of 2 bars
+			this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area) || this.barcode;
+		}
+
+	}.bind(this);
+
+	this.less = function(){
+		var b = parseInt(vin.b.value);
+		var D = parseInt(vin.D.value);
+		var df = parseInt(vin.df.value);
+		var cover = parseInt(vin.cover.value);
+		var fitwidth = b-2*cover-2*df;
+		var manager = this.manager;
+		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+			// TODO: assume minimum spacing of 20mm between
+			// TODO: assume maximum spacing of 300mm c-c
+			// TODO: assume maximum of 10 bars
+			this.barcode = this._more_less_barcode(false, 10, 300, 20, fitwidth, this.area) || this.barcode;
+
+		}else{
+			// TODO: assume maximum of 2 bars
+			this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area) || this.barcode;
+		}
+
+	}.bind(this);
+
+	this._more_less_barcode = function (getmore, maxbar, max_spacing, min_gap, fitwidth, current_area){
+		var combs = [];
+		var num,dia,diai,minw,maxw;
+
+		for(num = 2; num<=maxbar;num++){
+
+			for(diai=0;diai<this.diameters.length;diai++){
+				dia = this.diameters[diai];
+				minw = dia*num+(num-1)*min_gap;
+				maxw = dia*num+(num-1)*max_spacing;
+
+				if(fitwidth>=minw && fitwidth<=maxw){
+					combs.push({number:num, diameter:dia, area:this.areas[diai]*num})
+				}
+
+			}
+
+		}
+
+
+		combs.sort(function(a,b){
+
+			if(getmore){
+				return a.area-b.area;
+
+			}else{
+				return b.area-a.area;
+			}
+
+		})
+		//console.table(combs);
+		// go through pairwise and remove all adjacent combos within 50mm^2 of eachother where one has less bars than the other
+		var da = 0;
+		var dn = 0;
+
+		for(var i = 0;i<combs.length-1;i++){
+			da = Math.abs(combs[i].area - combs[i+1].area);
+
+			if(da>50){
+
+				if(combs[i].number<combs[i+1].number){
+					combs.splice(i+1,1);
+
+				}else if(combs[i].number>combs[i+1].number){
+					combs.splice(i,1);
+					i--;
+				}
+
+			}
+
+		}
+
+		// go through pairwise and remove all adjacent combos within 100mm^2 of eachother if one has less than or equal to half the number of bars.
+		var da = 0;
+		var dn = 0;
+
+		for(var i = 0;i<combs.length-1;i++){
+			da = Math.abs(combs[i].area - combs[i+1].area);
+
+			if(da>50){
+
+				if(combs[i].number<=combs[i+1].number/2){
+					combs.splice(i+1,1);
+
+				}else if(combs[i+1].number<=combs[i].number/2){
+					combs.splice(i,1);
+					i--;
+				}
+
+			}
+
+		}
+
+		//console.log(combs.length);
+
+		for(var i = 0;i<combs.length;i++){
+
+			if(getmore){
+
+				if(combs[i].area>current_area){
+					return combs[i].number+"N"+combs[i].diameter;
+				}
+
+
+			}else{
+
+				if(combs[i].area<current_area){
+					return combs[i].number+"N"+combs[i].diameter;
+				}
+
+			}
+
+		}
+
+		// no suitable combination was found. Return the top combination.
+		return combs[combs.length-1].number+"N"+combs[combs.length-1].diameter;
+	}.bind(this);// end _more_less_barcode
+	this.create();
+}
+
+
+
+// #########		 Crawling:.\ReoManager.js		#########
+
+function ReoManager(arg_body){
+	EventDispatcher.call(this);
+	this.body = arg_body;
+	this.rows = [];
+
+	this.create = function(){
+		var firstrow = this.createReoInput();
+		firstrow.makeFirstRow();
+		this.rows.push(this.createReoInput());
+		this.rows.push(this.createReoInput());
+		this.rows.push(this.createReoInput());
+		this.rows.push(firstrow);
+
+		for(var i = 0;i<this.rows.length;i++){
+			this.rows[i].appendTo(this.body);
+		}
+
+		this.update();
+	}.bind(this);
+
+	this.getEnabledSelectedRows = function(){
+		var result = [];
+
+		for(var i = 0;i<this.rows.length;i++){
+
+			if(this.rows[i].enabled && this.rows[i].selected){
+				result.push(this.rows[i]);
+			}
+
+		}
+
+		return result;
+	}.bind(this);
+
+	this.getEnabledRows = function(){
+		var result = [];
+
+		for(var i = 0;i<this.rows.length;i++){
+
+			if(this.rows[i].enabled){
+				result.push(this.rows[i]);
+			}
+
+		}
+
+		return result;
+	}.bind(this);
+
+	this.getTopmostTop = function(){
+		var r = this.getEnabledRows();
+
+		for(var i = 0;i<r.length;i++){
+			// TODO: finish this and swim through the mire that is determining the order and fit of the bars.
+			// LEFTOFF: 2014 04 16 23:25
+
+			if(r[i].from==="highest"){
+
+				if(r[i].offset===0){
+					return r[i];
+				}
+
+				break;
+			}
+
+		}
+
+		return undefined;
+	}.bind(this);
+
+	this.getBottomRow = function(){
+		var r = this.getEnabledRows();
+		return r[r.length-1];
+	}.bind(this);
+
+	this.getDepthOfRow = function(row){
+		var D = parseInt(vin.D.value);
+		var df = parseInt(vin.df.value);
+		var cover = parseInt(vin.cover.value);
+		var rs = this.getEnabledRows();
+		var br = this.getBottomRow();
+		var last_low_depth = D-cover-df;
+		var last_high_depth = cover+df;
+
+		for(var i = rs.length-1;i>=0;i--){
+
+			if(rs[i].from === "lowest"){
+
+				if(rs[i] === row){
+					return last_low_depth - rs[i].offset - rs[i].diameter/2;
+
+				}else{
+					last_low_depth -= rs[i].offset + rs[i].diameter;
+				}
+
+			}
+
+		}
+
+
+		for(var i = 0; i<rs.length-1; i--){
+
+			if(rs[i].from === "highest"){
+
+				if(rs[i] === row){
+					return last_high_depth + rs[i].offset + rs[i].diameter/2;
+
+				}else{
+					last_high_depth += rs[i].offset + rs[i].diameter;
+				}
+
+			}
+
+		}
+
+		return "ERROR";
+	}.bind(this);
+
+	this.createReoInput = function(){
+		var nr = new ReoInput();
+		nr.manager = this;
+		console.log("fix events")
+		nr.on("update",this.update);
+		nr.on("change",this.change);
+		return nr;
+	}.bind(this);
+
+	this.change = function(e){
+		//console.log("reo-manager change");
+		this.dispatch("change",this);
+	}.bind(this);
+
+	this.update = function(e){
+		//console.log("reo-manager update");
+		this.dispatch("update",this);
+	}.bind(this);
+
+	Object.defineProperty(this,"value",{
+
+		get:function(){
+			var result = [];
+			var rs = this.getEnabledRows(); 
+			var rw;
+
+			for(var i = 0;i<rs.length;i++){
+
+				rw = {
+					number:		rs[i].number,
+					diameter:	rs[i].diameter,
+					area:			rs[i].area,
+					depth:		this.getDepthOfRow(rs[i])
+				}
+
+				result.push(rw);
+			}
+
+			return result;
+		},
+
+		set:function(newval){
+			// TODO: DESERIELIZEEEE :|
+		}
+
+	});
+
+	Object.defineProperty(this,"selected_value",{
+
+		get:function(){
+			var result = [];
+			var rs = this.getEnabledSelectedRows(); 
+			var rw;
+
+			for(var i = 0;i<rs.length;i++){
+
+				rw = {
+					number:		rs[i].number,
+					diameter:	rs[i].diameter,
+					area:			rs[i].area,
+					depth:		this.getDepthOfRow(rs[i]),
+					mass_per_meter:	rs[i].mass_per_meter,
+					from:			rs[i].from,
+					offset:			rs[i].offset,
+				}
+
+				result.push(rw);
+			}
+
+			return result;
+		},
+
+		set:function(newval){
+			// TODO: DESERIELIZEEEE :|
+		}
+
+	});
+	this.create();
+};var rman = new ReoManager(document.querySelector("#reorows"));
+rman.on("change",mainUpdateListener);
+
+for(var i in vin){
+	vin[i].appendTo(document.querySelector("#invardivdiv"));
+	vin[i].on("change",mainUpdateListener);
+}
+
 // Create global beam object
 var b = new Beam();
 
 function intakeBeamValues(){
-	b.Ln		= document.getElementById("Ln").value;
-	b.b			= document.getElementById("b").value;
-	b.D			= document.getElementById("D").value;
-	b.cover		= document.getElementById("cover").value;
-	b.eclass	= document.getElementById("eclass").value;
-	b.df		= document.getElementById("df").value;
-	b.rhoc		= document.getElementById("rhoc").value;
-	b.fc		= document.getElementById("fc").value;
-	b.reo		= document.getElementById("reomanagerelement").value;
+	b.Ln		= vin.Ln.value;
+	b.b		= vin.b.value;
+	b.D		= vin.D.value;
+	b.cover	= vin.cover.value;
+	b.eclass	= vin.eclass.value;
+	b.df		= vin.df.value;
+	b.rhoc	= vin.rhoc.value;
+	b.fc		= vin.fc.value;
+	b.reo		= rman.value;
 }
 
 
-function intakeBeamReo(){
-	var rm = document.querySelector("reo-manager");
-	console.log(rm.getEnabledRows())
-}
+function outputCalculations(){
 
+	function f(n){
 
-(function _attatch_input_listners(){
-	// attach event listeners to inputs
-	var inps = document.querySelectorAll("reo-manager, x-input");
+		if(typeof n == "number" && !isNaN(n)){
+			return n.toFixed(0)
 
-	for(var i = 0;i < inps.length;i++){
-		inps[i].addEventListener("update",mainUpdateListener);
+		}else{
+			return "--"
+		}
+
 	}
 
-})();
-
-function mainUpdateListener(e){
-	intakeBeamValues();
-	document.querySelector("#calcdivcontent").innerHTML= b.dn;
+	var calc = [];
+	calc.push("alpha2: "	+b.alpha2.toFixed(2)		);
+	calc.push("gamma: "	+b.gamma.toFixed(2)		);
+	calc.push("");
+	calc.push("dn: "	+f(b.dn)+" mm"		);
+	calc.push("Muo: "	+f(b.Muo)+" kNm");
+	calc.push("Muo min: "	+f(b.Muo_min)+" kNm");
+	calc.push("Ast min (Alternative to meeting Muo_min): "	+f(b.Muo_min_Ast_min)+" mm^2");
+	calc.push("");
+	calc.push("Ag: "	+f(b.Ag)+" mm^2");
+	calc.push("Ast: "	+f(b.Ast)+" mm^2");
+	calc.push("Asc: "	+f(b.Asc)+" mm^2");
+	calc.push("Acc: "	+f(b.Acc)+" mm^2");
+	calc.push("Ixx: "	+f(b.Ixx)+" mm^4");
+	calc.push("Ze: "	+f(b.Ze)+" mm^3");
+	calc.push("Tensile reo ratio (Ast/Ag): "	+(b.p*100).toFixed(3)+"%");
+	calc.push("");
+	calc.push("Ts: "	+f(b.Ts)		);
+	calc.push("Cs: "	+f(b.Cs)		);
+	calc.push("Cc: "	+f(b.Cc)		);
+	calc.push("");
+	calc.push("Ts_centroid_depth: "	+ f(b.Ts_centroid_depth)		);
+	calc.push("Cs_centroid_depth: "	+ f(b.Cs_centroid_depth)		);
+	calc.push("Cc_centroid_depth: "	+ 	  f(b.Cc_centroid_depth)		);
+	calc.push("");
+	document.querySelector("#calcdivcontent").innerHTML = calc.join("<br>");
+	var o = document.createElement("pre");
+	o.innerHTML = "Beam Information "+JSON.stringify(b,undefined,4);
+	document.querySelector("#calcdivcontent").appendChild(o);
 }
 
-//###########################################################################################
-//###### Canvas resize events ###############################################################
-//###########################################################################################
-window.addEventListener("resize",handleResize);
-setTimeout(handleResize,500);
-setTimeout(handleResize,1500);
-setTimeout(handleResize,5000);
-setTimeout(handleResize,10000);
 
-function handleResize(e){
-	var c=document.querySelector("#crosssectioncanvas");
-	var st=window.getComputedStyle(c.parentElement);
-	c.width = Math.min(500,parseInt(st.width));
-	c.height = 300;
-	var c=document.querySelector("#elevationcanvas");
-	var st=window.getComputedStyle(c.parentElement);
-	c.width = parseInt(st.width);
-	c.height = 150;
-	// TODO: Update drawing
+function outputReoSummary(){
+	// TODO: fix this bs :(
+	return
+	var rm = document.querySelector("reo-manager");
+	var om = document.querySelector("reo-output");
+	var rs = rman.selected_value;
+
+	if(rs.length == 0){
+		om.clear();
+		om.oneLables();
+		return;
+
+	}else if(rs.length>1){
+		om.avgLables();
+
+	}else{
+		om.oneLables();
+	}
+
+	var area = 0;
+	var depth_times_area = 0;
+	var number = 0;
+	var length = 0;
+	var mass = 0;
+	var tforce = 0;
+
+	for(var i = 0;i<rs.length;i++){
+		area += rs[i].area;
+		depth_times_area += rs[i].depth*rs[i].area;
+		number += rs[i].number;
+		length += rs[i].number*b.Ln/1000;
+		mass += rs[i].number*b.Ln/1000*rs[i].mass_per_meter;
+		tforce += b.layer_force_from_layer_dn(rs[i], b.dn);
+	}
+
+	// TODO: remove the "Amount:" lable and lable individualy.
+	// TODO: fix output styles to prevent column resizing
+	// TODO: have a current column and sum column??
+	om.setIdContent("depth", (depth_times_area/area).toFixed(0) || 0);
+	om.setIdContent("area", area);
+	om.setIdContent("number", number);
+	om.setIdContent("length", length.toFixed(1));
+	om.setIdContent("mass", mass.toFixed(1));
+	om.setIdContent("tforce", tforce.toFixed(1));
+}
+
+mainUpdateListener()
+
+function mainUpdateListener(e){
+	DoValidation(); // see validation.js
+	intakeBeamValues();
+	outputCalculations();
+	outputReoSummary();
 }
 
 //###########################################################################################
@@ -744,19 +2076,34 @@ document.querySelector("#varinfoiframe").addEventListener("mouseover",function(e
 
 
 	}catch(e){
-		console.warn("iFrame Scroll prevention doesnt work :(");
+		//	console.warn("iFrame Scroll prevention doesnt work :(");
+		//fail silently
 	}
 
 });
 
 document.querySelector("#varinfoiframe").addEventListener("mouseout",function(e){
 	scroll_disabled = false;
+	document.querySelector("#varinfoiframe").style.borderColor="";
 });
 
 document.body.addEventListener("mousewheel",function(e){
 
 	if(scroll_disabled){
 		e.preventDefault();
+
+		try{
+			document.querySelector("#varinfoiframe").style.borderColor="orange";
+
+			setTimeout(function(){
+				document.querySelector("#varinfoiframe").style.borderColor="";
+			},200);
+
+		}catch(e){
+			//	console.warn("iFrame Scroll prevention doesnt work :(");
+			// fail silently
+		}
+
 	}
 
 });
@@ -778,1265 +2125,94 @@ document.body.addEventListener("mousewheel",function(e){
 var _current_help_url = "";
 
 function setHelpLoc(url){
+	// console.log(_current_help_url,document.querySelector("#varinfoiframe").contentWindow.location.pathname)
+	// console.log(document.querySelector("#varinfoiframe").getAttribute("src"),url)
+	// console.log(_current_help_url === document.querySelector("#varinfoiframe").contentWindow.location.pathname)
+	// console.log(document.querySelector("#varinfoiframe").getAttribute("src") === url)
+	if(document.querySelector("#varinfoiframe").contentWindow.location.pathname !== _current_help_url ||
 
-	if(_current_help_url != url){
-		_current_help_url = url;
-		document.querySelector("#varinfoiframe").contentWindow.location.replace(url);
+			document.querySelector("#varinfoiframe").getAttribute("src")!==url){
+
+		document.querySelector("#varinfoiframe").onload = function(){
+			_current_help_url = document.querySelector("#varinfoiframe").contentWindow.location.pathname;
+		};
+		document.querySelector("#varinfoiframe").setAttribute("src",url);
 	}
 
 }
 
 var ifrm = document.querySelector("#varinfoiframe");
 var rm = document.querySelector("reo-manager");</script>
-
-
-
-
-<!--#########		 Crawling:.\widgets\ReoInput.htm		#########-->
-<template id="ReoInputWidgetTemplate">
-	<style>
-
-		.spinbut{
-			width:15px;
-			height:11px;
-			display:block;
-			font-size:5px;
-			margin:0px;
-			padding:0px;
-			text-align:center;
-		}
-
-
-		#barcode{
-			text-align:right;
-			width:3.6em;
-			padding: 0 3px;
-			font-weight:bold;
-		}
-
-
-		#barcode:enabled{
-			color:darkblue;
-		}
-
-
-		#barcode:invalid{
-			color:red;
-			background-color: yellow;
-		}
-
-
-		#infobut{
-			font-family:monospace;
-			color:darkblue;
-			width:2em;
-			font-weight:bold;
-		}
-
-
-		#infobut:disabled{
-			color:lightgrey;
-			font-weight:regular;
-		}
-
-
-		#from:disabled, input:disabled{
-			color:rgb(220, 220, 215);
-			background-color:rgb(235, 235, 228);
-		}
-
-
-		input:invalid{
-			color:red;
-			background-color: yellow;
-		}
-
-		input[type=number]::-webkit-inner-spin-button,
-
-		input[type=number]::-webkit-outer-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
-
-
-		div:hover{
-			background-color:#E6E6FF;
-		}
-
-
-		div:hover #enabledtd{
-			border-radius:4px;
-			background-color:lightgreen;
-		}
-
-
-		div{
-			border-radius:4px;
-			cursor:pointer;
-			-webkit-user-select:none;
-		}
-
-	</style>
-	<div style="min-width:360px;max-width:520px;color:grey;" data-tooltip="Click to include in summary table below">
-		<table id="rin" style="color:inherit;width:100%;" cellspacing=0>
-			<tr>
-				<td id="enabledtd" style="padding:0;">
-					<input id="enabled" type="checkbox" data-tooltip="Enable/Disable Reo Layer."/>
-				</td>
-				<td style="text-align:right;">
-					<input id="barcode" type="text" required pattern="(([1-2][0-9])|[2-9])N(10|12|16|20|24|28|32|36|40)" value="2N10" placeholder="eg. 2N10"
-							data-tooltip="Number of bars, Grade, Nominal Diameter. eg 3N24<br> Only N grade bars are allowed in this software.<br>Avaliable bar diameters are:<br>[10, 12, 16, 20, 24, 28, 32, 36, 40]mm"/>
-				</td>
-				<td style="text-align:left;">
-					<button tabindex="-1" class="spinbut" id="spinbutup"	data-tooltip="more"><!--&#9650;--></button>
-					<button tabindex="-1" class="spinbut" id="spinbutdown"	data-tooltip="less"><!--&#9660;--></button>
-				</td>
-				<td id="asttd" style="text-align:left;width:6em;"
-						data-tooltip="Area calculated by multiplying the number of bars by the perscribed cross sectional areas defined in AS4671.">
-					= <span id="area">0000</span> mm&#178;
-				</td>
-				<td style="text-align:right;padding-left:0.5em;">
-					<input id="offset" type="number" required min="0" max="10000" value="0" style="text-align:right;width:4em;" data-tooltip="Offset: Space between the bars of this layer and the next."/>
-				</td>
-				<td style="text-align:left;padding-left:0;" id="mmlable">
-					mm
-				</td>
-				<td style="text-align:right;padding-right:0;padding-left:0.5em;" id ="fromlable">
-					from
-				</td>
-				<td>
-					<select id="from" data-tooltip="Where to offset this layer from.">
-						<!--<option value="top">top</option>-->
-						<option value="highest">highest</option>
-						<option value="lowest" selected>lowest</option>
-						<!--<option value="bottom">bottom</option>-->
-					</select>
-				</td>
-				<td style="padding-left:0.5em;">
-					<button id="infobut" data-tooltip="Click to include in summary table below" style="width:1.8em;height:100%;line-height:100%;"></button>
-				</td>
-			</tr>
-		</table>
-	</div>
-</template>
-<script id="ReoInputWidgetScript">
-	ReoInputPrototype = Object.create(HTMLDivElement.prototype);
-
-	ReoInputPrototype.createdCallback = function(){
-		this._selected = false;
-		this._enabled = false;
-		// ##########################################################################################
-		// 			DEFERED CONTRUCTOR
-		// ##########################################################################################
-
-		this.create = function(){
-			// ##########################################################################################
-			// 			CONSTRUCT SHADOW ROOT
-			// ##########################################################################################
-			this.webkitCreateShadowRoot();
-			var imported = document.importNode(document.querySelector("#ReoInputWidgetTemplate").content, true);
-			this.webkitShadowRoot.appendChild(imported);
-			this.doc = this.webkitShadowRoot;
-			// ##########################################################################################
-			// 			PROPERTIES
-			// ##########################################################################################
-			this.manager = this.parentElement;
-			this.maindiv = this.doc.querySelector("div");
-			this.enabledIn = this.doc.querySelector("#enabled");
-			this.barcodeIn = this.doc.querySelector("#barcode");
-			this.areaOut = this.doc.querySelector("#area");
-			this.fromIn = this.doc.querySelector("#from");
-			this.infobutIn = this.doc.querySelector("#infobut");
-			this.offsetIn = this.doc.querySelector("#offset");
-			this.spinbutup = this.doc.querySelector("#spinbutup");
-			this.spinbutdown = this.doc.querySelector("#spinbutdown");
-			// use these getter setters to initiate their respective side effects and styling
-			this.selected = false;
-			this.enabled = false;
-			// ##########################################################################################
-			// 			EVENT LISTENERS
-			// ##########################################################################################
-			// INFO BUTTON LISTENER
-
-			this.infobutIn.addEventListener("click",function(e){
-
-				if(this.enabled == false){
-					this.enabled = true;
-				}
-
-				this.selected = !this.selected;
-				this.update();
-				this.dispatchChangeEvent();
-			}.bind(this));
-			// "ROW" CLICK LISTENER
-
-			this.webkitShadowRoot.addEventListener("click",function(e){
-
-				switch(e.target.nodeName){
-					case "INPUT":
-					case "BUTTON":
-					case "SELECT":
-						break;
-					default:
-
-						if(this.enabled){
-							this.selected = !this.selected;
-						}
-
-						this.update();
-						this.dispatchChangeEvent();
-				}
-
-			}.bind(this));
-			// MORE AND LESS BUTTONS
-
-			this.spinbutup.addEventListener("click",function(){
-				this.more();
-				this.update();
-				this.dispatchChangeEvent();
-			}.bind(this));
-
-			this.spinbutdown.addEventListener("click",function(){
-				this.less();
-				this.update();
-				this.dispatchChangeEvent();
-			}.bind(this));
-			// "FROM" SELECTION INPUT LISTENER
-
-			this.fromIn.addEventListener("change",function(e){
-				this.update();
-				this.dispatchChangeEvent();
-			}.bind(this));
-			// "FROM" SELECTION INPUT LISTENER
-			this.offsetoldval = this.offsetIn.value;
-
-			this.offsetIn.addEventListener("keyup",function(e){
-
-				if(this.offsetoldval!==this.offsetIn.value){
-					this.offsetoldval = this.offsetIn.value;
-					this.update();
-					this.dispatchChangeEvent();
-				}
-
-			}.bind(this))
-			// ENABLED CHACKBOX LISTENER
-
-			this.enabledIn.addEventListener("change",function(){
-				this.enabled = this.enabledIn.checked;
-				this.update();
-				this.dispatchChangeEvent();
-			}.bind(this));
-			// BARCODE CHANGE EVENT LISTENERs
-
-			this.barcodeIn.addEventListener("keydown",function(e){
-				if(e.keyCode == 38){	// up button
-					this.more();
-					e.preventDefault();
-					this.update();
-					this.dispatchChangeEvent();
-				}
-
-				if(e.keyCode == 40){	// down button
-					this.less();
-					e.preventDefault();
-					this.update();
-					this.dispatchChangeEvent();
-				}
-
-			}.bind(this))
-
-			this.barcodeIn.addEventListener("change",function(){
-				this.update();
-				this.dispatchChangeEvent();
-			}.bind(this));
-
-			this.barcodeIn.addEventListener("input",function(e){
-				var val = e.target.value;
-				var ss = e.target.selectionStart;
-				var se = e.target.selectionEnd;
-				var arr = val.split("")
-				var flag = false;
-				var noN = true;
-
-				for(var i=0;i<arr.length;i++){
-
-					if((/[^0-9nN]/).test(arr[i])){
-						arr.splice(i--,1);
-						;
-
-						if(i<ss){
-							ss--;
-							se=ss;
-						}
-
-					}
-
-
-					if(arr[i]=="N"){
-						noN = false;
-					}
-
-				}
-
-				val = arr.join("");
-				val = val.toUpperCase();
-				e.target.value =  val;
-				e.target.setSelectionRange(ss,se);
-				this.update();
-				this.dispatchChangeEvent();
-			}.bind(this))
-		}.bind(this);//end create();
-		// ##########################################################################################
-		// 			DISPATCHCHANGEEVENT
-		// ##########################################################################################
-
-		this.dispatchChangeEvent = function(){
-			//console.log("reo-input change")
-			var e = new Event("change");
-			e.target = this;
-			e.bubbles = true;
-			this.dispatchEvent(e);
-		}.bind(this);
-		// ##########################################################################################
-		// 			UPDATE
-		// ##########################################################################################
-
-		this.update = function(){
-			this.areaOut.innerHTML = this.area || "--";
-			//console.log("reo-input update");
-			var e = new Event("update");
-			e.target = this;
-			e.bubbles = true;
-			this.dispatchEvent(e);
-		}.bind(this);
-		// ##########################################################################################
-		// 			HELPER WHICH DISABLS A BUNCH OF FEATURES IN THIS ROW
-		// ##########################################################################################
-
-		this.makeFirstRow = function(){
-			this.enabled = true;
-			this.enabledIn.disabled = true;
-			this.offsetIn.disabled = true;
-			this.fromIn.disabled = true;
-			this.offsetIn.style.visibility = "hidden";
-			this.fromIn.style.visibility = "hidden";
-			this.webkitShadowRoot.querySelector("#mmlable").style.visibility = "hidden";
-			this.webkitShadowRoot.querySelector("#fromlable").style.visibility = "hidden";
-		}.bind(this);
-		// ##########################################################################################
-		// 			GET/SET enabled
-		// ##########################################################################################
-
-		Object.defineProperty(this,"enabled",{
-
-			get:function(){
-				return this._enabled;
-			}.bind(this),
-
-			set:function(newval){
-				this._enabled = newval;
-
-				if(newval == true){
-					this.webkitShadowRoot.querySelector("div").style.color = "";
-
-				}else if(newval == false){
-					this.webkitShadowRoot.querySelector("div").style.color = "grey";
-					this.selected = false;
-				}
-
-				this.enabledIn.checked = newval;
-				var ins = this.doc.querySelectorAll("input, button, select")
-
-				for(var i = 0; i < ins.length;i++){
-
-					if(ins[i].id!="enabled"){
-						ins[i].disabled=!newval;
-					}
-
-				}
-
-				this.update();
-			}.bind(this),
-		});
-		// ##########################################################################################
-		// 			GET/SET area
-		// ##########################################################################################
-
-		Object.defineProperty(this,"area",{
-
-			get:function(){
-				var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
-				var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-				return areas[diameters.indexOf(this.diameter)]*this.number || undefined;
-			}.bind(this)
-		});
-		// ##########################################################################################
-		// 			GET/SET diameter
-		// ##########################################################################################
-
-		Object.defineProperty(this,"diameter",{
-
-			get:function(){
-				return parseInt(this.barcode.split("N")[1])||undefined;
-			}.bind(this),
-
-			set:function(newval){
-				var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
-
-				if(diameters.indexOf(newval)!==-1){
-					this.barcode = this.number + "N" + newval;
-
-				}else{
-					console.warn("Invalid assignment to reo-input diameter: "+newval);
-				}
-
-			}.bind(this)
-		});
-		// ##########################################################################################
-		// 			GET/SET number
-		// ##########################################################################################
-
-		Object.defineProperty(this,"number",{
-
-			get:function(){
-				return parseInt(this.barcode.split("N")[0])||undefined;
-			}.bind(this),
-
-			set:function(newval){
-
-				if(typeof newval == "number" && newval!==NaN && newval!==undefined && newval>=2 && newval<100){
-					this.barcode = newval + "N" + this.diameter;
-
-				}else{
-					console.warn("Invalid assignment to reo-input number: "+newval);
-				}
-
-			}.bind(this)
-		});
-		// ##########################################################################################
-		// 			GET/SET barcode
-		// ##########################################################################################
-
-		Object.defineProperty(this,"barcode",{
-
-			get:function(){
-				return this.barcodeIn.value;
-			}.bind(this),
-
-			set:function(newval){
-				this.barcodeIn.value = newval;
-				this.update();
-			}.bind(this),
-		});
-		// ##########################################################################################
-		// 			GET/SET offset
-		// ##########################################################################################
-
-		Object.defineProperty(this,"offset",{
-
-			get:function(){
-				return parseInt(this.offsetIn.value);
-			}.bind(this),
-
-			set:function(newval){
-				this.offsetIn.value = Math.abs(Math.round(parseFloat(newval)));
-				this.update();
-			}.bind(this),
-		});
-		// ##########################################################################################
-		// 			GET/SET from
-		// ##########################################################################################
-
-		Object.defineProperty(this,"from",{
-
-			get:function(){
-				return this.fromIn.value;
-			}.bind(this),
-
-			set:function(newval){
-				this.fromIn.value = newval;
-				this.update();
-			}.bind(this),
-		});
-		// ##########################################################################################
-		// 			GET/SET selected
-		// ##########################################################################################
-
-		Object.defineProperty(this,"selected",{
-
-			get:function(){
-				return this._selected;
-			}.bind(this),
-
-			set:function(newval){
-
-				if(!this._selected && newval){
-					this.maindiv.style.backgroundColor = "lightblue";
-					this.infobutIn.innerHTML = "&#8721;";
-					//this.infobutIn.style.fontWeight = "bold";
-
-				}else if(!newval && this._selected){
-					this.maindiv.style.backgroundColor = "";
-					this.infobutIn.innerHTML = "";
-					//this.infobutIn.style.fontWeight = "";
-				}
-
-				this._selected = newval;
-				this.update();
-			}.bind(this),
-		});
-		// ##########################################################################################
-		// 			MORE AND LESS HELPER FUNCTIONS
-		// ##########################################################################################
-
-		this.more = function(){
-			var b = document.querySelector("#b").value;
-			var D = document.querySelector("#D").value;
-			var df = document.querySelector("#df").value;
-			var cover = document.querySelector("#cover").value;
-			var fitwidth = b-2*cover-2*df;
-			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
-			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-			var manager = this.parentElement;
-			if(manager.getBottomRow()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
-				// TODO: assume minimum spacing of 20mm between
-				// TODO: assume maximum spacing of 300mm c-c
-				// TODO: assume maximum of 10 bars
-				this.barcode = this._more_less_barcode(true, 10, 300, 20, fitwidth, this.area) || this.barcode;
-
-			}else{
-				// TODO: assume maximum of 2 bars
-				this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area) || this.barcode;
-			}
-
-		}.bind(this);
-
-		this.less = function(){
-			var b = document.querySelector("#b").value;
-			var D = document.querySelector("#D").value;
-			var df = document.querySelector("#df").value;
-			var cover = document.querySelector("#cover").value;
-			var fitwidth = b-2*cover-2*df;
-			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
-			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-			var manager = this.parentElement;
-			if(manager.getBottomRow()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
-				// TODO: assume minimum spacing of 20mm between
-				// TODO: assume maximum spacing of 300mm c-c
-				// TODO: assume maximum of 10 bars
-				this.barcode = this._more_less_barcode(false, 10, 300, 20, fitwidth, this.area) || this.barcode;
-
-			}else{
-				// TODO: assume maximum of 2 bars
-				this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area) || this.barcode;
-			}
-
-		}.bind(this);
-
-		this._more_less_barcode = function (getmore, maxbar, max_spacing, min_gap, fitwidth, current_area){
-			var diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
-			var areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
-			var combs = [];
-			var num,dia,diai,minw,maxw;
-
-			for(num = 2; num<=maxbar;num++){
-
-				for(diai=0;diai<diameters.length;diai++){
-					dia = diameters[diai];
-					minw = dia*num+(num-1)*min_gap;
-					maxw = dia*num+(num-1)*max_spacing;
-
-					if(fitwidth>=minw && fitwidth<=maxw){
-						combs.push({number:num, diameter:dia, area:areas[diai]*num})
-					}
-
-				}
-
-			}
-
-
-			combs.sort(function(a,b){
-
-				if(getmore){
-					return a.area-b.area;
-
-				}else{
-					return b.area-a.area;
-				}
-
-			})
-
-			for(var i = 0;i<combs.length;i++){
-
-				if(getmore){
-
-					if(combs[i].area>current_area){
-
-						if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i+1].area-combs[i].area<50){
-							i++;
-
-							if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i+1].area-combs[i].area<10){
-								i++;
-							}
-
-						}
-
-						return combs[i].number+"N"+combs[i].diameter;
-					}
-
-
-				}else{
-
-					if(combs[i].area<current_area){
-
-						if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i].area-combs[i+1].area<50){
-							i++;
-
-							if(i+1<combs.length && combs[i+1].number<combs[i].number && combs[i].area-combs[i+1].area<10){
-								i++;
-							}
-
-						}
-
-						return combs[i].number+"N"+combs[i].diameter;
-					}
-
-				}
-
-			}
-
-		}.bind(this);// end _more_less_barcode
-		this.create();
-	};
-	var ReoInput = document.registerElement("reo-input",{prototype:ReoInputPrototype});
-</script>
-
-
-<!--#########		 Crawling:.\widgets\ReoManager.htm		#########-->
-<template id="reoManagerTemplate"></template>
-<script id="reoManagerScript">
-	ReoManagerPrototype = Object.create(HTMLDivElement.prototype);
-
-	ReoManagerPrototype.createdCallback = function(){
-		this.rows = [];
-
-		this.create = function(){
-			var firstrow = this.createReoInput();
-			firstrow.makeFirstRow();
-			this.rows.push(this.createReoInput());
-			this.rows.push(this.createReoInput());
-			this.rows.push(this.createReoInput());
-			this.rows.push(firstrow);
-
-			for(var i = 0;i<this.rows.length;i++){
-				this.appendChild(this.rows[i]);
-			}
-
-			this.update();
-		}.bind(this);
-
-		this.getEnabledSelectedRows = function(){
-			var result = [];
-
-			for(var i = 0;i<this.rows.length;i++){
-
-				if(this.rows[i].enabled && this.rows[i].selected){
-					result.push(this.rows[i]);
-				}
-
-			}
-
-			return result;
-		}.bind(this);
-
-		this.getEnabledRows = function(){
-			var result = [];
-
-			for(var i = 0;i<this.rows.length;i++){
-
-				if(this.rows[i].enabled){
-					result.push(this.rows[i]);
-				}
-
-			}
-
-			return result;
-		}.bind(this);
-
-		this.getTopmostTop = function(){
-			var r = this.getEnabledRows();
-
-			for(var i = 0;i<r.length;i++){
-				// TODO: finish this and swim through the mire that is determining the order and fit of the bars.
-				// LEFTOFF: 2014 04 16 23:25
-			}
-
-		}.bind(this);
-
-		this.getBottomRow = function(){
-			var r = this.getEnabledRows();
-			return r[r.length-1];
-		}.bind(this);
-
-		this.getTopRow = function(){
-			var r = this.getEnabledRows();
-			return r[0];
-		}.bind(this);
-
-		this.getDepthOfRow = function(row){
-			var D = document.querySelector("#D").value;
-			var cover = document.querySelector("#cover").value;
-			var df = document.querySelector("#df").value;
-			var rs = this.getEnabledRows();
-			var br = this.getBottomRow();
-			var last_low_depth = bottomDepth D-cover-df;
-			var last_high_depth = cover+df;
-
-			for(var i = rs.length-;i>=0;i--){
-
-				if(rs[i].from === "lowest"){
-
-					if(rs[i] === row){
-						return last_low_depth + rs[i].from + rs[i].diameter/2;
-
-					}else{
-						last_low_depth += rs[i].from + rs[i].diameter;
-					}
-
-				}
-
-			}
-
-
-			for(var i = 0; i<rs.length-1; i--){
-
-				if(rs[i].from === "highest"){
-
-					if(rs[i] === row){
-						return last_high_depth + rs[i].from + rs[i].diameter/2;
-
-					}else{
-						last_high_depth += rs[i].from + rs[i].diameter;
-					}
-
-				}
-
-			}
-
-		}.bind(this);
-
-		this.createReoInput = function(){
-			var nr = new ReoInput();
-			nr.addEventListener("update",this.update);
-			nr.addEventListener("change",this.change);
-			return nr;
-		}.bind(this);
-
-		this.change = function(e){
-			// TODO: ??
-			//console.log("reo-manager change");
-		}
-
-
-		this.update = function(e){
-			//console.log("reo-manager update");
-			var e = new Event("update");
-			e.target = this;
-			this.dispatchEvent(e);
-		}.bind(this);
-
-		this.adjustLength = function(){
-
-			if(this.rows.length==1){
-				this.rows.unshift(this.createReoInput())
-			}
-
-
-			while(!this.rows[0].enabled && this.rows.length>2 && !this.rows[1].enabled){
-				this.removeChild(this.rows.shift());
-			}
-
-
-			for(var i=0;i<this.rows.length;i++){
-
-				if(i==0 && this.rows[i].enabled){
-					this.rows.unshift(this.createReoInput())
-				}
-
-				// Insert inbetween behaviour
-
-				if(this.rows[i+1] && this.rows[i+1].enabled && this.rows[i].enabled && this.rows[i].from!=this.rows[i+1].from){
-					//this.rows.splice(i+1,0,this.createReoInput());
-					//i++;
-				}
-
-				// remove double blanks
-
-				if(this.rows[i+1] && !this.rows[i+1].enabled && !this.rows[i].enabled){
-					//this.removeChild(this.rows[i]);
-					//this.rows.splice(i,1);
-					//i--;
-				}
-
-			}
-
-		}.bind(this);
-
-		Object.defineProperty(this,"value",{
-
-			get:function(){
-				var result = [];
-				var rs = this.getEnabledRows(); 
-				var rw;
-
-				for(var i = 0;i<rs.length;i++){
-
-					rw = {
-						number:		rs[i].number,
-						diameter:	rs[i].diameter,
-						area:		rs[i].area,
-						depth:		this.getDepthOfRow(rs[i])
-					}
-
-					result.push(rw);
-				}
-
-				return result;
-			},
-
-			set:function(newval){
-				// TODO: DESERIELIZEEEE :|
-			}
-
-		});
-		this.create();
-	};
-	window.ReoManager = document.registerElement("reo-manager",{prototype:ReoManagerPrototype});
-</script>
-
-
-
-<!--#########		 Crawling:.\widgets\ReoOutput.htm		#########-->
-<template id="ReoOutputWidgetTemplate">
-	<style>
-
-		#rout td{
-			border-bottom:1px solid lightgrey;
-		}
-
-
-		.tableout{
-			color:darkblue;
-			text-align:right;
-			font-family:sans-serif;
-			padding-right:0;
-			min-width:50px;
-			font-size:90%;
-			padding-right:0.5em;
-		}
-
-	</style>
-	<div style="min-width:315px;max-width:500px;">
-		<table id="rout" style="width:100%" cellspacing=0>
-			<tr data-tooltip="Depth measured from top surface of beam to centroid of layer[s].">
-				<td id="depthlable">Depth from top surface:</td>
-				<td class="tableout" id="depth">1200</td>
-				<td>mm</td>
-			</tr>
-			<tr data-tooltip="Cross-sectional area of reo-bar layer[s]">
-				<td id="arealable">Cross-sectional area of steel:</td>
-				<td id="area" class="tableout">30000</td>
-				<td>mm&#178;</td>
-			</tr>
-			<tr>
-				<td id="amountlable" rowspan=4>Amount:</td>
-				<td id="nbars" class="tableout" data-tooltip="Number of reo bars in layer[s]">10</td>
-				<td>bars</td>
-			</tr>
-			<tr>
-				<td id="length" class="tableout" data-tooltip="Total length of reo bars based on clear span L_n with no overlap">10</td>
-				<td>m</td>
-			</tr>
-			<tr>
-				<td id="masspermeter" class="tableout" data-tooltip="Total mass/meter of layer[s]">5</td>
-				<td>kg/m</td>
-			</tr>
-			<tr>
-				<td id="mass" class="tableout" data-tooltip="Total mass of layer[s]">400</td>
-				<td>kg</td>
-			</tr>
-			<tr data-tooltip="Total tensile force in layer[s]. Compressive force is shown negative." >
-				<td id="tforcelable" style="border-bottom:none;">Layer Tension Force:</td>
-				<td id="tforce" style="border-bottom:none;"  class="tableout">200</td>
-				<td style="border-bottom:none;" >kN</td>
-			</tr>
-		</table>
-	</div>
-</template>
-<script id="ReoOutputWidgetScript">
-	ReoOutputPrototype = Object.create(HTMLDivElement.prototype);
-
-	ReoOutputPrototype.createdCallback = function(){
-
-		this.create = function(){
-			// --------
-			// CONSTRUCT
-			this.webkitCreateShadowRoot();
-			var imported = document.importNode(document.querySelector("#ReoOutputWidgetTemplate").content, true);
-			this.webkitShadowRoot.appendChild(imported);
-			this.doc = this.webkitShadowRoot;
-			this.oneLables();
-			this.blank();
-		}.bind(this);
-
-		this.setIdContent=function(id, content){
-			var elem = this.webkitShadowRoot.querySelector("#"+id);
-
-			if(elem!=null){
-				elem.innerHTML = content;
-
-			}else{
-				throw new Error("ReoOutput: No id of: "+id);
-			}
-
-		}.bind(this);
-
-		this.oneLables = function(){
-			this.setIdContent("depthlable",		"Depth to layer:");
-			this.setIdContent("arealable",		"Layer Cross-sectional Area:");
-			this.setIdContent("amountlable",	"Amount:");
-			this.setIdContent("tforcelable",	"Layer Tension Force:");
-		}.bind(this);
-
-		this.avgLables = function(){
-			this.setIdContent("depthlable",		"Depth to <i>centroid</i>:");
-			this.setIdContent("arealable",		"&#8721; Cross-sectional Area:");
-			this.setIdContent("amountlable",	"&#8721; Amount:");
-			this.setIdContent("tforcelable",	"&#8721; Tension Force:");
-		}
-
-
-		this.blank = function(){
-			this.setIdContent("depth",			"--");
-			this.setIdContent("area",			"--");
-			this.setIdContent("nbars",			"--");
-			this.setIdContent("length",			"--");
-			this.setIdContent("masspermeter",	"--");
-			this.setIdContent("mass",			"--");
-			this.setIdContent("tforce",			"--");
-		}
-
-		this.create();
-	};
-	var ReoOutput = document.registerElement("reo-output",{prototype:ReoOutputPrototype});
-</script>
-
-
-<!--#########		 Crawling:.\widgets\XInput.htm		#########-->
-<template id="x-input-template">
-	<style>
-
-		td,input{
-			font-size:1.1em;
-		}
-
-
-		input{
-			width:100%;
-			text-align:right;
-			border:1px solid lightgrey;
-			padding: 2px;
-		}
-
-
-		input:invalid{
-			color:red;
-			background-color:lightyellow;
-			border-style:solid;
-			border-width:1px;
-		}
-
-
-		div{
-			/*border:1px solid lightgrey;
-			padding: 0 2px;
-			margin:1px;*/
-		}
-
-
-		#error{
-			display:none;
-			margin:3px;
-			color:darkred;
-			background-color:lightyellow;
-			//border: 1px solid red;
-			//border-radius: 0.5em;			
-		}
-
-
-		#unit{
-			width:3em;
-			font-family: Palatino, serif;
-		}
-
-
-		table{
-			border-spacing:0px;
-			width:100%;
-		}
-
-
-		div:hover{
-			background-color:#E6E6FF;
-		}
-
-
-		div{
-			cursor:pointer;
-			-webkit-user-select:none;
-			border-radius:4px;
-		}
-
-		input[type=number]::-webkit-inner-spin-button,
-
-		input[type=number]::-webkit-outer-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
-
-	</style>
-	<div>
-		<table>
-			<tr>
-				<td id="name" colspan=3></td>
-			</tr>
-			<tr>
-				<td id="notation" style="padding-right:0.5em;text-align:right;width:4em;"></td>
-				<td style="padding-left:0.3em;text-align:right;width:5em;"><input type="text" required/></td>
-				<td id="unit"></td>
-			</tr>
-			<tr>
-				<td id="error" colspan=3>
-					<p>A long and convoluted error message to teach people things</p>
-					<p>Another longer and convoluted error message to teach people things</p>
-				</td>
-			</tr>
-		</table>
-	</div>
-</template>
-<script id="x-input-script">
-var XInputPrototype = Object.create(HTMLDivElement.prototype);
-
-XInputPrototype.createdCallback = function(){
-	// ##########################################################################################
-	// 			DEFERED CONSTRUCTOR
-	// ##########################################################################################
-
-	this.create = function(){
-		//import content from the template element
-		var imported = document.querySelector("#x-input-template").innerHTML;
-		this.webkitCreateShadowRoot();
-		this.webkitShadowRoot.innerHTML = imported;
-		// ##########################################################################################
-		// 			EVENT LISTENERS
-		// ##########################################################################################
-		this.input = this.webkitShadowRoot.querySelector("input");
-
-		this.input.addEventListener("input",function(e){
-			this.update();
-			this.change();
-		}.bind(this));
-
-		this.input.addEventListener("change",function(e){
-			this.update();
-			this.change();
-		}.bind(this));
-
-		this.webkitShadowRoot.querySelector("div").addEventListener("mousedown",function(e){
-
-			if(e.target!=this.input){
-				e.preventDefault();
-				this.input.focus();
-			}
-
-		}.bind(this))
-		this.isvalid = function(thisval){return true;};
-		this.getAttributes();
-		MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.webkitShadowRoot]);
-	}.bind(this); // end create();
-	// ##########################################################################################
-	// 			EVENT Dispatchers
-	// ##########################################################################################
-
-	this.update = function(e){
-		var evt = new Event("update");
-		evt.target = this;
-		evt.bubbles = true;
-		this.dispatchEvent(evt);
-	}.bind(this);
-
-	this.change = function(e){
-		var evt = new Event("change");
-		evt.target = this;
-		evt.bubbles = true;
-		this.dispatchEvent(evt);
-	}.bind(this);
-	// ##########################################################################################
-	// 			Calibrate this input based on the value of its attributes
-	// ##########################################################################################
-
-	this.getAttributes = function(){
-
-		for(var i=0; i<this.attributes.length;i++){
-			var att = this.attributes[i];
-			this[att.name] = att.value;
-		}
-
-	}.bind(this);
-	// ##########################################################################################
-	// 			GETTERS AND SETTERS
-	// ##########################################################################################
-	// VALUE
-
-	Object.defineProperty(this,"value",{
-
-		get:function(){
-			return this.input.value;
-		}.bind(this),
-
-		set:function(newval){
-			this.input.value = newval;
-		}.bind(this)
-	});
-	// VALID
-
-	Object.defineProperty(this,"valid",{
-
-		get:function(){
-			this.isvalid(this.value);
-		}
-
-	});
-	// VARNAME
-
-	Object.defineProperty(this,"varname",{
-
-		get:function(){
-			return this.webkitShadowRoot.querySelector("#name").innerHTML;
-		},
-
-		set:function(newval){
-			this.webkitShadowRoot.querySelector("#name").innerHTML = newval;
-		}
-
-	});
-	// NOTATION
-
-	Object.defineProperty(this,"notation",{
-
-		get:function(){
-			return this.webkitShadowRoot.querySelector("#notation").innerHTML;
-		},
-
-		set:function(newval){
-			this.webkitShadowRoot.querySelector("#notation").innerHTML = newval;
-		}
-
-	});
-	// UNIT
-
-	Object.defineProperty(this,"unit",{
-
-		get:function(){
-			return this.webkitShadowRoot.querySelector("#unit").innerHTML;
-		},
-
-		set:function(newval){
-			this.webkitShadowRoot.querySelector("#unit").innerHTML = newval;
-		}
-
-	});
-	// PATTERN
-
-	Object.defineProperty(this,"pattern",{
-
-		get:function(){
-			return this.input.pattern;
-		},
-
-		set:function(newval){
-			this.input.pattern = newval;
-		}
-
-	});
-	// TYPE
-
-	Object.defineProperty(this,"type",{
-
-		get:function(){
-			return this.input.type;
-		},
-
-		set:function(newval){
-			this.input.type = newval;
-		}
-
-	});
-	// MIN
-
-	Object.defineProperty(this,"min",{
-
-		get:function(){
-			return this.input.min;
-		},
-
-		set:function(newval){
-			this.input.min = newval;
-		}
-
-	});
-	// MAX
-
-	Object.defineProperty(this,"max",{
-
-		get:function(){
-			return this.input.max;
-		},
-
-		set:function(newval){
-			this.input.max = newval;
-		}
-
-	});
-	// STEP
-
-	Object.defineProperty(this,"step",{
-
-		get:function(){
-			return this.input.step;
-		},
-
-		set:function(newval){
-			this.input.step = newval;
-		}
-
-	});
-	// DATA-TOOLTIP
-
-	Object.defineProperty(this,"data-tooltip",{
-
-		get:function(){
-			return this.webkitShadowRoot.querySelector("div").getAttribute("data-tooltip");
-		},
-
-		set:function(newval){
-			this.webkitShadowRoot.querySelector("div").setAttribute("data-tooltip",newval);
-		}
-
-	});
-	this.create();
-}
-
-var XInput = document.registerElement("x-input",{prototype:XInputPrototype});
-</script>
 	</html>
+			<!--
+		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
+			<h1 style="display:block;width:100%">Elevation</h1>
+			<div style="width:100%;">
+				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
+			</div>
+		</div>
+		-->
+	<!--
+				<x-input	id="Ln"		
+							notation ="$$$L_n$$$" 
+							unit="mm"
+							value="1000"
+							type="number"
+							min="0"
+							max="50000"
+							step="500"
+							data-tooltip="Clear Span from edge to edge of supports"></x-input>
+				<x-input	id="b"
+							notation ="$$$b$$$"
+							unit="mm"
+							value="300"
+							type="number"
+							min="200"
+							max="5000"
+							step="5"
+							data-tooltip="Breadth (horizontal width) of rectangular beam cross section"></x-input>
+				<x-input	id="D"
+							notation ="$$$D$$$"
+							unit="mm"
+							value="600"
+							type="number"
+							min="0"
+							max="10000"
+							step="10"
+							data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
+				<x-input	id="cover"
+							notation ="$$$\text{Cover}$$$"
+							unit="mm"
+							value="25"
+							type="number"
+							min="20"
+							max="100"
+							step="5"
+							data-tooltip="Distance from the outer surface of concrete to the reo bars (all around)"></x-input>
+				<x-input	id="eclass"
+							notation ="$$$\text{E. Class}$$$"
+							options='["A1","A2","B1","B2","C1","C2"]'
+							pattern="(A|B|C|D)"
+							data-tooltip="Exposure Classification determined by exposure to natural environment. See AS3600 Table 4.3."></x-input>
+				<x-input	id="df"
+							notation="$$$d_f$$$"
+							unit="mm"
+							value="10"
+							options="[10, 12, 16, 20, 24, 28, 32, 36, 40]"
+							data-tooltip="Diameter of fitment bars (the 'ribcage') of the beam. Standard nominal diameters: [10, 12, 16, 20, 24, 28, 32, 36, 40]mm"></x-input> 
+				<x-input	id="rhoc"
+							notation="$$$\rho_c$$$"
+							unit="kg/m&#179;"
+							value="2400"
+							type="number"
+							min="2100"
+							max="2800"
+							step="10"
+							data-tooltip="Concrete Density"></x-input>
+				<x-input	id="fc"
+							notation="$$$f'_c$$$"
+							unit="MPa"
+							value="32"
+							options="[20, 25, 32, 40, 50, 65, 80, 100]"
+							data-tooltip="Concrete Strength. This software only uses standard grades."></x-input>
+					-->

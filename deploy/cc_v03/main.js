@@ -1,6 +1,6 @@
 "use strict";
 ///~ ../jslib/Vector.js
-///* drawBeam.js
+////* drawBeam.js
 ///* Beam.js
 ///* varinput.js
 ///* setup_varinputs.js
