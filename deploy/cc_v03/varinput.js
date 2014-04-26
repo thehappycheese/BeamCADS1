@@ -59,7 +59,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		this.value	= arg_value;
 		
 		
-		
+		this.notationAnchor.tabIndex=-1;
 		
 		
 		
@@ -79,6 +79,11 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 			if(e.target.tagName!=="INPUT" && e.target.tagName!=="SELECT"){
 				//e.preventDefault();
 				this.notationAnchor.click();
+				if(this.valueInput.tagName == "SELECT"){
+					this.valueInput.focus();
+				}else{
+					this.valueInput.select();
+				}
 			}
 		}.bind(this))
 	}.bind(this);

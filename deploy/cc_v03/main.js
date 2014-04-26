@@ -6,7 +6,18 @@
 ///* varinput.js
 ///* setup_varinputs.js
 ///* validation.js
+///* reoinput.js
 
+
+var rr = new ReoInput();
+
+rr.appendTo(document.querySelector("#reorows"));
+var rr = new ReoInput();
+
+rr.appendTo(document.querySelector("#reorows"));
+var rr = new ReoInput();
+
+rr.appendTo(document.querySelector("#reorows"));
 
 
 

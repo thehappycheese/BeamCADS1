@@ -25,6 +25,55 @@ h3{
 
 
 
+.reotable{
+	table-layout: fixed;
+	width:100%;
+	border-collapse: collapse;
+	border:1px solid lightgrey;
+}
+.reotable td{
+	border-top:1px solid lightgrey;
+	border-bottom:1px solid lightgrey;
+}
+.reotable tbody tr:hover{
+	background-color:#E6E6FF;
+}
+
+.reotable thead td{
+	border-left:1px solid lightgrey;
+	text-align:center;
+	vertical-align:middle;
+}
+.reotable tbody td{
+	vertical-align:middle;
+	text-align:center;
+}
+.reoinput button{
+	width:calc(50% - 2px);
+	height:100%;
+	border-width:1px;
+	padding:0em;
+	margin:0em;
+}
+.reoinput .bars{
+	color:darkblue;
+	font-weight:bold;
+}
+.reoinput input{
+	width:100%;
+	text-align:right;
+}
+.reoinput input[type="checkbox"]{
+	width:100%;
+	height:1em;
+	padding:0px;
+	margin:0px;
+}
+
+
+
+
+
 
 
 .varinput{
@@ -52,6 +101,9 @@ h3{
 }
 .varinput a{
 	vertical-align:center;
+}
+.varinput a:focus{
+	outline:none;
 }
 .varinput .value-div{
 	margin-left:0.2em;
