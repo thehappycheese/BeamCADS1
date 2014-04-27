@@ -1,18 +1,14 @@
 {
   "name": "nw-demo",
   "main": "index.htm",
-  "nodejs" :false;
+  "node-js": false,
   "node-remote": "<local>",
   "window": {
     "title": "node-webkit demo",
+	"toolbar": false,
     "frame": true,
-	 
-    "width": 1280,
-    "height": 760,
     "position": "mouse",
-    "min_width": 400,
-    "min_height": 200,
-    "max_width": 800,
-    "max_height": 600
+    "min_width": 600,
+    "min_height": 400
   }
 }

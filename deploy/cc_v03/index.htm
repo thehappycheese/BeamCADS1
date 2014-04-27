@@ -1,7 +1,7 @@
 	<html>
 
 <head>
-	<link rel="stylesheet" href="index.css" type="text/css"/>
+	<link rel="stylesheet" href="style/index.css" type="text/css"/>
 	<script type="text/x-mathjax-config">
 		MathJax.Hub.Config({
 			extensions: ["tex2jax.js"],
@@ -11,16 +11,15 @@
 		});
 	</script>
 	<script type="text/javascript" src="../jslib/mathjax/MathJax.js"></script>
-	<title> - BeamCAD - </title>
+	<title> - Beam Calc - </title>
 </head>
 
 
 <body>
 	<div id="apptitlebox" class="bmpblock">
-		<div>Beam CC</div>
-		<div><a target="_blank" href="task/index.htm">1. Task	</a></div>
-		<div><a target="_blank" href="https://www.surveymonkey.com/s/FBLMLHG">2. Survey	</a></div>
-		
+		<div>Beam Calc</div>
+		<button onclick="window.open('task/index.htm','_blank');">1. View Task</button>
+		<button onclick="window.open('https://www.surveymonkey.com/s/FBLMLHG','_blank');">2. Do Survey :)</button>
 	</div>
 	
 	<div style="display:flex;flex-wrap:wrap;justify-content:center;">	
@@ -46,7 +45,7 @@
 		
 		<div id="varinfodiv" class="bmpblock" >
 			<h2>Variable Reference Information</h2>
-			<iframe id="varinfoiframe" src="infos/index.htm" style="border:1px solid grey;width:calc(100% - 10px);height:460px;margin:5px;"></iframe>
+			<iframe id="varinfoiframe" src="infos/index.htm" style="border:none;width:calc(100% - 10px);height:460px;margin:5px;"></iframe>
 		</div>
 		
 		
@@ -80,10 +79,7 @@
 				<table id="reoouttable" style="width:100%" cellspacing=0>
 					<thead>
 						<tr>
-							<th>Value:</th>
-							<th>Hover:</th>
-							<th>Sum:</th>
-							<th>Unit:</th>
+							<th>Value:</th><th>Hover:</th><th>Sum/Avg</th><th>Unit:</th>
 						</tr>
 					</thead>
 					<tbody>
