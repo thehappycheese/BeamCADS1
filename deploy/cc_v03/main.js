@@ -1,6 +1,6 @@
 "use strict";
 ///~ ../jslib/Vector.js
-////* drawBeam.js
+///* drawBeam.js
 ///* Beam.js
 ///* varinput.js
 ///* setup_varinputs.js
@@ -132,12 +132,16 @@ function outputReoSummary(){
 }
 
 
+var cs_canvas = document.querySelector("#crosssectioncanvas");
+var cs_ctx = cs_canvas.getContext('2d');
+
 mainUpdateListener()
 function mainUpdateListener(e){
 	DoValidation(); // see validation.js
 	intakeBeamValues();
 	outputCalculations();
 	outputReoSummary();
+	drawCrossSection(cs_ctx,b)
 }
 
 

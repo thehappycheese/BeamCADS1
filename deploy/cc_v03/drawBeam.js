@@ -1,6 +1,5 @@
 ///~ jslib/Vector.js
 ///~ jslib/CADCanvas.js
-///~ jslib/CanvasPatterns.js
 
 
 
@@ -105,13 +104,10 @@ function drawCrossSection(ctx, b){
 		var occupied_offests = [];
 		for(var i = 0; i<b.reo.length; i++){
 			var layer = b.reo[i];
-			if(!layer.isValid()){
-				continue;
-			}
 
 			var scaled_dtendons = layer.diameter*scale;
 
-			var offsety = layer.getDepth()*scale;
+			var offsety = layer.depth*scale;
 			var offsetx = (b.cover + b.dfitments + layer.diameter/2)*scale;
 			var spacing = (b.b - 2*(b.cover + b.dfitments) - layer.diameter)*scale/(layer.number-1);
 
@@ -134,7 +130,7 @@ function drawCrossSection(ctx, b){
 			ctx.fillStyle = "black";
 			ctx.textAlign = "start";
 			ctx.textBaseline = "middle";
-			ctx.fillText(layer.getBarCode(),w/2+10,  offsety-h/2);
+			ctx.fillText(layer.number+"N"+layer.diameter,w/2+10,  offsety-h/2);
 		}	
 
 		
@@ -145,30 +141,13 @@ function drawCrossSection(ctx, b){
 }
 function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 
-	if(scaled_dfitments>3){
+	if(true){
 		ctx.lineCap = "square";
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = Math.ceil(scaled_dfitments);
 		draw1();
-		
-		
-		ctx.strokeStyle = "white";
-		ctx.lineWidth = Math.ceil(scaled_dfitments-2);
-		draw1()
+		draw2();
 
-		
-		ctx.strokeStyle = "black";
-		ctx.lineWidth = Math.ceil(scaled_dfitments);
-		draw2();
-		ctx.strokeStyle = "white";
-		ctx.lineWidth = Math.ceil(scaled_dfitments-2);
-		draw2();
-		draw3()
-		
-		ctx.lineWidth = Math.ceil(scaled_dfitments+2);
-		ctx.strokeStyle = ctx.createPattern(CanvasPatterns.fs_can,"repeat");
-		draw1();
-		draw2();
 	}else{
 		ctx.lineCap = "round";
 		ctx.strokeStyle = "black";

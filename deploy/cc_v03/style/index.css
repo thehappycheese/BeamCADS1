@@ -1,8 +1,7 @@
 body {
   margin: 0;
   padding: 5px 20px;
-  background: url("../img/Clouds.png"), linear-gradient(to bottom, #d4f8ff 0%, white 100%);
-  /* W3C */ }
+  background: url("../img/Clouds.png"), #f6feff; }
 
 h1, h2, h3, h4 {
   font-family: sans-serif;
@@ -124,11 +123,11 @@ input:invalid {
     margin: 0; }
 
 .bmpblock {
-  border: 1px solid #91bdc5;
+  border: 1px solid #303f41;
   margin: 5px;
   padding: 5px;
   background-color: white;
-  box-shadow: 2px 2px 5px 0px #255d67; }
+  box-shadow: 2px 2px 5px 0px black; }
 
 /* Tex src = http://fc07.deviantart.net/fs19/i/2007/291/6/b/Concrete_Texture_by_MartinIsaac.jpg*/
 #apptitlebox {
