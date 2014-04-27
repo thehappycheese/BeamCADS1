@@ -46,7 +46,7 @@ function drawCrossSection(ctx, b){
 	var scaled_dfitments = b.dfitments*scale;
 	// TODO: update this with correct bend radii
 	// AS3600 17.2.3 assuming N12 Bars
-	var fitments_BendRadius = 6*b.dfitments/2*scale; 
+	var fitments_BendRadius = 6*b.df/2*scale; 
 	
 	
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -98,34 +98,36 @@ function drawCrossSection(ctx, b){
 		//ctx.fillCircle(-w/2+scaled_cover+scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
 		//ctx.fillCircle( w/2-scaled_cover-scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
 		
+		
+		console.log((-b.b/2 + b.cover + b.df/2)	*scale)
+		drawFitment(ctx,
+						(-b.b/2 + b.cover + b.df/2)	*scale,
+						(-b.D/2 + b.cover + b.df/2)	*scale,
+						(b.b - 2*b.cover - b.df)		*scale,
+						(b.D - 2*b.cover - b.df)	*scale,
+						fitments_BendRadius*scale,
+						30*scale,
+						b.df*scale);
+		
 
 		// Draw other reo bars
-		ctx.fillStyle = "black";
-		var occupied_offests = [];
 		for(var i = 0; i<b.reo.length; i++){
 			var layer = b.reo[i];
 
 			var scaled_dtendons = layer.diameter*scale;
 
 			var offsety = layer.depth*scale;
-			var offsetx = (b.cover + b.dfitments + layer.diameter/2)*scale;
-			var spacing = (b.b - 2*(b.cover + b.dfitments) - layer.diameter)*scale/(layer.number-1);
+			var offsetx = (b.cover + b.df + layer.diameter/2)*scale;
+			var spacing = (b.b - 2*(b.cover + b.df) - layer.diameter)*scale/(layer.number-1);
 
-
+			// TODO: hover highlight
+			ctx.fillStyle = "black";
 			for(j=0;j<layer.number;j++){
 				ctx.fillCircle( offsetx+j*spacing-w/2, offsety-h/2, scaled_dtendons/2);
 			}
 
-			if(layer.number>2 || i==3){
-				drawFitment(ctx,
-						-w/2 + (b.cover + b.dfitments/2)*scale,
-						-h/2 + (b.cover + b.dfitments/2)*scale,
-						w - (2*b.cover+b.dfitments)*scale,
-						offsety - (b.cover - b.dfitments)*scale,
-						fitments_BendRadius*scale,
-						30*scale,
-						scaled_dfitments);
-			}
+
+				
 
 			ctx.fillStyle = "black";
 			ctx.textAlign = "start";
@@ -140,13 +142,19 @@ function drawCrossSection(ctx, b){
 	
 }
 function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
-
+console.log(x,y,w,h,rad,fitmentlen,scaled_dfitments)
 	if(true){
+	console.log("d")
 		ctx.lineCap = "square";
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = Math.ceil(scaled_dfitments);
-		draw1();
-		draw2();
+		do_draw();
+		ctx.lineCap = "square";
+		ctx.strokeStyle = "white";
+		ctx.lineWidth = Math.ceil(scaled_dfitments)-2;
+		do_draw();
+		
+		do_draw();
 
 	}else{
 		ctx.lineCap = "round";
@@ -156,20 +164,7 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 		draw2();
 	}
 
-
-
-	function draw3(){
-		ctx.beginPath();
-			ctx.moveTo(x+w-rad*3-2,y+h)
-			ctx.lineTo(x+w-rad*3+2,y+h)
-
-		ctx.stroke();
-	}
-
-
-
-
-	function draw1(){
+	function do_draw(){
 		ctx.beginPath();
 			ctx.moveTo(x+w-rad-rad/Math.SQRT2-fitmentlen,y+rad-rad/Math.SQRT2+fitmentlen);
 			ctx.arc(x+w-rad,y+rad, rad, Math.PI*1.5-Math.PI/4, Math.PI*2);
@@ -177,22 +172,7 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 			ctx.lineTo(x+w,y+rad);
 			ctx.arc(x+w-rad,y+h-rad,rad,0,Math.PI/2)
 			ctx.lineTo(x+w-rad*3,y+h)
-			//ctx.moveTo(x+w-rad,y+h);
-			//ctx.lineTo(x+rad,y+h);
-			//ctx.arc(x+rad,y+h-rad,rad,Math.PI/2,Math.PI)
-			//ctx.moveTo(x,y+h-rad);
-			//ctx.lineTo(x,y+rad);
-			//ctx.arc(x+rad,y+rad,rad,Math.PI,Math.PI*1.5)
-			//ctx.moveTo(x+rad,y);
-			//ctx.lineTo(x+w-rad,y);
-		ctx.stroke();
-	}
-	function draw2(){
-		ctx.beginPath();
-			//ctx.moveTo(x+w,y+h-rad);
-			//ctx.lineTo(x+w,y+rad);
-			//ctx.arc(x+w-rad,y+h-rad,rad,0,Math.PI/2)
-			ctx.moveTo(x+w-rad*3,y+h);
+			ctx.moveTo(x+w-rad,y+h);
 			ctx.lineTo(x+rad,y+h);
 			ctx.arc(x+rad,y+h-rad,rad,Math.PI/2,Math.PI)
 			ctx.moveTo(x,y+h-rad);
@@ -200,15 +180,19 @@ function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
 			ctx.arc(x+rad,y+rad,rad,Math.PI,Math.PI*1.5)
 			ctx.moveTo(x+rad,y);
 			ctx.lineTo(x+w-rad,y);
-		ctx.stroke();
-		ctx.beginPath();
-			//ctx.moveTo(x+w-rad-rad/Math.SQRT2-fitmentlen,y+rad-rad/Math.SQRT2+fitmentlen)
-			ctx.arc(x+w-rad,y+rad, rad, Math.PI*1.5, Math.PI*2+Math.PI/4)
-			ctx.lineTo(x+w-rad+rad/Math.SQRT2-fitmentlen,y+rad+rad/Math.SQRT2+fitmentlen)
+			
+			ctx.arc(x+w-rad,y+rad, rad, -Math.PI/2, Math.PI/4);
+			ctx.lineTo(x+w-rad+rad/Math.SQRT2-fitmentlen,y+rad+rad/Math.SQRT2+fitmentlen);
 		ctx.stroke();
 	}
-	
 }
+
+			//ctx.arc(x+rad,y+h-rad,rad,Math.PI/2,Math.PI)
+			//ctx.moveTo(x,y+h-rad);
+			//ctx.lineTo(x,y+rad);
+			//ctx.arc(x+rad,y+rad,rad,Math.PI,Math.PI*1.5)
+			//ctx.moveTo(x+rad,y);
+			//ctx.lineTo(x+w-rad,y);
 
 
 
