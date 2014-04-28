@@ -1,5 +1,5 @@
-///~ jslib/Vector.js
-///~ jslib/CADCanvas.js
+///* ../jslib/Vector.js
+///* ../jslib/CADCanvas.js
 
 
 
@@ -51,6 +51,7 @@ function drawCrossSection(ctx, b){
 	
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	ctx.save();
+	try{
 		ctx.translate(Math.floor(ctx.canvas.width/2), Math.floor(ctx.canvas.height/2));
 		
 		
@@ -134,10 +135,10 @@ function drawCrossSection(ctx, b){
 			ctx.textBaseline = "middle";
 			ctx.fillText(layer.number+"N"+layer.diameter,w/2+10,  offsety-h/2);
 		}	
-
-		
-		
-	ctx.restore();
+	}catch(e){
+		ctx.restore();
+		throw e;
+	}
 	
 	
 }
