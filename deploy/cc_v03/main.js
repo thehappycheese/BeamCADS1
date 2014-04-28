@@ -3,21 +3,76 @@
 ///* drawBeam.js
 ///* Beam.js
 ///* varinput.js
-///* setup_varinputs.js
 ///* validation.js
 ///* reoinput.js
 ///* ReoManager.js
-
-var rman = new ReoManager(document.querySelector("#reorows"));
-rman.on("change",mainUpdateListener);
+///* ProTips.js
 
 
+
+
+
+
+
+
+
+///////////////    SETUP VARIABLE INPUTS     /////////////////////
+
+var vin = {};
+vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm", "infos/Ln.htm", "varinfoiframe");
+vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm", "infos/b.htm", "varinfoiframe");
+vin.D      = new VarInput('D' , "$$$D$$$" , "number" , 600, "mm", "infos/D.htm", "varinfoiframe");
+vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm", "infos/cover.htm", "varinfoiframe");
+vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "", "infos/eclass.htm", "varinfoiframe",["A1","A2","B1","B2","C1","C2"]);
+vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 16, 20, 24, 28, 32, 36, 40]);
+vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;", "infos/rhoc.htm", "varinfoiframe");
+vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa", "infos/fc.htm", "varinfoiframe",[20, 25, 32, 40, 50, 65, 80, 100]);
 for(var i in vin){
 	vin[i].appendTo(document.querySelector("#invardivdiv"));
 	vin[i].on("change",mainUpdateListener);
 }
 
 
+var vin_tips = new ProTips(document.querySelector("#invar_protips"));
+vin_tips.add(vin.b.body,"test")
+
+
+
+
+
+var reo_tips = new ProTips(document.querySelector("#reo_protips"));
+reo_tips.grab(reo_tips.body.parentElement);
+
+
+
+vin.b.validate = function(e){
+	//var e = {value:this.value, error:[], warning:[], info:[]};
+	if(e.value%5!==0){
+		e.error.push("b should be a rounded to the nearest 5mm");
+	}
+	if(e.value<100){
+		e.value=100;
+	}
+	if(e.value>3000){
+		e.value=3000;
+	}
+	return e;
+}
+
+
+
+
+
+///////////////    SETUP REO MANAGER     /////////////////////
+
+var rman = new ReoManager(document.querySelector("#reorows"));
+rman.on("change",mainUpdateListener);
+
+
+
+
+
+///////////////    SETUP REO MANAGER     /////////////////////
 // Create global beam object
 var b = new Beam();
 function intakeBeamValues(){
@@ -165,10 +220,11 @@ function setErrorList(list){
 //##################################################################3
 //##### Tooltips ###################################################3
 //##################################################################3
-setTimeout(function(){
-	addTooltipTo(document.querySelector("#invardiv"),document.querySelector("#invardivtooltipbar"));
-	addTooltipTo(document.querySelector("#reoinputoutputdiv"),document.querySelector("#reoinputoutputtooltipbar"));
-},1500);
+
+
+
+
+
 function addTooltipTo(d, output){
 	var els = d.querySelectorAll("*");
 	for(var i = 0;i<els.length;i++){
@@ -229,36 +285,3 @@ document.body.addEventListener("mousewheel",function(e){
 		}
 	}
 });
-
-
-//##########################################################
-//#### Contextual Help View ################################
-//##########################################################
-
-(function(){
-	var xins = document.querySelectorAll("x-input");
-	for(var i = 0;i<xins.length;i++){
-		xins[i].addEventListener("mousedown",function(e){
-			setHelpLoc("infos/"+e.target.id+".htm");
-		})
-	}
-})()
-var _current_help_url = "";
-function setHelpLoc(url){
-	// console.log(_current_help_url,document.querySelector("#varinfoiframe").contentWindow.location.pathname)
-	// console.log(document.querySelector("#varinfoiframe").getAttribute("src"),url)
-	// console.log(_current_help_url === document.querySelector("#varinfoiframe").contentWindow.location.pathname)
-	// console.log(document.querySelector("#varinfoiframe").getAttribute("src") === url)
-	if(document.querySelector("#varinfoiframe").contentWindow.location.pathname !== _current_help_url ||
-			document.querySelector("#varinfoiframe").getAttribute("src")!==url){
-		
-		document.querySelector("#varinfoiframe").onload = function(){
-			_current_help_url = document.querySelector("#varinfoiframe").contentWindow.location.pathname;
-		};
-		document.querySelector("#varinfoiframe").setAttribute("src",url);
-	}
-}
-
-
-var ifrm = document.querySelector("#varinfoiframe");
-var rm = document.querySelector("reo-manager");
