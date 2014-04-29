@@ -43,7 +43,7 @@ body{
 	font-size:16px;
 	margin:0;
 	padding: 5px 20px;
-	background: url("../img/Clouds.png"), $pri-5;
+	background: url("../img/Clouds.png"), darken($pri-5,3%);
 }
 h1, h2, h3, h4{
 	font-family:sans-serif;

@@ -1,4 +1,3 @@
-"use strict";
 ///~ ../jslib/Vector.js
 ///* drawBeam.js
 ///* Beam.js
@@ -40,8 +39,7 @@ vin_tips.add(vin.b.body,"test")
 
 
 
-var reo_tips = new ProTips(document.querySelector("#reo_protips"));
-reo_tips.grab(reo_tips.body.parentElement);
+
 
 
 
@@ -68,6 +66,16 @@ vin.b.validate = function(e){
 var rman = new ReoManager(document.querySelector("#reorows"));
 rman.on("change",mainUpdateListener);
 
+var reo_tips = new ProTips(document.querySelector("#reo_protips"));
+reo_tips.grab(reo_tips.body.parentElement);
+
+reo_tips.addElemSelector(rman.body,".more","Add more reo to this layer. <i>Layers touching the top or bottom may have more than 2 bars.</i>");
+reo_tips.addElemSelector(rman.body,".less","Remove some reo from this layer. <i>Layers touching the top or bottom may have more than 2 bars.</i>");
+reo_tips.addElemSelector(rman.body,".enabled","Enable/Disable this layer");
+reo_tips.addElemSelector(rman.body,".area","Cross section area of this layer");
+reo_tips.addElemSelector(rman.body,".offset","Space between this layer and the next");
+reo_tips.addElemSelector(rman.body,".from","Placement of the reo."); // TODO make this better.
+reo_tips.addElemSelector(rman.body,".selected","Include this area in the 'Sum/Avg' column below");
 
 
 
@@ -90,9 +98,9 @@ function intakeBeamValues(){
 
 function outputCalculations(){
 
-	function f(n){
+	function f(n, did){
 		if(typeof n == "number" && !isNaN(n)){
-			return n.toFixed(0)
+			return n.toFixed(did || 0)
 		}else{
 			return "--"
 		}
@@ -102,10 +110,13 @@ function outputCalculations(){
 	calc.push("gamma: "	+b.gamma.toFixed(2)		);
 	calc.push("");
 	
+	calc.push("d: (Centroid depth of tensile steel) "	+f(b.Ts_centroid_depth)+" mm"		);
+	calc.push("k: "	+f(b.k,3)+""		);
+	
+	
 	calc.push("dn: "	+f(b.dn)+" mm"		);
 	calc.push("Muo: "	+f(b.Muo)+" kNm");
-	calc.push("Muo min: "	+f(b.Muo_min)+" kNm");
-	calc.push("Ast min (Alternative to meeting Muo_min): "	+f(b.Muo_min_Ast_min)+" mm^2");
+	calc.push("MINIMUMS: Muo_min: "	+f(b.Muo_min)+" kNm  OR Ast_min: "+f(b.Muo_min_Ast_min)+" mm^2");
 	calc.push("");
 	
 	calc.push("Ag: "	+f(b.Ag)+" mm^2");

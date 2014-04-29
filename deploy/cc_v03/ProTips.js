@@ -17,6 +17,12 @@ function ProTips(arg_body){
 		target.addEventListener("mouseover",this.over);
 		target.addEventListener("mouseout",this.out);
 	}.bind(this);
+	this.addElemSelector = function(elem,selector,tip){
+		var els = elem.querySelectorAll(selector);
+		for(var i = 0; i<els.length; i++){
+			this.add(els[i],tip);
+		}
+	}.bind(this);
 	this.tip_from_target = function(target){
 		for(var i = 0; i<this.tips.length; i++){
 			if(this.tips[i].target === target) return this.tips[i].tip;

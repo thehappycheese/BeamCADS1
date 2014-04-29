@@ -55,6 +55,18 @@ function ReoInput(){
 			this.update();
 			this.change();
 		}.bind(this));
+		this.offsetInput.addEventListener("change",function(){
+			this.update();
+			this.change();
+		}.bind(this))
+		this.offsetInput.addEventListener("input",function(){
+			this.update();
+			this.change();
+		}.bind(this));
+		this.fromInput.addEventListener("change",function(){
+			this.update();
+			this.change();
+		}.bind(this))
 		
 		// BARCODE CHANGE EVENT LISTENERs
 		this.barcodeInput.addEventListener("keydown",function(e){

@@ -1,11 +1,12 @@
 
-"use strict";
+
 function Beam(){
+	"use strict";
 	this.create = function(){
 		
 		// #########################################################
 		// Misc considerations
-		this.eclass 			= "A";
+		this.eclass 			= "A1";
 		this.minbarspacing		= undefined;
 		
 		
@@ -338,6 +339,12 @@ function Beam(){
 		return 0.6*Math.sqrt(this.fc);
 	}.bind(this)});
 	
+	// TODO: Ensure technical correctness.
+	Object.defineProperty(this,"k",{get:function(){
+		var dn = this.dn;
+		var dts = this.Ts_centroid_depth_from_dn(dn); 
+		return dn/dts;
+	}.bind(this)});
 	
 	
 	// ########################################################################

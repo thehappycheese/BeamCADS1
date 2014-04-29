@@ -30,11 +30,9 @@
 			</div>
 			<div id="invardivdiv">
 			</div>
-			<div id="invardivtooltipbar" class="tooltipbar">
-				.
-			</div>
-			<div id="invardiverrorbar">
-				.
+			<div id="invar_protips" class="protip">
+				<div class="tips"></div>
+				<div class="feedback"></div>
 			</div>
 		</div>
 		<div id="varinfodiv" class="bmpblock" >
@@ -111,13 +109,16 @@
 					</tbody>
 				</table>
 			</div>
-			<div id="reoinputoutputtooltipbar" class="tooltipbar" style="height:4em;"></div>
+			<div id="reo_protips" class="protip">
+				<div class="tips"></div>
+				<div class="feedback"></div>
+			</div>
 		</div>
 		<div id="crosssectiondiv" class="bmpblock" style="">
 			<div style="width:100%;align-self:flex-start;">
 				<h2>Cross Section</h2>
 			</div>
-			<canvas width="400" height="300" id="crosssectioncanvas" ></canvas>
+			<canvas width="480" height="400" id="crosssectioncanvas" ></canvas>
 		</div>
 		<div style="flex: 1 0 500px;min-height:300px;margin-bottom:40px;" class="bmpblock">
 			<div style="width:100%;">
@@ -127,12 +128,12 @@
 		</div>
 	</div>
 </body>
+
 <script>
 
 
 
 // #########		 Crawling:.\main.js		#########
-"use strict";
 
 
 
@@ -1763,7 +1764,7 @@ CanvasRenderingContext2D.prototype.sharpLine = function (aa, bb, cc, dd, r,g,b,a
 
 	}
 
-	//console.log(out);
+	////(out);
   this.putImageData(imd,0,0);
 }
 
@@ -1845,7 +1846,6 @@ function drawCrossSection(ctx, b){
 		// Draw top two longitudinal reo bars.
 		//ctx.fillCircle(-w/2+scaled_cover+scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
 		//ctx.fillCircle( w/2-scaled_cover-scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
-		console.log((-b.b/2 + b.cover + b.df/2)	*scale)
 		drawFitment(ctx,
 						(-b.b/2 + b.cover + b.df/2)	*scale,
 						(-b.D/2 + b.cover + b.df/2)	*scale,
@@ -1876,18 +1876,18 @@ function drawCrossSection(ctx, b){
 		}	
 
 	}catch(e){
+		throw e
+
+	}finally{
 		ctx.restore();
-		throw e;
 	}
 
 }
 
 
 function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
-console.log(x,y,w,h,rad,fitmentlen,scaled_dfitments)
 
 	if(true){
-	console.log("d")
 		ctx.lineCap = "square";
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = Math.ceil(scaled_dfitments);
@@ -1896,14 +1896,12 @@ console.log(x,y,w,h,rad,fitmentlen,scaled_dfitments)
 		ctx.strokeStyle = "white";
 		ctx.lineWidth = Math.ceil(scaled_dfitments)-2;
 		do_draw();
-		do_draw();
 
 	}else{
 		ctx.lineCap = "round";
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = 0.5;// Math.max(0.5,Math.floor(scaled_dfitments));
-		draw1();
-		draw2();
+		do_draw();
 	}
 
 
@@ -2013,14 +2011,14 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 
 
 // #########		 Crawling:.\Beam.js		#########
-"use strict";
 
 function Beam(){
+	"use strict";
 
 	this.create = function(){
 		// #########################################################
 		// Misc considerations
-		this.eclass 			= "A";
+		this.eclass 			= "A1";
 		this.minbarspacing		= undefined;
 		// #########################################################
 		// Reinforcement considerations
@@ -2349,6 +2347,13 @@ function Beam(){
 	Object.defineProperty(this,"fctf",{get:function(){
 		return 0.6*Math.sqrt(this.fc);
 	}.bind(this)});
+	// TODO: Ensure technical correctness.
+
+	Object.defineProperty(this,"k",{get:function(){
+		var dn = this.dn;
+		var dts = this.Ts_centroid_depth_from_dn(dn); 
+		return dn/dts;
+	}.bind(this)});
 	// ########################################################################
 	// #### SECTION PROPERTIES ################################################
 	// ########################################################################
@@ -2404,7 +2409,7 @@ function Beam(){
  * 	var ev = new EventDispatcher();
 
  * 	ev.on("run",function(e){
- * 		console.log(e);
+ * 		//(e);
  * 	});
  */
 
@@ -2439,7 +2444,7 @@ function EventDispatcher() {
 	this.on = (function (eventName, eventFunction) {
 
 		if (typeof eventName !== "string" || typeof eventFunction !== "function") {
-			console.log("Invalid event registration, " + eventName);
+			//("Invalid event registration, " + eventName);
 			return;
 		}
 
@@ -2708,41 +2713,6 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		}.bind(this)
 	});
 	this.buildInterface();
-}
-
-
-
-
-// #########		 Crawling:.\setup_varinputs.js		#########
-var vin = {};
-vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm", "infos/Ln.htm", "varinfoiframe");
-vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm", "infos/b.htm", "varinfoiframe");
-vin.D      = new VarInput('D' , "$$$D$$$" , "number" , 600, "mm", "infos/D.htm", "varinfoiframe");
-vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm", "infos/cover.htm", "varinfoiframe");
-vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "", "infos/eclass.htm", "varinfoiframe",["A1","A2","B1","B2","C1","C2"]);
-vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 16, 20, 24, 28, 32, 36, 40]);
-vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;", "infos/rhoc.htm", "varinfoiframe");
-vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa", "infos/fc.htm", "varinfoiframe",[20, 25, 32, 40, 50, 65, 80, 100]);
-vin.Ln
-
-vin.b.validate = function(e){
-	//var e = {value:this.value, error:[], warning:[], info:[]};
-
-	if(e.value%5!==0){
-		e.error.push("b should be a rounded to the nearest 5mm");
-	}
-
-
-	if(e.value<100){
-		e.value=100;
-	}
-
-
-	if(e.value>3000){
-		e.value=3000;
-	}
-
-	return e;
 }
 
 
@@ -3040,6 +3010,21 @@ function ReoInput(){
 			this.update();
 			this.change();
 		}.bind(this));
+
+		this.offsetInput.addEventListener("change",function(){
+			this.update();
+			this.change();
+		}.bind(this))
+
+		this.offsetInput.addEventListener("input",function(){
+			this.update();
+			this.change();
+		}.bind(this));
+
+		this.fromInput.addEventListener("change",function(){
+			this.update();
+			this.change();
+		}.bind(this))
 		// BARCODE CHANGE EVENT LISTENERs
 
 		this.barcodeInput.addEventListener("keydown",function(e){
@@ -3379,7 +3364,7 @@ function ReoInput(){
 
 		}
 
-		//console.log(combs.length);
+		////(combs.length);
 
 		for(var i = 0;i<combs.length;i++){
 
@@ -3492,6 +3477,7 @@ function ReoManager(arg_body){
 		var br = this.getBottomRow();
 		var last_low_depth = D-cover-df;
 		var last_high_depth = cover+df;
+		//(rs);
 
 		for(var i = rs.length-1;i>=0;i--){
 
@@ -3509,7 +3495,7 @@ function ReoManager(arg_body){
 		}
 
 
-		for(var i = 0; i<rs.length-1; i--){
+		for(var i = 0; i<rs.length-1; i++){
 
 			if(rs[i].from === "highest"){
 
@@ -3530,19 +3516,19 @@ function ReoManager(arg_body){
 	this.createReoInput = function(){
 		var nr = new ReoInput();
 		nr.manager = this;
-		console.log("fix events")
+		//("fix events")
 		nr.on("update",this.update);
 		nr.on("change",this.change);
 		return nr;
 	}.bind(this);
 
 	this.change = function(e){
-		//console.log("reo-manager change");
+		////("reo-manager change");
 		this.dispatch("change",this);
 	}.bind(this);
 
 	this.update = function(e){
-		//console.log("reo-manager update");
+		////("reo-manager update");
 		this.dispatch("update",this);
 	}.bind(this);
 
@@ -3605,14 +3591,118 @@ function ReoManager(arg_body){
 
 	});
 	this.create();
-};var rman = new ReoManager(document.querySelector("#reorows"));
-rman.on("change",mainUpdateListener);
+};
+
+
+// #########		 Crawling:.\ProTips.js		#########
+
+function ProTips(arg_body){
+	this.body = arg_body;
+	this.tips_div = this.body.querySelector(".tips");
+	this.feedback_div = this.body.querySelector(".feedback");
+	this.tips = [];
+
+	this.add = function(target, tip){
+		this.tips.push({target:target, tip:tip});
+		target.addEventListener("mouseover",this.over);
+		target.addEventListener("mouseout",this.out);
+	}.bind(this);
+
+	this.addElemSelector = function(elem,selector,tip){
+		var els = elem.querySelectorAll(selector);
+
+		for(var i = 0; i<els.length; i++){
+			this.add(els[i],tip);
+		}
+
+	}.bind(this);
+
+	this.tip_from_target = function(target){
+
+		for(var i = 0; i<this.tips.length; i++){
+			if(this.tips[i].target === target) return this.tips[i].tip;
+		}
+
+		return undefined;
+	}.bind(this);
+
+	this.over	= function(e){
+		var t = e.target;
+
+		while(this.tip_from_target(t) === undefined && t !== document.body){
+			t = t.parentElement;
+		}
+
+		this.tips_div.innerHTML = "Pro-tip: "+this.tip_from_target(t);
+	}.bind(this);
+
+	this.out		= function(e){
+		this.tips_div.innerHTML = "";
+	}.bind(this);
+	this.add(this.body,"Roll your mouse over something to get a tooltip here!");
+
+	this.grab = function(elem){
+		var els = elem.querySelectorAll("*");
+
+		for(var i = 0;i<els.length;i++){
+
+			if(els[i].getAttribute("data-tooltip")){
+				this.add(els[i],els[i].getAttribute("data-tooltip"));
+			}
+
+		}
+
+	}.bind(this);
+}
+var vin = {};
+vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm", "infos/Ln.htm", "varinfoiframe");
+vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm", "infos/b.htm", "varinfoiframe");
+vin.D      = new VarInput('D' , "$$$D$$$" , "number" , 600, "mm", "infos/D.htm", "varinfoiframe");
+vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm", "infos/cover.htm", "varinfoiframe");
+vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "", "infos/eclass.htm", "varinfoiframe",["A1","A2","B1","B2","C1","C2"]);
+vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 16, 20, 24, 28, 32, 36, 40]);
+vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;", "infos/rhoc.htm", "varinfoiframe");
+vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa", "infos/fc.htm", "varinfoiframe",[20, 25, 32, 40, 50, 65, 80, 100]);
 
 for(var i in vin){
 	vin[i].appendTo(document.querySelector("#invardivdiv"));
 	vin[i].on("change",mainUpdateListener);
 }
 
+var vin_tips = new ProTips(document.querySelector("#invar_protips"));
+vin_tips.add(vin.b.body,"test")
+
+vin.b.validate = function(e){
+	//var e = {value:this.value, error:[], warning:[], info:[]};
+
+	if(e.value%5!==0){
+		e.error.push("b should be a rounded to the nearest 5mm");
+	}
+
+
+	if(e.value<100){
+		e.value=100;
+	}
+
+
+	if(e.value>3000){
+		e.value=3000;
+	}
+
+	return e;
+}
+
+var rman = new ReoManager(document.querySelector("#reorows"));
+rman.on("change",mainUpdateListener);
+var reo_tips = new ProTips(document.querySelector("#reo_protips"));
+reo_tips.grab(reo_tips.body.parentElement);
+reo_tips.addElemSelector(rman.body,".more","Add more reo to this layer. <i>Layers touching the top or bottom may have more than 2 bars.</i>");
+reo_tips.addElemSelector(rman.body,".less","Remove some reo from this layer. <i>Layers touching the top or bottom may have more than 2 bars.</i>");
+reo_tips.addElemSelector(rman.body,".enabled","Enable/Disable this layer");
+reo_tips.addElemSelector(rman.body,".area","Cross section area of this layer");
+reo_tips.addElemSelector(rman.body,".offset","Space between this layer and the next");
+reo_tips.addElemSelector(rman.body,".from","Placement of the reo."); // TODO make this better.
+reo_tips.addElemSelector(rman.body,".selected","Include this area in the 'Sum/Avg' column below");
 // Create global beam object
 var b = new Beam();
 
@@ -3631,10 +3721,10 @@ function intakeBeamValues(){
 
 function outputCalculations(){
 
-	function f(n){
+	function f(n, did){
 
 		if(typeof n == "number" && !isNaN(n)){
-			return n.toFixed(0)
+			return n.toFixed(did || 0)
 
 		}else{
 			return "--"
@@ -3646,10 +3736,11 @@ function outputCalculations(){
 	calc.push("alpha2: "	+b.alpha2.toFixed(2)		);
 	calc.push("gamma: "	+b.gamma.toFixed(2)		);
 	calc.push("");
+	calc.push("d: (Centroid depth of tensile steel) "	+f(b.Ts_centroid_depth)+" mm"		);
+	calc.push("k: "	+f(b.k,3)+""		);
 	calc.push("dn: "	+f(b.dn)+" mm"		);
 	calc.push("Muo: "	+f(b.Muo)+" kNm");
-	calc.push("Muo min: "	+f(b.Muo_min)+" kNm");
-	calc.push("Ast min (Alternative to meeting Muo_min): "	+f(b.Muo_min_Ast_min)+" mm^2");
+	calc.push("MINIMUMS: Muo_min: "	+f(b.Muo_min)+" kNm  OR Ast_min: "+f(b.Muo_min_Ast_min)+" mm^2");
 	calc.push("");
 	calc.push("Ag: "	+f(b.Ag)+" mm^2");
 	calc.push("Ast: "	+f(b.Ast)+" mm^2");
@@ -3758,11 +3849,6 @@ function setErrorList(list){
 //##### Tooltips ###################################################3
 //##################################################################3
 
-setTimeout(function(){
-	addTooltipTo(document.querySelector("#invardiv"),document.querySelector("#invardivtooltipbar"));
-	addTooltipTo(document.querySelector("#reoinputoutputdiv"),document.querySelector("#reoinputoutputtooltipbar"));
-},1500);
-
 function addTooltipTo(d, output){
 	var els = d.querySelectorAll("*");
 
@@ -3770,7 +3856,7 @@ function addTooltipTo(d, output){
 
 		if(els[i].webkitShadowRoot!=null){
 			addTooltipTo(els[i].webkitShadowRoot, output);
-			//console.log(els[i]);
+			////(els[i]);
 
 		}else if(els[i].getAttribute("data-tooltip")){
 			els[i].output = output;
@@ -3842,42 +3928,7 @@ document.body.addEventListener("mousewheel",function(e){
 	}
 
 });
-//##########################################################
-//#### Contextual Help View ################################
-//##########################################################
-
-(function(){
-	var xins = document.querySelectorAll("x-input");
-
-	for(var i = 0;i<xins.length;i++){
-
-		xins[i].addEventListener("mousedown",function(e){
-			setHelpLoc("infos/"+e.target.id+".htm");
-		})
-	}
-
-})()
-var _current_help_url = "";
-
-function setHelpLoc(url){
-	// console.log(_current_help_url,document.querySelector("#varinfoiframe").contentWindow.location.pathname)
-	// console.log(document.querySelector("#varinfoiframe").getAttribute("src"),url)
-	// console.log(_current_help_url === document.querySelector("#varinfoiframe").contentWindow.location.pathname)
-	// console.log(document.querySelector("#varinfoiframe").getAttribute("src") === url)
-	if(document.querySelector("#varinfoiframe").contentWindow.location.pathname !== _current_help_url ||
-
-			document.querySelector("#varinfoiframe").getAttribute("src")!==url){
-
-		document.querySelector("#varinfoiframe").onload = function(){
-			_current_help_url = document.querySelector("#varinfoiframe").contentWindow.location.pathname;
-		};
-		document.querySelector("#varinfoiframe").setAttribute("src",url);
-	}
-
-}
-
-var ifrm = document.querySelector("#varinfoiframe");
-var rm = document.querySelector("reo-manager");</script>
+</script>
 	</html>
 			<!--
 		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">

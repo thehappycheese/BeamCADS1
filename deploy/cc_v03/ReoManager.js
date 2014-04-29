@@ -90,6 +90,8 @@ function ReoManager(arg_body){
 		var last_low_depth = D-cover-df;
 		var last_high_depth = cover+df;
 		
+		console.log(rs);
+		
 		for(var i = rs.length-1;i>=0;i--){
 			if(rs[i].from === "lowest"){
 				if(rs[i] === row){
@@ -99,7 +101,7 @@ function ReoManager(arg_body){
 				}
 			}
 		}
-		for(var i = 0; i<rs.length-1; i--){
+		for(var i = 0; i<rs.length-1; i++){
 			if(rs[i].from === "highest"){
 				if(rs[i] === row){
 					return last_high_depth + rs[i].offset + rs[i].diameter/2;

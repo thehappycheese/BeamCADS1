@@ -100,7 +100,6 @@ function drawCrossSection(ctx, b){
 		//ctx.fillCircle( w/2-scaled_cover-scaled_dfitments, -h/2+scaled_cover+scaled_dfitments, scaled_dfitments/2);
 		
 		
-		console.log((-b.b/2 + b.cover + b.df/2)	*scale)
 		drawFitment(ctx,
 						(-b.b/2 + b.cover + b.df/2)	*scale,
 						(-b.D/2 + b.cover + b.df/2)	*scale,
@@ -136,9 +135,12 @@ function drawCrossSection(ctx, b){
 			ctx.fillText(layer.number+"N"+layer.diameter,w/2+10,  offsety-h/2);
 		}	
 	}catch(e){
+		
+		throw e
+	}finally{
 		ctx.restore();
-		throw e;
 	}
+	
 	
 	
 }
@@ -154,15 +156,12 @@ console.log(x,y,w,h,rad,fitmentlen,scaled_dfitments)
 		ctx.strokeStyle = "white";
 		ctx.lineWidth = Math.ceil(scaled_dfitments)-2;
 		do_draw();
-		
-		do_draw();
 
 	}else{
 		ctx.lineCap = "round";
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = 0.5;// Math.max(0.5,Math.floor(scaled_dfitments));
-		draw1();
-		draw2();
+		do_draw();
 	}
 
 	function do_draw(){
