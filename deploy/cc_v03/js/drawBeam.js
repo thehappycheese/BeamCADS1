@@ -1,5 +1,5 @@
-///* ../jslib/Vector.js
-///* ../jslib/CADCanvas.js
+///* Vector.js
+///* CADCanvas.js
 
 
 

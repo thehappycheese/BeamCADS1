@@ -1,4 +1,3 @@
-///* sylvester.src.js
 ///* Vector.js
 
 

@@ -1,4 +1,3 @@
-///~ ../jslib/Vector.js
 ///* drawBeam.js
 ///* Beam.js
 ///* varinput.js
