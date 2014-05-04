@@ -16,7 +16,9 @@ local.properties
 .classpath
 .settings/
 .loadpath
-**/sass-cache/
+**/.sass-cache/
+**/.sass-cache/**
+.scssc
 **/mathjax/
 
 # External tool builders
