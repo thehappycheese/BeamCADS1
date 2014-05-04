@@ -145,9 +145,7 @@ function drawCrossSection(ctx, b){
 	
 }
 function drawFitment(ctx,x,y,w,h,rad,fitmentlen,scaled_dfitments){
-console.log(x,y,w,h,rad,fitmentlen,scaled_dfitments)
-	if(true){
-	console.log("d")
+	if(scaled_dfitments>=3){
 		ctx.lineCap = "square";
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = Math.ceil(scaled_dfitments);
@@ -158,9 +156,9 @@ console.log(x,y,w,h,rad,fitmentlen,scaled_dfitments)
 		do_draw();
 
 	}else{
-		ctx.lineCap = "round";
+		ctx.lineCap = "square";
 		ctx.strokeStyle = "black";
-		ctx.lineWidth = 0.5;// Math.max(0.5,Math.floor(scaled_dfitments));
+		ctx.lineWidth = scaled_dfitments;
 		do_draw();
 	}
 

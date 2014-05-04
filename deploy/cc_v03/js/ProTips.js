@@ -53,5 +53,24 @@ function ProTips(arg_body){
 		}
 	}.bind(this);
 	
+	this.setError=function(error_list){
+		var out = ""
+		if(error_list.length>0){
+			out += '<ul class="errorlist"><li>'+error_list.join("</li><li>")+'</li></ul>';
+		}
+		this.feedback_div.innerHTML = out;
+		this.updateMathJax();
+	}.bind(this);
+	
+	this.updateMathJax = function(){
+		if(document.body.contains(this.body)){
+			try{
+				MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.body]);
+			}catch(e){
+				// Fail silently
+			}
+		}
+	}.bind(this);
+	
 	
 }

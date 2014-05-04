@@ -77,12 +77,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	this.configureEvents = function(){
 		
 		this.valueInput.addEventListener("change",function(e){
-			var val = {value:this.value, error:[], warning:[], info:[]};
-			val = this.validate(val);
-			this.value = val.value;
-			if(val.error.length>0){
-				this.valueInput.setCustomValidity("NO")
-			}
+			this.value = this.getValidity().value;
 			this.update();
 			this.change();
 		}.bind(this));
@@ -114,6 +109,11 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	
 	
 	this.update = function(){
+		if(!this.valid){
+			this.valueInput.setCustomValidity("invalid");
+		}else{
+			this.valueInput.setCustomValidity("");
+		}
 		this.dispatch("update",this);
 	}.bind(this);
 	this.change = function(){
@@ -142,14 +142,25 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		}
 	}.bind(this);
 	
+	this.getValidity = function(){
+		var val = {value:this.value, error:[], warning:[], info:[]};
+		return this.validate(val);
+	}
+	
 	
 	// ##########################################################################################
 	// 			GETTERS AND SETTERS
 	// ##########################################################################################
+	Object.defineProperty(this,"valid",{
+		get:function(){
+			var val = {value:this.value, error:[], warning:[], info:[]};
+			return this.validate(val).error.length==0;
+		}.bind(this)
+	});
 	
 	Object.defineProperty(this,"notation",{
 		get:function(){
-			this._notation;
+			return this._notation;
 		}.bind(this),
 		set:function(newval){
 			this.notationAnchor.innerHTML	= newval;
@@ -158,7 +169,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	});
 	Object.defineProperty(this,"target",{
 		get:function(){
-			this.notationAnchor.target;
+			return this.notationAnchor.target;
 		}.bind(this),
 		set:function(newval){
 			this.notationAnchor.target	= newval;
@@ -166,7 +177,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	});
 	Object.defineProperty(this,"href",{
 		get:function(){
-			this.notationAnchor.href;
+			return this.notationAnchor.href;
 		}.bind(this),
 		set:function(newval){
 			this.notationAnchor.href	= newval;

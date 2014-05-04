@@ -22,7 +22,7 @@ vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm", "infos/b.htm",
 vin.D      = new VarInput('D' , "$$$D$$$" , "number" , 600, "mm", "infos/D.htm", "varinfoiframe");
 vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm", "infos/cover.htm", "varinfoiframe");
 vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "", "infos/eclass.htm", "varinfoiframe",["A1","A2","B1","B2","C1","C2"]);
-vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 16, 20, 24, 28, 32, 36, 40]);
+vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 13, 14, 15, 15, 17, 18, 19, 20]); // TODO: SUPERVISOR Round bars http://www.onesteel.com/products.asp?action=showProduct&productID=52&categoryName=Bar%20Sections
 vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;", "infos/rhoc.htm", "varinfoiframe");
 vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa", "infos/fc.htm", "varinfoiframe",[20, 25, 32, 40, 50, 65, 80, 100]);
 for(var i in vin){
@@ -44,14 +44,51 @@ vin_tips.add(vin.b.body,"test")
 
 vin.b.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
+	var link = '<a href="infos/b.htm" target="varinfoiframe">$$$b$$$</a> '
+	
 	if(e.value%5!==0){
-		e.error.push("b should be a rounded to the nearest 5mm");
+		e.error.push(link+"Round to nearest 5mm.");
+		e.value = Math.round(e.value/5)*5;
 	}
-	if(e.value<100){
-		e.value=100;
+	if(e.value<200){
+		e.error.push(link+"Beam not wide enough.");
+		e.value=200;
 	}
-	if(e.value>3000){
-		e.value=3000;
+	if(e.value>2000){
+		e.error.push(link+"Beam too wide.");
+		e.value=2000;
+	}
+	
+	
+	
+	
+	//8.9.2 Simply supported and continuous beams
+		// For a simply supported or continuous beam, the distance L_l between points at which lateral
+		// restraint is provided shall be such that L_l/bef does not exceed the lesser of 180bef/D and 60.
+		// Here we assume beam Ln == L_1
+	var breadth_on_depth = e.value/vin.D.value;
+	var length_on_breadth = vin.Ln.value/e.value;
+	if(length_on_breadth>Math.min(60,180*breadth_on_depth)){
+		e.warning.push(link+"L_n/b =  <b>"+length_on_breadth.toFixed(1)+"</b> > minimum(180*b/D , 60) = <b>"+Math.min(60,180*breadth_on_depth)+"</b> This beam is too slender! Assuming there is no lateral restraint on its length. See AS3600 8.9.2");
+	}// TODO: THIS CHECK HAS NO EFFECT!
+	
+	return e;
+}
+vin.D.validate = function(e){
+	//var e = {value:this.value, error:[], warning:[], info:[]};
+	var link = '<a href="infos/D.htm" target="varinfoiframe">$$$D$$$</a> '
+	
+	if(e.value%5!==0){
+		e.error.push(link+"Round to nearest 5mm.");
+		e.value = Math.round(e.value/5)*5;
+	}
+	if(e.value<200){
+		e.error.push(link+"Beam not deep enough.");
+		e.value=200;
+	}
+	if(e.value>1500){
+		e.error.push(link+"Beam too deep.");
+		e.value=1500;
 	}
 	return e;
 }
@@ -202,7 +239,17 @@ var cs_ctx = cs_canvas.getContext('2d');
 
 mainUpdateListener()
 function mainUpdateListener(e){
-	DoValidation(); // see validation.js
+	//DoValidation(); // see validation.js
+	var arr = [];
+	for(var i in vin){
+		var v = vin[i].getValidity()
+		if(v.error.length>0){
+			arr = arr.concat(v.error);
+		}
+	}
+	vin_tips.setError(arr);
+	
+	
 	intakeBeamValues();
 	outputCalculations();
 	outputReoSummary();
@@ -212,21 +259,6 @@ function mainUpdateListener(e){
 
 
 
-//###########################################################################################
-//###### validation error text box ###########################################################
-//###########################################################################################
-function setErrorList(list){
-	if(list===undefined || list.length==0){
-		document.querySelector("#errortr").style.display="none";
-	}else{
-		document.querySelector("#errortr").style.display="";
-		var out = '<h1 style="color:darkred;">Error</h1>'
-		for(var i = 0;i<list.length;i++){
-			out+="<p>"+list[i]+"</p>";
-		}
-		document.querySelector("#errortd").innerHTML = out;
-	}
-}
 //##################################################################3
 //##### Tooltips ###################################################3
 //##################################################################3
