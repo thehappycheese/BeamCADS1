@@ -66,6 +66,31 @@ h3{
 
 
 
+
+.CalcDiv{
+	width:100%;
+	border:1px solid grey;
+	margin:5px 0px;
+}
+.CalcDiv :first-child{
+	height:20px;
+	padding:2px;
+	background-color:red;
+	cursor:pointer;
+}
+.CalcDiv :first-child:hover{
+	background-color:$pri-5;
+}
+.CalcDiv :last-child{
+	min-height:20px;
+	padding:5px;
+	background-color:black;
+}
+
+
+
+
+
 input:invalid{
 	background-color:$sec-b-1;
 	color:red;

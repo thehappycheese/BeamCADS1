@@ -5,6 +5,7 @@
 ///* reoinput.js
 ///* ReoManager.js
 ///* ProTips.js
+///* CalcDiv.js
 
 
 
@@ -133,7 +134,6 @@ function intakeBeamValues(){
 
 
 function outputCalculations(){
-
 	function f(n, did){
 		if(typeof n == "number" && !isNaN(n)){
 			return n.toFixed(did || 0)
@@ -145,6 +145,15 @@ function outputCalculations(){
 	calc.push("alpha2: "	+b.alpha2.toFixed(2)		);
 	calc.push("gamma: "	+b.gamma.toFixed(2)		);
 	calc.push("");
+	
+	
+	
+	
+	var alpha2calc = new CalcDiv();
+	alpha2calc.appendTo(document.querySelector("#calcdivcontent"));
+	return;
+	
+	
 	
 	calc.push("d: (Centroid depth of tensile steel) "	+f(b.Ts_centroid_depth)+" mm"		);
 	calc.push("k: "	+f(b.k,3)+""		);

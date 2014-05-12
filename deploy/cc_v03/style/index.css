@@ -21,6 +21,25 @@ h3 {
   font-size: 10pt;
   margin: 0; }
 
+.CalcDiv {
+  width: 100%;
+  border: 1px solid grey;
+  margin: 5px 0px; }
+
+.CalcDiv :first-child {
+  height: 20px;
+  padding: 2px;
+  background-color: red;
+  cursor: pointer; }
+
+.CalcDiv :first-child:hover {
+  background-color: #f6feff; }
+
+.CalcDiv :last-child {
+  min-height: 20px;
+  padding: 5px;
+  background-color: black; }
+
 input:invalid {
   background-color: #fffba6;
   color: red; }
