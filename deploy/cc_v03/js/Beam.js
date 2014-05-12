@@ -212,12 +212,17 @@ function Beam(){
 	Object.defineProperty(this,"Ts_centroid_depth",{get:function(){
 		return this.Ts_centroid_depth_from_dn(this.dn);
 	}.bind(this)});
+	Object.defineProperty(this,"d",{get:function(){
+		return this.Ts_centroid_depth_from_dn(this.dn);
+	}.bind(this)});
 	Object.defineProperty(this,"Cs_centroid_depth",{get:function(){
 		return this.Cs_centroid_depth_from_dn(this.dn);
 	}.bind(this)});
 	Object.defineProperty(this,"Cc_centroid_depth",{get:function(){
 		return this.Cc_centroid_depth_from_dn(this.dn)
 	}.bind(this)});
+	
+	
 	
 	
 	this.Ts_centroid_depth_from_dn = function(dn){

@@ -72,19 +72,29 @@ h3{
 	border:1px solid grey;
 	margin:5px 0px;
 }
-.CalcDiv :first-child{
-	height:20px;
-	padding:2px;
-	background-color:red;
+.CalcDiv .topdiv{
+	font-size:120%;
+	line-height:25px;
+	height:25px;
+	padding:5px;
 	cursor:pointer;
 }
-.CalcDiv :first-child:hover{
+.CalcDiv .topdiv:hover{
 	background-color:$pri-5;
 }
-.CalcDiv :last-child{
+.CalcDiv .topdiv .MathJax{
+	vertical-align:bottom;
+}
+.CalcDiv .contentdiv{
 	min-height:20px;
 	padding:5px;
-	background-color:black;
+	border-top: 1px dashed lightgrey;
+}
+.CalcDiv .contentdiv p{
+	margin: 0;
+	margin-left: 20px;
+	margin-top:0.5em;
+	padding:0;
 }
 
 

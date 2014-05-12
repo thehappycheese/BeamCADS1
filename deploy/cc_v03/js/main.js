@@ -132,11 +132,11 @@ function intakeBeamValues(){
 	b.reo		= rman.value;
 }
 
-
+var calcs = {};
 function outputCalculations(){
-	function f(n, did){
-		if(typeof n == "number" && !isNaN(n)){
-			return n.toFixed(did || 0)
+	function format(value, decimals){
+		if(typeof value == "number" && !isNaN(value)){
+			return n.toFixed(decimals || 0)
 		}else{
 			return "--"
 		}
@@ -146,11 +146,104 @@ function outputCalculations(){
 	calc.push("gamma: "	+b.gamma.toFixed(2)		);
 	calc.push("");
 	
+	var calculationdiv = document.querySelector("#calcdivcontent");
+	
+	var b_dn= b.dn;
 	
 	
 	
-	var alpha2calc = new CalcDiv();
-	alpha2calc.appendTo(document.querySelector("#calcdivcontent"));
+	
+	
+	
+	// ALPHA 2;
+	calcs.alpha2 = calcs.alpha2 || new CalcDiv();
+	calcs.alpha2.title = "$$$\\alpha_2 ~~=~~ "+b.alpha2.toFixed(2)+"$$$";
+	calcs.alpha2.content = "";
+	calcs.alpha2.addParagraph("From As3600 Section 8.1.3(ii)")//Verify
+	calcs.alpha2.addParagraph("$$$\\alpha_2 = 1.0 - 0.003 f'_c$$$")//Verify
+	calcs.alpha2.addParagraph("$$$~~= 1.0-0.003\\times "+b.fc.toFixed(0)+"~=~ "+(1-0.003*b.fc).toFixed(2)+"$$$")//Verify
+	calcs.alpha2.addParagraph("where $$$0.67 \\le \\alpha_2 \\le 0.85 $$$")//Verify
+	calcs.alpha2.addParagraph(" &there4; $$$\\alpha_2 = "+b.alpha2.toFixed(2)+" $$$")//Verify
+	calcs.alpha2.appendTo(calculationdiv);
+	// GAMMA;
+	calcs.gamma = calcs.gamma || new CalcDiv();
+	calcs.gamma.title = "$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$";
+	calcs.gamma.content = "";
+	calcs.gamma.addParagraph("From As3600 Section 8.1.3(ii)")//Verify
+	calcs.gamma.addParagraph("$$$\\gamma = 1.05 - 0.007 f'_c$$$")//Verify
+	calcs.gamma.addParagraph("$$$~~= 1.05-0.007\\times "+b.fc.toFixed(0)+"~=~ "+(1.05-0.007*b.fc).toFixed(2)+"$$$")//Verify
+	calcs.gamma.addParagraph("&nbsp;")//Verify
+	calcs.gamma.addParagraph("where $$$0.67 \\le \\gamma \\le 0.85 $$$")//Verify
+	calcs.gamma.addParagraph(" &there4; $$$\\gamma = "+b.gamma.toFixed(2)+" $$$")//Verify
+	calcs.gamma.appendTo(calculationdiv);
+	
+	//d
+	
+	calcs.d = calcs.d || new CalcDiv();
+	calcs.d.title = "$$$d ~~=~~ "+b.d.toFixed(0)+"$$$";
+	calcs.d.content = "";
+	calcs.d.addParagraph("d is the depth to the <b>centroid of the tension steel</b> from the upper surface of the beam.")
+	//calcs.d.addParagraph("d is found by: (sum of (tension steel layer depth)*(tension steel layer area)) divide by (sum of(tension steel layer area))");
+	calcs.d.addParagraph("$$ \\sum{d_i \\times A_{st i}}\\over\\sum{A_{st i}} $$");
+	calcs.d.addParagraph("<b>Note:</b> The 'top' reo layer may or may not be in tension! <i>Be sure to check that you assume correctly in hand calculations</i>. (Once you have calculated Depth to Neutral Axis (dn), all layers below dn are in tension.)")
+	
+	var sum_dast_sym = "";
+	var sum_dast_val = "";
+	var sum_dast_res = 0;
+	
+	var sum_ast_sym = "";
+	var sum_ast_val = "";
+	var sum_ast_res = 0;
+	var discluded_layers = [];
+	
+	for(var i = 0;i<b.reo.length;i++){
+		
+		if(b.layer_strain_from_layer_dn(b.reo[i],b_dn)<=0){
+			discluded_layers.push(i);
+			continue;
+		}
+		
+		sum_dast_sym += "d_"+i+" "+"A_{st"+i+"}";
+		sum_dast_val += b.reo[i].depth.toFixed(0)+" \\times "+b.reo[i].area.toFixed(0);
+		sum_dast_res +=b.reo[i].depth*b.reo[i].area
+
+		sum_ast_sym += "A_{st"+i+"}";
+		sum_ast_val += b.reo[i].area+"";
+		sum_ast_res += b.reo[i].area;
+		
+		if(i!=b.reo.length-1){
+			sum_dast_sym+="~+~";
+			sum_dast_val+="~+~";
+			sum_ast_sym+="~+~";
+			sum_ast_val+="~+~";
+		}
+	}
+	calcs.d.addParagraph("$$d = {{"+sum_dast_sym+"}\\over{"+sum_ast_sym+"}} = {{"+sum_dast_val+"}\\over{"+sum_ast_val+"}} = {{"+(sum_dast_res/sum_ast_res).toFixed(0)+"}}mm$$")
+	if(discluded_layers.length){
+		calcs.d.addParagraph("<b>Note:</b> layers  <b>"+discluded_layers.join(", ")+"</b> are compressive and have been excluded.");
+	}
+	calcs.d.appendTo(calculationdiv);
+	
+	
+	// DN;
+	calcs.dn = calcs.dn || new CalcDiv();
+	calcs.dn.title = "$$$dn ~~=~~ "+b.dn.toFixed(0)+"$$$";
+	calcs.dn.content = "";
+	calcs.dn.addParagraph("Depth to neutral axis (dn) is calculated by the 'Rectangular Stress Block' Method.")
+	calcs.dn.addParagraph("To find this depth imagine a see-saw with the Concrete Compression (Cc) on one side and the Steel Tension (Ts) on the other side. We must find the point on the see-saw where these two forces balance.");
+	calcs.dn.addParagraph("That is $$$ C_c = T_s $$$ in other words $$$\\sum F_x = 0$$$");
+	calcs.dn.addParagraph("In this case we must also consider the compression steel (Cs). In hand calculations it may be left out when it does not contribute significantly to the capacity, but this program cannot tell the difference.");
+	calcs.dn.addParagraph("That is $$$ C_c + C_s = T_s $$$");
+	calcs.dn.addParagraph("The equations are developed as follows:");
+	calcs.dn.addParagraph("$$$C_c = $$$");
+	calcs.dn.addParagraph(" &there4; $$$d_n = "+b.dn.toFixed(0)+" $$$")//Verify
+	calcs.dn.appendTo(calculationdiv);
+	
+	
+	
+	
+	
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub,calculationdiv]);
 	return;
 	
 	

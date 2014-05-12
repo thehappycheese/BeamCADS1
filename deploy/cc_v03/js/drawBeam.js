@@ -128,11 +128,11 @@ function drawCrossSection(ctx, b){
 
 
 				
-
+			ctx.font = "13px sans-serif";
 			ctx.fillStyle = "black";
 			ctx.textAlign = "start";
 			ctx.textBaseline = "middle";
-			ctx.fillText(layer.number+"N"+layer.diameter,w/2+10,  offsety-h/2);
+			ctx.fillText(i+": "+layer.number+"N"+layer.diameter+"  d="+layer.depth+"mm",w/2+10,  offsety-h/2);
 		}	
 	}catch(e){
 		

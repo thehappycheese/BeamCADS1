@@ -76,7 +76,7 @@ function CalcDiv(){
 		}.bind(this)
 	})
 	
-	this.addParagraph = function(conent){
+	this.addParagraph = function(content){
 		var newp = document.createElement("p");
 		newp.innerHTML = content;
 		this.contentdiv.appendChild(newp);
