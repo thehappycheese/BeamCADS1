@@ -365,6 +365,14 @@ input:invalid{
 #varinfodiv{
 	flex: 1 0 500px;
 	padding:0;
+	nav{
+		height:30px;
+		width:100px;
+		padding:5px;
+		button{
+			width:30px;
+		}
+	}
 }
 
 

@@ -10,7 +10,8 @@
 			messageStyle: "none"
 		});
 	</script>
-	<script type="text/javascript" src="js/mathjax/MathJax.js"></script>
+	<script type="text/javascript"  src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.3-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<!--<script type="text/javascript" src="js/mathjax/MathJax.js"></script>-->
 	<title> - Beam Calc - </title>
 </head>
 
@@ -41,15 +42,15 @@
 		</div>
 		
 		<div id="varinfodiv" class="bmpblock" >
-			<nav style="height:25px;display:flex;flex-wrap:wrap;justify-content:space-between;">
+			<div style="height:25px;display:flex;flex-wrap:wrap;justify-content:space-between;">
 				<h2>Variable Reference Information</h2>
-				<div style="flex: 0 0 100px;padding:5px;">
+				<nav>
 					<button onClick="document.querySelector('#varinfoiframe').contentWindow.history.back();"><img src="img/back.png"/></button>
 					<button onClick="document.querySelector('#varinfoiframe').src='infos/index.htm'"><img src="img/home.png"/></button>
 					<button onClick="document.querySelector('#varinfoiframe').contentWindow.history.forward();"><img src="img/forwards.png"/></button>
-				</div>
-			</nav>
-			<iframe id="varinfoiframe" src="infos/index.htm" style="border:none;width:calc(100% - 10px);height:460px;margin:5px;"></iframe>
+				</nav>
+			</div>
+			<iframe id="varinfoiframe" name="varinfoiframe" src="infos/index.htm" style="border:none;width:calc(100% - 10px);height:460px;margin:5px;"></iframe>
 		</div>
 		
 		
