@@ -132,8 +132,21 @@ function intakeBeamValues(){
 	b.reo		= rman.value;
 }
 
+function clearCalculations(){
+	var calculationdiv = document.querySelector("#calcdivcontent");
+	calculationdiv.innerHTML = "";
+	var but = document.createElement("button");
+	but.innerHTML = "Click here to show the Calculation Process";
+	but.onclick = function(){
+		outputCalculations()
+	}
+	calculationdiv.appendChild(but);
+}
+
 var calcs = {};
 function outputCalculations(){
+	var calculationdiv = document.querySelector("#calcdivcontent");
+	calculationdiv.innerHTML = "";
 	function format(value, decimals){
 		if(typeof value == "number" && !isNaN(value)){
 			return n.toFixed(decimals || 0)
@@ -146,7 +159,6 @@ function outputCalculations(){
 	calc.push("gamma: "	+b.gamma.toFixed(2)		);
 	calc.push("");
 	
-	var calculationdiv = document.querySelector("#calcdivcontent");
 	
 	var b_dn= b.dn;
 	
@@ -174,11 +186,13 @@ function outputCalculations(){
 	calcs.gamma.addParagraph("$$$\\begin{aligned}\\gamma &= 1.05 - 0.007 f'_c \\\\ "+
 							 "&= 1.05-0.007\\times "+b.fc.toFixed(0)+"\\\\ "+
 							 "&=~ "+(1.05-0.007*b.fc).toFixed(2)+"\\end{aligned}$$$")//Verify
-	calcs.gamma.addParagraph("&nbsp;")//Verify
+	calcs.gamma.addSpace()//Verify
 	calcs.gamma.addParagraph("where $$$0.67 \\le \\gamma \\le 0.85 $$$")//Verify
 	calcs.gamma.addParagraph(" &there4; $$$\\gamma = "+b.gamma.toFixed(2)+" $$$")//Verify
 	calcs.gamma.appendTo(calculationdiv);
 	
+	
+	// TODO: disegaurd bars less than half the diameter of the largets bar!
 	//d
 	
 	calcs.d = calcs.d || new CalcDiv();
@@ -205,11 +219,11 @@ function outputCalculations(){
 			continue;
 		}
 		
-		sum_dast_sym += "d_"+i+" "+"A_{st"+i+"}";
+		sum_dast_sym += "d_"+i+" "+"A_{st "+i+"}";
 		sum_dast_val += b.reo[i].depth.toFixed(0)+" \\times "+b.reo[i].area.toFixed(0);
 		sum_dast_res +=b.reo[i].depth*b.reo[i].area
 
-		sum_ast_sym += "A_{st"+i+"}";
+		sum_ast_sym += "A_{st "+i+"}";
 		sum_ast_val += b.reo[i].area+"";
 		sum_ast_res += b.reo[i].area;
 		
@@ -229,7 +243,7 @@ function outputCalculations(){
 	
 	// DN;
 	calcs.dn = calcs.dn || new CalcDiv();
-	calcs.dn.title = "$$$dn ~~=~~ "+b.dn.toFixed(0)+"$$$";
+	calcs.dn.title = "$$$d_n ~~=~~ "+b.dn.toFixed(0)+"$$$";
 	calcs.dn.content = "";
 	calcs.dn.addParagraph("Depth to neutral axis (dn) is calculated by the 'Rectangular Stress Block' Method.")
 	calcs.dn.addParagraph("To find this depth imagine a see-saw with the Concrete Compression (Cc) on one side and the Steel Tension (Ts) on the other side. We must find the point on the see-saw where these two forces balance.");
@@ -237,8 +251,11 @@ function outputCalculations(){
 	calcs.dn.addParagraph("In this case we must also consider the compression steel (Cs). In hand calculations it may be left out when it does not contribute significantly to the capacity, but this program cannot tell the difference.");
 	calcs.dn.addParagraph("That is $$$ C_c + C_s = T_s $$$");
 	calcs.dn.addParagraph("The equations are developed as follows:");
-	calcs.dn.addParagraph("$$$C_c = $$$");
-	calcs.dn.addParagraph(" &there4; $$$d_n = "+b.dn.toFixed(0)+" $$$")//Verify
+	calcs.dn.addParagraph("$$\\begin{aligned} C_c &= \\alpha_2 f'_c \\times (b)(\\gamma d_n) \\\\ "+
+							"T_s &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for tensile steel layers}\\\\"+
+							"C_s &= E_s \\sum(\\epsilon_{s j} A_{s j}) &\\text{for compressive steel layers}\\end{aligned}$$");
+	calcs.dn.addParagraph("The strain of each steel layer ($$$\\epsilon_{s i}$$$) is found by similar triangles from the following diagram:");
+	
 	calcs.dn.appendTo(calculationdiv);
 	
 	
@@ -355,7 +372,8 @@ function mainUpdateListener(e){
 	
 	
 	intakeBeamValues();
-	outputCalculations();
+	//outputCalculations();
+	clearCalculations();
 	outputReoSummary();
 	drawCrossSection(cs_ctx,b)
 }

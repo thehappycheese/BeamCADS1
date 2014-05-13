@@ -34,10 +34,15 @@ function CalcDiv(){
 		
 	}.bind(this);
 	
+	
+	var _listeners_registered = false;
 	this.registerEvents = function(){
-		this.topdiv.addEventListener("click",function(e){
-			this.collapsed = !this.collapsed;
-		}.bind(this));
+		if(!_listeners_registered){
+			_listeners_registered = true;
+			this.topdiv.addEventListener("click",function(e){
+				this.collapsed = !this.collapsed;
+			}.bind(this),false);
+		}
 	}.bind(this);
 	
 	
@@ -79,6 +84,11 @@ function CalcDiv(){
 	this.addParagraph = function(content){
 		var newp = document.createElement("p");
 		newp.innerHTML = content;
+		this.contentdiv.appendChild(newp);
+	}.bind(this);
+	this.addSpace = function(){
+		var newp = document.createElement("div");
+		newp.style.height = "5px";
 		this.contentdiv.appendChild(newp);
 	}.bind(this);
 	this.addElement = function(element){
