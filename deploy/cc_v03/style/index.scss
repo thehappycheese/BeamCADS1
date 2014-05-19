@@ -12,7 +12,7 @@ $sec-a-2: #AD94C5;
 $sec-a-3: #7940AD;
 $sec-a-4: #EBD6FF;
 $sec-a-5: #FBF7FF;
- 
+
 $sec-b-1: #FFFBA6;
 $sec-b-2: #C5C290;
 $sec-b-3: #ADA83D;
@@ -42,9 +42,45 @@ $col-light-bg: #FAFAFA;
 body{
 	font-size:16px;
 	margin:0;
-	padding: 5px 20px;
-	background: url("../img/Clouds.png"), darken($pri-5,3%);
+	padding: 5px 5px;
+	//background: url("../img/Clouds.png"), darken($pri-5,3%);
+	background:black;
+	display:flex;
+	flex-direction:row;
+	
 }
+
+#maincol{
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:center;
+	flex: 1 1 200px;
+	height: calc(100% - 10px);
+	overflow-y:scroll;
+	padding:5px;
+	background-color:0px;
+	box-shadow: inset 2px 2px 5px 0px black;
+}
+#secondarycol{
+	display:flex;
+	flex-direction:column;
+	display:flex;
+	flex: 0 0 500px;
+	height:100%;
+	margin-right:5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 h1, h2, h3, h4{
 	font-family:sans-serif;
 	font-weight:bold;
@@ -68,33 +104,45 @@ h3{
 
 
 .CalcDiv{
+	
 	width:100%;
 	border:1px solid grey;
 	margin:5px 0px;
-}
-.CalcDiv .topdiv{
-	font-size:120%;
-	line-height:25px;
-	height:25px;
-	padding:5px;
-	cursor:pointer;
-}
-.CalcDiv .topdiv:hover{
-	background-color:$pri-5;
-}
-.CalcDiv .topdiv .MathJax{
-	vertical-align:bottom;
-}
-.CalcDiv .contentdiv{
-	min-height:20px;
-	padding:5px;
-	border-top: 1px dashed lightgrey;
-}
-.CalcDiv .contentdiv p{
-	margin: 0;
-	margin-left: 20px;
-	margin-top:0.5em;
-	padding:0;
+	
+	.topdiv{
+		&:hover{
+			background-color:$pri-5;
+		}
+		.titlediv{
+		
+			font-size:120%;
+			line-height:25px;
+			height:25px;
+			padding:5px;
+			cursor:pointer;
+		
+			.MathJax{
+				vertical-align:bottom;
+			}
+			
+			button{
+				width:25px;
+			}
+			
+		}
+		
+	}
+	.contentdiv{
+		min-height:20px;
+		padding:5px;
+		border-top: 1px dashed lightgrey;
+		p{
+			margin: 0;
+			margin-left: 20px;
+			margin-top:0.5em;
+			padding:0;
+		}
+	}
 }
 
 
@@ -193,27 +241,28 @@ input:invalid{
 
 //////////////////////////////////
 .protip{
-	width:100%;
-	border-radius:4px;
-	background-color: $sec-b-4;
-	color:$pri-3/4;
-	border:1px solid grey;
-	margin-top:5px;
-	font-family:sans-serif;
-	line-height:16px;
-	font-size: 14px;
+	flex: 1 0 116px;
+	width:  100%;
+	margin: 5px 0;
+	font-family: sans-serif;
+	
+	
+	.tips, .feedback{
+		color:$pri-3/4;
+		padding:5px;
+		line-height: 16px;
+		font-size:	 14px;
+	}
 	.tips{
 		height:32px;
-		margin:2px;
-		padding:5px;
-		padding-left:55px;
-		text-indent:-50px;
+		background-color: $sec-b-4*2;
+		padding-left:4em;
+		text-indent:-4em;
 	}
 	.feedback{
-		border-top:1px solid lightgrey;
-		height:70px;
+		height:64px;
 		overflow-y:scroll;
-		margin:2px;
+		background-color: $sec-b-4;
 		.errorlist, .warninglist, .infolist{
 			list-style:none;
 			padding:0;
@@ -297,27 +346,28 @@ input:invalid{
 
 
 .bmpblock{
-	border: 1px solid $pri-2/3;
-	margin: 5px;
 	padding: 5px;
 	background-color:$sec-a-5*2;
-	box-shadow: 2px 2px 5px 0px black;//$pri-3*0.6;
 }
 /* Tex src = http://fc07.deviantart.net/fs19/i/2007/291/6/b/Concrete_Texture_by_MartinIsaac.jpg*/
 #apptitlebox{
 	display:flex;
+	flex: 0 0 35px;
+	flex-direction:row;
+	flex-wrap:wrap;
 	justify-content:space-around;
-	text-align:center;
+	align-content:space-around;
 	font-family:sans-serif;
 	font-weight:bold;
-	font-size:32px;
-	letter-spacing:1.6px;
 	color:$pri-3;
-	padding:10px;
-	border-radius:0;
+	h1{
+		flex: 0 1 150px;
+		height:30px;
+	}
 	button{
-		flex: 0 1 400px;
-		font-size:inherit;
+		flex: 0 1 100px;
+		height:30px;
+		font-size:15px;
 		color:inherit;
 	}
 }
@@ -325,7 +375,6 @@ input:invalid{
 
 
 #invardiv{
-	height:500px;
 	display:flex;
 	flex-wrap:wrap;
 	justify-content:space-around;
@@ -341,38 +390,11 @@ input:invalid{
 	align-content:space-around;
 	height: (36px+7px) * 8;
 }
-#invardiverrorbar{
-	width:100%;
-	height:4.4*16px;
-	font-size: 12px;
-	line-height:18px;
-	border: 1px grey solid;
-	background-color:$sec-b-4;
-	padding:5px;
-	border-radius:4px;
-	margin-top:5px;
-	font-family:sans-serif;
-	color:$comp-3;
-	overflow-y:scroll;
-}
 
-
-#invardiverrorbar ul li:before{
-	content:'\2639';
-	margin: 0 16px;
-}
 
 #varinfodiv{
-	flex: 1 0 500px;
+	flex: 1 1 500px;
 	padding:0;
-	nav{
-		height:30px;
-		width:100px;
-		padding:5px;
-		button{
-			width:30px;
-		}
-	}
 }
 
 
@@ -424,24 +446,4 @@ x-input{
 	margin: 8px 0;
 	font-size:16px;
 	line-height:16px;
-}
-
-
-.tooltipbar {
-	width:100%;
-	border:1px solid grey;
-	border-radius:4px;
-	//background: linear-gradient(to bottom, rgba(255,255,229,1) 0%,rgba(255,255,229,0) 2em);
-	background-color: $sec-b-4;
-	color:$pri-3/4;
-	margin-top:5px;
-	text-align:left;
-	font-family:sans-serif;
-	line-height:16px;
-	font-size: 14px;
-	height:32px;
-	padding:5px;
-	padding-left:55px;
-	text-indent:-50px;
-	
 }

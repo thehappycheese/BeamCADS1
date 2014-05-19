@@ -19,13 +19,26 @@
 
 
 <body>
-	<div id="apptitlebox" class="bmpblock">
-		<div>Beam Calc</div>
-		<button onclick="window.open('task/index.htm','_blank');">1. View Task</button>
-		<button onclick="window.open('https://www.surveymonkey.com/s/FBLMLHG','_blank');">2. Do Survey :)</button>
+	<div id="secondarycol">
+		<div id="apptitlebox" class="bmpblock">
+			
+			<button onclick="window.open('task/index.htm','_blank');">View Task</button>
+			<h1 style="display:block;padding:0;margin:0;">Beam Calc</h1>
+			<button onclick="window.open('https://www.surveymonkey.com/s/FBLMLHG','_blank');">Do Survey :)</button>
+		</div>
+		
+		
+		<div id="protips" class="protip">
+			<div class="tips"></div>
+			<div class="feedback"></div>
+		</div>
+		
+		<div id="varinfodiv" class="bmpblock" >
+			<iframe id="varinfoiframe" name="varinfoiframe" src="infos/index.htm" style="width:100%;border:none;"></iframe>
+		</div>
 	</div>
 	
-	<div style="display:flex;flex-wrap:wrap;justify-content:center;">	
+	<div id="maincol">	
 		
 		
 		<div id="invardiv" class="bmpblock">
@@ -33,27 +46,13 @@
 				<h2>General Variables</h2>
 			</div>
 			<div id="invardivdiv">
-				
+				<!--
+					Variable inputs go here!
+				-->
 			</div>
-			
-			<div id="invar_protips" class="protip">
-				<div class="tips"></div>
-				<div class="feedback"></div>
-			</div>
-			
 		</div>
 		
-		<div id="varinfodiv" class="bmpblock" >
-			<div style="height:25px;display:flex;flex-wrap:wrap;justify-content:space-between;">
-				<h2>Variable Reference Information</h2>
-				<nav>
-					<button onClick="document.querySelector('#varinfoiframe').contentWindow.history.back();"><img src="img/back.png"/></button>
-					<button onClick="document.querySelector('#varinfoiframe').src='infos/index.htm'"><img src="img/home.png"/></button>
-					<button onClick="document.querySelector('#varinfoiframe').contentWindow.history.forward();"><img src="img/forwards.png"/></button>
-				</nav>
-			</div>
-			<iframe id="varinfoiframe" name="varinfoiframe" src="infos/index.htm" style="border:none;width:calc(100% - 10px);height:460px;margin:5px;"></iframe>
-		</div>
+		
 		
 		
 		<div id="reoinputoutputdiv" class="bmpblock">
@@ -74,7 +73,9 @@
 						</tr>
 					</thead>
 					<tbody id="reorows">
-					
+						<!--
+							REO INPUT CONTROLS HERE
+						-->
 					</tbody>
 				</table>
 			</div>
@@ -130,15 +131,6 @@
 					</tbody>
 				</table>
 				
-				
-				
-				
-				
-			</div>
-			
-			<div id="reo_protips" class="protip">
-				<div class="tips"></div>
-				<div class="feedback"></div>
 			</div>
 		</div>
 		
@@ -157,7 +149,7 @@
 
 		
 		
-		<div style="flex: 1 0 500px;min-height:300px;margin-bottom:40px;" class="bmpblock">
+		<div style="flex: 1 0 500px;min-height:300px;" class="bmpblock">
 			<div style="width:100%;">
 				<h2>Calculations</h2>
 			</div>

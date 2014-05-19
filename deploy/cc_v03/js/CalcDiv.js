@@ -25,6 +25,15 @@ function CalcDiv(){
 		this.contentdiv = document.createElement("div");
 		this.contentdiv.className = "contentdiv";
 		
+		this.titlediv = document.createElement("div");
+		this.titlediv.className = "titledivc";
+		
+		this.minmaxbutton = document.createElement("button");
+		this.minmaxbutton.className = "minmaxbutton";
+		this.minmaxbutton.innerHTML = "+";
+		
+		
+		this.topdiv.appendChild(this.minmaxbuton);
 		this.body.appendChild(this.topdiv);
 		this.body.appendChild(this.contentdiv);
 		
@@ -86,11 +95,13 @@ function CalcDiv(){
 		newp.innerHTML = content;
 		this.contentdiv.appendChild(newp);
 	}.bind(this);
+	
 	this.addSpace = function(){
 		var newp = document.createElement("div");
 		newp.style.height = "5px";
 		this.contentdiv.appendChild(newp);
 	}.bind(this);
+	
 	this.addElement = function(element){
 		this.contentdiv.appendChild(element);
 	}.bind(this);

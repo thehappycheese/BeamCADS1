@@ -1,8 +1,29 @@
 body {
   font-size: 16px;
   margin: 0;
-  padding: 5px 20px;
-  background: url("../img/Clouds.png"), #e7fcff; }
+  padding: 5px 5px;
+  background: black;
+  display: flex;
+  flex-direction: row; }
+
+#maincol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 1 1 200px;
+  height: calc(100% - 10px);
+  overflow-y: scroll;
+  padding: 5px;
+  background-color: 0px;
+  box-shadow: inset 2px 2px 5px 0px black; }
+
+#secondarycol {
+  display: flex;
+  flex-direction: column;
+  display: flex;
+  flex: 0 0 500px;
+  height: 100%;
+  margin-right: 5px; }
 
 h1, h2, h3, h4 {
   font-family: sans-serif;
@@ -25,30 +46,27 @@ h3 {
   width: 100%;
   border: 1px solid grey;
   margin: 5px 0px; }
-
-.CalcDiv .topdiv {
-  font-size: 120%;
-  line-height: 25px;
-  height: 25px;
-  padding: 5px;
-  cursor: pointer; }
-
-.CalcDiv .topdiv:hover {
-  background-color: #f6feff; }
-
-.CalcDiv .topdiv .MathJax {
-  vertical-align: bottom; }
-
-.CalcDiv .contentdiv {
-  min-height: 20px;
-  padding: 5px;
-  border-top: 1px dashed lightgrey; }
-
-.CalcDiv .contentdiv p {
-  margin: 0;
-  margin-left: 20px;
-  margin-top: 0.5em;
-  padding: 0; }
+  .CalcDiv .topdiv:hover {
+    background-color: #f6feff; }
+  .CalcDiv .topdiv .titlediv {
+    font-size: 120%;
+    line-height: 25px;
+    height: 25px;
+    padding: 5px;
+    cursor: pointer; }
+    .CalcDiv .topdiv .titlediv .MathJax {
+      vertical-align: bottom; }
+    .CalcDiv .topdiv .titlediv button {
+      width: 25px; }
+  .CalcDiv .contentdiv {
+    min-height: 20px;
+    padding: 5px;
+    border-top: 1px dashed lightgrey; }
+    .CalcDiv .contentdiv p {
+      margin: 0;
+      margin-left: 20px;
+      margin-top: 0.5em;
+      padding: 0; }
 
 input:invalid {
   background-color: #fffba6;
@@ -111,26 +129,24 @@ input:invalid {
   margin: 0px; }
 
 .protip {
+  flex: 1 0 116px;
   width: 100%;
-  border-radius: 4px;
-  background-color: #fffdd2;
-  color: #0f272b;
-  border: 1px solid grey;
-  margin-top: 5px;
-  font-family: sans-serif;
-  line-height: 16px;
-  font-size: 14px; }
+  margin: 5px 0;
+  font-family: sans-serif; }
+  .protip .tips, .protip .feedback {
+    color: #0f272b;
+    padding: 5px;
+    line-height: 16px;
+    font-size: 14px; }
   .protip .tips {
     height: 32px;
-    margin: 2px;
-    padding: 5px;
-    padding-left: 55px;
-    text-indent: -50px; }
+    background-color: white;
+    padding-left: 4em;
+    text-indent: -4em; }
   .protip .feedback {
-    border-top: 1px solid lightgrey;
-    height: 70px;
+    height: 64px;
     overflow-y: scroll;
-    margin: 2px; }
+    background-color: #fffdd2; }
     .protip .feedback .errorlist, .protip .feedback .warninglist, .protip .feedback .infolist {
       list-style: none;
       padding: 0;
@@ -193,31 +209,30 @@ input:invalid {
     margin: 0; }
 
 .bmpblock {
-  border: 1px solid #303f41;
-  margin: 5px;
   padding: 5px;
-  background-color: white;
-  box-shadow: 2px 2px 5px 0px black; }
+  background-color: white; }
 
 /* Tex src = http://fc07.deviantart.net/fs19/i/2007/291/6/b/Concrete_Texture_by_MartinIsaac.jpg*/
 #apptitlebox {
   display: flex;
+  flex: 0 0 35px;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-around;
-  text-align: center;
+  align-content: space-around;
   font-family: sans-serif;
   font-weight: bold;
-  font-size: 32px;
-  letter-spacing: 1.6px;
-  color: #3e9cad;
-  padding: 10px;
-  border-radius: 0; }
+  color: #3e9cad; }
+  #apptitlebox h1 {
+    flex: 0 1 150px;
+    height: 30px; }
   #apptitlebox button {
-    flex: 0 1 400px;
-    font-size: inherit;
+    flex: 0 1 100px;
+    height: 30px;
+    font-size: 15px;
     color: inherit; }
 
 #invardiv {
-  height: 500px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -233,26 +248,8 @@ input:invalid {
   align-content: space-around;
   height: 344px; }
 
-#invardiverrorbar {
-  width: 100%;
-  height: 70.4px;
-  font-size: 12px;
-  line-height: 18px;
-  border: 1px grey solid;
-  background-color: #fffdd2;
-  padding: 5px;
-  border-radius: 4px;
-  margin-top: 5px;
-  font-family: sans-serif;
-  color: #ad743d;
-  overflow-y: scroll; }
-
-#invardiverrorbar ul li:before {
-  content: '\2639';
-  margin: 0 16px; }
-
 #varinfodiv {
-  flex: 1 0 500px;
+  flex: 1 1 500px;
   padding: 0; }
 
 #reoinputoutputdiv {
@@ -290,19 +287,3 @@ input:invalid {
   margin: 8px 0;
   font-size: 16px;
   line-height: 16px; }
-
-.tooltipbar {
-  width: 100%;
-  border: 1px solid grey;
-  border-radius: 4px;
-  background-color: #fffdd2;
-  color: #0f272b;
-  margin-top: 5px;
-  text-align: left;
-  font-family: sans-serif;
-  line-height: 16px;
-  font-size: 14px;
-  height: 32px;
-  padding: 5px;
-  padding-left: 55px;
-  text-indent: -50px; }
