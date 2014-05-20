@@ -7,8 +7,18 @@
 			extensions: ["tex2jax.js"],
 			jax: ["input/TeX","output/HTML-CSS"],
 			tex2jax: {inlineMath: [["$$","$$"],["$$$","$$$"]]},
-			messageStyle: "none"
+			messageStyle: "none",
+			skipStartupTypeset: false,
+			menuSettings: {
+				context: "Browser"
+			}
 		});
+		//MathJax.Hub.Config({
+		//	extensions: ["tex2jax.js"],
+		//	jax: ["input/TeX","output/SVG"],
+		//	tex2jax: {inlineMath: [["$$","$$"],["$$$","$$$"]]},
+		//	messageStyle: "none"
+		//});
 	</script>
 	<!--
 	<script type="text/javascript"  src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.3-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -142,14 +152,14 @@
 			<div style="width:100%;align-self:flex-start;">
 				<h2>Cross Section</h2>
 			</div>
-			<canvas width="400" height="400" id="crosssectioncanvas" ></canvas>
+			<canvas width="430" height="400" id="crosssectioncanvas" ></canvas>
 		</div>
 		
 		
 
 		
 		
-		<div style="flex: 1 0 500px;min-height:300px;" class="bmpblock">
+		<div style="flex: 1 0 400px;min-height:800px;" class="bmpblock">
 			<div style="width:100%;">
 				<h2>Calculations</h2>
 			</div>

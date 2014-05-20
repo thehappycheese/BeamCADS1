@@ -98,20 +98,37 @@ function outputCalculations(){
 	
 	// DN;
 	calcs.dn = calcs.dn || new CalcDiv();
+	calcs.dn.appendTo(calculationdiv);
 	calcs.dn.title = "$$$d_n ~~=~~ "+b.dn.toFixed(0)+"$$$";
 	calcs.dn.content = "";
+	// TODO simplify this shiz
 	calcs.dn.addParagraph("Depth to neutral axis (dn) is calculated by the 'Rectangular Stress Block' Method.")
 	calcs.dn.addParagraph("To find this depth imagine a see-saw with the Concrete Compression (Cc) on one side and the Steel Tension (Ts) on the other side. We must find the point on the see-saw where these two forces balance.");
 	calcs.dn.addParagraph("That is $$$ C_c = T_s $$$ in other words $$$\\sum F_x = 0$$$");
-	calcs.dn.addParagraph("In this case we must also consider the compression steel (Cs). In hand calculations it may be left out when it does not contribute significantly to the capacity, but this program cannot tell the difference.");
-	calcs.dn.addParagraph("That is $$$ C_c + C_s = T_s $$$");
+	calcs.dn.addParagraph("To find $$$dn_n$$$, solve the equilibrium of horizontal forces in the beam cross section:");
+	calcs.dn.addParagraph("$$$\\sum F_x = C_c + C_s + (-T_s) = 0$$$");
 	calcs.dn.addParagraph("The equations are developed as follows:");
 	calcs.dn.addParagraph("$$\\begin{aligned} C_c &= \\alpha_2 f'_c \\times (b)(\\gamma d_n) \\\\ "+
 							"T_s &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for tensile steel layers}\\\\"+
 							"C_s &= E_s \\sum(\\epsilon_{s j} A_{s j}) &\\text{for compressive steel layers}\\end{aligned}$$");
-	calcs.dn.addParagraph("The strain of each steel layer ($$$\\epsilon_{s i}$$$) is found by similar triangles from the following diagram:");
+	calcs.dn.addParagraph("Where...");
 	
-	calcs.dn.appendTo(calculationdiv);
+		calcs.esi = calcs.esi || new CalcDiv();
+		calcs.esi.title = "$$$\\epsilon_{si} = 0.003 ({{d_i}/{d_n}} - 1)$$$";
+		calcs.esi.addParagraph("$$$\\epsilon_{si}$$$ is the strain of each layer of steel.");
+		calcs.esi.addParagraph("It is calculated by similar triangles from the following diagram.");
+		calcs.esi.appendTo(calcs.dn.contentdiv);
+	
+	calcs.dn.addParagraph("Thus, the full equations are as follows:")
+	calcs.dn.addParagraph("TODO:") // TODO: develop full equations
+		
+		
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -119,48 +136,6 @@ function outputCalculations(){
 	
 	MathJax.Hub.Queue(["Typeset",MathJax.Hub,calculationdiv]);
 	return;
-	
-	
-	
-	calc.push("d: (Centroid depth of tensile steel) "	+f(b.Ts_centroid_depth)+" mm"		);
-	calc.push("k: "	+f(b.k,3)+""		);
-	
-	
-	calc.push("dn: "	+f(b.dn)+" mm"		);
-	calc.push("Muo: "	+f(b.Muo)+" kNm");
-	calc.push("MINIMUMS: Muo_min: "	+f(b.Muo_min)+" kNm  OR Ast_min: "+f(b.Muo_min_Ast_min)+" mm^2");
-	calc.push("");
-	
-	calc.push("Ag: "	+f(b.Ag)+" mm^2");
-	calc.push("Ast: "	+f(b.Ast)+" mm^2");
-	calc.push("Asc: "	+f(b.Asc)+" mm^2");
-	calc.push("Acc: "	+f(b.Acc)+" mm^2");
-	calc.push("Ixx: "	+f(b.Ixx)+" mm^4");
-	calc.push("Ze: "	+f(b.Ze)+" mm^3");
-	
-	calc.push("Tensile reo ratio (Ast/Ag): "	+(b.p*100).toFixed(3)+"%");
-	calc.push("");
-	
-	calc.push("Ts: "	+f(b.Ts)		);
-	calc.push("Cs: "	+f(b.Cs)		);
-	calc.push("Cc: "	+f(b.Cc)		);
-	calc.push("");
-	
-	calc.push("Ts_centroid_depth: "	+ f(b.Ts_centroid_depth)		);
-	calc.push("Cs_centroid_depth: "	+ f(b.Cs_centroid_depth)		);
-	calc.push("Cc_centroid_depth: "	+ 	  f(b.Cc_centroid_depth)		);
-	calc.push("");
-	
-	document.querySelector("#calcdivcontent").innerHTML = calc.join("<br>");
-	
-	
-	var o = document.createElement("pre");
-	
-	o.innerHTML = "Beam Information "+JSON.stringify(b,undefined,4);
-	
-	document.querySelector("#calcdivcontent").appendChild(o);
-	
-	
 }
 
 function outputReoSummary(){
