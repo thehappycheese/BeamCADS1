@@ -202,6 +202,16 @@ function addTooltipTo(d, output){
 //#### iFrame Scroll behaviour #############################
 //##########################################################
 
+resizeIframe();
+window.addEventListener("resize",resizeIframe,false);
+function resizeIframe(e){
+	var frm = document.querySelector("#varinfoiframe")
+	var p = frm.parentElement;
+	var s = window.getComputedStyle(p);
+	frm.style.height = s.height;
+	console.log(s.height)
+}
+
 var scroll_disabled = false;
 document.querySelector("#varinfoiframe").addEventListener("mouseover",function(e){
 	try{

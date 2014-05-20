@@ -2,7 +2,7 @@ body {
   font-size: 16px;
   margin: 0;
   padding: 5px 5px;
-  background: black;
+  background: lightgrey;
   display: flex;
   flex-direction: row; }
 
@@ -10,20 +10,21 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-content: flex-start;
   flex: 1 1 200px;
-  height: calc(100% - 10px);
+  height: calc(100% - 6px);
   overflow-y: scroll;
-  padding: 5px;
-  background-color: 0px;
-  box-shadow: inset 2px 2px 5px 0px black; }
+  border: 3px inset;
+  background-color: white; }
 
 #secondarycol {
   display: flex;
   flex-direction: column;
   display: flex;
-  flex: 0 0 500px;
+  flex: 0 0 400px;
   height: 100%;
-  margin-right: 5px; }
+  margin-right: 5px;
+  background-color: white; }
 
 h1, h2, h3, h4 {
   font-family: sans-serif;
@@ -53,11 +54,15 @@ h3 {
     line-height: 25px;
     height: 25px;
     padding: 5px;
-    cursor: pointer; }
+    cursor: pointer;
+    display: inline-block; }
     .CalcDiv .topdiv .titlediv .MathJax {
       vertical-align: bottom; }
-    .CalcDiv .topdiv .titlediv button {
-      width: 25px; }
+  .CalcDiv .topdiv button {
+    width: 25px;
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 2em; }
   .CalcDiv .contentdiv {
     min-height: 20px;
     padding: 5px;
@@ -129,7 +134,7 @@ input:invalid {
   margin: 0px; }
 
 .protip {
-  flex: 1 0 116px;
+  flex: 0 0 116px;
   width: 100%;
   margin: 5px 0;
   font-family: sans-serif; }
@@ -234,26 +239,26 @@ input:invalid {
 
 #invardiv {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-content: flex-start;
-  flex: 0.1 0 270px;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 1 1 270px;
   width: 270px;
   padding: 5px; }
 
 #invardivdiv {
   display: flex;
+  flex-direction: rows;
+  flex: 0 1 280px;
   flex-wrap: wrap;
   justify-content: space-around;
-  align-content: space-around;
-  height: 344px; }
+  align-content: space-around; }
 
 #varinfodiv {
   flex: 1 1 500px;
   padding: 0; }
 
 #reoinputoutputdiv {
-  flex: 0.01 0 430px;
+  flex: 1 0 365px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -270,7 +275,7 @@ input:invalid {
   width: 100%; }
 
 #crosssectiondiv {
-  flex: 0.1 0 500px;
+  flex: 0.1 0 420px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

@@ -26,14 +26,17 @@ function CalcDiv(){
 		this.contentdiv.className = "contentdiv";
 		
 		this.titlediv = document.createElement("div");
-		this.titlediv.className = "titledivc";
+		this.titlediv.className = "titlediv";
 		
 		this.minmaxbutton = document.createElement("button");
 		this.minmaxbutton.className = "minmaxbutton";
 		this.minmaxbutton.innerHTML = "+";
+		this.minmaxbutton.title = "Show workings."
 		
 		
-		this.topdiv.appendChild(this.minmaxbuton);
+		this.topdiv.appendChild(this.minmaxbutton);
+		this.topdiv.appendChild(this.titlediv);
+		
 		this.body.appendChild(this.topdiv);
 		this.body.appendChild(this.contentdiv);
 		
@@ -69,15 +72,20 @@ function CalcDiv(){
 		set:function(newval){
 			this._collapsed = newval;
 			this.contentdiv.style.display = (newval)? "none" : "";
+			if(newval){
+				this.minmaxbutton.innerHTML = "+";
+			}else{
+				this.minmaxbutton.innerHTML = "-";
+			}
 		}.bind(this)
 	})
 	
 	Object.defineProperty(this,"title",{
 		get:function(){
-			return this.topdiv.innerHTML;
+			return this.titlediv.innerHTML;
 		}.bind(this),
 		set:function(newval){
-			this.topdiv.innerHTML = newval;
+			this.titlediv.innerHTML = newval;
 		}.bind(this)
 	})
 	
