@@ -386,15 +386,16 @@ input:invalid{
 	flex: 1 1 270px;
 	width: 270px;
 	padding: 5px;
+	#invardivdiv{
+		display:flex;
+		flex-direction:rows;
+		flex: 0 1 280px;
+		flex-wrap:wrap;
+		justify-content:space-around;
+		align-content:space-around;
+	}
 }
-#invardivdiv{
-	display:flex;
-	flex-direction:rows;
-	flex: 0 1 280px;
-	flex-wrap:wrap;
-	justify-content:space-around;
-	align-content:space-around;
-}
+
 
 
 #varinfodiv{
@@ -412,17 +413,17 @@ input:invalid{
 	align-content:flex-start;
 	justify-content:space-around;
 	display:flex;
-	
+	#reooutputdiv{
+		width:100%;
+		margin-top:8px;
+		padding-top:8px;
+		border-top:2px dashed lightgrey;
+	}
+	#reoinputdiv{
+		width:100%;
+	}
 }
-#reooutputdiv{
-	width:100%;
-	margin-top:8px;
-	padding-top:8px;
-	border-top:2px dashed lightgrey;
-}
-#reoinputdiv{
-	width:100%;
-}
+
 
 
 
@@ -434,9 +435,7 @@ input:invalid{
 	justify-content:center;
 	align-content:flex-start;
 }
-#elevationdiv{
-	flex: 2 0 500px;
-}
+
 
 
 
