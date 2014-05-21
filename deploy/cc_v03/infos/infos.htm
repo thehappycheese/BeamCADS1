@@ -13,11 +13,12 @@
 	
 	<style>
 		#maindiv a {
+			font-size:11pt;
 			font-family:sans-serif;
 			margin:3px;
-			flex: 0 0 300px;
-			padding-left:2em;
-			text-indent:-2em;
+			flex: 1 0 300px;
+			padding-left:3em;
+			text-indent:-3em;
 			border-bottom:1px solid grey;
 			text-decoration:none;
 		}
@@ -34,6 +35,7 @@
 
 <div id="maindiv">
 	<div id="home">
+		<h2>Table of Contents</h2>
 		<div style="display:flex;flex-wrap:wrap;justify-content:space-around;">
 			<a href = "Ag">$$$A_g$$$  Gross sectional area</a>
 			<a href = "alpha2">$$$\alpha_2$$$  Alpha2 Coefficient</a>
@@ -48,7 +50,7 @@
 			<a href = "bw">$$$b_w$$$  Breadth of web</a>
 			<a href = "Cc">$$$C_c$$$  Concrete Compression</a>
 			<a href = "d">$$$d$$$  Depth to tensile steel centroid</a>
-			<a href = "D">$$$D$$$  Depth of beam</a>
+			<a href = "Depth">$$$D$$$  Depth of beam</a>
 			<a href = "Dbf">$$$D_{bf}$$$  Depth of bottom flange</a>
 			<a href = "deflim">$$$\Delta/L_{ef}$$$  Deflection Limit</a>
 			<a href = "dfitments">Diameter of Fitment</a>
@@ -58,7 +60,7 @@
 			<a href = "Dtf">$$$D_{tf}$$$  Depth of top flange</a>
 			<a href = "Ec">$$$E_c$$$  Concrete modulus of elasticity</a>
 			<a href = "eclass">Exposure Classification</a>
-			<a href = "epsiloncmax">$$$\epsilon_{c max}$$$  Maximum concrete strain</a>
+			<a href = "epsiloncmax">$$$\epsilon_{c\ max}$$$  Maximum concrete strain</a>
 			<a href = "fc">$$$f'_{c}$$$  Concrete characteristic strength</a>
 			<a href = "fcm">$$$f_{cm}$$$  </a>
 			<a href = "fcmi">$$$f_{cmi}$$$  </a>
@@ -77,7 +79,7 @@
 			<a href = "Mo">$$$M_o$$$  Total Static Moment</a>
 			<a href = "mstar">$$$M^*$$$  Moment Design Capacity</a>
 			<a href = "Mu">$$$M_u$$$  Moment Ultimate Strength - When combined with axial load</a>
-			<a href = "Mub">$$$M_{ub}$$$  Moment Ultimate Strength - When ballanced failiure occurs</a>
+			<a href = "Mub">$$$M_{ub}$$$  Moment Ultimate Strength - When balanced failure occurs</a>
 			<a href = "Muo">$$$M_{uo}$$$  Moment capacity</a>
 			<a href = "Muomin">$$$(M_{uo})_{min}$$$  Minimum design capacity</a>
 			<a href = "phi">$$$\Phi$$$  Capacity reduction factor</a>
@@ -92,6 +94,39 @@
 		</div>
 	</div>
 	
+	<div id="alpha2">
+		<h2>$$$\alpha_2$$$ - Coefficient of concrete strength</h2>
+
+		<h3>Coefficient of concrete strength in "Equivalent compression block method"</h3>
+		<table cellspacing="0">
+			<tr><td rowspan="2">AS3600</td>	<td rowspan="2">8.1.3(ii)</td>	<td>$$$\alpha_2 = 1.0 - 0.003 f'_c$$$</td></tr>
+			<tr>															<td>$$$0.67 \le \alpha_2 \le 0.85 $$$</td></tr>
+		</table>
+
+		<h2>Related:</h2>
+			<p><a href="Muo">$$$M_{uo}$$$ ultimate strength in bending, without axial force, at a cross-section</a></p>
+	</div>
+	
+	
+	<div id="d">
+		<h2>$$$d$$$ - Effective depth of beam</h2>
+
+		<h2>Related:</h2>
+			<p><a href="ku">$$$k_u$$$ </a></p>
+			<p><a href="Depth">$$$D$$$ Depth of Beam</a></p>
+			<p><a href="dn">$$$d_n$$$ Depth to Neutral Axis</a></p>
+	</div>
+	<div id="Depth">
+		<h2>$$$D$$$ - Depth of Beam</h2>
+
+		<h3>Vertical height of rectangular cross-section or member</h3>
+
+		<h2>Related:</h2>
+			<p><a href="Ln">$$$L_n$$$ Length of clear span</a></p>
+			<p><a href="b">$$$b$$$ Breadth</a></p>
+			<p><a href="d">$$$d$$$ "Effective depth"</a></p>
+			<p><a href="dn">$$$d_n$$$ Depth to Neutral Axis</a></p>
+	</div>
 	<div id="fc">
 		<h2>$$$f'_c$$$ - Concrete Strength</h2>
 		<h3>Characteristic compressive strength at 28 days after concrete pour.</h3>
@@ -102,9 +137,9 @@
 		</table>
 
 		<h2>Related:</h2>
-			<p><a href="Ec.htm">$$$E_c$$$ Concrete modulus of elasticity calculated according to AS3600 3.1.2</a></p>
-			<p><a href="alpha2.htm">$$$\alpha_2$$$ in AS3600 8.1.3</a></p>
-			<p><a href="gamma.htm">$$$\gamma$$$ in AS3600 8.1.3</a></p>
+			<p><a href="Ec">$$$E_c$$$ Concrete modulus of elasticity calculated according to AS3600 3.1.2</a></p>
+			<p><a href="alpha2">$$$\alpha_2$$$ in AS3600 8.1.3</a></p>
+			<p><a href="gamma">$$$\gamma$$$ in AS3600 8.1.3</a></p>
 	</div>
 	
 	<div id="rhoc">
@@ -135,8 +170,13 @@
 	var links = document.querySelectorAll("a");
 	for(var i = 0;i<links.length;i++){
 		var hr = links[i].getAttribute("href");
-		links[i].setAttribute("href","#");
-		links[i].setAttribute("onclick","goId(\'"+hr+"\')");
+		var temp = document.querySelector("#"+hr);
+		if(temp){
+			links[i].setAttribute("href","#");
+			links[i].setAttribute("onclick","goId(\'"+hr+"\')");
+		}else{
+			links[i].removeAttribute("href");
+		}
 	}
 	
 	
