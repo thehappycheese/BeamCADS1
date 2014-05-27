@@ -96,7 +96,7 @@ function outputCalculations(){
 	calcs.d.appendTo(calculationdiv);
 	
 	
-	// DN;
+	// DN; =============================================
 	calcs.dn = calcs.dn || new CalcDiv();
 	calcs.dn.appendTo(calculationdiv);
 	calcs.dn.title = "$$$d_n ~~=~~ "+b.dn.toFixed(0)+"$$$";
@@ -106,22 +106,62 @@ function outputCalculations(){
 	calcs.dn.addParagraph("To find this depth imagine a see-saw with the Concrete Compression (Cc) on one side and the Steel Tension (Ts) on the other side. We must find the point on the see-saw where these two forces balance.");
 	calcs.dn.addParagraph("That is $$$ C_c = T_s $$$ in other words $$$\\sum F_x = 0$$$");
 	calcs.dn.addParagraph("To find $$$dn_n$$$, solve the equilibrium of horizontal forces in the beam cross section:");
-	calcs.dn.addParagraph("$$$\\sum F_x = C_c + C_s + (-T_s) = 0$$$");
 	calcs.dn.addParagraph("The equations are developed as follows:");
+	calcs.dn.addParagraph("$$\\sum F_x = C_c + C_s + (-T_s) = 0$$");
+	calcs.dn.addParagraph("Where...");
 	calcs.dn.addParagraph("$$\\begin{aligned} C_c &= \\alpha_2 f'_c \\times (b)(\\gamma d_n) \\\\ "+
 							"T_s &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for tensile steel layers}\\\\"+
-							"C_s &= E_s \\sum(\\epsilon_{s j} A_{s j}) &\\text{for compressive steel layers}\\end{aligned}$$");
+							"C_s &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for compressive steel layers}\\end{aligned}$$");
 	calcs.dn.addParagraph("Where...");
-	
-		calcs.esi = calcs.esi || new CalcDiv();
+		// d_n - epsilon_si ====================================
+		calcs.esi = calcs.esi || new CalcDiv(); // Create
+		calcs.esi.appendTo(calcs.dn.contentdiv);// Append
 		calcs.esi.title = "$$$\\epsilon_{si} = 0.003 ({{d_i}/{d_n}} - 1)$$$";
 		calcs.esi.addParagraph("$$$\\epsilon_{si}$$$ is the strain of each layer of steel.");
 		calcs.esi.addParagraph("It is calculated by similar triangles from the following diagram.");
-		calcs.esi.appendTo(calcs.dn.contentdiv);
 	
 	calcs.dn.addParagraph("Thus, the full equations are as follows:")
-	calcs.dn.addParagraph("TODO:") // TODO: develop full equations
+	
+	// d_n - C_c
+	var fe = [] // create a temporary array to hold the next few lines of calcs
+	fe.push("C_c &= "+b.alpha2.toFixed(2)+"\\times"+b.fc.toFixed(0)+"\\times("+b.b.toFixed(0)+")("+b.gamma.toFixed(2)+"\\times d_n"+")")
+	
+	
+	// TODO: add units to all calcs
+	var T_s = [];
+	var C_s = [];
+	
+	var T_s_sym = [];
+	var C_s_sym = [];
+	
+	// d_n - T_s & C_s
+	for(var i = 0;i<b.reo.length;i++){
 		
+		if(b.layer_strain_from_layer_dn(b.reo[i],b_dn)<=0){
+			// compression
+			// numeric
+			var e_si = "0.003("+b.reo[i].depth.toFixed(0)+"/{d_n} - 1)";
+			C_s.push("["+e_si+"]\\times"+b.reo[i].area.toFixed(0))
+			// symbolic
+			var e_si = "0.003(d_+{"+i+"}+/{d_n} - 1)";
+			C_s_sym.push("["+e_si+"]\\times A_{s"+i+"}")
+		}else{
+			// tension
+			// numeric
+			var e_si = "0.003("+b.reo[i].depth.toFixed(0)+"/{d_n} - 1)";
+			T_s.push("["+e_si+"]\\times"+b.reo[i].area.toFixed(0))
+			// symbolic
+			var e_si = "0.003(d_{"+i+"}/{d_n} - 1)";
+			T_s_sym.push("["+e_si+"]\\times A_{s"+i+"}"   )
+		}
+
+		
+		
+	}
+	fe.push("T_s &= E_s \\times ("+((T_s.length>0)?T_s.join("+"):"0")+")")
+	fe.push("C_s &= E_s \\times ("+((C_s.length>0)?C_s.join("+"):"0")+")")
+	calcs.dn.addParagraph("$$\\begin{aligned}"+fe.join("\\\\")+"\\end{aligned}$$");
+	
 		
 	
 	
