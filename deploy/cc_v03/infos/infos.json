@@ -7,8 +7,14 @@
 		"unicode": "A_g",
 		"default": "",
 		"unit": "mm\u00b2",
-		"related": [],
-		"docs": "derp ferd",
+		"related": [
+			"Ast",
+			"As",
+			"Acc",
+			"Asc",
+			"Self Weight"
+		],
+		"docs": "For a rectangular beam: $$$A_g = b \\times D$$$",
 		"coderef": []
 	},
 	"alpha2": {
@@ -19,18 +25,22 @@
 		"unicode": "\u03b1\u2082",
 		"default": "",
 		"unit": "",
-		"related": [],
+		"related": [
+			"gamma",
+			"fc",
+			"Asc"
+		],
 		"docs": "",
 		"coderef": []
 	},
 	"Acc": {
 		"id": "Acc",
-		"name": "Area of concrete under compression in stress block method",
+		"name": "Area of concrete under compression in the 'rectangular stress block' method",
 		"description": "",
 		"notation": "A_{cc}",
 		"unicode": "A_cc",
 		"default": "",
-		"unit": "",
+		"unit": "<p>The following diagram shows this area:</p>\n<img src=\"#\"></img>\n<p>In a rectanularbeam this areacan befound by\n    $$\\begin{aligned} A_{cc} &= \\gamma (d_n) \\\\\n                             &= \\gamma (k_u \\times d) \\end{aligned}$$\n</p>",
 		"related": [],
 		"docs": "",
 		"coderef": []

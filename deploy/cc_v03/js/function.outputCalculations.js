@@ -152,7 +152,7 @@ function outputCalculations(){
 			T_s.push("["+e_si+"]\\times"+b.reo[i].area.toFixed(0))
 			// symbolic
 			var e_si = "0.003(d_{"+i+"}/{d_n} - 1)";
-			T_s_sym.push("["+e_si+"]\\times A_{s"+i+"}"   )
+			T_s_sym.push("["+e_si+"]\\times A_{s"+i+"}")
 		}
 
 		
