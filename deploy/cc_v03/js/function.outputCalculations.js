@@ -45,7 +45,7 @@ function outputCalculations(){
 	//d ///////////////////////////////
 	
 	calcs.d = calcs.d || new CalcDiv();
-	calcs.d.title = "$$$d ~~=~~ "+b.d.toFixed(0)+"$$$";
+	calcs.d.title = "$$$d ~~=~~ "+b.d.toFixed(0)+"~ mm $$$";
 	calcs.d.content = "";
 	calcs.d.addParagraph("d is the depth to the <b>centroid of the tension steel</b> from the upper surface of the beam.")
 	//calcs.d.addParagraph("d is found by: (sum of (tension steel layer depth)*(tension steel layer area)) divide by (sum of(tension steel layer area))");
@@ -93,7 +93,7 @@ function outputCalculations(){
 	// DN; =============================================
 	calcs.dn = calcs.dn || new CalcDiv();
 	calcs.dn.appendTo(calculationdiv);
-	calcs.dn.title = "$$$d_n ~~=~~ "+b.dn.toFixed(0)+"$$$";
+	calcs.dn.title = "$$$d_n ~~=~~ "+b.dn.toFixed(0)+"~ mm $$$";
 	calcs.dn.content = "";
 	// TODO simplify this shiz
 	calcs.dn.addParagraph("Depth to neutral axis ($$$d_n$$$) is calculated by the 'Rectangular Stress Block' Method. This involves solving the internal horizontal forces in the beam:")
@@ -182,13 +182,37 @@ function outputCalculations(){
 		
 	
 	
+	// M_uo //////////////////////////////////
+	calcs.Muo = calcs.Muo || new CalcDiv(); // Create
+	calcs.Muo.appendTo(calculationdiv);// Append
+	calcs.Muo.title = "$$$M_{uo} ~~=~~ "+b.Muo.toFixed(1)+" ~kNm $$$";
+	calcs.Muo.addParagraph("");
+	// TODO: finish Muo calculations
+	calcs.Muo.addParagraph("");
 	
 	
+	// k_uo //////////////////////////////////
+	calcs.kuo = calcs.kuo || new CalcDiv(); // Create
+	calcs.kuo.appendTo(calculationdiv);// Append
+	calcs.kuo.title = "$$$k_{uo} ~~=~~ "+""+" $$$";
+	// TODO: finish kuo calculation
+	calcs.kuo.addParagraph("");
+	calcs.kuo.addParagraph("");
 	
+	// phi //////////////////////////////////
+	calcs.phi = calcs.phi || new CalcDiv(); // Create
+	calcs.phi.appendTo(calculationdiv);// Append
+	// TODO: finish phi calculation
+	calcs.phi.title = "$$$\\Phi ~~=~~ "+""+"$$$";
+	calcs.phi.addParagraph("");
+	calcs.phi.addParagraph("");
 	
-	
-	
-	
+	calcs.capacity = calcs.capacity || new CalcDiv(); // Create
+	calcs.capacity.appendTo(calculationdiv);// Append
+	// TODO: finish capacity calculation
+	calcs.capacity.title = "$$$\\Phi M_{uo} ~~=~~ "+""+" ~kNm$$$ (Capacity)";
+	calcs.capacity.addParagraph("");
+	calcs.capacity.addParagraph("");
 	
 	
 	MathJax.Hub.Queue(["Typeset",MathJax.Hub,calculationdiv]);
