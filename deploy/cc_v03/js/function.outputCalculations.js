@@ -2,17 +2,7 @@ var calcs = {};
 function outputCalculations(){
 	var calculationdiv = document.querySelector("#calcdivcontent");
 	calculationdiv.innerHTML = "";
-	function format(value, decimals){
-		if(typeof value == "number" && !isNaN(value)){
-			return n.toFixed(decimals || 0)
-		}else{
-			return "--"
-		}
-	}
-	var calc = [];
-	calc.push("alpha2: "	+b.alpha2.toFixed(2)		);
-	calc.push("gamma: "	+b.gamma.toFixed(2)		);
-	calc.push("");
+	
 	
 	
 	var b_dn= b.dn;
@@ -22,7 +12,7 @@ function outputCalculations(){
 	
 	
 	
-	// ALPHA 2;
+	// ALPHA 2;///////////////////////////////
 	calcs.alpha2 = calcs.alpha2 || new CalcDiv();
 	calcs.alpha2.title = "$$$\\alpha_2 ~~=~~ "+b.alpha2.toFixed(2)+"$$$";
 	calcs.alpha2.content = "";
@@ -33,7 +23,10 @@ function outputCalculations(){
 	calcs.alpha2.addParagraph("where $$$0.67 \\le \\alpha_2 \\le 0.85 $$$")//Verify
 	calcs.alpha2.addParagraph(" &there4; $$$\\alpha_2 = "+b.alpha2.toFixed(2)+" $$$")//Verify
 	calcs.alpha2.appendTo(calculationdiv);
-	// GAMMA;
+	
+	
+	
+	// GAMMA; ///////////////////////////////
 	calcs.gamma = calcs.gamma || new CalcDiv();
 	calcs.gamma.title = "$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$";
 	calcs.gamma.content = "";
@@ -47,8 +40,9 @@ function outputCalculations(){
 	calcs.gamma.appendTo(calculationdiv);
 	
 	
-	// TODO: disegaurd bars less than half the diameter of the largets bar!
-	//d
+	
+	// TODO: disegaurd bars less than half the diameter of the largest bar!
+	//d ///////////////////////////////
 	
 	calcs.d = calcs.d || new CalcDiv();
 	calcs.d.title = "$$$d ~~=~~ "+b.d.toFixed(0)+"$$$";
@@ -102,16 +96,20 @@ function outputCalculations(){
 	calcs.dn.title = "$$$d_n ~~=~~ "+b.dn.toFixed(0)+"$$$";
 	calcs.dn.content = "";
 	// TODO simplify this shiz
-	calcs.dn.addParagraph("Depth to neutral axis (dn) is calculated by the 'Rectangular Stress Block' Method.")
-	calcs.dn.addParagraph("To find this depth imagine a see-saw with the Concrete Compression (Cc) on one side and the Steel Tension (Ts) on the other side. We must find the point on the see-saw where these two forces balance.");
-	calcs.dn.addParagraph("That is $$$ C_c = T_s $$$ in other words $$$\\sum F_x = 0$$$");
-	calcs.dn.addParagraph("To find $$$dn_n$$$, solve the equilibrium of horizontal forces in the beam cross section:");
-	calcs.dn.addParagraph("The equations are developed as follows:");
-	calcs.dn.addParagraph("$$\\sum F_x = C_c + C_s + (-T_s) = 0$$");
+	calcs.dn.addParagraph("Depth to neutral axis ($$$d_n$$$) is calculated by the 'Rectangular Stress Block' Method. This involves solving the internal horizontal forces in the beam:")
+	calcs.dn.addParagraph("$$\\sum F_x = C_c + C_s + (-T_s) = 0$$");//TODO: check sign convention
 	calcs.dn.addParagraph("Where...");
-	calcs.dn.addParagraph("$$\\begin{aligned} C_c &= \\alpha_2 f'_c \\times (b)(\\gamma d_n) \\\\ "+
-							"T_s &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for tensile steel layers}\\\\"+
-							"C_s &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for compressive steel layers}\\end{aligned}$$");
+	calcs.dn.addParagraph("$$\\begin{aligned} C_{concrete} &= \\alpha_2 f'_c \\times (b)(\\gamma d_n) \\\\ "+
+							"T_{steel} &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for tensile steel layers}\\\\"+
+							"C_{steel} &= E_s \\sum(\\epsilon_{s i} A_{s i}) &\\text{for compressive steel layers}\\end{aligned}$$");
+		
+		calcs.howtoknowtension = calcs.howtoknowtension || new CalcDiv(); // Create
+		calcs.howtoknowtension.appendTo(calcs.dn.contentdiv);// Append
+		calcs.howtoknowtension.title = "How to tell if a layer is in tension/compression?"
+		calcs.howtoknowtension.addParagraph("When a beam has multiple layers of reinforcement, it is sometimes unclear which layers are in tension or compression. The only way to know is to 'guess and check' which layers are in tension/compression.")
+		calcs.howtoknowtension.addParagraph("If you get the guess wrong, the sum of horizontal forces equation below will have non-nonsensical or no solutions. This is because a force balance does not exist for an incorrect guess.")
+		calcs.howtoknowtension.addParagraph("This software finds d_n by the same force equilibrium equation but uses a blind guess and check 'bisection' solver to find the root of  $$$F_x(d_n) = 0$$$.")
+		
 	calcs.dn.addParagraph("Where...");
 		// d_n - epsilon_si ====================================
 		calcs.esi = calcs.esi || new CalcDiv(); // Create
@@ -119,12 +117,12 @@ function outputCalculations(){
 		calcs.esi.title = "$$$\\epsilon_{si} = 0.003 ({{d_i}/{d_n}} - 1)$$$";
 		calcs.esi.addParagraph("$$$\\epsilon_{si}$$$ is the strain of each layer of steel.");
 		calcs.esi.addParagraph("It is calculated by similar triangles from the following diagram.");
+	calcs.dn.addParagraph("$$$A_{si}$$$ =  the sectional area of each layer of steel ($$$mm^2$$$)");
+	calcs.dn.addParagraph("$$$E_{si}$$$ =  the young's modulus of the steel (200,000 MPa)");
+	calcs.dn.addParagraph("For this beam, the full equations are as follows:")
 	
-	calcs.dn.addParagraph("Thus, the full equations are as follows:")
+	// d_n - C_c =========================================
 	
-	// d_n - C_c
-	var fe = [] // create a temporary array to hold the next few lines of calcs
-	fe.push("C_c &= "+b.alpha2.toFixed(2)+"\\times"+b.fc.toFixed(0)+"\\times("+b.b.toFixed(0)+")("+b.gamma.toFixed(2)+"\\times d_n"+")")
 	
 	
 	// TODO: add units to all calcs
@@ -134,7 +132,10 @@ function outputCalculations(){
 	var T_s_sym = [];
 	var C_s_sym = [];
 	
-	// d_n - T_s & C_s
+	var T_s_simp = [];
+	var C_s_simp = [];
+	
+	// d_n - T_s & C_s ================================
 	for(var i = 0;i<b.reo.length;i++){
 		
 		if(b.layer_strain_from_layer_dn(b.reo[i],b_dn)<=0){
@@ -143,7 +144,7 @@ function outputCalculations(){
 			var e_si = "0.003("+b.reo[i].depth.toFixed(0)+"/{d_n} - 1)";
 			C_s.push("["+e_si+"]\\times"+b.reo[i].area.toFixed(0))
 			// symbolic
-			var e_si = "0.003(d_+{"+i+"}+/{d_n} - 1)";
+			var e_si = "0.003(d_{"+i+"}+/{d_n} - 1)";
 			C_s_sym.push("["+e_si+"]\\times A_{s"+i+"}")
 		}else{
 			// tension
@@ -158,10 +159,26 @@ function outputCalculations(){
 		
 		
 	}
-	fe.push("T_s &= E_s \\times ("+((T_s.length>0)?T_s.join("+"):"0")+")")
-	fe.push("C_s &= E_s \\times ("+((C_s.length>0)?C_s.join("+"):"0")+")")
+	// Lets create a symbolic representation first:
+	var fe = [] // create a temporary array to hold the next few lines of calcs
+	fe.push("C_c &= (\\alpha_2 f_c)(b \\times \\gamma d_n)")
+	fe.push("T_s &= E_s \\times ("+((T_s_sym.length>0)?T_s_sym.join("+"):"0")+")")
+	fe.push("C_s &= E_s \\times ("+((C_s_sym.length>0)?C_s_sym.join("+"):"0")+")")
 	calcs.dn.addParagraph("$$\\begin{aligned}"+fe.join("\\\\")+"\\end{aligned}$$");
 	
+		
+	
+	calcs.dn.addParagraph("Substituting in all the known values:");
+	
+	// now lets do the numeric representation:
+	var fe = [] // create a temporary array to hold the next few lines of calcs
+	fe.push("C_c &= ("+b.alpha2.toFixed(2)+"\\times"+b.fc.toFixed(0)+")("+b.b.toFixed(0)+"\\times"+b.gamma.toFixed(2)+" d_n"+")")
+	fe.push("T_s &= "+b.Es+" \\times ("+((T_s.length>0)?T_s.join("+"):"0")+")")
+	fe.push("C_s &= "+b.Es+" \\times ("+((C_s.length>0)?C_s.join("+"):"0")+")")
+	calcs.dn.addParagraph("$$\\begin{aligned}"+fe.join("\\\\")+"\\end{aligned}$$");
+	
+	calcs.dn.addParagraph("These equations are now all in terms of $$$d_n$$$. This software can't simplify them for you, but they should end up as some kind of quadratic equation when subsituted back into");
+	calcs.dn.addParagraph("$$\\sum F_x = C_c + C_s + (-T_s) = 0$$"); //TODO: check sign convention
 		
 	
 	
