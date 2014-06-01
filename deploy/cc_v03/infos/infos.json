@@ -45,7 +45,7 @@
 		"notation": "A_{cc}",
 		"unicode": "A_cc",
 		"default": "",
-		"unit": "<p>The following diagram shows this area:</p>\n<img src=\"\" alt=\"// TODO: add image here.\"></img>\n<p>In a rectanular beam this area can be found by\n    $$\\begin{aligned} A_{cc} &= \\gamma (d_n) \\\\\n                             &= \\gamma (k_u \\times d) \\end{aligned}$$\n</p>",
+		"unit": "mm\u00b2",
 		"related": [
 			"dn",
 			"ku",
@@ -54,7 +54,7 @@
 			"As",
 			"Ast"
 		],
-		"docs": "",
+		"docs": "<p>The following diagram shows this area:</p>\n<img src=\"\" alt=\"// TODO: add image here.\"></img>\n<p>In a rectanular beam this area can be found by\n    $$\\begin{aligned} A_{cc} &= \\gamma (d_n) \\\\\n                             &= \\gamma (k_u \\times d) \\end{aligned}$$\n</p>",
 		"coderef": []
 	},
 	"As": {
@@ -330,7 +330,7 @@
 		"id": "gamma",
 		"name": "Gamma Ratio",
 		"description": "Ratio, under design bending or design combined bending and compression, of the depth of the assumed rectangular compressive stress block to k_u * d",
-		"notation": "gamma",
+		"notation": "\\gamma",
 		"unicode": "\u03b3",
 		"default": "",
 		"unit": "",
@@ -596,8 +596,8 @@
 	},
 	"Es": {
 		"id": "Es",
-		"name": "Reo modulus of elasticity",
-		"description": "Young's modulus of elasticity of reinforcement, determined in accordance with Clause 3.2.2",
+		"name": "Reo modulus of elasticity (200,000 MPa)",
+		"description": "Young's modulus of elasticity of reinforcement steel, determined in accordance with Clause 3.2.2",
 		"notation": "E_s",
 		"unicode": "E_s",
 		"default": 200000,

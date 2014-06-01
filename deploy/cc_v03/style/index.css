@@ -244,18 +244,27 @@ input:invalid {
   flex: 1 1 270px;
   width: 270px;
   padding: 5px; }
-
-#invardivdiv {
-  display: flex;
-  flex-direction: rows;
-  flex: 0 1 280px;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-content: space-around; }
+  #invardiv #invardivdiv {
+    display: flex;
+    flex-direction: rows;
+    flex: 0 1 280px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: space-around; }
 
 #varinfodiv {
   flex: 1 1 500px;
-  padding: 0; }
+  padding: 5px;
+  overflow-y: scroll; }
+  #varinfodiv p {
+    margin-left: 1em; }
+  #varinfodiv h1 {
+    font-size: 1.1em; }
+  #varinfodiv h2 {
+    font-size: 1em;
+    margin-top: 1em;
+    margin-left: 0em;
+    margin-bottom: 0.5em; }
 
 #reoinputoutputdiv {
   flex: 1 0 365px;
@@ -264,15 +273,13 @@ input:invalid {
   align-content: flex-start;
   justify-content: space-around;
   display: flex; }
-
-#reooutputdiv {
-  width: 100%;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 2px dashed lightgrey; }
-
-#reoinputdiv {
-  width: 100%; }
+  #reoinputoutputdiv #reooutputdiv {
+    width: 100%;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 2px dashed lightgrey; }
+  #reoinputoutputdiv #reoinputdiv {
+    width: 100%; }
 
 #crosssectiondiv {
   flex: 0.1 0 420px;
@@ -280,9 +287,6 @@ input:invalid {
   flex-wrap: wrap;
   justify-content: center;
   align-content: flex-start; }
-
-#elevationdiv {
-  flex: 2 0 500px; }
 
 #errortd {
   background-color: #fffdd2;
