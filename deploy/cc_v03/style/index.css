@@ -256,7 +256,7 @@ input:invalid {
   flex: 1 1 500px;
   padding: 5px;
   overflow-y: scroll; }
-  #varinfodiv p {
+  #varinfodiv p b {
     margin-left: 1em; }
   #varinfodiv h1 {
     font-size: 1.1em; }

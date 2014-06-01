@@ -403,7 +403,9 @@ input:invalid{
 	padding:5px;
 	overflow-y:scroll;
 	p{
-		margin-left:1em;
+		b{
+			margin-left:1em;
+		}
 	}
 	h1{
 		font-size:1.1em;

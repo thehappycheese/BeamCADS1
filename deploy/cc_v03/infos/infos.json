@@ -399,9 +399,22 @@
 		"unicode": "k_u",
 		"default": "",
 		"unit": "",
-		"related": [],
+		"related": [
+			"kuo",
+			"gamma",
+			"d"
+		],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "AS3600 6.2.7.2",
+				"data": "Part of the requirements for the Deemed-to-comply approach for reinforced and prestressed members"
+			},
+			{
+				"ref": "AS3600 8.1.3",
+				"data": "<p>Part of the rectangular stress block method. In this method, there is a uniform compressive stress of $$$\\alpha_2 f'_c$$$ at the top of the cross sectio to a line at a depth of $$$\\gamma k_u d$$$</p>\n\n<p><img src=\"\" alt=\"// TODO: Put image here.\"/></p>"
+			}
+		]
 	},
 	"kuo": {
 		"id": "kuo",
@@ -411,9 +424,20 @@
 		"unicode": "k_uo",
 		"default": "",
 		"unit": "",
-		"related": [],
+		"related": [
+			"ku",
+			"dn",
+			"do",
+			"Mub",
+			"Nub"
+		],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "AS3600 8.1.5",
+				"data": "Limits $$$k_{uo}$$$ to 0.36 (except for special circumstances - see code)"
+			}
+		]
 	},
 	"Lef": {
 		"id": "Lef",
