@@ -86,7 +86,6 @@ function HelpBar(arg_host){
 				html += "<h2>Related:</h2>"
 				for(var i = 0;i<item.related.length;i++){
 					// TRY TO FIND THE RELATED item in this.data
-					console.log(this)
 					try{
 						// Create a link
 						html +=  makeIndexLink(data[item.related[i]]);

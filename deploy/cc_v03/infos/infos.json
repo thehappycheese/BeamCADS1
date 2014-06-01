@@ -28,7 +28,8 @@
 		"related": [
 			"gamma",
 			"fc",
-			"Asc"
+			"Asc",
+			"Muo"
 		],
 		"docs": "<p>\n    $$$\\alpha_2$$$ is a reduction factor for concrete strength.\n</p>\n<p>\n    $$$\\alpha_2 f'_c$$$ represents the reduced characteristic compressive strength of concrete in the rectangular stress block method.\n</p>",
 		"coderef": [
@@ -115,6 +116,7 @@
 		"default": 300,
 		"unit": "mm",
 		"related": [
+			"cover",
 			"Depth",
 			"d"
 		],
@@ -164,6 +166,7 @@
 		"default": 600,
 		"unit": "mm",
 		"related": [
+			"Ln",
 			"b",
 			"d",
 			"do",
@@ -207,7 +210,13 @@
 		"unicode": "d_n",
 		"default": "",
 		"unit": "mm",
-		"related": [],
+		"related": [
+			"D",
+			"kuo",
+			"ku",
+			"gamma",
+			"Acc"
+		],
 		"docs": "",
 		"coderef": []
 	},
@@ -339,9 +348,21 @@
 		"unicode": "\u03b3",
 		"default": "",
 		"unit": "",
-		"related": [],
+		"related": [
+			"alpha2",
+			"gamma",
+			"dn",
+			"ku",
+			"kuo",
+			"Muo"
+		],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "AS3600 8.1.3(ii)",
+				"data": "$$$\\gamma = 1.05 - 0.007 f'_c$$$ <br>\nWhere<br>\n$$$0.67 \\le \\gamma \\le 0.85 $$$"
+			}
+		]
 	},
 	"I": {
 		"id": "I",
