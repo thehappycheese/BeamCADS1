@@ -265,6 +265,33 @@ input:invalid {
     margin-top: 1em;
     margin-left: 0em;
     margin-bottom: 0.5em; }
+  #varinfodiv li {
+    font-family: sans-serif;
+    font-size: 0.9em; }
+  #varinfodiv table.help_bar_link {
+    width: 100%;
+    border-collapse: collapse;
+    text-decoration: inherit;
+    color: inherit; }
+    #varinfodiv table.help_bar_link td {
+      border-bottom: 1px solid grey;
+      padding: 2px; }
+    #varinfodiv table.help_bar_link .c1 {
+      width: 20%; }
+    #varinfodiv table.help_bar_link .c2 {
+      font-size: 0.9em;
+      font-family: sans-serif; }
+  #varinfodiv table.help_bar_coderef {
+    width: 100%;
+    border-collapse: collapse; }
+    #varinfodiv table.help_bar_coderef td {
+      border: 1px solid grey;
+      padding: 2px; }
+    #varinfodiv table.help_bar_coderef .c1 {
+      width: 30%;
+      font-family: sans-serif;
+      font-size: 0.9em;
+      font-weight: bold; }
 
 #reoinputoutputdiv {
   flex: 1 0 365px;

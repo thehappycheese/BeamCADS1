@@ -21,7 +21,7 @@
 		"id": "alpha2",
 		"name": "Alpha2 Coefficient",
 		"description": "Coefficient of concrete compressive area in the \"Equivalent compression block method\"",
-		"notation": "alpha_2",
+		"notation": "\\alpha_2",
 		"unicode": "\u03b1\u2082",
 		"default": "",
 		"unit": "",
@@ -30,11 +30,11 @@
 			"fc",
 			"Asc"
 		],
-		"docs": "<p>\n    $$$\\alpha_2$$$ is a reduction factor for concrete strength.\n</p>\n<p>\n    $$$\\alpha_2 f'_c$$$ represents the reduced characteristic compressive strength of concrete in the rectangular stress block method.\n</p>\n<table>\n    <tr>\n        <td>AS3600 8.1.3</td>\n        <td>\n            $$$\\alpha_2 =  1.0  - 0.003 f'_c$$$<br>\n            Within the limits of <br>\n            $$$0.67 \\le \\alpha_2 \\le 0.85$$$\n        </td>\n    </tr>\n</table>",
+		"docs": "<p>\n    $$$\\alpha_2$$$ is a reduction factor for concrete strength.\n</p>\n<p>\n    $$$\\alpha_2 f'_c$$$ represents the reduced characteristic compressive strength of concrete in the rectangular stress block method.\n</p>",
 		"coderef": [
 			{
-				"ref": "",
-				"data": ""
+				"ref": "AS3600 8.1.3",
+				"data": "$$$\\alpha_2 =  1.0  - 0.003 f'_c$$$<br>\nWithin the limits of <br>\n$$$0.67 \\le \\alpha_2 \\le 0.85$$$"
 			}
 		]
 	},
@@ -177,7 +177,7 @@
 		"id": "deflim",
 		"name": "Deflection Limit",
 		"description": "",
-		"notation": "Delta/L_{ef}",
+		"notation": "\\Delta/L_{ef}",
 		"unicode": "\u0394/L_ef",
 		"default": "",
 		"unit": "",
@@ -251,7 +251,7 @@
 		"id": "epsiloncmax",
 		"name": "Maximum concrete strain",
 		"description": "Maximum compressive concrete strain",
-		"notation": "epsilon_{c max}",
+		"notation": "\\epsilon_{c max}",
 		"unicode": "\u03b5_c_max",
 		"default": 0.003,
 		"unit": "",
@@ -276,7 +276,12 @@
 			"fctf"
 		],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "ddddd",
+				"data": "lof"
+			}
+		]
 	},
 	"fcm": {
 		"id": "fcm",
@@ -510,7 +515,7 @@
 		"id": "phi",
 		"name": "Capacity reduction factor",
 		"description": "Capacity reduction factor for design using linear elastic analysis (see Clause 2.2.2)",
-		"notation": "Phi",
+		"notation": "\\Phi",
 		"unicode": "\u03a6",
 		"default": "",
 		"unit": "",
@@ -527,14 +532,31 @@
 		"default": "",
 		"unit": "",
 		"related": [],
-		"docs": "<table>\n    <tr>\n        <td>AS/NZS 4671:2001 (Preface):</td>\n        <td>\n            [There are] .. three ductility classes. These are distinguished in requirements by the letters \u2018L\u2019 (low), \u2018N\u2019 (normal) and \u2018E\u2019 (earthquake), placed immediately after the strength-grade number, corresponding with different minimum values for uniform elongation and maximum stress to yield stress ratio.\n        </td>\n    </tr>\n    <tr>\n        <td>AS/NZS 4671:2001 (Foreword)</td>\n        <td>\n            500E steels are unlikely to be used in Australia, it being considered that Australia's generally low seismicity can be adequately accounted for by using Normal (N) class steels.\n        </td>\n    </tr>\n    <tr>\n        <td>AS/NZS 4671:2001 (5.2)</td>\n        <td>\n            Shape is designated by the letters, R, D, or I, representing plain (Round), Deformed ribbed, or deformed Indented, surfaces respectively.\n        </td>\n    </tr>\n    <tr>\n        <td>AS/NZS 4671:2001 (5.3)</td>\n        <td>\n            The standard grades of reinforcing steels are 250N, 300E, 500L, 500N, 500E.\n        </td>\n    </tr>\n</table>",
-		"coderef": []
+		"docs": "",
+		"coderef": [
+			{
+				"ref": "AS/NZS 4671:2001 (Preface)",
+				"data": "[There are] .. three ductility classes. These are distinguished in requirements by the letters \u2018L\u2019 (low), \u2018N\u2019 (normal) and \u2018E\u2019 (earthquake), placed immediately after the strength-grade number, corresponding with different minimum values for uniform elongation and maximum stress to yield stress ratio."
+			},
+			{
+				"ref": "AS/NZS 4671:2001 (Foreword)",
+				"data": "500E steels are unlikely to be used in Australia, it being considered that Australia's generally low seismicity can be adequately accounted for by using Normal (N) class steels."
+			},
+			{
+				"ref": "AS/NZS 4671:2001 (5.2)",
+				"data": "Shape is designated by the letters, R, D, or I, representing plain (Round), Deformed ribbed, or deformed Indented, surfaces respectively."
+			},
+			{
+				"ref": "AS/NZS 4671:2001 (5.3)",
+				"data": "The standard grades of reinforcing steels are 250N, 300E, 500L, 500N, 500E."
+			}
+		]
 	},
 	"rhoc": {
 		"id": "rhoc",
 		"name": "Concrete Density",
 		"description": "Density of concrete, in kilograms per cubic metre (kg/m3), determined in accordance with Clause 3.1.3",
-		"notation": "\rho_c",
+		"notation": "\\rho_c",
 		"unicode": "\u03c1_c",
 		"default": 2400,
 		"unit": "kg/m^3",
@@ -546,7 +568,7 @@
 		"id": "sigmast",
 		"name": "Tensile steel stress",
 		"description": "Tensile stress in reinforcement (see Clause 13.1.2.4)",
-		"notation": "sigma_{st}",
+		"notation": "\\sigma_{st}",
 		"unicode": "\u03c3_st",
 		"default": "",
 		"unit": "",

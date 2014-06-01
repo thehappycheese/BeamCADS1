@@ -19,7 +19,7 @@ function HelpBar(arg_host){
 	this.init=function(){
 		this.buildBar();
 		try{
-		MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+			MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 		}catch(e){
 			console.log("Failed to typeset help bar",e);
 		}
@@ -31,48 +31,70 @@ function HelpBar(arg_host){
 	
 	this.buildBar = function (){
 		var div = document.createElement("div");
-		var homediv = document.createElement("div");
-		homediv.id = "home";
+		var indexdiv = makeDiv("helpindex","helpblock");
+		div.appendChild(indexdiv)
 		var items = [];
 		// convert object to array for sorting:
 		for(var k in this.data){
 			items.push(this.data[k]);
 		}
 		items.sort(function(a,b){
-			a.id.localeCompare(b.id)
+			return a.unicode.localeCompare(b.unicode)
 		})
-		for(var i = 0;i<items.length;i++){
-			div.appendChild(makeHelpBlock(items[i]));
-		}
+		var indexhtml = "<div><h1>Index</h1>";
 		
+		for(var i = 0;i<items.length;i++){
+			div.appendChild(makeHelpBlock(items[i],this.data));
+			//indexhtml +='<a href="#help_bar_'+items[i].id+'">$$$'+items[i].notation+'$$$ '+items[i].name+'</a>';
+			indexhtml += makeIndexLink(items[i])
+		}
+		indexhtml +="</div>"
+		indexdiv.innerHTML = indexhtml;
 		this.host.appendChild(div);
 		
 		
-		function makeIndexLink(){}
-		function makeHelpBlock(item){
-			var result = makeDiv(item.id,"helpblock");
+		function makeIndexLink(item){
+			var html ="";
+			html+= '<a href="#help_bar_'+item.id+'">';
+				html+= '<table class="help_bar_link"><tr>';
+				html+= '<td class="c1">$$$'+item.notation+'$$$</td><td class="c2">'+item.name+'</td>';
+				html+= "</tr></table>";
+			html+= "</a>";
+			
+			return html
+		}
+		function makeHelpBlock(item,data){
+			var result = makeDiv("help_bar_"+item.id,"helpblock");
 			var html = "";
-			html += "<h1>"+
+			html += "<hr/><h1>"+
 					((item.notation)?("$$$"+item.notation+"$$$ "):"")+
-					((item.unit)?("("+item.unit+") "):"")+
-					item.name+"</h1>";
+					item.name+
+					((item.unit)?(" ("+item.unit+")"):"")+
+					"</h1>";
 			if(item.description){
 				html += "<p><b>"+item.description+"</b></p>";
 			}
 			html += item.docs;
 			if(item.coderef.length>0){
-				html += "<table>"
+				html += '<table class="help_bar_coderef">'
 				for(var i = 0;i<item.coderef.length;i++){
-					html+="<tr><td>"+item.coderef[i].ref+"</td><td>"+item.coderef[i].data+"</td></tr>";
+					html+='<tr><td class="c1">'+item.coderef[i].ref+'</td><td class="c2">'+item.coderef[i].data+"</td></tr>";
 				}
 				html+="</table>"
 			}
 			if(item.related.length>0){
-				html += "<h2>Related:</h2><ul>"
+				html += "<h2>Related:</h2>"
 				for(var i = 0;i<item.related.length;i++){
-					html+="<li>"+item.related[i]+"</li>";
+					// TRY TO FIND THE RELATED item in this.data
+					console.log(this)
+					try{
+						// Create a link
+						html +=  makeIndexLink(data[item.related[i]]);
+					}catch(e){
+						// Just show text
+						html += item.related[i];
+					}
 				}
-				html+="</ul>"
 			}
 			result.innerHTML = html;
 			return result;
@@ -83,7 +105,7 @@ function HelpBar(arg_host){
 			result.className = classname || "";
 			return result;
 		}
-	}
+	}.bind(this);
 	
 	
 	

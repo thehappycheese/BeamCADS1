@@ -414,6 +414,47 @@ input:invalid{
 		margin-left:0em;
 		margin-bottom:0.5em;
 	}
+	li{
+		font-family:sans-serif;
+		font-size:0.9em;
+	}
+	
+	table.help_bar_link{
+		width:100%;
+		border-collapse: collapse;
+		text-decoration:inherit;
+		color:inherit;
+		td{
+			border-bottom:1px solid grey;
+			padding:2px;
+		}
+		.c1{
+			width:20%;
+		}
+		.c2{
+			font-size:0.9em;
+			font-family:sans-serif;
+			
+		}
+	}
+	table.help_bar_coderef{
+		width:100%;
+		border-collapse: collapse;
+		
+		td{
+			border:1px solid grey;
+			padding:2px;
+		}
+		.c1{
+			width:30%;
+			font-family:sans-serif;
+			font-size:0.9em;
+			font-weight:bold;
+		}
+		.c2{
+			
+		}
+	}
 }
 
 
