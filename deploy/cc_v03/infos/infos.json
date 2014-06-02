@@ -287,8 +287,12 @@
 		"docs": "",
 		"coderef": [
 			{
-				"ref": "ddddd",
-				"data": "lof"
+				"ref": "AS3600 1.1.2",
+				"data": "limits $$$f'_c$$$ to  between 20MPa and 100MPa."
+			},
+			{
+				"ref": "AS3600 3.1.1.1",
+				"data": "<p>Lists standard grades: [20, 25, 32, 40, 50, 65, 80, 100] MPa</p>\n<p>Determined by standard grade/curing conditions (AS1379) or Determined statistically from tests (AS1012.9)</p>"
 			}
 		]
 	},
@@ -300,7 +304,12 @@
 		"unicode": "f_cm",
 		"default": "",
 		"unit": "",
-		"related": [],
+		"related": [
+			"fc",
+			"fsy",
+			"fcmi",
+			"fctf"
+		],
 		"docs": "",
 		"coderef": []
 	},
