@@ -1,0 +1,219 @@
+.CalcDiv{
+	
+	width:100%;
+	border:1px solid grey;
+	margin:5px 0px;
+	
+	.topdiv{
+		&:hover{
+			background-color:$pri-5;
+		}
+		.titlediv{
+		
+			font-size:100%;
+			line-height:25px;
+			height:25px;
+			padding:5px;
+			cursor:pointer;
+			display:inline-block;
+			
+		
+			.MathJax{
+				vertical-align:bottom;
+			}
+		}
+		button{
+			width:25px;
+			margin: 0;
+			margin-left:5px;
+			margin-right:2em;
+			
+		}
+	}
+	
+	.contentdiv{
+		min-height:20px;
+		padding:5px;
+		border-top: 1px dashed lightgrey;
+		p{
+			margin: 0;
+			margin-left: 20px;
+			margin-top:0.5em;
+			padding:0;
+		}
+	}
+}
+
+
+.reotable{
+	table-layout: fixed;
+	width:100%;
+	border-collapse: collapse;
+	border:1px solid lightgrey;
+	td{
+		border-top:1px solid lightgrey;
+		border-bottom:1px solid lightgrey;
+		padding:2px;
+	}
+	tbody tr:hover{
+		background-color:$pri-4;
+	}
+	tbody td{
+		vertical-align:middle;
+		text-align:center;
+	}
+	thead td{
+		border-left:1px solid lightgrey;
+		text-align:center;
+		vertical-align:middle;
+	}
+}
+
+
+.reoinput {
+	button{
+		width:13px;
+		height:100%;
+		padding:0;
+		margin:0;
+	}
+	.bars{
+		color:$pri-3;
+		font-weight:bold;
+	}
+	input{
+		width:100%;
+		text-align:right;
+	}
+	input[type="checkbox"]{
+		width:100%;
+		height:16px;
+		padding:0px;
+		margin:0px;
+	}
+}
+
+
+
+//////////////////////////////////
+.protip{
+	flex: 0 0 116px;
+	width:  100%;
+	margin: 5px 0;
+	font-family: sans-serif;
+	
+	
+	.tips, .feedback{
+		color:$pri-3/4;
+		padding:5px;
+		line-height: 16px;
+		font-size:	 14px;
+	}
+	.tips{
+		height:32px;
+		background-color: $sec-b-4*2;
+		padding-left:4em;
+		text-indent:-4em;
+	}
+	.feedback{
+		height:64px;
+		overflow-y:scroll;
+		background-color: $sec-b-4;
+		.errorlist, .warninglist, .infolist{
+			list-style:none;
+			padding:0;
+			padding-left:3*16px;
+			text-indent:-3*16px;
+			margin:0px;
+		}
+		.errorlist li:before{
+			content:'\2639';
+			margin: 0 8px;
+			color:red;
+		}
+		.warninglist li:before{
+			content:'\2639';
+			margin: 0 8px;
+			color:orange;
+		}
+		.infolist li:before{
+			content:'i';
+			margin: 0 8px;
+			color:grey;
+		}
+	}
+}
+
+
+
+//////////////////////////////////
+.varinput{
+	border:1px solid transparent;
+	border-radius: 4px;
+	margin:1px;
+	display:flex;
+	align-items:center;
+	float:left;
+	border:1px solid lightgrey;
+	
+	td{
+		padding:1px;
+		height:20px;
+	}
+	
+	cursor:pointer;
+	&:hover{
+		border:1px solid grey;
+	}
+	.notation-div{
+		text-align:right;
+		padding-right: 8px;
+		width:4em;
+	}
+	.value-div{
+		margin-left:3px;
+		width:3em;
+	}
+	.unit-div{
+		margin-left:0.2em;
+		padding-left:0.2em;
+		font-size:1em;
+		width:2.2em;
+	}
+	.help-div{
+		width:1em;
+		padding:0;
+		button{
+			color: darkblue;
+			font-family: monospace;
+			font-weight: bold;
+			margin: none;
+			height: 100%;
+			width: 100%;
+			margin:0;
+			padding:0;
+		}
+	}
+	a{
+		color:$pri-3/2;
+		vertical-align:center;
+		&:focus{
+			outline:none;
+		}
+	}
+	input, select{
+		width:100%;
+		text-align:right;
+		padding:0 3px;
+		margin:0;
+	}
+	select{
+		direction: rtl;
+	}
+	input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+}
+
+

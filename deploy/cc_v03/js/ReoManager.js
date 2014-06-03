@@ -13,13 +13,13 @@ function ReoManager(arg_body){
 	this.create = function(){
 		var firstrow = this.createReoInput();
 		firstrow.makeFirstRow();
-		this.rows.push(this.createReoInput());
-		this.rows.push(this.createReoInput());
-		this.rows.push(this.createReoInput());
 		this.rows.push(firstrow);
+		this.rows.push(this.createReoInput());
+		this.rows.push(this.createReoInput());
+		this.rows.push(this.createReoInput());
 		
-		
-		for(var i = 0;i<this.rows.length;i++){
+		// TODO: reversed row order. make things independat of row orderish.
+		for(var i = this.rows.length - 1;i>=0;i--){
 			this.rows[i].appendTo(this.body);
 		}
 		
@@ -30,16 +30,7 @@ function ReoManager(arg_body){
 	
 	
 	
-	
-	this.getEnabledSelectedRows = function(){
-		var result = [];
-		for(var i = 0;i<this.rows.length;i++){
-			if(this.rows[i].enabled && this.rows[i].selected){
-				result.push(this.rows[i]);
-			}
-		}
-		return result;
-	}.bind(this);
+
 	
 	
 	
@@ -54,6 +45,28 @@ function ReoManager(arg_body){
 	}.bind(this);
 	
 	
+	this.getRowIndex = function(row){
+		for(var i=0; i<this.rows.length;i++){
+			if(row === this.rows[i]){
+				return i;
+			}
+		}
+		return undefined
+	}.bind(this);
+	
+	this.getEnabledRowIndex = function(row){
+		var rs = this.getEnabledRows();
+		for(var i=0; i<rs.length;i++){
+			if(row === rs[i]){
+				return i;
+			}
+		}
+		return undefined
+	}.bind(this);
+	
+	
+	
+	// TODO: WHAT IS THIS? update fix
 	this.getTopmostTop = function(){
 		var r = this.getEnabledRows();
 		for(var i = 0;i<r.length;i++){
@@ -73,13 +86,13 @@ function ReoManager(arg_body){
 	
 	this.getBottomRow = function(){
 		var r = this.getEnabledRows();
-		return r[r.length-1];
+		return r[0];
 	}.bind(this);
 	
 	
 	
 	this.getDepthOfRow = function(row){
-		
+		// TODO: update
 		var D = parseInt(vin.D.value);
 		var df = parseInt(vin.df.value);
 		var cover = parseInt(vin.cover.value);
@@ -90,9 +103,9 @@ function ReoManager(arg_body){
 		var last_low_depth = D-cover-df;
 		var last_high_depth = cover+df;
 		
-		console.log(rs);
 		
-		for(var i = rs.length-1;i>=0;i--){
+		// loop bottom to top
+		for(var i = 0;i<rs.length;i++){
 			if(rs[i].from === "lowest"){
 				if(rs[i] === row){
 					return last_low_depth - rs[i].offset - rs[i].diameter/2;
@@ -101,7 +114,8 @@ function ReoManager(arg_body){
 				}
 			}
 		}
-		for(var i = 0; i<rs.length-1; i++){
+		// loop top to bottom
+		for(var i = rs.length-1; i>=0; i--){
 			if(rs[i].from === "highest"){
 				if(rs[i] === row){
 					return last_high_depth + rs[i].offset + rs[i].diameter/2;
@@ -110,7 +124,7 @@ function ReoManager(arg_body){
 				}
 			}
 		}
-		return "ERROR";
+		throw new Error("Failed to get depth of row.")
 	}.bind(this);
 	
 	
@@ -122,8 +136,7 @@ function ReoManager(arg_body){
 	
 	
 	this.createReoInput = function(){
-		var nr = new ReoInput();
-		nr.manager = this;
+		var nr = new ReoInput(this);
 		console.log("fix events")
 		nr.on("update",this.update);
 		nr.on("change",this.change);
@@ -142,8 +155,28 @@ function ReoManager(arg_body){
 	
 	this.update = function(e){
 		//console.log("reo-manager update");
+		this.update_renumberRows();
 		this.dispatch("update",this);
 	}.bind(this);
+	
+	
+	
+	
+	this.update_renumberRows = function(){
+		for(var i=0; i<this.rows.length;i++){
+			this.rows[i].layerNumberOutput.innerHTML = "";
+			this.rows[i].layerDepthOutput.innerHTML = "";
+		}
+		var rs = this.getEnabledRows();
+		for(var i=0; i<rs.length;i++){
+			rs[i].layerNumberOutput.innerHTML = i;
+			this.rows[i].layerDepthOutput.innerHTML = this.getDepthOfRow(rs[i]);
+		}
+	}.bind(this);
+	
+	
+	
+	
 	
 	
 	Object.defineProperty(this,"value",{
@@ -157,32 +190,6 @@ function ReoManager(arg_body){
 					diameter:	rs[i].diameter,
 					area:			rs[i].area,
 					depth:		this.getDepthOfRow(rs[i])
-				}
-				result.push(rw);
-			}
-			return result;
-			
-		},
-		set:function(newval){
-			// TODO: DESERIELIZEEEE :|
-		}
-	});
-	
-	Object.defineProperty(this,"selected_value",{
-		get:function(){
-			var result = [];
-			var rs = this.getEnabledSelectedRows(); 
-			var rw;
-			for(var i = 0;i<rs.length;i++){
-				rw = {
-					number:		rs[i].number,
-					diameter:	rs[i].diameter,
-					area:			rs[i].area,
-					depth:		this.getDepthOfRow(rs[i]),
-					mass_per_meter:	rs[i].mass_per_meter,
-					from:			rs[i].from,
-					offset:			rs[i].offset,
-					
 				}
 				result.push(rw);
 			}

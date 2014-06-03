@@ -15,19 +15,15 @@
 
 
 
-///////////////  HELP BAR SETUP  /////////////////////////// 
-
-
+///////////////  HELP BAR SETUP  ///////////////////////////
 var helpBar  = new HelpBar("varinfodiv")
 
 
 ///////////////    SETUP TOOLTIPS     /////////////////////
-
 var vin_tips = new ProTips(document.querySelector("#protips"));
 vin_tips.add(vin.b.body,"test")
 
 ///////////////    SETUP REO MANAGER     /////////////////////
-
 var rman = new ReoManager(document.querySelector("#reorows"));
 rman.on("change",mainUpdateListener);
 
@@ -59,7 +55,6 @@ var cs_ctx = cs_canvas.getContext('2d');
 ///////////////////// MAIN UPDATE LISTENER  /////////////////////////////
 mainUpdateListener()
 function mainUpdateListener(e){
-	//DoValidation(); // see validation.js
 	var arr = [];
 	for(var i in vin){
 		var v = vin[i].getValidity()
@@ -91,7 +86,7 @@ function mainUpdateListener(e){
 
 ///////////// CLEAR CALCULATION DIV HELPER FINCTION ////////////////
 function clearCalculations(){
-	var calculationdiv = document.querySelector("#calcdivcontent");
+	var calculationdiv = document.querySelector("#calcdiv-content");
 	calculationdiv.innerHTML = "";
 	var but = document.createElement("button");
 	but.innerHTML = "Click here to show the Calculation Process";

@@ -1,4 +1,5 @@
 function ReoLayer(parentbeam,barcode){
+	throw new Error("USE THIS?")
 	this.parentbeam = parentbeam;
 	this.number		= undefined;
 	this.diameter	= undefined;

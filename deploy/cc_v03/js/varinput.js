@@ -27,6 +27,12 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		this.unitDiv = document.createElement("td");
 		this.unitDiv.className = "unit-div";
 		
+		this.helpDiv = document.createElement("td");
+		this.helpDiv.className = "help-div";
+		this.helpButton = document.createElement("button");
+		this.helpButton.className = "help-button";
+		this.helpButton.innerHTML = "?";
+		
 		this.notationAnchor = document.createElement("a");
 	
 		if(arg_options){
@@ -51,7 +57,8 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		this.row.appendChild(this.notationDiv);
 		this.row.appendChild(this.valueDiv);
 		this.row.appendChild(this.unitDiv);
-		
+		this.row.appendChild(this.helpDiv);
+		this.helpDiv.appendChild(this.helpButton);
 		this.body.appendChild(this.row);
 		
 		

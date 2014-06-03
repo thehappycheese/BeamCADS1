@@ -14,9 +14,6 @@
 			}
 		});
 	</script>
-	<!--
-	<script type="text/javascript"  src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.3-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-	-->
 	<script type="text/javascript" src="js/mathjax/MathJax.js"></script>
 	<title>BeamCalc</title>
 </head>
@@ -37,7 +34,9 @@
 		</div>
 		
 		<div id="varinfodiv" class="bmpblock" >
-			<!--<iframe id="varinfoiframe" name="varinfoiframe" src="infos/infos.htm" style="width:100%;border:none;"></iframe>-->
+			<!-- 
+				HELP INFO GOES HERE
+			-->
 		</div>
 	</div>
 	
@@ -48,31 +47,30 @@
 			<div style="width:100%;">
 				<h2>General Variables</h2>
 			</div>
-			<div id="invardivdiv">
+			<div id="invardiv-content">
 				<!--
 					Variable inputs go here!
 				-->
 			</div>
 		</div>
 		
-		
-		
-		
-		<div id="reoinputoutputdiv" class="bmpblock">
+		<div id="reoinputdiv" class="bmpblock">
 			<div style="width:100%;">
 				<h2>Reinforcement Information</h2>
 			</div>
-			<div id="reoinputdiv">
+			<div id="reoinputdiv-content">
 				<table class="reotable" style="">
 					<thead>
 						<tr style="font-family:sans-serif;">
-							<td style="width:2em;"><img src="img/power_icon.png"/></td>
-							<td style="width:3em;">bars</td>
+							<td style="width:2em;"><!--Layer number here--></td>
+							<td style="width:2em;border-left:none;"><img src="img/power_icon.png"/></td>
+							<td style="width:3em;">Bars</td>
 							<td style="width:30px;border-left:none;"></td>
-							<td style="width:3em;">area<br>(mm&sup2;)</td>
-							<td>gap<br>(mm)</td>
-							<td>position<br>(mm)</td>
-							<td  style="width:2em;"><img src="img/sum_icon.png"/></td>
+							<td>Top/Bottom</td>
+							<td>Gap<br>(mm)</td>
+							
+							<td style="min-width:3em;">Area<br>(mm&sup2;)</td>
+							<td style="min-width:3em;">Depth<br>(mm)</td>
 						</tr>
 					</thead>
 					<tbody id="reorows">
@@ -82,64 +80,8 @@
 					</tbody>
 				</table>
 			</div>
-			<div style="width:100%;"></div>
-			<div id="reooutputdiv">
-				
-				
-				<!-- TODO ressurect this-->
-				<table id="reoouttable" style="width:100%" cellspacing=0>
-					<thead>
-						<tr>
-							<th>Value:</th><th>Hover:</th><th>Sum/Avg</th><th>Unit:</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr data-tooltip="Depth measured from top surface of beam to centroid of layer[s].">
-							<td id="depthlable">Depth from top surface:</td>
-							<td>.</td>
-							<td class="tableout" id="depth">1200</td>
-							<td>mm</td>
-						</tr>
-						<tr data-tooltip="Cross-sectional area of reo-bar layer[s]">
-							<td id="arealable">Cross-sectional area of steel:</td>
-							<td>.</td>
-							<td id="area" class="tableout">30000</td>
-							<td>mm&#178;</td>
-						</tr>
-						
-						<tr>
-							<td id="amountlable">Number of bars</td>
-							<td>10</td>
-							<td id="number" class="tableout" data-tooltip="Number of reo bars in layer[s]">10</td>
-							<td>bars</td>
-						</tr>
-						<tr>
-							<td>.</td>
-							<td>.</td>
-							<td id="length" class="tableout" data-tooltip="Total length of reo bars based on clear span L_n with no overlap">10</td>
-							<td>m</td>
-						</tr>
-						<tr>
-							<td>.</td>
-							<td>.</td>
-							<td id="mass" class="tableout" data-tooltip="Total mass of layer[s]">400</td>
-							<td>kg</td>
-						</tr>
-						<tr data-tooltip="Total tensile force in layer[s]. Compressive force is shown negative." >
-							<td id="tforcelable" style="border-bottom:none;">Layer Tension Force:</td>
-							<td>.</td>
-							<td id="tforce" style="border-bottom:none;"  class="tableout">200</td>
-							<td style="border-bottom:none;" >kN</td>
-						</tr>
-					</tbody>
-				</table>
-				
-			</div>
 		</div>
 		
-		
-
-
 		
 		<div id="crosssectiondiv" class="bmpblock" style="">
 			<div style="width:100%;align-self:flex-start;">
@@ -149,14 +91,12 @@
 		</div>
 		
 		
-
 		
-		
-		<div style="flex: 1 0 400px;min-height:800px;" class="bmpblock">
+		<div id="calcdiv" style="" class="bmpblock">
 			<div style="width:100%;">
 				<h2>Calculations</h2>
 			</div>
-			<div id="calcdivcontent"></div>
+			<div id="calcdiv-content"></div>
 		</div>
 	</div>
 	
@@ -171,109 +111,3 @@
 ///* main.js
 </script>
 	</html>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-			<!--
-		<div id="elevationdiv" class="bmpblock" style="display:flex;flex-wrap:wrap;">
-			<h1 style="display:block;width:100%">Elevation</h1>
-			<div style="width:100%;">
-				<canvas id="elevationcanvas" style="background-color:black;"></canvas>
-			</div>
-		</div>
-		-->
-	
-	
-	
-	
-	
-	<!--
-				<x-input	id="Ln"		
-							notation ="$$$L_n$$$" 
-							unit="mm"
-							value="1000"
-							type="number"
-							min="0"
-							max="50000"
-							step="500"
-							data-tooltip="Clear Span from edge to edge of supports"></x-input>
-							
-				<x-input	id="b"
-							notation ="$$$b$$$"
-							unit="mm"
-							value="300"
-							type="number"
-							min="200"
-							max="5000"
-							step="5"
-							data-tooltip="Breadth (horizontal width) of rectangular beam cross section"></x-input>
-							
-				<x-input	id="D"
-							notation ="$$$D$$$"
-							unit="mm"
-							value="600"
-							type="number"
-							min="0"
-							max="10000"
-							step="10"
-							data-tooltip="Total depth (vertical height) of beam from top to bottom surface"></x-input>
-							
-				<x-input	id="cover"
-							notation ="$$$\text{Cover}$$$"
-							unit="mm"
-							value="25"
-							type="number"
-							min="20"
-							max="100"
-							step="5"
-							data-tooltip="Distance from the outer surface of concrete to the reo bars (all around)"></x-input>
-							
-				<x-input	id="eclass"
-							notation ="$$$\text{E. Class}$$$"
-							options='["A1","A2","B1","B2","C1","C2"]'
-							pattern="(A|B|C|D)"
-							data-tooltip="Exposure Classification determined by exposure to natural environment. See AS3600 Table 4.3."></x-input>
-				
-				<x-input	id="df"
-							notation="$$$d_f$$$"
-							unit="mm"
-							value="10"
-							options="[10, 12, 16, 20, 24, 28, 32, 36, 40]"
-							data-tooltip="Diameter of fitment bars (the 'ribcage') of the beam. Standard nominal diameters: [10, 12, 16, 20, 24, 28, 32, 36, 40]mm"></x-input> 
-							
-				<x-input	id="rhoc"
-							notation="$$$\rho_c$$$"
-							unit="kg/m&#179;"
-							value="2400"
-							type="number"
-							min="2100"
-							max="2800"
-							step="10"
-							data-tooltip="Concrete Density"></x-input>
-							
-				<x-input	id="fc"
-							notation="$$$f'_c$$$"
-							unit="MPa"
-							value="32"
-							options="[20, 25, 32, 40, 50, 65, 80, 100]"
-							data-tooltip="Concrete Strength. This software only uses standard grades."></x-input>
-					-->

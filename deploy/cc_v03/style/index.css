@@ -1,49 +1,3 @@
-body {
-  font-size: 16px;
-  margin: 0;
-  padding: 5px 5px;
-  background: lightgrey;
-  display: flex;
-  flex-direction: row; }
-
-#maincol {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: flex-start;
-  flex: 1 1 200px;
-  height: calc(100% - 6px);
-  overflow-y: scroll;
-  border: 3px inset;
-  background-color: white; }
-
-#secondarycol {
-  display: flex;
-  flex-direction: column;
-  display: flex;
-  flex: 0.3 0 400px;
-  max-width: 500px;
-  height: 100%;
-  margin-right: 5px;
-  background-color: white; }
-
-h1, h2, h3, h4 {
-  font-family: sans-serif;
-  font-weight: bold;
-  color: #3e9cad; }
-
-h1 {
-  font-size: 22pt;
-  margin: 0; }
-
-h2 {
-  font-size: 14pt;
-  margin: 2px 10px; }
-
-h3 {
-  font-size: 10pt;
-  margin: 0; }
-
 .CalcDiv {
   width: 100%;
   border: 1px solid grey;
@@ -51,7 +5,7 @@ h3 {
   .CalcDiv .topdiv:hover {
     background-color: #f6feff; }
   .CalcDiv .topdiv .titlediv {
-    font-size: 120%;
+    font-size: 100%;
     line-height: 25px;
     height: 25px;
     padding: 5px;
@@ -73,30 +27,6 @@ h3 {
       margin-left: 20px;
       margin-top: 0.5em;
       padding: 0; }
-
-input:invalid {
-  background-color: #fffba6;
-  color: red; }
-
-#reoouttable {
-  border: 1px solid lightgrey;
-  border-collapse: collapse; }
-  #reoouttable th {
-    border-bottom: 1px solid lightgrey;
-    border-left: 1px solid lightgrey;
-    font-family: sans-serif;
-    font-weight: normal; }
-  #reoouttable td {
-    border-bottom: 1px solid lightgrey;
-    padding: 1px 3px; }
-  #reoouttable td.tableout {
-    color: #6a7c7f;
-    text-align: right;
-    font-family: sans-serif;
-    padding-right: 0;
-    min-width: 50px;
-    font-size: 90%;
-    padding-right: 5px; }
 
 .reotable {
   table-layout: fixed;
@@ -173,30 +103,43 @@ input:invalid {
       color: grey; }
 
 .varinput {
-  width: 250px;
-  height: 18px;
   border: 1px solid transparent;
   border-radius: 4px;
-  padding: 1px;
-  margin: 1px 0px;
+  margin: 1px;
   display: flex;
   align-items: center;
+  float: left;
+  border: 1px solid lightgrey;
   cursor: pointer; }
+  .varinput td {
+    padding: 1px;
+    height: 20px; }
   .varinput:hover {
-    border: 1px solid lightgrey; }
+    border: 1px solid grey; }
   .varinput .notation-div {
     text-align: right;
     padding-right: 8px;
-    font-size: 18px; }
+    width: 4em; }
   .varinput .value-div {
     margin-left: 3px;
-    font-size: 18px;
-    width: 35%; }
+    width: 3em; }
   .varinput .unit-div {
-    margin-left: 3px;
-    padding-left: 3px;
-    font-size: 18px;
-    width: 30%; }
+    margin-left: 0.2em;
+    padding-left: 0.2em;
+    font-size: 1em;
+    width: 2.2em; }
+  .varinput .help-div {
+    width: 1em;
+    padding: 0; }
+    .varinput .help-div button {
+      color: darkblue;
+      font-family: monospace;
+      font-weight: bold;
+      margin: none;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0; }
   .varinput a {
     color: #1f4e56;
     vertical-align: center; }
@@ -204,7 +147,6 @@ input:invalid {
       outline: none; }
   .varinput input, .varinput select {
     width: 100%;
-    font-size: 16px;
     text-align: right;
     padding: 0 3px;
     margin: 0; }
@@ -214,11 +156,67 @@ input:invalid {
     -webkit-appearance: none;
     margin: 0; }
 
+body {
+  font-size: 16px;
+  margin: 0;
+  padding: 5px 5px;
+  background: #c0b3cc;
+  display: flex;
+  flex-direction: row; }
+
+input:invalid {
+  background-color: #fffba6;
+  color: red; }
+
+h1, h2, h3, h4 {
+  font-family: sans-serif;
+  font-weight: bold;
+  color: #3e9cad; }
+
+h1 {
+  font-size: 22pt;
+  margin: 0; }
+
+h2 {
+  font-size: 14pt;
+  margin: 2px 10px; }
+
+h3 {
+  font-size: 10pt;
+  margin: 0; }
+
 .bmpblock {
   padding: 5px;
   background-color: white; }
 
-/* Tex src = http://fc07.deviantart.net/fs19/i/2007/291/6/b/Concrete_Texture_by_MartinIsaac.jpg*/
+#maincol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  flex: 1 1 200px;
+  height: calc(100% - 6px);
+  overflow-y: scroll;
+  border: 3px inset;
+  border-color: white;
+  background-color: white; }
+
+#secondarycol {
+  display: flex;
+  flex-direction: column;
+  display: flex;
+  flex: 0.3 0 400px;
+  max-width: 500px;
+  height: calc(100% - 6px);
+  margin-right: 5px;
+  border: 3px inset;
+  border-color: white;
+  background-color: white; }
+
+#calcdiv {
+  flex: 1 0 400px;
+  min-height: 800px; }
+
 #apptitlebox {
   display: flex;
   flex: 0 0 35px;
@@ -239,19 +237,7 @@ input:invalid {
     color: inherit; }
 
 #invardiv {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  flex: 1 1 270px;
-  width: 270px;
   padding: 5px; }
-  #invardiv #invardivdiv {
-    display: flex;
-    flex-direction: rows;
-    flex: 0 1 280px;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-content: space-around; }
 
 #varinfodiv {
   flex: 1 1 500px;
@@ -278,7 +264,8 @@ input:invalid {
       border-bottom: 1px solid grey;
       padding: 2px; }
     #varinfodiv table.help_bar_link .c1 {
-      width: 20%; }
+      width: 5em;
+      text-align: center; }
     #varinfodiv table.help_bar_link .c2 {
       font-size: 0.9em;
       font-family: sans-serif; }
@@ -294,19 +281,14 @@ input:invalid {
       font-size: 0.9em;
       font-weight: bold; }
 
-#reoinputoutputdiv {
-  flex: 1 0 365px;
+#reoinputdiv {
+  flex: 1 1 365px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   justify-content: space-around;
   display: flex; }
-  #reoinputoutputdiv #reooutputdiv {
-    width: 100%;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 2px dashed lightgrey; }
-  #reoinputoutputdiv #reoinputdiv {
+  #reoinputdiv #reoinputdiv-content {
     width: 100%; }
 
 #crosssectiondiv {
@@ -315,12 +297,3 @@ input:invalid {
   flex-wrap: wrap;
   justify-content: center;
   align-content: flex-start; }
-
-#errortd {
-  background-color: #fffdd2;
-  padding: 5px; }
-
-#errortd p {
-  margin: 8px 0;
-  font-size: 16px;
-  line-height: 16px; }

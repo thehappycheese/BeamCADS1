@@ -1,9 +1,11 @@
 
 ///* EventDispatcher.js
 
-function ReoInput(){
+function ReoInput(arg_manager){
+	this.manager = arg_manager;
 	
 	EventDispatcher.call(this);
+	
 	
 	this.diameters	= [10,	12,		16,		20,		24,		28,		32,		36,		40];
 	this.areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
@@ -13,19 +15,25 @@ function ReoInput(){
 		this.body = document.createElement("tr");
 		this.body.className = "reoinput";
 		this.body.innerHTML = 
-		'<td><input type="checkbox" class="enabled"></td>\
+		'\
+		<td class="layernum">#</td>\
+		<td><input type="checkbox" class="enabled"></td>\
 		<td><input class="barcode" required value="2N10"\></td>\
 		<td><button class="more" tabindex="-1">+</button><button class="less" tabindex="-1">-</button></td>\
-		<td class="area">--</td>\
-		<td><input type="number" class="offset" value="0" required/></td>\
 		<td><select class="from"><option>lowest</option><option>highest</option></select></td>\
-		<td><input type="checkbox" class="selected"/></td>';
+		<td><input type="number" class="offset" value="0" required/></td>\
+		\
+		<td class="area">--</td>\
+		<td class="depth">0</td>\
+		';
 		
 		this.enabledCheckbox = this.body.querySelector(".enabled");
 		this.barcodeInput = this.body.querySelector(".barcode");
 		this.moreButton = this.body.querySelector(".more");
 		this.lessButton = this.body.querySelector(".less");
 		this.areaOutput = this.body.querySelector(".area");
+		this.layerNumberOutput = this.body.querySelector(".layernum");
+		this.layerDepthOutput = this.body.querySelector(".depth");
 		this.offsetInput = this.body.querySelector(".offset");
 		this.fromInput = this.body.querySelector(".from");
 		this.selectedCheckbox = this.body.querySelector(".selected");
@@ -39,10 +47,6 @@ function ReoInput(){
 		dom.appendChild(this.body);
 		this.enabledCheckbox.addEventListener("change",function(e){
 			this.enabled = this.enabledCheckbox.checked;
-			this.change();
-		}.bind(this));
-		this.selectedCheckbox.addEventListener("change",function(e){
-			this.selected = this.selectedCheckbox.checked;
 			this.change();
 		}.bind(this));
 		this.moreButton.addEventListener("click",function(){
@@ -131,12 +135,7 @@ function ReoInput(){
 			
 			this.enabledCheckbox.checked = newval;
 			
-			if(newval == true){
-				this.body.style.color = "";
-			}else if(newval == false){
-				this.body.style.color = "grey";
-				this.selected = false;
-			}
+			
 			
 			this.barcodeInput.disabled		= !newval;
 			this.moreButton.disabled		= !newval;
@@ -144,23 +143,12 @@ function ReoInput(){
 			this.areaOutput.disabled		= !newval;
 			this.offsetInput.disabled		= !newval;
 			this.fromInput.disabled			= !newval;
-			this.selectedCheckbox.disabled= !newval;
 			
 			this.update();
 			
 		}.bind(this),
 	});
 	
-	//				GET/SET SELECTED
-	Object.defineProperty(this,"selected",{
-		get:function(){
-			return this.selectedCheckbox.checked;
-		}.bind(this),
-		set:function(newval){
-			this.selectedCheckbox.checked = newval;
-			this.update();
-		}.bind(this),
-	});
 	
 	
 	// 			GET/SET barcode
@@ -252,6 +240,12 @@ function ReoInput(){
 	this.update = function(){
 		this.areaOutput.innerHTML = this.area || "--";
 		this.dispatch("update",this);
+		if(this.enabled){
+			this.body.style.color = "";
+			// TODO: show layer number
+		}else{
+			this.body.style.color = "grey";
+		}
 	}.bind(this);
 	this.change = function(){
 		this.dispatch("change",this);

@@ -1,6 +1,6 @@
 var calcs = {};
 function outputCalculations(){
-	var calculationdiv = document.querySelector("#calcdivcontent");
+	var calculationdiv = document.querySelector("#calcdiv-content");
 	calculationdiv.innerHTML = "";
 	
 	

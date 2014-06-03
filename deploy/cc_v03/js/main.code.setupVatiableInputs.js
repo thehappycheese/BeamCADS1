@@ -1,17 +1,25 @@
 ///* varinput.js
 ///////////////    SETUP VARIABLE INPUTS     /////////////////////
+// TODO: varinfodiv iframe is no longer relevant here! Remove it from the definition of the thing and replace with #help_bar_ etc
 
+
+
+// first, create the global variables
 var vin = {};
 vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm", "infos/Ln.htm", "varinfoiframe");
 vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm", "infos/b.htm", "varinfoiframe");
 vin.D      = new VarInput('D' , "$$$D$$$" , "number" , 600, "mm", "infos/D.htm", "varinfoiframe");
 vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm", "infos/cover.htm", "varinfoiframe");
 vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "", "infos/eclass.htm", "varinfoiframe",["A1","A2","B1","B2","C1","C2"]);
-vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 13, 14, 15, 15, 17, 18, 19, 20]); // TODO: SUPERVISOR Round bars http://www.onesteel.com/products.asp?action=showProduct&productID=52&categoryName=Bar%20Sections
+vin.df     = new VarInput('df' , "$$$d_f$$$" , "number" , 10, "mm", "infos/df.htm", "varinfoiframe",[10, 12, 13, 14, 15, 15, 17, 18, 19, 20]);
+// TODO: SUPERVISOR Round bars http://www.onesteel.com/products.asp?action=showProduct&productID=52&categoryName=Bar%20Sections
 vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;", "infos/rhoc.htm", "varinfoiframe");
 vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa", "infos/fc.htm", "varinfoiframe",[20, 25, 32, 40, 50, 65, 80, 100]);
+
+
+// append to dom and attatch a listener
 for(var i in vin){
-	vin[i].appendTo(document.querySelector("#invardivdiv"));
+	vin[i].appendTo(document.querySelector("#invardiv-content"));
 	vin[i].on("change",function(){
 		mainUpdateListener()
 	});
@@ -60,6 +68,8 @@ vin.b.validate = function(e){
 	
 	return e;
 }
+
+
 vin.D.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
 	var link = '<a href="infos/D.htm" target="varinfoiframe">$$$D$$$</a> '
