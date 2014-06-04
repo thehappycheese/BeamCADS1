@@ -1,5 +1,6 @@
 ///* drawBeam.js
-///* Beam.js
+
+///* Beam.drawSection.js
 
 ///* validation.js
 ///* reoinput.js
@@ -60,7 +61,7 @@ function mainUpdateListener(e){
 	intakeBeamValues();
 	//outputCalculations();
 	clearCalculations();
-	drawCrossSection(cs_ctx,b);
+	b.drawSection(cs_ctx);
 	
 	var arr = [];
 	for(var i in vin){

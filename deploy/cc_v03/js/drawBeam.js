@@ -271,12 +271,13 @@ function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
 		ctx.fill();
 	ctx.restore();
 	
-	// Draw text
-	ctx.fillStyle = "#000000";
+	if(txt && txt !== "") {
+		// Draw text
+		ctx.fillStyle = "#000000";
 
-	ctx.clearRect(vt.x-metric.width/2-3,vt.y-fontpx/2-1,metric.width+6,fontpx+4);
-	ctx.fillText(txt,vt.x,vt.y);
-	
+		ctx.clearRect(vt.x-metric.width/2-3,vt.y-fontpx/2-1,metric.width+6,fontpx+4);
+		ctx.fillText(txt,vt.x,vt.y);
+	}
 	ctx.restore();
 	
 }
