@@ -54,11 +54,12 @@
 		border-top:1px solid lightgrey;
 		border-bottom:1px solid lightgrey;
 		padding:2px;
+		font-family:sans-serif;
 	}
 	tbody tr:hover{
 		background-color:$pri-4;
 	}
-	tbody td{
+	tbody, tfoot td{
 		vertical-align:middle;
 		text-align:center;
 	}
@@ -67,6 +68,7 @@
 		text-align:center;
 		vertical-align:middle;
 	}
+	
 }
 
 
@@ -81,9 +83,9 @@
 		color:$pri-3;
 		font-weight:bold;
 	}
-	input{
+	input, select{
 		width:100%;
-		text-align:right;
+		text-align:center;
 	}
 	input[type="checkbox"]{
 		width:100%;

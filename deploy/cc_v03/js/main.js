@@ -55,21 +55,25 @@ var cs_ctx = cs_canvas.getContext('2d');
 ///////////////////// MAIN UPDATE LISTENER  /////////////////////////////
 mainUpdateListener()
 function mainUpdateListener(e){
-	var arr = [];
-	for(var i in vin){
-		var v = vin[i].getValidity()
-		if(v.error.length>0){
-			arr = arr.concat(v.error);
-		}
-	}
-	vin_tips.setError(arr);
 	
 	
 	intakeBeamValues();
 	//outputCalculations();
 	clearCalculations();
-	outputReoSummary();
-	drawCrossSection(cs_ctx,b)
+	drawCrossSection(cs_ctx,b);
+	
+	var arr = [];
+	for(var i in vin){
+		var v = vin[i].getValidity()
+		arr = arr.concat(v.error);
+	}
+	var rs = rman.getEnabledRows()
+	for(var i = 0; i<rs.length; i++){
+		var v = rs[i].getValidity(b.dn);
+		arr = arr.concat(v.error);
+	}
+	vin_tips.setError(arr);
+	
 }
 
 

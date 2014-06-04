@@ -1,7 +1,7 @@
 ///* EventDispatcher.js
 
 
-function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_target,arg_options){
+function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_options){
 	
 	
 	EventDispatcher.call(this);
@@ -15,7 +15,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	
 	// ##########################################################################################
 	// 			BUILD INTERFACE
-	// ##########################################################################################
+	// #########################################################################################
 	this.buildInterface = function(){
 		this.body = document.createElement("table");
 		this.row = document.createElement("tr");
@@ -29,11 +29,13 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		
 		this.helpDiv = document.createElement("td");
 		this.helpDiv.className = "help-div";
+		this.helpAnchor = document.createElement("a");
+		this.helpAnchor.href = "#help_bar_"+arg_id;
 		this.helpButton = document.createElement("button");
 		this.helpButton.className = "help-button";
 		this.helpButton.innerHTML = "?";
 		
-		this.notationAnchor = document.createElement("a");
+
 	
 		if(arg_options){
 			this.valueInput	= document.createElement("select");
@@ -52,27 +54,23 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		
 		
 		this.valueDiv.appendChild(this.valueInput);
-		this.notationDiv.appendChild(this.notationAnchor);
 		
 		this.row.appendChild(this.notationDiv);
 		this.row.appendChild(this.valueDiv);
 		this.row.appendChild(this.unitDiv);
 		this.row.appendChild(this.helpDiv);
-		this.helpDiv.appendChild(this.helpButton);
+		this.helpDiv.appendChild(this.helpAnchor);
+		this.helpAnchor.appendChild(this.helpButton);
 		this.body.appendChild(this.row);
 		
 		
 		this.notation	= arg_notation;
-		this.href		= arg_href;
-		this.target		= arg_target;
 		
 		
-		this.id		= arg_id
+		this.id		= "var_input_"+arg_id;
 		this.unit	= arg_unit;
 		this.value	= arg_value;
 		
-		
-		this.notationAnchor.tabIndex=-1;
 		
 		
 		
@@ -102,7 +100,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 		this.body.addEventListener("click", function(e){
 			if(e.target.tagName!=="INPUT" && e.target.tagName!=="SELECT"){
 				//e.preventDefault();
-				this.notationAnchor.click();
+				this.valueInput.click();
 				if(this.valueInput.tagName == "SELECT"){
 					this.valueInput.focus();
 				}else{
@@ -155,9 +153,9 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 	}
 	
 	
-	// ##########################################################################################
+	// ###################################################################
 	// 			GETTERS AND SETTERS
-	// ##########################################################################################
+	// ###################################################################
 	Object.defineProperty(this,"valid",{
 		get:function(){
 			var val = {value:this.value, error:[], warning:[], info:[]};
@@ -170,24 +168,8 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_href,arg_t
 			return this._notation;
 		}.bind(this),
 		set:function(newval){
-			this.notationAnchor.innerHTML	= newval;
+			this.notationDiv.innerHTML	= newval;
 			this.updateMathJax();
-		}.bind(this)
-	});
-	Object.defineProperty(this,"target",{
-		get:function(){
-			return this.notationAnchor.target;
-		}.bind(this),
-		set:function(newval){
-			this.notationAnchor.target	= newval;
-		}.bind(this)
-	});
-	Object.defineProperty(this,"href",{
-		get:function(){
-			return this.notationAnchor.href;
-		}.bind(this),
-		set:function(newval){
-			this.notationAnchor.href	= newval;
 		}.bind(this)
 	});
 	

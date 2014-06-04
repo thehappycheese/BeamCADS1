@@ -33,6 +33,7 @@ function ReoInput(arg_manager){
 		this.lessButton = this.body.querySelector(".less");
 		this.areaOutput = this.body.querySelector(".area");
 		this.layerNumberOutput = this.body.querySelector(".layernum");
+		this.layerNumberOutput.style.fontWeight = "bold";
 		this.layerDepthOutput = this.body.querySelector(".depth");
 		this.offsetInput = this.body.querySelector(".offset");
 		this.fromInput = this.body.querySelector(".from");
@@ -238,14 +239,15 @@ function ReoInput(arg_manager){
 	// ##########################################################################################
 	
 	this.update = function(){
-		this.areaOutput.innerHTML = this.area || "--";
-		this.dispatch("update",this);
 		if(this.enabled){
 			this.body.style.color = "";
+			this.areaOutput.innerHTML = this.area;
 			// TODO: show layer number
 		}else{
+			this.areaOutput.innerHTML = "";
 			this.body.style.color = "grey";
 		}
+		this.dispatch("update",this);
 	}.bind(this);
 	this.change = function(){
 		this.dispatch("change",this);
@@ -388,6 +390,62 @@ function ReoInput(arg_manager){
 	
 	}.bind(this);// end _more_less_barcode
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	this.getValidity = function(){
+		var result = {error:[], warning:[], infos:[]};
+		if(!this.enabled) return result;
+		// Check that this layer isn't near the neutral axis
+		
+		
+		
+		// Check that this layer's diameter isnt less than half the diameter of the largest bar.
+		//var rs = this.manager.getEnabledRows();
+		//var largest = -Infinity;
+		//for(var i= 0; i <rs.length;i++){
+		//	if(rs[i].diameter>largest){
+		//		largest = rs[i].diameter;
+		//	}
+		//}
+		//var largeston2 = largest/2;
+		//if(this.diameter<largeston2){
+		//	result.error.push("Reo Layer "+this.manager.getEnabledRowIndex(this)+": "+"is less than half the diameter of the largest bar. This layer should be excluded from calculations.")
+		//}
+		
+		return result;
+	}.bind(this);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 	this.create();

@@ -36,10 +36,11 @@
   .reotable td {
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
-    padding: 2px; }
+    padding: 2px;
+    font-family: sans-serif; }
   .reotable tbody tr:hover {
     background-color: #d4f8ff; }
-  .reotable tbody td {
+  .reotable tbody, .reotable tfoot td {
     vertical-align: middle;
     text-align: center; }
   .reotable thead td {
@@ -55,9 +56,9 @@
 .reoinput .bars {
   color: #3e9cad;
   font-weight: bold; }
-.reoinput input {
+.reoinput input, .reoinput select {
   width: 100%;
-  text-align: right; }
+  text-align: center; }
 .reoinput input[type="checkbox"] {
   width: 100%;
   height: 16px;

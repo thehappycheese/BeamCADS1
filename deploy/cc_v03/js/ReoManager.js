@@ -166,11 +166,12 @@ function ReoManager(arg_body){
 		for(var i=0; i<this.rows.length;i++){
 			this.rows[i].layerNumberOutput.innerHTML = "";
 			this.rows[i].layerDepthOutput.innerHTML = "";
+			this.rows[i].layerDepthOutput.innerHTML = "";
 		}
 		var rs = this.getEnabledRows();
 		for(var i=0; i<rs.length;i++){
 			rs[i].layerNumberOutput.innerHTML = i;
-			this.rows[i].layerDepthOutput.innerHTML = this.getDepthOfRow(rs[i]);
+			rs[i].layerDepthOutput.innerHTML = this.getDepthOfRow(rs[i]);
 		}
 	}.bind(this);
 	
