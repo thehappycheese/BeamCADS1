@@ -287,6 +287,15 @@ function Beam(){
 	// ### GET STEEL AREAS #########################################################
 	// #############################################################################
 	
+	Object.defineProperty(this,"As",{get:function(){
+		var sum = 0;
+		for(i = 0;i<this.reo.length;i++){
+			sum += this.reo[i].area;
+		}
+		return sum;
+	}.bind(this)});
+	
+	
 	Object.defineProperty(this,"Ast",{get:function(){
 		return this.Ast_from_dn(this.dn);
 	}.bind(this)});

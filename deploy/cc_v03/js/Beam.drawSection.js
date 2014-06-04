@@ -4,6 +4,8 @@
 
 Beam.prototype.drawSection = function(ctx){
 	var b = null;
+	var dn = this.dn;
+	var d = this.Ts_centroid_depth_from_dn(dn);
 	
 	// unpack the canvas
 	
@@ -68,6 +70,37 @@ Beam.prototype.drawSection = function(ctx){
 			20,
 			""
 		);
+		
+		ctx.strokeStyle="red"
+		ctx.lineWidth = 2;
+		ctx.beginPath()
+			ctx.moveTo(
+				-this.b/2*scale-30,
+				-this.D/2*scale+d*scale
+			)
+			ctx.lineTo(
+				this.b/2*scale+80,
+				-this.D/2*scale+d*scale
+			)
+		ctx.stroke()
+		ctx.fillText(
+			"d_n",
+			this.b/2*scale+80,
+			-this.D/2*scale+d*scale
+		)
+
+		dim(
+			ctx,
+			this.b/2*scale + 5	, -this.D/2*scale,
+			this.b/2*scale + 5	, -this.D/2*scale+dn*scale,
+			0,
+			80,
+			"d = "+dn.toFixed(1)+" mm"
+		);
+		
+		
+		
+		
 		
 		ctx.fillStyle = "black";
 		ctx.font = "15px serif";
@@ -180,6 +213,7 @@ Beam.prototype.drawSection = function(ctx){
 			if(ddif<300){
 				last_depth = creo[i].depth;
 			}else{
+				// TODO evenly space stuff
 				while(ddif>300){
 					last_depth += 300;
 					ddif -= 300;
@@ -197,16 +231,23 @@ Beam.prototype.drawSection = function(ctx){
 		
 		
 		// Draw reo
-		ctx.fillStyle = "grey";
+		
 		for(var i = 0; i< crackreo.length; i++){
 			var layer = crackreo[i];
 			
 			var spacing = (this.b-(this.cover+this.df)*2 - layer.diameter)/(layer.number-1)
 			for(var j = 0; j<layer.number; j++){
+				ctx.fillStyle = "grey";
 				ctx.fillCircle(
 					(-this.b/2+this.cover+this.df+layer.diameter/2+j*spacing)	*scale,
 					(-this.D/2 + layer.depth)			*scale,
 					layer.diameter/2 * scale
+				);
+				ctx.fillStyle = "lightgrey";
+				ctx.fillCircle(
+					(-this.b/2+this.cover+this.df+layer.diameter/2+j*spacing)	*scale,
+					(-this.D/2 + layer.depth)			*scale,
+					layer.diameter/2 * scale - 1
 				);
 			}
 		}

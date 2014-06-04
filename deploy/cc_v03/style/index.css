@@ -37,7 +37,8 @@
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
     padding: 2px;
-    font-family: sans-serif; }
+    font-family: sans-serif;
+    font-size: 0.8em; }
   .reotable tbody tr:hover {
     background-color: #d4f8ff; }
   .reotable tbody, .reotable tfoot td {
@@ -114,7 +115,7 @@
   cursor: pointer; }
   .varinput td {
     padding: 1px;
-    height: 20px; }
+    height: 28px; }
   .varinput:hover {
     border: 1px solid grey; }
   .varinput .notation-div {
