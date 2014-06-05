@@ -60,7 +60,7 @@ function mainUpdateListener(e){
 	
 	intakeBeamValues();
 	
-	document.querySelector("#reosumarea").innerHTML = b.As;
+	document.querySelector("#reosumarea").innerHTML = b.As || "";
 	//outputCalculations();
 	clearCalculations();
 	b.drawSection(cs_ctx);

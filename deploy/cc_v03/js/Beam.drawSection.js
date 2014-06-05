@@ -3,6 +3,11 @@
 ///* Beam.js
 
 Beam.prototype.drawSection = function(ctx){
+	var drawOptions = {
+		draw_dn:false,
+		draw_d:false
+		
+	};
 	var b = null;
 	var dn = this.dn;
 	var d = this.Ts_centroid_depth_from_dn(dn);
@@ -20,7 +25,7 @@ Beam.prototype.drawSection = function(ctx){
 	var padding_left = 60;
 	var padding_top = 40;
 	var padding_bottom = 40;
-	var padding_right = 100;
+	var padding_right = 150;
 	
 	var max_height = canvas.height - (padding_top+padding_bottom);
 	var max_width = canvas.width - (padding_left+padding_right);
@@ -71,32 +76,35 @@ Beam.prototype.drawSection = function(ctx){
 			""
 		);
 		
-		ctx.strokeStyle="red"
-		ctx.lineWidth = 2;
-		ctx.beginPath()
-			ctx.moveTo(
-				-this.b/2*scale-30,
-				-this.D/2*scale+d*scale
-			)
-			ctx.lineTo(
+		
+		//////// BANANA FOR SCALE ////////////
+		//ctx.drawImage(
+		//	document.querySelector("#bananascale"),
+		//	0,0,
+		//	200*scale,
+		//	200*scale
+		//);
+		
+		////// d_n  /////////////
+		if(drawOptions.draw_dn){
+			ctx.strokeStyle="#FFAAAA"
+			ctx.lineWidth = 2;
+			ctx.beginPath()
+				ctx.moveTo(
+					-this.b/2*scale-30,
+					-this.D/2*scale+d*scale
+				)
+				ctx.lineTo(
+					this.b/2*scale+80,
+					-this.D/2*scale+d*scale
+				)
+			ctx.stroke()
+			ctx.fillText(
+				"d_n",
 				this.b/2*scale+80,
 				-this.D/2*scale+d*scale
 			)
-		ctx.stroke()
-		ctx.fillText(
-			"d_n",
-			this.b/2*scale+80,
-			-this.D/2*scale+d*scale
-		)
-
-		dim(
-			ctx,
-			this.b/2*scale + 5	, -this.D/2*scale,
-			this.b/2*scale + 5	, -this.D/2*scale+dn*scale,
-			0,
-			80,
-			"d = "+dn.toFixed(1)+" mm"
-		);
+		}
 		
 		
 		
@@ -115,7 +123,7 @@ Beam.prototype.drawSection = function(ctx){
 		
 		
 		
-		// AS3600 17.2.3 assuming N12 Bars
+		// AS3600 17.2.3 bend radius
 		drawFitment(ctx,
 						(-this.b/2 + this.cover + this.df/2)*scale,
 						(-this.D/2 + this.cover + this.df/2)*scale,
@@ -161,7 +169,7 @@ Beam.prototype.drawSection = function(ctx){
 			lastDepth = lableDepth;
 			ctx.font = "15px sans-serif"
 			ctx.fillText(
-				"layer"+layer.index,
+				"Layer"+layer.index+": "+layer.number+"\u00D7N"+layer.diameter,
 				this.b/2*scale+30,
 				lableDepth
 			)

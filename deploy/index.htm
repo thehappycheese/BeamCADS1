@@ -1,69 +1,87 @@
 		<html>
 	<head>
 		<title>BeamCAD Suit</title>
+		<link rel="stylesheet" type="text/css" href="cc_v03/style/index.css" />
 		<style>
-
 body{
 	display:flex;
-	flex-wrap:wrap;
-	justify-content:space-around;
-	background:lightgrey;
-}
-h1{
-	color:darkblue;
-	font-family:sans-serif;
-	text-align:center;
+	align-items: center;
+	justify-content: space-around;
+
 }
 #main{
-	width:50%;
-	min-height:400px;
-	
-	border-radius:1em;
-	background:white;
-	box-shadow: 2px 2px 3px black;
-	
-	padding:1em;
-	margin:1em;
-	
-	display:flex;
-	flex-wrap:wrap;
-	justify-content:space-around;
-	
+	flex: 1 1 auto;
+	max-width:600px;
+	min-width:300px;
+	background-color:white;
+	min-height:300px;
+	padding:10px;
+	border:1px solid grey;
+	margin:30px;
+	margin-bottom:200px;
 }
 #butts{
 	display:flex;
-	flex-wrap:wrap;
-	justify-content:space-around;
 }
-a{
-	display:table-cell;
-	padding:1em;
-	margin:1em;
-	width:200px;
-	height:50px;
-	text-align:center;
-	vertical-align:middle;
-	border:1px solid black;
-	border-radius:1em;
-	box-shadow: -2px -2px 3px black inset;
-	
+p{
 	font-family:sans-serif;
-	background-color:#C2E0FF;
 }
-a:hover{
-	background-color:#F0F8FF;
+li{
+	font-family:sans-serif;
 }
-
+.contact{
+	padding-left:2em;
+	font-size:90%;
+}
 		</style>
 	</head>
 	<body>
 <div id="main">
-	<h1 style="width:100%;">BeamCAD Suit</h1>
+	<h1 style="width:100%;">BeamCalc Task and Survey</h1>
+	<hr>
+	<img src="img/myface.png" style="float:right;" width="200px" />
+	<h2>Hello!</h2>
+	<p>My name is Nicholas Archer.</p>
+	<p>I need just 5-10 mins of you time to finish my thesis.</p>
+	<p>My goal is to improve online learning for engineering students like you.</p>
+	
+	<p><b>Here's what I need!</b></p>
+	<ol>
+		<li>Read the consent form below</li>
+		<li>Try out the BeamCalc website</li>
+		<li>Do short tutorial using the BeamCalc.</li>
+		<ul>
+			<li>It is <b>not marked</b></li>
+			<li>It is easy</li>
+			<li>It is to get you to try some features of BeamCalc</li>
+		</ul>
+		<li>Complete a short survey.</li>
+	</ol>
+	
+	<hr>
+	<h2>Consent Form:</h2>
+	
+	<p>
+		No information which could identify you will be published anywhere. Survey results are stored privately on <a href="https://www.surveymonkey.com/">surveymonkey.com</a> then transferred to my computer only. Should you enter your contact details in the survey (for the purposes of the competition) this information will be processed separately from your survey answers.
+	</p>
+	<p>
+		If you have any questions my contact details are as follows:
+	</p>
+	
+	<p class="contact"> Mobile:
+		<script>
+			document.write([0,4,0,2,7].concat([3,4,1,6,4]).join(''));
+		</script>
+	</p>
+	<p class="contact"> Email:
+		<script>
+			document.write([14,28,2,8].concat([50,"@","student.","curtin",".edu",".au"]).join(''));
+		</script>
+	</p>
 	<div id="butts">
-		<a href="cc_v02/index.htm">Capacity Checker v0.2</a>
-		<a href="cc_v03/index.htm">Capacity Checker v0.3</a>
-		<a href="cc_v03/index_compiled.htm">Beam Calc Compiled</a>
+		<a href="cc_v03/index.htm"><button>I Agree to be experimented on. Show me the task.</button></a>
 	</div>
+	<p>Thank you, and I hope this will be interesting for you!</p>
 </div>
 	</body>
 		</html>
