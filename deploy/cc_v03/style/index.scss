@@ -13,12 +13,12 @@
 body{
 	font-size:16px;
 	margin:0;
-	padding: 5px 5px;
+	padding: 0px;
 	//background: url("../img/Clouds.png"), darken($pri-5,3%);
 	background: mix($sec-a-2,lightgrey);
 	display:flex;
 	flex-direction:row;
-	
+	height: 100%;
 }
 
 input:invalid{
@@ -61,7 +61,8 @@ h3{
 	justify-content:center;
 	align-content:flex-start;
 	flex: 1 1 200px;
-	height: calc(100% - 6px);
+	height: calc(100% - 6px - 10px);
+	margin:5px;
 	overflow-y:scroll;
 	border: 3px inset;
 	border-color:$sec-a-5*2;
@@ -73,8 +74,9 @@ h3{
 	display:flex;
 	flex: 0.3 0 400px;
 	max-width:500px;
-	height: calc(100% - 6px);
-	margin-right:5px;
+	height: calc(100% - 6px - 10px);
+	margin:5px;
+	margin-right:0px;
 	border: 3px inset;
 	border-color:$sec-a-5*2;
 	background-color:white;

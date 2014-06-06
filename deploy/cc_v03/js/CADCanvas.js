@@ -27,7 +27,7 @@ CanvasRenderingContext2D.prototype.arrow = function(from,to,size){
 //		Circle drawing Functions
 ///////////////////////////////////////////////////////////////////
 CanvasRenderingContext2D.prototype.circle = function(x,y,radius){
-	this.arc(x,y,radius,0,Math.PI*2);
+	this.arc(x,y,Math.max(0,radius),0,Math.PI*2);
 }
 CanvasRenderingContext2D.prototype.fillCircle = function(x,y,radius){
 	this.beginPath();

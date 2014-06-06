@@ -245,17 +245,11 @@ Beam.prototype.drawSection = function(ctx){
 			
 			var spacing = (this.b-(this.cover+this.df)*2 - layer.diameter)/(layer.number-1)
 			for(var j = 0; j<layer.number; j++){
-				ctx.fillStyle = "grey";
+				ctx.fillStyle = "#CCCCCC";
 				ctx.fillCircle(
 					(-this.b/2+this.cover+this.df+layer.diameter/2+j*spacing)	*scale,
 					(-this.D/2 + layer.depth)			*scale,
 					layer.diameter/2 * scale
-				);
-				ctx.fillStyle = "lightgrey";
-				ctx.fillCircle(
-					(-this.b/2+this.cover+this.df+layer.diameter/2+j*spacing)	*scale,
-					(-this.D/2 + layer.depth)			*scale,
-					layer.diameter/2 * scale - 1
 				);
 			}
 		}

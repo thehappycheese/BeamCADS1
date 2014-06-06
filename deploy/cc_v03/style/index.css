@@ -161,10 +161,11 @@
 body {
   font-size: 16px;
   margin: 0;
-  padding: 5px 5px;
+  padding: 0px;
   background: #c0b3cc;
   display: flex;
-  flex-direction: row; }
+  flex-direction: row;
+  height: 100%; }
 
 input:invalid {
   background-color: #fffba6;
@@ -197,7 +198,8 @@ h3 {
   justify-content: center;
   align-content: flex-start;
   flex: 1 1 200px;
-  height: calc(100% - 6px);
+  height: calc(100% - 6px - 10px);
+  margin: 5px;
   overflow-y: scroll;
   border: 3px inset;
   border-color: white;
@@ -209,8 +211,9 @@ h3 {
   display: flex;
   flex: 0.3 0 400px;
   max-width: 500px;
-  height: calc(100% - 6px);
-  margin-right: 5px;
+  height: calc(100% - 6px - 10px);
+  margin: 5px;
+  margin-right: 0px;
   border: 3px inset;
   border-color: white;
   background-color: white; }

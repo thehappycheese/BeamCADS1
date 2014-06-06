@@ -6,14 +6,14 @@
 
 // first, create the global variables
 var vin = {};
-vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm");
+//vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm");
 vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm");
 vin.D      = new VarInput('Depth' , "$$$D$$$" , "number" , 600, "mm");
 vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm");
 vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "",["A1","A2","B1","B2","C1","C2"]);
 vin.df     = new VarInput('dfitments' , "$$$d_f$$$" , "number" , 10, "mm",[10, 12, 13, 14, 15, 15, 17, 18, 19, 20]);
 // TODO: SUPERVISOR Round bars http://www.onesteel.com/products.asp?action=showProduct&productID=52&categoryName=Bar%20Sections
-vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;");
+//vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;");
 vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa",[20, 25, 32, 40, 50, 65, 80, 100]);
 
 

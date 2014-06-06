@@ -20,11 +20,12 @@ body{
 	margin:30px;
 	margin-bottom:200px;
 }
-#butts{
-	display:flex;
-}
 p{
 	font-family:sans-serif;
+	text-align:justify;
+}
+ol>li{
+	margin:5px 0;
 }
 li{
 	font-family:sans-serif;
@@ -33,6 +34,22 @@ li{
 	padding-left:2em;
 	font-size:90%;
 }
+a{
+	font-family:inherit;
+	font-size:inherit;
+}
+
+
+.answer{
+	color:black;
+	background-color:black;
+	border:1px solid black;
+}
+.answer:hover{
+	color:black;
+	background-color:white;
+}
+
 		</style>
 	</head>
 	<body>
@@ -42,17 +59,17 @@ li{
 	<img src="img/myface.png" style="float:right;" width="200px" />
 	<h2>Hello!</h2>
 	<p>My name is Nicholas Archer.</p>
-	<p>I need just 5-10 mins of you time to finish my thesis.</p>
-	<p>My goal is to improve online learning for engineering students like you.</p>
+	<p>I need just 5-10 mins of your time to finish my thesis.</p>
 	
 	<p><b>Here's what I need!</b></p>
 	<ol>
 		<li>Read the consent form below</li>
 		<li>Try out the BeamCalc website</li>
-		<li>Do short tutorial using the BeamCalc.</li>
+		<li>Do short tutorial using BeamCalc.</li>
 		<ul>
 			<li>It is <b>not marked</b></li>
-			<li>It is easy</li>
+			<li>Hover your mouse here: <span class="answer">This is how the answers are shown.</span></li>
+			<li>Only 3 questions.</li>
 			<li>It is to get you to try some features of BeamCalc</li>
 		</ul>
 		<li>Complete a short survey.</li>
@@ -60,27 +77,37 @@ li{
 	
 	<hr>
 	<h2>Consent Form:</h2>
-	
 	<p>
-		No information which could identify you will be published anywhere. Survey results are stored privately on <a href="https://www.surveymonkey.com/">surveymonkey.com</a> then transferred to my computer only. Should you enter your contact details in the survey (for the purposes of the competition) this information will be processed separately from your survey answers.
-	</p>
+		My goal is to improve online learning for engineering students like you. This servey aims to test out a few concepts in the literature of e-learning in the context of engineering.</p>
+	<p>
+		If you are a current Curtin University student, you will have the opportunity to enter contact information for the purpose of prises or rewards for participation.</p>
+	<p>
+		No information which could identify you will be published anywhere. Entering contact information is optional. Any contact details which you enter will be stored and processed separately from your survey answers.</p>
+	<p>
+		Survey results and contact information are stored securely on <a href="https://www.surveymonkey.com/">surveymonkey.com</a></p>
+	<p>
+		You may withdraw from the study at any time with no questions asked. If you have already submitted information you may contact me at the details below to have the information removed.</p>
 	<p>
 		If you have any questions my contact details are as follows:
 	</p>
 	
-	<p class="contact"> Mobile:
-		<script>
-			document.write([0,4,0,2,7].concat([3,4,1,6,4]).join(''));
-		</script>
+	<p class="contact">
+		Mobile:<script>document.write([0,4,0,2,7].concat([3,4,1,6,4]).join(''));</script></p>
+	<p class="contact">
+		Email:<script>document.write([14,28,2,8].concat([50,"@","student.","curtin",".edu",".au"]).join(''));</script></p>
+	<p>
+		By clicking agree below, you are legally agreeing to the following:
+		<ul>
+			<li>I have been informed of and understand the purposes of the study.</li>
+			<li>I have been given an opportunity to ask questions.</li>
+			<li>I understand I can withdraw at any time without prejudice.</li>
+			<li>Any information which might potentially identify me will not be used in published material.</li>
+			<li>I agree to participate in the study as outlined to me.</li>
+		</ul>
 	</p>
-	<p class="contact"> Email:
-		<script>
-			document.write([14,28,2,8].concat([50,"@","student.","curtin",".edu",".au"]).join(''));
-		</script>
+	<p style="text-align:center;padding:5px; border:1px solid lightgrey;">
+		<a href="cc_v03/index.htm">I Agree to Participate. Show me BeamCalc.</a>
 	</p>
-	<div id="butts">
-		<a href="cc_v03/index.htm"><button>I Agree to be experimented on. Show me the task.</button></a>
-	</div>
 	<p>Thank you, and I hope this will be interesting for you!</p>
 </div>
 	</body>
