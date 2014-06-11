@@ -21,7 +21,7 @@ body{
 	height: 100%;
 }
 
-input:invalid{
+input:invalid, select:invalid{
 	background-color:$sec-b-1;
 	color:red;
 }

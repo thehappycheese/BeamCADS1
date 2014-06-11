@@ -32,15 +32,19 @@ rman.on("change",mainUpdateListener);
 // Create global beam object
 var b = new Beam();
 function intakeBeamValues(){
-	b.Ln		= vin.Ln.value;
+	//b.Ln		= vin.Ln.value;
 	b.b		= vin.b.value;
 	b.D		= vin.D.value;
 	b.cover	= vin.cover.value;
 	b.eclass	= vin.eclass.value;
 	b.df		= vin.df.value;
-	b.rhoc	= vin.rhoc.value;
+	//b.rhoc	= vin.rhoc.value;
 	b.fc		= vin.fc.value;
 	b.reo		= rman.value;
+	
+	for(var i in vin){
+		vin[i].update();
+	}
 }
 
 

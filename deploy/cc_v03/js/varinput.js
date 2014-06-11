@@ -89,7 +89,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_options){
 		
 		this.valueInput.addEventListener("input",function(e){
 			var val = {value:this.value, error:[], warning:[], info:[]};
-			val = this.validate(val);
+			this.validate(val);
 			if(val.error.length>0){
 				this.valueInput.setCustomValidity("NO")
 			}

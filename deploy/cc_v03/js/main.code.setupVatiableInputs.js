@@ -1,4 +1,5 @@
 ///* varinput.js
+///* AS3600.js
 ///////////////    SETUP VARIABLE INPUTS     /////////////////////
 // TODO: varinfodiv iframe is no longer relevant here! Remove it from the definition of the thing and replace with #help_bar_ etc
 
@@ -60,11 +61,11 @@ vin.b.validate = function(e){
 		// For a simply supported or continuous beam, the distance L_l between points at which lateral
 		// restraint is provided shall be such that L_l/bef does not exceed the lesser of 180bef/D and 60.
 		// Here we assume beam Ln == L_1
-	var breadth_on_depth = e.value/vin.D.value;
-	var length_on_breadth = vin.Ln.value/e.value;
-	if(length_on_breadth>Math.min(60,180*breadth_on_depth)){
-		e.warning.push(link+"L_n/b =  <b>"+length_on_breadth.toFixed(1)+"</b> > minimum(180*b/D , 60) = <b>"+Math.min(60,180*breadth_on_depth)+"</b> This beam is too slender! Assuming there is no lateral restraint on its length. See AS3600 8.9.2");
-	}// TODO: THIS CHECK HAS NO EFFECT!
+	//var breadth_on_depth = e.value/vin.D.value;
+	//var length_on_breadth = vin.Ln.value/e.value;
+	//if(length_on_breadth>Math.min(60,180*breadth_on_depth)){
+	//	e.warning.push(link+"L_n/b =  <b>"+length_on_breadth.toFixed(1)+"</b> > minimum(180*b/D , 60) = <b>"+Math.min(60,180*breadth_on_depth)+"</b> This beam is too slender! Assuming there is no lateral restraint on its length. See AS3600 8.9.2");
+	//}// TODO: THIS CHECK HAS NO EFFECT!
 	
 	return e;
 }
@@ -72,10 +73,10 @@ vin.b.validate = function(e){
 
 vin.D.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
-	var link = '<a href="infos/D.htm" target="varinfoiframe">$$$D$$$</a> '
+	var link = '<a href="#help_bar_Depth">D</a> '
 	
 	if(e.value%5!==0){
-		e.error.push(link+"Round to nearest 5mm.");
+		e.error.push(link+" will be rounded to nearest 5mm.");
 		e.value = Math.round(e.value/5)*5;
 	}
 	if(e.value<200){
@@ -88,3 +89,44 @@ vin.D.validate = function(e){
 	}
 	return e;
 }
+
+
+vin.cover.validate = function(e){
+	/** cover
+				match with eclass 4.10.3.2
+				reasonable multiple
+				not too big ?? how big is too big?
+				not too small
+	**/
+	
+	
+	if(e.value> 150){
+		// silent warning?
+		e.warning.push('<a href="#help_bar_cover">Cover</a> might be too big... unless there is a special reason.');
+	}else if(e.value< 20){
+		// error
+		e.error.push('<a href="#help_bar_cover">Cover</a> is too small');
+		e.value = 20;
+	}else{
+		if(e.value%5!==0){
+			e.error.push('<a href="#help_bar_cover">Cover</a> will be rounded to nearest 5mm.');
+			e.value = Math.round(e.value/5)*5;
+		}
+		var min_cover = AS3600["4.10.3.2"].get_min_cover_from_fc_eclass(vin.fc.value, vin.eclass.value);
+		if(min_cover!==undefined && e.value<min_cover){
+			e.error.push('<a href="#help_bar_cover">Cover</a> insufficient for <a href="#help_bar_fc">f\'c</a> and <a href="#help_bar_eclass">Exposure Classification</a>. See AS3600 4.10.3.2: The minimum cover without special provisions is: ' + min_cover+"mm");
+		}
+	}
+	return e;
+}
+
+vin.fc.validate = function(e){
+	var minfc = AS3600["4.10.3.2"].get_min_fc_from_eclass(vin.eclass.value);
+	if(minfc !== undefined){
+		if(e.value < minfc){
+			e.error.push('<a href="#help_bar_fc">f\'c</a> is too small for <a href="#help_bar_eclass">Exposure Classification</a>. See AS3600 4.10.3.2: The minimum f\c without special provisions is: '+minfc+" MPa");
+		}
+	}
+	return e;
+}
+
