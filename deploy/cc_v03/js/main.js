@@ -9,8 +9,9 @@
 ///* CalcDiv.js
 ///* HelpBar.js
 
-///* main.function.outputCalculations.js
 
+// Order matters for these ones :(
+///* main.function.outputCalculations.js
 ///* main.code.setupVatiableInputs.js
 
 
@@ -33,9 +34,9 @@ rman.on("change",mainUpdateListener);
 var b = new Beam();
 function intakeBeamValues(){
 	//b.Ln		= vin.Ln.value;
-	b.b		= vin.b.value;
-	b.D		= vin.D.value;
-	b.cover	= vin.cover.value;
+	b.b			= vin.b.value;
+	b.D			= vin.D.value;
+	b.cover		= vin.cover.value;
 	b.eclass	= vin.eclass.value;
 	b.df		= vin.df.value;
 	//b.rhoc	= vin.rhoc.value;
