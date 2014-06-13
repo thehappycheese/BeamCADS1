@@ -30,36 +30,46 @@ class MacroStatement:
 
 crawled = []; #will be used to check that files are not crawled twice.
 
-def crawl(path,filename):
+def crawl(arg_path, arg_filename):
 	
+	fullpathstring = os.path.join(arg_path,arg_filename);
 	
-	#keep track of everything that has already been crawled.
-	crawled.append(os.path.join(path,filename));
+	# check if we have already crawled this file.
+	if fullpathstring in crawled:
+		print("Already crawled "+ fullpathstring);
+		return "";
+	else:
+		print("Crawling "+fullpathstring);
+		crawled.append(fullpathstring);
+		
 	
 	
 	
 	typeoffile = ""; #will be used to store the type of file we are currently inside.
 	# determine the type of file we are crawling based on the extension. Supported types are HTML or JS
-	if filename[-4:].upper()=="HTML" or filename[-3:].upper()=="HTM":
+	if arg_filename[-4:].upper()=="HTML" or arg_filename[-3:].upper()=="HTM":
 		typeoffile = "HTML";
-	elif filename[-2:].upper()=="JS":
+	elif arg_filename[-2:].upper()=="JS":
 		typeoffile = "JS";
-		
-		
+	
+	
+	
 	curfile = ""; # will hold the contents of the output of this file;
+	
+	
 	
 	# add a line in the output to show what we are busy crawling.
 	if(typeoffile == "JS"):
-		curfile+= "\n\n\n// #########\t\t Crawling:"+os.path.join(path,filename)+"\t\t#########\n";
+		curfile+= "\n\n\n// #########\t\t Crawling:"+fullpathstring+"\t\t#########\n";
 	elif (typeoffile == "HTML"):
-		curfile+= "\n\n\n<!--#########\t\t Crawling:"+os.path.join(path,filename)+"\t\t#########-->\n";
+		curfile+= "\n\n\n<!--#########\t\t Crawling:"+fullpathstring+"\t\t#########-->\n";
 	else:
 		print "ERROR: unable to determine the type of file based on extension. .htm .html or .js";
 		return "error";
 	
 	
 	# Open the file specified in the arguments
-	mf = open(path+"\\"+filename, "r");
+	mf = open(arg_path+"\\"+filename, "r");
 	
 	mflist = []; #will be used to store array of lines read from the file
 	#read the lines from the file.
@@ -68,31 +78,25 @@ def crawl(path,filename):
 	
 	
 	i = 0;
-	line = "";
 	while i<len(mflist):
 		line = mflist[i];
-		# time to breakdown line into a compiler instruction.
-		# an instruction line can begin with /// OR <!--
-		line_macro = line.split(" ")[0];
 		
+		#get the macro statement of the line:
+		macro = MacroStatement(line);
 		
-		
-		if line_macro[0:3] == "///" or line_macro[0:4] == "<!--":
-			# we have an instruction. Lets get the argument before we continue
-			
-			# lets remove the rem from the instruction to get the macro:
-			if line_macro[0:3] == "///":
-				line_i = line_macro[3:];
-				line_a = " ".join(line.split(" ")[1:]);
-			else:
-				line_i = line_macro[4:];
-				line_a = " ".join(line.split(" ")[1:])[:-3]; #remove the -->
-			
-			
-			
+		if macro.ins == "inc" or macro.ins == "*":
+			# INCLUDE FILE - USE RELATIVE PATH
+			importingfolder	= os.path.join(arg_path,os.path.split(macro.arg)[0]);
+			importingfile	= os.path.split(line[5:].replace("\n",""))[1];
+			curfile+= crawl(importingfolder,importingfile);
+		elif macro.ins == "inc_abs" or macro.ins == "~":
+			# INCLUDE FILE - USE ABSOLUTE PATH
+			importingfolder	= os.path.join(".",os.path.split(macro.arg.replace("\n",""))[0]);
+			importingfile	= os.path.split(line[5:].replace("\n",""))[1];
+			curfile+= crawl(importingfolder,importingfile);
+		elif macro.ins == "rem_next_line":
 			
 		else:
-			#we don't have an instruction. We just add the line to the main string.
 			curfile += line;
 		
 		
@@ -104,31 +108,17 @@ def crawl(path,filename):
 			#INSTRUCTIONS
 			if line[3]=="*":
 				# IMPORT  using relative path
-				importingfolder	= os.path.join(path,os.path.split(line[5:].replace("\n",""))[0]);
-				importingfile	= os.path.split(line[5:].replace("\n",""))[1];
-				importingpath	= os.path.join(importingfolder,importingfile);
-				if importingpath in crawled:
-					print ("...already imported "+importingpath);
-				else:
-					print ("Relative import "+importingpath);
-					curfile+= crawl(importingfolder,importingfile);
+				
 			elif line[3]=="~":
 				# IMPORT  using absolute path
-				importingfolder	= os.path.join(".",os.path.split(line[5:].replace("\n",""))[0]);
-				importingfile	= os.path.split(line[5:].replace("\n",""))[1];
-				importingpath	= os.path.join(importingfolder,importingfile);
-				if importingpath in crawled:
-					print ("...already imported "+importingpath);
-				else:
-					print ("Absolute import "+importingpath);
-					curfile+= crawl(importingfolder,importingfile);
+				
 			elif line[3]==".":
 				# Disregard the remainder of this file.
 				if filename[-4:]=="html" or filename[-3:]=="htm":
-					curfile+= "\n\n\n<!--####### remainder of "+os.path.join(path,filename)+ " has not been imported ########-->\n";
+					curfile+= "\n\n\n<!--####### remainder of "+fullpathstring+ " has not been imported ########-->\n";
 				elif filename[-2:]=="js":
-					curfile+= "\n// ####### remainder of "+os.path.join(path,filename)+ " has not been imported ########\n";
-				print ("halt crawling of "+os.path.join(path,filename));
+					curfile+= "\n// ####### remainder of "+fullpathstring+ " has not been imported ########\n";
+				print ("halt crawling of "+fullpathstring);
 				break;
 		i++;
 				
