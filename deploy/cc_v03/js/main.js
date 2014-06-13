@@ -1,8 +1,9 @@
-///* drawBeam.js
+
+
+///* function.dim.js
 
 ///* Beam.drawSection.js
 
-///* validation.js
 ///* reoinput.js
 ///* ReoManager.js
 ///* ProTips.js
@@ -83,7 +84,6 @@ function mainUpdateListener(e){
 	vin_tips.setError(arr);
 	
 }
-
 
 
 

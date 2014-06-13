@@ -39,19 +39,17 @@ for(var i in vin){
 
 vin.b.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
-	var link = '<a href="infos/b.htm" target="varinfoiframe">$$$b$$$</a> '
+	var link = '<a href="#help_bar_b">b</a> '
 	
 	if(e.value%5!==0){
-		e.error.push(link+"Round to nearest 5mm.");
+		e.error.push(link+" will be rounded to nearest 5mm.");
 		e.value = Math.round(e.value/5)*5;
 	}
 	if(e.value<200){
-		e.error.push(link+"Beam not wide enough.");
-		e.value=200;
+		e.error.push(link+" is too small. Beams should be at least 200mm wide for this software to work.");
 	}
 	if(e.value>2000){
-		e.error.push(link+"Beam too wide.");
-		e.value=2000;
+		e.error.push(link+" is too large. Beams should be at most 2000mm wide for this software to work.");
 	}
 	
 	
@@ -75,13 +73,15 @@ vin.D.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
 	var link = '<a href="#help_bar_Depth">D</a> '
 	
+	var MIN_DEPTH = 200;
+	var MAX_DEPTH = 1500;
+	
 	if(e.value%5!==0){
 		e.error.push(link+" will be rounded to nearest 5mm.");
 		e.value = Math.round(e.value/5)*5;
 	}
-	if(e.value<200){
-		e.error.push(link+"Beam not deep enough.");
-		e.value=200;
+	if(e.value<MIN_DEPTH){
+		e.error.push(link+" is too small. Beams  should be at least "+MIN_DEPTH+"mm deep for this software to work.");
 	}
 	if(e.value>1500){
 		e.error.push(link+"Beam too deep.");
