@@ -9,6 +9,7 @@ class MacroStatement:
 	ins = "";
 	arg = "";
 	def __init__(self, line):
+		line_wo_cr = line.replace("\n","").replace("\r","");
 		line_macro = line.split(" ")[0];
 		if line_macro[0:3] == "///" or line_macro[0:4] == "<!--":
 			# we have an instruction.
@@ -91,7 +92,7 @@ def crawl(arg_path, arg_filename):
 			curfile+= crawl(importingfolder,importingfile);
 		elif macro.ins == "inc_abs" or macro.ins == "~":
 			# INCLUDE FILE - USE ABSOLUTE PATH
-			importingfolder	= os.path.join(".",os.path.split(macro.arg.replace("\n",""))[0]);
+			importingfolder	= os.path.join(".",os.path.split(macro.arg)[0]);
 			importingfile	= os.path.split(line[5:].replace("\n",""))[1];
 			curfile+= crawl(importingfolder,importingfile);
 		elif macro.ins == "rem_next_line":
