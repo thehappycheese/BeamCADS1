@@ -2,14 +2,23 @@
 
 
 
-import os
-import re
+import os, re, sys, getopt;
 
 class MacroStatement:
 	ins = "";
 	arg = "";
 	def __init__(self, line):
+		
+		# remove any carriage returns from the end of the line.
 		line_wo_cr = line.replace("\n","").replace("\r","");
+		
+		# remove any leading spaces or tabs.
+		while len(line_wo_cr)>0 and (line_wo_cr[0] == "\t" or line_wo_cr[0] == " "):
+			line_wo_cr = line_wo_cr[1:];
+		
+		if(len(line_wo_cr) == 0):
+			return
+		
 		line_macro = line.split(" ")[0];
 		if line_macro[0:3] == "///" or line_macro[0:4] == "<!--":
 			# we have an instruction.
@@ -65,12 +74,12 @@ def crawl(arg_path, arg_filename):
 	elif (typeoffile == "HTML"):
 		curfile+= "\n\n\n<!--#########\t\t Crawling:"+fullpathstring+"\t\t#########-->\n";
 	else:
-		print "ERROR: unable to determine the type of file based on extension. .htm .html or .js";
+		print("ERROR: unable to determine the type of file based on extension. .htm .html or .js");
 		return "error";
 	
 	
 	# Open the file specified in the arguments
-	mf = open(arg_path+"\\"+filename, "r");
+	mf = open(arg_path+"\\"+arg_filename, "r");
 	
 	mflist = []; #will be used to store array of lines read from the file
 	#read the lines from the file.
@@ -79,6 +88,9 @@ def crawl(arg_path, arg_filename):
 	
 	
 	i = 0;
+	
+	ignorelines = False;
+	
 	while i<len(mflist):
 		line = mflist[i];
 		
@@ -95,75 +107,62 @@ def crawl(arg_path, arg_filename):
 			importingfolder	= os.path.join(".",os.path.split(macro.arg)[0]);
 			importingfile	= os.path.split(line[5:].replace("\n",""))[1];
 			curfile+= crawl(importingfolder,importingfile);
-		elif macro.ins == "rem_next_line":
-			
+		elif macro.ins == "ignore_next_line":
+			i+=1;
+			print("IGNORE NEXT LINE");
+		elif macro.ins == "ignore_begin":
+			print("IGNORE BEGIN")
+			ignorelines = True;
+		elif macro.ins == "ignore_end":
+			print("IGNORE END")
+			ignorelines = False;
 		else:
-			curfile += line;
-		
-		
-		
-		
-		
-		
-		if line[0:3] == "///":
-			#INSTRUCTIONS
-			if line[3]=="*":
-				# IMPORT  using relative path
-				
-			elif line[3]=="~":
-				# IMPORT  using absolute path
-				
-			elif line[3]==".":
-				# Disregard the remainder of this file.
-				if filename[-4:]=="html" or filename[-3:]=="htm":
-					curfile+= "\n\n\n<!--####### remainder of "+fullpathstring+ " has not been imported ########-->\n";
-				elif filename[-2:]=="js":
-					curfile+= "\n// ####### remainder of "+fullpathstring+ " has not been imported ########\n";
-				print ("halt crawling of "+fullpathstring);
-				break;
-		i++;
-				
+			if not ignorelines:
+				curfile += filterLines(line);
+		i+=1;
+		#end while loop
+	
 	mf.close();
 	
 	
-	return curfile;
+	return curfile+"\n\n\n";
 
 
-	
-def getMacro(line):
-	
-	
 
-def filepart(fn):
-	result = fn.replace("\n","").replace("/","\\");
-	while "\\" in result:
-		result = result[result.find("\\")+1:];
-	return result
-def folderpart(fn):
-	result = fn.replace("\n","").replace("/","\\");
-	if "\\" in result:
-		result = result[::-1];
-		result = result[result.find("\\")+1:];
-		result = result[::-1];
-		return "\\"+result;
-	else:
+
+def filterLines(line):
+	return line;
+	result = line;
+	# we dont like leading tabs or spaces. Lets get rid of them
+	while len(result)>0 and (result[0] == "\t" or result[0] == " "):
+		result = result[1:];
+	
+	# we dont like blank lines. Let's get rid of them.
+	if re.match("\A\s+[\r\n]{0,2}\Z",result) != None:
+		# this line is blank and consists of cariage returns only:
 		return "";
+	else:
+		# this line is ok. Return it as-is.
+		return result;
+
+def main():
+	print("Python started...");
+	if len(sys.argv)>1:
+		result=crawl(".",sys.argv[1]);
+		try:
+			resfile = open(".".join(sys.argv[1].split(".")[:-1])+"_compiled."+sys.argv[1].split(".")[-1],"w");
+			resfile.write(result);
+			print("\ndone.");
+			print(crawled)
+		except err:
+			print("failed to write compiled result to file");
+			print(err);
+		finally:
+			resfile.close();
+	else:
+		print("usage $>python compile2.py [filename]");
 
 
 
-
-os.chdir("./cc_v03");
-result=crawl(".","index.htm");
-try:
-	resfile = open("index_compiled.htm","w");
-	resfile.write(result);
-	print("\ndone.");
-	print(crawled)
-except err:
-	print("failed to write compiled result to file");
-	print(err);
-finally:
-	resfile.close();
-
-
-
+#runmain
+main()
