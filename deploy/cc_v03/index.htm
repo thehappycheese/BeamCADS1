@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 	<html>
 
 <head>
+	<meta charset="UTF-8">
 	<link rel="stylesheet" href="style/index.css" type="text/css"/>
 	<script type="text/x-mathjax-config">
 		MathJax.Hub.Config({
@@ -15,8 +16,15 @@
 			}
 		});
 	</script>
-	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-	<!--<script type="text/javascript" src="js/mathjax/MathJax.js"></script>-->
+	
+
+<!--ignore_next_line -->
+<!--
+	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!---->
+<!--ignore_next_line -->
+<script type="text/javascript" src="js/mathjax/MathJax.js"></script>
+
+
 	<title>BeamCalc</title>
 </head>
 
@@ -24,9 +32,8 @@
 <body>
 	<div id="secondarycol">
 		<div id="apptitlebox" class="bmpblock">
-			<a href="javascript:window.open('task/index.htm','_blank');">View Task</a>
-			<h1 style="display:block;padding:0;margin:0;">Beam Calc</h1>
-			<a href="javascript:window.open('https://www.surveymonkey.com/s/FBLMLHG','_blank');">Do Survey :)</a>
+			<h1 style="display:block;padding:0;margin:0;">BeamCalc</h1>
+			<a href="https://www.surveymonkey.com/s/FBLMLHG" style="color:red;" target="_blank">CLICK HERE TO DO TUTE / SURVEY (in a new tab)</a>
 		</div>
 		
 		
@@ -64,8 +71,8 @@
 				<table class="reotable" style="">
 					<thead>
 						<tr style="font-family:sans-serif;">
-							<td style="width:2em;"><!--Layer number here--></td>
-							<td style="width:2em;border-left:none;"><img src="img/power_icon.png"/></td>
+							<td style="width:4em;">Layer#</td>
+							<td style="width:4em;border-left:none;">Enabled</td>
 							<td style="width:3em;">Bars</td>
 							<td style="width:30px;border-left:none;"></td>
 							<td style="min-width:3em;">Reo<br>Position</td>
@@ -113,7 +120,7 @@
 </body>
 
 
-
+<!--ignore_next_line -->
 <script data-root="./" data-main="js/main.js" src="js/nickRequire.js"></script>
 
 <script>

@@ -58,7 +58,7 @@
 		font-size:0.8em;
 	}
 	tbody tr:hover{
-		background-color:$pri-4;
+		//background-color:$pri-4;
 	}
 	tbody, tfoot td{
 		vertical-align:middle;
@@ -87,12 +87,14 @@
 	input, select{
 		width:100%;
 		text-align:center;
+		color:inherit;
+		background-color:inherit;
+	}
+	input:disabled, select:disabled{
+		color:white;
 	}
 	input[type="checkbox"]{
-		width:100%;
-		height:16px;
-		padding:0px;
-		margin:0px;
+		
 	}
 }
 
@@ -116,10 +118,11 @@
 		height:32px;
 		background-color: $sec-b-4*2;
 		padding-left:4em;
-		text-indent:-4em;
+		text-indent:-3em;
 	}
 	.feedback{
 		height:64px;
+		margin:5px;
 		overflow-y:scroll;
 		background-color: $sec-b-4;
 		.errorlist, .warninglist, .infolist{
@@ -175,7 +178,7 @@
 	}
 	.value-div{
 		margin-left:3px;
-		width:3em;
+		width:4em;
 	}
 	.unit-div{
 		margin-left:0.2em;
@@ -190,11 +193,9 @@
 			color: darkblue;
 			font-family: monospace;
 			font-weight: bold;
-			margin: none;
+			box-sizing:border-box;
 			height: 100%;
 			width: 100%;
-			margin:0;
-			padding:0;
 		}
 	}
 	a{
@@ -205,18 +206,17 @@
 		}
 	}
 	input, select{
+		box-sizing:border-box;
 		width:100%;
-		text-align:right;
-		padding:0 3px;
-		margin:0;
+		text-align:left;
 	}
 	select{
-		direction: rtl;
+		//direction: rtl;
 	}
-	input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+	/*input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
 		-webkit-appearance: none;
 		margin: 0;
-	}
+	}*/
 }
 
 

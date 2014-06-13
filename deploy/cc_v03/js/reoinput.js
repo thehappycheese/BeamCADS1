@@ -155,7 +155,12 @@ function ReoInput(arg_manager){
 	// 			GET/SET barcode
 	Object.defineProperty(this,"barcode",{
 		get:function(){
-			return this.barcodeInput.value;
+			var inp = this.barcodeInput.value;
+			if(inp.match(/^(10|[1-9])(N)(10|12|16|20|24|28|32|36|40)$/)){
+				return inp;
+			}else{
+				return "2N10";
+			}
 		}.bind(this),
 		set:function(newval){
 			this.barcodeInput.value = newval;
@@ -182,7 +187,7 @@ function ReoInput(arg_manager){
 	// 			GET/SET diameter
 	Object.defineProperty(this,"diameter",{
 		get:function(){
-			return parseInt(this.barcode.split("N")[1]) || undefined;
+			return parseInt(this.barcode.split("N")[1]) || 10;
 		}.bind(this),
 		set:function(newval){
 			if(this.diameters.indexOf(newval)!==-1){
@@ -197,7 +202,7 @@ function ReoInput(arg_manager){
 	// 			GET/SET number
 	Object.defineProperty(this,"number",{
 		get:function(){
-			return parseInt(this.barcode.split("N")[0]);
+			return parseInt(this.barcode.split("N")[0]) || 2;
 		}.bind(this),
 		set:function(newval){
 			if(typeof newval == "number" && newval!==NaN && newval!==undefined && newval>=2 && newval<100){
@@ -212,7 +217,7 @@ function ReoInput(arg_manager){
 	// 			GET/SET OFFSET
 	Object.defineProperty(this,"offset",{
 		get:function(){
-			return parseInt(this.offsetInput.value);
+			return parseInt(this.offsetInput.value) || 0;
 		}.bind(this),
 		set:function(newval){
 			this.offsetInput.value = Math.abs(Math.round(parseFloat(newval)));
@@ -242,15 +247,29 @@ function ReoInput(arg_manager){
 		if(this.enabled){
 			this.body.style.color = "";
 			this.areaOutput.innerHTML = this.area;
-			// TODO: show layer number
 		}else{
 			this.areaOutput.innerHTML = "";
 			this.body.style.color = "grey";
 		}
+		
+		
+		
+		this.update_validity();
 		this.dispatch("update",this);
 	}.bind(this);
 	this.change = function(){
 		this.dispatch("change",this);
+	}.bind(this);
+	
+	this.update_validity = function(){
+		var valid = this.getValidity();
+		if(valid.error.length>0){
+			this.body.style.backgroundColor = "lightyellow";
+			this.body.style.color = "red";
+		}else{
+			this.body.style.backgroundColor = "";
+			this.body.style.color = "";
+		}
 	}.bind(this);
 	
 	
@@ -281,13 +300,14 @@ function ReoInput(arg_manager){
 		
 		var manager = this.manager;
 		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
-			// TODO: assume minimum spacing of 20mm between
-			// TODO: assume maximum spacing of 300mm c-c
-			// TODO: assume maximum of 10 bars
+			// ASSUME: assume minimum spacing of 20mm between
+			// ASSUME: assume maximum spacing of 300mm c-c
+			// ASSUME: assume maximum of 10 bars
 			this.barcode = this._more_less_barcode(true, 10, 300, 20, fitwidth, this.area) || this.barcode;
 		}else{
-			// TODO: assume maximum of 2 bars
-			this.barcode = this._more_less_barcode(true, 2,  300, 20, fitwidth, this.area) || this.barcode;
+			// ASSUME: assume maximum of 2 bars
+			// ASSUME: assume maximum spacing of Infinity
+			this.barcode = this._more_less_barcode(true, 2,  Infinity, 20, fitwidth, this.area) || this.barcode;
 		}
 	}.bind(this);
 	
@@ -303,13 +323,14 @@ function ReoInput(arg_manager){
 		
 		var manager = this.manager;
 		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
-			// TODO: assume minimum spacing of 20mm between
-			// TODO: assume maximum spacing of 300mm c-c
-			// TODO: assume maximum of 10 bars
+			// ASSUME: assume minimum spacing of 20mm between
+			// ASSUME: assume maximum spacing of 300mm c-c
+			// ASSUME: assume maximum of 10 bars
 			this.barcode = this._more_less_barcode(false, 10, 300, 20, fitwidth, this.area) || this.barcode;
 		}else{
-			// TODO: assume maximum of 2 bars
-			this.barcode = this._more_less_barcode(false, 2,  300, 20, fitwidth, this.area) || this.barcode;
+			// ASSUME: assume maximum of 2 bars
+			// ASSUME: assume maximum spacing of Infinity
+			this.barcode = this._more_less_barcode(false, 2,  Infinity, 20, fitwidth, this.area) || this.barcode;
 		}
 	}.bind(this);
 	
@@ -330,6 +351,11 @@ function ReoInput(arg_manager){
 					combs.push({number:num, diameter:dia, area:this.areas[diai]*num})
 				}
 			}
+		}
+		
+		
+		if(combs.length==0){
+			console.log("never was possible combinations error");
 		}
 		
 		combs.sort(function(a,b){
@@ -385,6 +411,9 @@ function ReoInput(arg_manager){
 		}
 		
 		// no suitable combination was found. Return the top combination.
+		if(combs.length==0){
+			console.log("no possible combinations error");
+		}
 		return combs[combs.length-1].number+"N"+combs[combs.length-1].diameter;
 		
 	
@@ -406,9 +435,31 @@ function ReoInput(arg_manager){
 	this.getValidity = function(){
 		var result = {error:[], warning:[], infos:[]};
 		if(!this.enabled) return result;
+		
+		var rowname = "Layer"+this.manager.getEnabledRowIndex(this);
+		
 		// Check that this layer isn't near the neutral axis
 		
 		
+		if(!this.barcodeInput.value.match(/^[0-9]*N[0-9]*$/)){
+			result.error.push(rowname+' incorrect \'Bars\' column. This software uses the shorthand \"<b>2N10</b>\" to indicate 2 <a href="#help_bar_reoclass">normal ductility bars</a> with a diameter of 10mm.');
+		}else{
+			if(this.number>10){
+				result.error.push(rowname+" has too many bars (<b>>10</b>). Consider using larger bar diameters instead.");
+			}
+			if(this.diameters.indexOf(this.diameter)===-1){
+				result.error.push(rowname+" non-standard bar diameter. This software can only function with standard deformed bar diameters: ["+this.diameters.join(", ")+"] mm");
+			}
+		}
+		
+		// if this is the top or bottom layer, gap can be 0. otherwise gap should be at least 20mm.
+		if(this.manager.getBottomRow()===this || this.manager.getTopmostTop()===this){
+			// do nothing
+		}else{
+			if(this.offset<20){
+				result.error.push(rowname+" is too close to another layer. The <b>'Gap' should be at least 20mm</b> so that aggregate can compleatly surround the bars and and air bubbles can escape.");
+			}
+		}
 		
 		// Check that this layer's diameter isnt less than half the diameter of the largest bar.
 		//var rs = this.manager.getEnabledRows();

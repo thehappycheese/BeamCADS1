@@ -43,6 +43,8 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_options){
 		}else if(arg_type == "number"){
 			this.valueInput		= document.createElement("input");
 			this.valueInput.type = "number";
+			this.valueInput.step = 5;
+			this.valueInput.min = 0;
 		}else if(arg_type == "text"){
 			this.valueInput		= document.createElement("input");
 			this.valueInput.type = "text";
@@ -112,19 +114,25 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_options){
 		}.bind(this))
 	}.bind(this);
 	
+	// ##########################################################################################
+	// 			UPDATE/CHANGE
+	// ##########################################################################################
 	
 	this.update = function(){
-		if(!this.valid){
-			this.valueInput.setCustomValidity("invalid");
-		}else{
-			this.valueInput.setCustomValidity("");
-		}
+		this.update_validity();
 		this.dispatch("update",this);
 	}.bind(this);
 	this.change = function(){
 		this.dispatch("change",this);
 	}.bind(this);
 	
+	this.update_validity = function(){
+		if(!this.valid){
+			this.valueInput.setCustomValidity("invalid");
+		}else{
+			this.valueInput.setCustomValidity("");
+		}
+	}.bind(this);
 	
 	// ##########################################################################################
 	// 			HELPER FUNCTIONS

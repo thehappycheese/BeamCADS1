@@ -29,7 +29,7 @@ for(var i in vin){
 
 
 
-
+// A helper function for formating sstrings in html
 
 
 
@@ -41,15 +41,20 @@ vin.b.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
 	var link = '<a href="#help_bar_b">b</a> '
 	
+	
+	var MIN_BREADTH = 150;
+	var MAX_BREADTH = 2000;
+	
+	
 	if(e.value%5!==0){
 		e.error.push(link+" will be rounded to nearest 5mm.");
 		e.value = Math.round(e.value/5)*5;
 	}
-	if(e.value<200){
-		e.error.push(link+" is too small. Beams should be at least 200mm wide for this software to work.");
+	if(e.value<MIN_BREADTH){
+		e.error.push(link+" is too small. Beams should be at least "+(MIN_BREADTH+"mm").bold()+" wide for this software to work.");
 	}
-	if(e.value>2000){
-		e.error.push(link+" is too large. Beams should be at most 2000mm wide for this software to work.");
+	if(e.value>MAX_BREADTH){
+		e.error.push(link+" is too large. Beams should be at most "+(MAX_BREADTH+"mm").bold()+" wide for this software to work.");
 	}
 	
 	
@@ -73,19 +78,18 @@ vin.D.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
 	var link = '<a href="#help_bar_Depth">D</a> '
 	
-	var MIN_DEPTH = 200;
-	var MAX_DEPTH = 1500;
+	var MIN_DEPTH = 150;
+	var MAX_DEPTH = 2000;
 	
 	if(e.value%5!==0){
-		e.error.push(link+" will be rounded to nearest 5mm.");
+		e.error.push(link+" will be rounded to nearest 5 mm.");
 		e.value = Math.round(e.value/5)*5;
 	}
 	if(e.value<MIN_DEPTH){
-		e.error.push(link+" is too small. Beams  should be at least "+MIN_DEPTH+"mm deep for this software to work.");
+		e.error.push(link+" is too small. Beams  should be at least "+(MIN_DEPTH+" mm").bold()+" deep for this software to work.");
 	}
 	if(e.value>1500){
-		e.error.push(link+"Beam too deep.");
-		e.value=1500;
+		e.error.push(link+"Beam too deep. Beams should be at most "+(MAX_DEPTH+" mm").bold()+" deep for this software to work.");
 	}
 	return e;
 }
@@ -109,12 +113,12 @@ vin.cover.validate = function(e){
 		e.value = 20;
 	}else{
 		if(e.value%5!==0){
-			e.error.push('<a href="#help_bar_cover">Cover</a> will be rounded to nearest 5mm.');
+			e.error.push('<a href="#help_bar_cover">Cover</a> will be rounded to nearest 5 mm.');
 			e.value = Math.round(e.value/5)*5;
 		}
 		var min_cover = AS3600["4.10.3.2"].get_min_cover_from_fc_eclass(vin.fc.value, vin.eclass.value);
 		if(min_cover!==undefined && e.value<min_cover){
-			e.error.push('<a href="#help_bar_cover">Cover</a> insufficient for <a href="#help_bar_fc">f\'c</a> and <a href="#help_bar_eclass">Exposure Classification</a>. See AS3600 4.10.3.2: The minimum cover without special provisions is: ' + min_cover+"mm");
+			e.error.push('<a href="#help_bar_cover">Cover</a> insufficient for <a href="#help_bar_fc">f\'c</a> and <a href="#help_bar_eclass">Exposure Classification</a>. See AS3600 4.10.3.2: The minimum cover without special provisions is: ' + (min_cover+" mm").bold());
 		}
 	}
 	return e;
@@ -122,9 +126,12 @@ vin.cover.validate = function(e){
 
 vin.fc.validate = function(e){
 	var minfc = AS3600["4.10.3.2"].get_min_fc_from_eclass(vin.eclass.value);
+	var maxec = AS3600["4.10.3.2"].get_max_eclass_from_fc(vin.fc.value);
 	if(minfc !== undefined){
 		if(e.value < minfc){
-			e.error.push('<a href="#help_bar_fc">f\'c</a> is too small for <a href="#help_bar_eclass">Exposure Classification</a>. See AS3600 4.10.3.2: The minimum f\c without special provisions is: '+minfc+" MPa");
+			e.error.push('<a href="#help_bar_fc">f\'c</a> is too small for <a href="#help_bar_eclass">Exposure Classification</a>. See AS3600 4.10.3.2:<br>'+
+							'The minimum f\c without special provisions is: '+(minfc+" MPa").bold()+"<br>"+
+							'Alternatively, reduce <a href="#help_bar_eclass">Exposure Classification</a> to '+String(maxec).bold());
 		}
 	}
 	return e;

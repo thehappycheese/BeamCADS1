@@ -2,10 +2,11 @@
 ///* EventDispatcher.js
 
 
-function ReoManager(arg_body){
+function ReoManager(arg_body, arg_beam){
 	
 	EventDispatcher.call(this);
 	
+	this.beam = arg_beam;
 	
 	this.body = arg_body;
 	this.rows = [];
@@ -66,12 +67,24 @@ function ReoManager(arg_body){
 	
 	
 	
-	// TODO: WHAT IS THIS? update fix
+	
+	
+	
 	this.getTopmostTop = function(){
 		var r = this.getEnabledRows();
-		for(var i = 0;i<r.length;i++){
-			// TODO: finish this and swim through the mire that is determining the order and fit of the bars.
-			// LEFTOFF: 2014 04 16 23:25
+		for(var i = r.length-1;i>=0;i--){
+			if(r[i].from==="highest"){
+				if(r[i].offset===0){
+					return r[i];
+				}
+				break;
+			}
+		}
+		return undefined;
+	}.bind(this);
+	
+	this.getTopRow = function(){
+		for(var i = r.length-1;i>=0;i--){
 			if(r[i].from==="highest"){
 				if(r[i].offset===0){
 					return r[i];
@@ -84,6 +97,9 @@ function ReoManager(arg_body){
 	
 	
 	
+	
+	
+	
 	this.getBottomRow = function(){
 		var r = this.getEnabledRows();
 		return r[0];
@@ -93,9 +109,9 @@ function ReoManager(arg_body){
 	
 	this.getDepthOfRow = function(row){
 		// TODO: update
-		var D = parseInt(vin.D.value);
-		var df = parseInt(vin.df.value);
-		var cover = parseInt(vin.cover.value);
+		var D = this.beam.D;
+		var df = this.beam.df;
+		var cover = this.beam.cover;
 		
 		var rs = this.getEnabledRows();
 		var br = this.getBottomRow();
@@ -137,7 +153,6 @@ function ReoManager(arg_body){
 	
 	this.createReoInput = function(){
 		var nr = new ReoInput(this);
-		console.log("fix events")
 		nr.on("update",this.update);
 		nr.on("change",this.change);
 		return nr;

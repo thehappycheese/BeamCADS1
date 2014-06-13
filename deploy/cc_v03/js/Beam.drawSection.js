@@ -223,10 +223,13 @@ Beam.prototype.drawSection = function(ctx){
 			if(ddif<300){
 				last_depth = creo[i].depth;
 			}else{
-				// TODO evenly space stuff
-				while(ddif>300){
-					last_depth += 300;
-					ddif -= 300;
+				// TODO: evenly space stuff
+				
+				var num_spaces = Math.ceil(ddif/300);
+				var spacing = ddif/num_spaces;
+				
+				for(var j = 0;j<num_spaces-1;j++){
+					last_depth += spacing
 					crackreo.push({
 						number: 2,
 						diameter: 10 ,

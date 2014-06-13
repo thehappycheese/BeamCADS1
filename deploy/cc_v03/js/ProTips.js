@@ -35,7 +35,7 @@ function ProTips(arg_body){
 		while(this.tip_from_target(t) === undefined && t !== document.body){
 			t = t.parentElement;
 		}
-		this.tips_div.innerHTML = "Pro-tip: "+this.tip_from_target(t);
+		this.tips_div.innerHTML = this.tip_from_target(t);
 	}.bind(this);
 	this.out		= function(e){
 		this.tips_div.innerHTML = "";
@@ -53,13 +53,15 @@ function ProTips(arg_body){
 		}
 	}.bind(this);
 	
-	this.setError=function(error_list){
+	this.setError=function(error_list,warning_list){
 		var out = ""
-		if(error_list.length>0){
+		if(error_list && error_list.length>0){
 			out += '<ul class="errorlist"><li>'+error_list.join("</li><li>")+'</li></ul>';
 		}
+		if(warning_list && warning_list.length>0){
+			out += '<ul class="warninglist"><li>'+warning_list.join("</li><li>")+'</li></ul>';
+		}
 		this.feedback_div.innerHTML = out;
-		this.updateMathJax();
 	}.bind(this);
 	
 	this.updateMathJax = function(){
