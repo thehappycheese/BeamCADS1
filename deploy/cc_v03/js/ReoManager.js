@@ -1,4 +1,4 @@
-///* reoinput.js
+///* ReoInput.js
 ///* EventDispatcher.js
 
 
@@ -13,7 +13,8 @@ function ReoManager(arg_body, arg_beam){
 	
 	this.create = function(){
 		var firstrow = this.createReoInput();
-		firstrow.makeFirstRow();
+		firstrow.isFirstRow = true;
+		firstrow.enabled = true;
 		this.rows.push(firstrow);
 		this.rows.push(this.createReoInput());
 		this.rows.push(this.createReoInput());
@@ -67,29 +68,14 @@ function ReoManager(arg_body, arg_beam){
 	
 	
 	
+
+
 	
-	
-	
-	this.getTopmostTop = function(){
-		var r = this.getEnabledRows();
+	this.getHighestHighestRow = function(){
+		r = this.getEnabledRows();
 		for(var i = r.length-1;i>=0;i--){
 			if(r[i].from==="highest"){
-				if(r[i].offset===0){
-					return r[i];
-				}
-				break;
-			}
-		}
-		return undefined;
-	}.bind(this);
-	
-	this.getTopRow = function(){
-		for(var i = r.length-1;i>=0;i--){
-			if(r[i].from==="highest"){
-				if(r[i].offset===0){
-					return r[i];
-				}
-				break;
+				return r[i];
 			}
 		}
 		return undefined;
@@ -100,9 +86,14 @@ function ReoManager(arg_body, arg_beam){
 	
 	
 	
-	this.getBottomRow = function(){
-		var r = this.getEnabledRows();
-		return r[0];
+	this.getLowestLowestRow = function(){
+		r = this.getEnabledRows();
+		for(var i = 0;i<r.length;i++){
+			if(r[i].from === "lowest"){
+				return r[i];
+			}
+		}
+		return undefined;
 	}.bind(this);
 	
 	
@@ -114,7 +105,7 @@ function ReoManager(arg_body, arg_beam){
 		var cover = this.beam.cover;
 		
 		var rs = this.getEnabledRows();
-		var br = this.getBottomRow();
+		var br = this.getLowestLowestRow();
 		
 		var last_low_depth = D-cover-df;
 		var last_high_depth = cover+df;
@@ -164,16 +155,72 @@ function ReoManager(arg_body, arg_beam){
 	
 	this.change = function(e){
 		//console.log("reo-manager change");
+
 		this.dispatch("change",this);
 	}.bind(this);
 	
 	
+	this.lock_update = false;
 	this.update = function(e){
+		if(this.lock_update) return;
+		this.lock_update = true;
 		//console.log("reo-manager update");
+		this.sort_rows(); // TODO: does this trigger when offset is changed in a row? prolly not :(
 		this.update_renumberRows();
+		this.lock_update = false;
 		this.dispatch("update",this);
 	}.bind(this);
 	
+
+
+	this.sort_rows = function(){
+		var r = this.rows; // Alias for the reoinput objects
+		var a, b, ad, bd;
+		for(i=0;i<r.length-1;i++){
+			a = r[i];
+			b = r[i+1];
+
+			// swap when:
+			// highest&enabled below an (enabled&lowest or a disabled) OR
+			// disabled item below an enabled&lowest
+			if(((a.from === "highest" && a.enabled === true) && ((b.from === "lowest" && b.enabled === true) || b.enabled === false))||
+				(a.enabled===false && (b.from==="lowest" && b.enabled===true))){
+			// dont sort against blanks!
+			// didnt work :(
+			//if((a.from==="highest" && a.enabled) && (b.from === "lowest" && b.enabled)){ 
+				// swap required. only need to swap in this direction to finish
+				this.swap_rows(a,b)
+				// set i to 0 and restart
+				i=0;
+			}
+
+
+
+		}
+		//this.update_renumberRows();
+	}.bind(this);
+
+	this.swap_rows = function(a,b){
+		var t_offset = a.offset;
+		var t_barcode = a.barcode;
+		var t_from = a.from;
+		var t_enabled = a.enabled;
+		var t_isFirstRow = a.isFirstRow;
+
+		a.offset = b.offset;
+		a.barcode = b.barcode;
+		a.from = b.from;
+		a.enabled = b.enabled;
+		a.isFirstRow = b.isFirstRow;
+
+		b.offset = t_offset;
+		b.barcode = t_barcode;
+		b.from = t_from;
+		b.enabled = t_enabled;
+		b.isFirstRow = t_isFirstRow;
+
+
+	}.bind(this);
 	
 	
 	
@@ -204,8 +251,11 @@ function ReoManager(arg_body, arg_beam){
 				rw = {
 					number:		rs[i].number,
 					diameter:	rs[i].diameter,
-					area:			rs[i].area,
-					depth:		this.getDepthOfRow(rs[i])
+					area:		rs[i].area,
+					depth:		this.getDepthOfRow(rs[i]),
+					from:		rs[i].from,
+					offset:		rs[i].offset,
+
 				}
 				result.push(rw);
 			}

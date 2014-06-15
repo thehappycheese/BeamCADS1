@@ -38,7 +38,9 @@
     border-bottom: 1px solid lightgrey;
     padding: 2px;
     font-family: sans-serif;
-    font-size: 0.8em; }
+    font-size: 0.8em;
+    height: 20px;
+    line-height: 20px; }
   .reotable tbody, .reotable tfoot td {
     vertical-align: middle;
     text-align: center; }
@@ -46,22 +48,21 @@
     border-left: 1px solid lightgrey;
     text-align: center;
     vertical-align: middle; }
-
-.reoinput button {
-  width: 13px;
-  height: 100%;
-  padding: 0;
-  margin: 0; }
-.reoinput .bars {
-  color: #3e9cad;
-  font-weight: bold; }
-.reoinput input, .reoinput select {
-  width: 100%;
-  text-align: center;
-  color: inherit;
-  background-color: inherit; }
-.reoinput input:disabled, .reoinput select:disabled {
-  color: white; }
+  .reotable .reoinput button {
+    width: 13px;
+    height: 100%;
+    padding: 0;
+    margin: 0; }
+  .reotable .reoinput .bars {
+    color: #3e9cad;
+    font-weight: bold; }
+  .reotable .reoinput input, .reotable .reoinput select {
+    width: 100%;
+    text-align: center;
+    color: inherit;
+    background-color: inherit; }
+  .reotable .reoinput input:disabled, .reotable .reoinput select:disabled {
+    color: white; }
 
 .protip {
   flex: 0 0 116px;
@@ -196,7 +197,7 @@ h3 {
   flex-wrap: wrap;
   justify-content: center;
   align-content: flex-start;
-  flex: 1 1 200px;
+  flex: 1 1 500px;
   height: calc(100% - 6px - 10px);
   margin: 5px;
   overflow-y: scroll;
@@ -208,7 +209,7 @@ h3 {
   display: flex;
   flex-direction: column;
   display: flex;
-  flex: 0.3 0 400px;
+  flex: 0 1 400px;
   max-width: 500px;
   height: calc(100% - 6px - 10px);
   margin: 5px;
@@ -218,29 +219,27 @@ h3 {
   background-color: white; }
 
 #calcdiv {
-  flex: 1 0 500px;
+  flex: 1 0 450px;
   min-height: 800px; }
 
 #apptitlebox {
-  display: flex;
-  flex: 0 0 35px;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-content: space-around;
+  flex: 0 0 5.4em;
   font-family: sans-serif;
   font-weight: bold;
-  color: #3e9cad; }
+  color: #3e9cad;
+  text-align: center; }
   #apptitlebox h1 {
-    flex: 0 1 150px;
-    height: 30px; }
-  #apptitlebox button {
-    flex: 0 1 100px;
-    height: 30px;
-    font-size: 15px;
-    color: inherit; }
+    font-size: 1.5em;
+    line-height: 2em;
+    padding: 0;
+    margin: 0; }
+  #apptitlebox a {
+    line-height: 1.2em;
+    font-size: 1em;
+    color: red; }
 
 #invardiv {
+  flex: 1 1 auto;
   padding: 5px; }
 
 #varinfodiv {

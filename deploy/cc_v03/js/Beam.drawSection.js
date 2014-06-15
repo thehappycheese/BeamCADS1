@@ -171,7 +171,7 @@ Beam.prototype.drawSection = function(ctx){
 			lastDepth = lableDepth;
 			ctx.font = "15px sans-serif"
 			ctx.fillText(
-				"Layer"+layer.index+": "+layer.number+"\u00D7N"+layer.diameter,
+				"Layer "+layer.index+": "+layer.number+"\u00D7N"+layer.diameter,
 				this.b/2*scale+30,
 				lableDepth
 			)
@@ -199,10 +199,17 @@ Beam.prototype.drawSection = function(ctx){
 		//First, we need a way to sort reo by depth since this is not how it is present in the data structure.
 		// here we make a copy.
 		
+		
 
-		// lets look at the depth of the first element shall we. it should be within say  50mm of the top position
+
+		
+
+		// TODO this crack reo is a crock of shit.
+		// TODO crack controll reo should be more than half the diameter of the largest bar?
+
 		var crackreo = [];
-		if(creo[0].depth<(this.cover+this.df+50) ){
+		console.log(creo)
+		if(creo[0].offset === 0  && creo[0].from ==="highest"){
 			// Good. A top layer of reinforcement exists
 			last_depth = creo[0].depth;
 		}else{
@@ -210,7 +217,7 @@ Beam.prototype.drawSection = function(ctx){
 			// if the beam is particularly wide, do we need crack control reo accross the top? Dunno. lets put it there
 			// we will use N10s. It is only symbolic anyways.
 			crackreo.push({
-				number: Math.floor((this.b-2*this.cover-2*this.df)/300)+2,
+				number: Math.floor((this.b-2*this.cover-2*this.df)/(300+10))+2,// TODO: fix this line!!! baaaahhhg
 				diameter: 10 ,
 				depth:this.cover+this.df+5
 			});
@@ -223,7 +230,7 @@ Beam.prototype.drawSection = function(ctx){
 			if(ddif<300){
 				last_depth = creo[i].depth;
 			}else{
-				// TODO: evenly space stuff
+				
 				
 				var num_spaces = Math.ceil(ddif/300);
 				var spacing = ddif/num_spaces;
@@ -245,12 +252,12 @@ Beam.prototype.drawSection = function(ctx){
 		
 		// Draw reo
 		
+		ctx.fillStyle = "#CCCCCC";
 		for(var i = 0; i< crackreo.length; i++){
 			var layer = crackreo[i];
 			
 			var spacing = (this.b-(this.cover+this.df)*2 - layer.diameter)/(layer.number-1)
 			for(var j = 0; j<layer.number; j++){
-				ctx.fillStyle = "#CCCCCC";
 				ctx.fillCircle(
 					(-this.b/2+this.cover+this.df+layer.diameter/2+j*spacing)	*scale,
 					(-this.D/2 + layer.depth)			*scale,

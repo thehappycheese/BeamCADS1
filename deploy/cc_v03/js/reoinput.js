@@ -11,6 +11,11 @@ function ReoInput(arg_manager){
 	this.areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
 	this.masses		= [0.632,0.910,1.619,2.528,3.640,4.955,6.471,8.910,10.112];
 	
+
+
+	this._isFirstRow = false;
+
+
 	this.create = function(){
 		this.body = document.createElement("tr");
 		this.body.className = "reoinput";
@@ -18,9 +23,9 @@ function ReoInput(arg_manager){
 		'\
 		<td class="layernum">#</td>\
 		<td><input type="checkbox" class="enabled"></td>\
-		<td><input class="barcode" required value="2N10"\></td>\
+		<td style="white-space:nowrap;"><input class="barcode" required value="2N10"/> <span class="offmessage" style="display:none;color:lightgrey;">&#8592; Click here to add a new row</span></td>\
 		<td><button class="more" tabindex="-1">+</button><button class="less" tabindex="-1">-</button></td>\
-		<td><select class="from"><option>lowest</option><option>highest</option></select></td>\
+		<td><select class="from"><option value="highest">&#8593; Top</option><option value="lowest" selected>&#8595; Bottom</option></select></td>\
 		<td><input type="number" class="offset" value="0" required/></td>\
 		\
 		<td class="area">--</td>\
@@ -28,16 +33,18 @@ function ReoInput(arg_manager){
 		';
 		
 		this.enabledCheckbox = this.body.querySelector(".enabled");
-		this.barcodeInput = this.body.querySelector(".barcode");
-		this.moreButton = this.body.querySelector(".more");
-		this.lessButton = this.body.querySelector(".less");
-		this.areaOutput = this.body.querySelector(".area");
+		this.barcodeInput	= this.body.querySelector(".barcode");
+		this.moreButton		= this.body.querySelector(".more");
+		this.lessButton		= this.body.querySelector(".less");
+		this.areaOutput		= this.body.querySelector(".area");
 		this.layerNumberOutput = this.body.querySelector(".layernum");
 		this.layerNumberOutput.style.fontWeight = "bold";
 		this.layerDepthOutput = this.body.querySelector(".depth");
-		this.offsetInput = this.body.querySelector(".offset");
-		this.fromInput = this.body.querySelector(".from");
+		this.offsetInput	= this.body.querySelector(".offset");
+		this.fromInput		= this.body.querySelector(".from");
 		this.selectedCheckbox = this.body.querySelector(".selected");
+
+		this.offMessageOutput = this.body.querySelector(".offmessage");
 		
 		this.enabled = false;
 	}.bind(this);
@@ -156,10 +163,11 @@ function ReoInput(arg_manager){
 	Object.defineProperty(this,"barcode",{
 		get:function(){
 			var inp = this.barcodeInput.value;
-			if(inp.match(/^(10|[1-9])(N)(10|12|16|20|24|28|32|36|40)$/)){
+			//if(inp.match(/^(10|[1-9])(N)(10|12|16|20|24|28|32|36|40)$/)){
+			if(inp.match(/^([0-9]+)(N)([0-9]+)$/)){
 				return inp;
 			}else{
-				return "2N10";
+				return "";
 			}
 		}.bind(this),
 		set:function(newval){
@@ -221,7 +229,7 @@ function ReoInput(arg_manager){
 		}.bind(this),
 		set:function(newval){
 			this.offsetInput.value = Math.abs(Math.round(parseFloat(newval)));
-			this.update();
+			//this.update();
 		}.bind(this),
 	});
 	
@@ -236,7 +244,56 @@ function ReoInput(arg_manager){
 			this.update();
 		}.bind(this),
 	});
+
+
+	// 			GET/SET IS AT HIGHEST POSITION
+	Object.defineProperty(this,"isAtHighestPosition",{
+		get:function(){
+			return this.isHighestHighestRow && (this.offset === 0);
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"isAtLowestPosition",{
+		get:function(){
+			return this.isLowestLowestRow && (this.offset === 0);
+		}.bind(this)
+	});
 	
+	Object.defineProperty(this,"isHighestHighestRow",{
+		get:function(){
+			return this.manager.getHighestHighestRow() === this;
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"isLowestLowestRow",{
+		get:function(){
+			return this.manager.getLowestLowestRow() === this;
+		}.bind(this)
+	});
+
+Object.defineProperty(this,"isFirstRow",{
+		get:function(){
+			return this._isFirstRow;
+		}.bind(this),
+		set:function(newval){
+			this._isFirstRow = newval;
+
+			if(this._isFirstRow){
+				this.enabledCheckbox.disabled = true;
+				this.offsetInput.disabled = true;
+				this.fromInput.disabled = true;
+				this.offsetInput.style.visibility = "hidden";
+				this.fromInput.style.visibility = "hidden";
+			}else{
+				this.enabledCheckbox.disabled = false;
+				this.offsetInput.disabled = false;
+				this.fromInput.disabled = false;
+				this.offsetInput.style.visibility = "";
+				this.fromInput.style.visibility = "";
+			}
+		}.bind(this)
+	})
+
 	
 	
 	// ##########################################################################################
@@ -247,10 +304,36 @@ function ReoInput(arg_manager){
 		if(this.enabled){
 			this.body.style.color = "";
 			this.areaOutput.innerHTML = this.area;
+
+			this.offsetInput.style.display	= "";
+			this.fromInput.style.display	= "";
+			this.moreButton.style.display	= "";
+			this.lessButton.style.display	= "";
+			this.barcodeInput.style.display = "";
+
+			this.offMessageOutput.style.display = "none";
+
+			if(this.isHighestHighestRow){
+				if(this.offest!== 0){
+					this.offset = 0;
+				}
+				this.offsetInput.style.display	= "none";
+			}
+			
 		}else{
 			this.areaOutput.innerHTML = "";
 			this.body.style.color = "grey";
+
+			this.offsetInput.style.display	= "none";
+			this.fromInput.style.display	= "none";
+			this.moreButton.style.display	= "none";
+			this.lessButton.style.display	= "none";
+			this.barcodeInput.style.display	= "none";
+
+			this.offMessageOutput.style.display = "";
 		}
+
+
 		
 		
 		
@@ -277,14 +360,7 @@ function ReoInput(arg_manager){
 	// ##########################################################################################
 	// 			HELPERS
 	// ##########################################################################################
-	this.makeFirstRow = function(){
-		this.enabled = true;
-		this.enabledCheckbox.disabled = true;
-		this.offsetInput.disabled = true;
-		this.fromInput.disabled = true;
-		this.offsetInput.style.visibility = "hidden";
-		this.fromInput.style.visibility = "hidden";
-	}.bind(this);
+
 	
 	// ##########################################################################################
 	// 			MORE AND LESS HELPER FUNCTIONS
@@ -299,7 +375,7 @@ function ReoInput(arg_manager){
 		var fitwidth = b-2*cover-2*df;
 		
 		var manager = this.manager;
-		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+		if(this.isAtLowestPosition || this.isAtHighestPosition){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
 			// ASSUME: assume minimum spacing of 20mm between
 			// ASSUME: assume maximum spacing of 300mm c-c
 			// ASSUME: assume maximum of 10 bars
@@ -322,7 +398,7 @@ function ReoInput(arg_manager){
 		var fitwidth = b-2*cover-2*df;
 		
 		var manager = this.manager;
-		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+		if(this.isAtLowestPosition || this.isAtHighestPosition){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
 			// ASSUME: assume minimum spacing of 20mm between
 			// ASSUME: assume maximum spacing of 300mm c-c
 			// ASSUME: assume maximum of 10 bars
@@ -436,30 +512,61 @@ function ReoInput(arg_manager){
 		var result = {error:[], warning:[], infos:[]};
 		if(!this.enabled) return result;
 		
-		var rowname = "Layer"+this.manager.getEnabledRowIndex(this);
+		var rowname = ("Layer "+this.manager.getEnabledRowIndex(this)).bold();
 		
 		// Check that this layer isn't near the neutral axis
 		
 		
-		if(!this.barcodeInput.value.match(/^[0-9]*N[0-9]*$/)){
+		if(!this.barcodeInput.value.match(/^[0-9]+N[0-9]+$/)){
 			result.error.push(rowname+' incorrect \'Bars\' column. This software uses the shorthand \"<b>2N10</b>\" to indicate 2 <a href="#help_bar_reoclass">normal ductility bars</a> with a diameter of 10mm.');
 		}else{
-			if(this.number>10){
+			var number = parseInt(this.barcodeInput.value.split("N")[0]);
+			var diameter = parseInt(this.barcodeInput.value.split("N")[1]);
+			if(number<2){
+				// we should never have less than 2 bars
+				result.error.push(rowname+" has less than 2 bars. At least 2 bars in each layer are required to form a symetrical reo cage for transportation.");
+			}else if(!this.isAtHighestPosition && !this.isAtLowestPosition){
+				// If this is a "middle" row, then it shouldn have more than 2 bars!
+				if(number > 2){
+					result.error.push(rowname+" has bars floating in mid air! This layer should have only 2 bars.")
+				}
+			}
+			if(number>10){
 				result.error.push(rowname+" has too many bars (<b>>10</b>). Consider using larger bar diameters instead.");
 			}
-			if(this.diameters.indexOf(this.diameter)===-1){
+			if(this.diameters.indexOf(diameter)===-1){
 				result.error.push(rowname+" non-standard bar diameter. This software can only function with standard deformed bar diameters: ["+this.diameters.join(", ")+"] mm");
+			}
+			// lets calculate the spacing between the bars in this layer!
+			var b = parseInt(vin.b.value);
+			var df = parseInt(vin.df.value);
+			var cover = parseInt(vin.cover.value);
+			var fitwidth = b-2*cover-2*df;
+			var gap = (fitwidth - (number*diameter))/(number-1);
+			if(gap<20){
+				result.error.push(rowname+" not enough space between bars (<20mm). Use fewer bars so that aggregate can compleatly surround the bars and and air bubbles can escape.");
+			}
+
+			// TODO: get code references for this section
+			// verify!
+			if(this.isAtHighestPosition || this.isAtLowestPosition){
+				if(gap > 300){
+					result.error.push(rowname+" has too much space between bars (>300mm) for crack controll requirements! Only bars which are &greq; half the diameter of the largest bar can be counted.")
+				}
 			}
 		}
 		
 		// if this is the top or bottom layer, gap can be 0. otherwise gap should be at least 20mm.
-		if(this.manager.getBottomRow()===this || this.manager.getTopmostTop()===this){
+		if(this.isAtLowestPosition || this.isAtHighestPosition){
 			// do nothing
 		}else{
 			if(this.offset<20){
 				result.error.push(rowname+" is too close to another layer. The <b>'Gap' should be at least 20mm</b> so that aggregate can compleatly surround the bars and and air bubbles can escape.");
 			}
 		}
+
+
+		
 		
 		// Check that this layer's diameter isnt less than half the diameter of the largest bar.
 		//var rs = this.manager.getEnabledRows();

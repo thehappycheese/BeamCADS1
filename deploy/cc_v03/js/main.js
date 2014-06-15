@@ -4,7 +4,7 @@
 
 ///* Beam.drawSection.js
 
-///* reoinput.js
+///* ReoInput.js
 ///* ReoManager.js
 ///* ProTips.js
 ///* CalcDiv.js
