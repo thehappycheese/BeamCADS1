@@ -31,6 +31,7 @@ function ProTips(arg_body){
 	}.bind(this);
 	
 	this.over	= function(e){
+		this.tips_div.style.color = "black";
 		var t = e.target;
 		while(this.tip_from_target(t) === undefined && t !== document.body){
 			t = t.parentElement;
@@ -38,11 +39,11 @@ function ProTips(arg_body){
 		this.tips_div.innerHTML = this.tip_from_target(t);
 	}.bind(this);
 	this.out		= function(e){
-		this.tips_div.innerHTML = "";
+		this.tips_div.style.color = "lightgrey";
+		this.tips_div.innerHTML = "Roll your mouse over something to get a tooltip here!";
 	}.bind(this);
 	
 	
-	this.add(this.body,"Roll your mouse over something to get a tooltip here!");
 	
 	this.grab = function(elem){
 		var els = elem.querySelectorAll("*");

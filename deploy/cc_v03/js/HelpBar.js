@@ -19,9 +19,6 @@ function HelpBar(arg_host){
 		
 		 if ("onhashchange" in window) {
 			 window.addEventListener("hashchange",this.hashChangeListener,false);
-			 // Or $(window).bind( 'hashchange',function(e) {
-			 //       alert(window.location.hash);
-			 //   });
 		}else {
 			this.prevHash = window.location.hash;
 			window.setInterval(function () {
@@ -59,7 +56,7 @@ function HelpBar(arg_host){
 		items.sort(function(a,b){
 			return a.unicode.localeCompare(b.unicode)
 		})
-		var indexhtml = "<div><h1>Index</h1>";
+		var indexhtml = "<div><h1>Help Index</h1>";
 		for(var i = 0;i<items.length;i++){
 			this.host.appendChild(makeHelpBlock(items[i],this.data));
 			//indexhtml +='<a href="#help_bar_'+items[i].id+'">$$$'+items[i].notation+'$$$ '+items[i].name+'</a>';
@@ -85,7 +82,7 @@ function HelpBar(arg_host){
 		function makeHelpBlock(item,data){
 			var result = makeDiv("help_bar_"+item.id,"helpblock");
 			var html = "";
-			html += '<a href="#help_block_index">Back to Index.</a>'
+			html += '<a href="#help_block_index" style="display:block;line-height:40px;height:40px;text-align:center;">Back to Help Index.</a>'
 			html += '<h1>'+
 						((item.notation)?("$$$"+item.notation+"$$$ "):"")+
 						item.name+

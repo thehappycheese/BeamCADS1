@@ -58,6 +58,16 @@ function CalcDiv(){
 	}.bind(this);
 	
 	
+	this.clearTitle = function(){
+		this.title = "";
+	}.bind(this);
+	this.clearContent = function(){
+		this.content = "";
+	}.bind(this);
+	this.clear = function(){
+		this.title = "";
+		this.content = "";
+	}.bind(this);
 	
 	this.appendTo = function(dom){
 		dom.appendChild(this.body);

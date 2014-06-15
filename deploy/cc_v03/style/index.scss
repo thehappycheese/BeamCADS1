@@ -87,7 +87,7 @@ h3{
 }
 
 #calcdiv{
-	flex: 1 0 400px;
+	flex: 1 0 500px;
 	min-height:800px;
 }
 
@@ -207,11 +207,7 @@ h3{
 
 
 #crosssectiondiv{
-	flex: 0.1 0 420px;
-	display:flex;
-	flex-wrap:wrap;
-	justify-content:center;
-	align-content:flex-start;
+	flex: 0 0 auto;
 }
 
 

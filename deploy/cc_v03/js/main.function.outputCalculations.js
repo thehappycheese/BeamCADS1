@@ -1,3 +1,5 @@
+
+///* calc/calc.js
 var calcs = {};
 function outputCalculations(){
 	var calculationdiv = document.querySelector("#calcdiv-content");
@@ -13,35 +15,17 @@ function outputCalculations(){
 	
 	
 	// ALPHA 2;///////////////////////////////
-	calcs.alpha2 = calcs.alpha2 || new CalcDiv();
-	calcs.alpha2.title = "$$$\\alpha_2 ~~=~~ "+b.alpha2.toFixed(2)+"$$$";
-	calcs.alpha2.content = "";
-	calcs.alpha2.addParagraph("From As3600 Section 8.1.3(ii)")//Verify
-	calcs.alpha2.addParagraph("$$$\\begin{aligned}\\alpha_2 &= 1.0 - 0.003 f'_c \\\\"+
-								"&= 1.0-0.003\\times "+b.fc.toFixed(0)+"\\\\"+
-								"&= "+(1-0.003*b.fc).toFixed(2)+"\\end{aligned}$$$")//Verify
-	calcs.alpha2.addParagraph("where $$$0.67 \\le \\alpha_2 \\le 0.85 $$$")//Verify
-	calcs.alpha2.addParagraph(" &there4; $$$\\alpha_2 = "+b.alpha2.toFixed(2)+" $$$")//Verify
-	calcs.alpha2.appendTo(calculationdiv);
-	
+	calc.alpha2.update();
+	calc.alpha2.appendTo(calculationdiv)
 	
 	
 	// GAMMA; ///////////////////////////////
-	calcs.gamma = calcs.gamma || new CalcDiv();
-	calcs.gamma.title = "$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$";
-	calcs.gamma.content = "";
-	calcs.gamma.addParagraph("From As3600 Section 8.1.3(ii)")//Verify
-	calcs.gamma.addParagraph("$$$\\begin{aligned}\\gamma &= 1.05 - 0.007 f'_c \\\\ "+
-							 "&= 1.05-0.007\\times "+b.fc.toFixed(0)+"\\\\ "+
-							 "&=~ "+(1.05-0.007*b.fc).toFixed(2)+"\\end{aligned}$$$")//Verify
-	calcs.gamma.addSpace()//Verify
-	calcs.gamma.addParagraph("where $$$0.67 \\le \\gamma \\le 0.85 $$$")//Verify
-	calcs.gamma.addParagraph(" &there4; $$$\\gamma = "+b.gamma.toFixed(2)+" $$$")//Verify
-	calcs.gamma.appendTo(calculationdiv);
+	calc.gamma.update();
+	calc.gamma.appendTo(calculationdiv);
 	
 	
 	
-	// TODO: disegaurd bars less than half the diameter of the largest bar!
+	
 	//d ///////////////////////////////
 	
 	calcs.d = calcs.d || new CalcDiv();
@@ -113,6 +97,7 @@ function outputCalculations(){
 	calcs.dn.addParagraph("Where...");
 		// d_n - epsilon_si ====================================
 		calcs.esi = calcs.esi || new CalcDiv(); // Create
+		calcs.esi.content = "";
 		calcs.esi.appendTo(calcs.dn.contentdiv);// Append
 		calcs.esi.title = "$$$\\epsilon_{si} = 0.003 ({{d_i}/{d_n}} - 1)$$$";
 		calcs.esi.addParagraph("$$$\\epsilon_{si}$$$ is the strain of each layer of steel.");
