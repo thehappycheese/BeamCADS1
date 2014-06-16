@@ -1,5 +1,6 @@
 
 ///* calc/calc.js
+
 var calcs = {};
 function outputCalculations(){
 	var calculationdiv = document.querySelector("#calcdiv-content");
@@ -14,14 +15,14 @@ function outputCalculations(){
 	
 	
 	
-	// ALPHA 2;///////////////////////////////
+	// ALPHA 2 and GAMMA;///////////////////////////////
 	calc.alpha2.update();
 	calc.alpha2.appendTo(calculationdiv)
 	
+	calc.dn.update();
+	calc.dn.appendTo(calculationdiv);
 	
-	// GAMMA; ///////////////////////////////
-	calc.gamma.update();
-	calc.gamma.appendTo(calculationdiv);
+	
 	
 	
 	

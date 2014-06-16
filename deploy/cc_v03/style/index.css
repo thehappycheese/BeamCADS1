@@ -17,9 +17,7 @@
         vertical-align: bottom; }
     .CalcDiv .topdiv button {
       width: 100%;
-      margin: 0;
-      margin-left: 5px;
-      margin-right: 2em; }
+      margin: 0; }
   .CalcDiv .contentdiv {
     min-height: 20px;
     padding: 5px;

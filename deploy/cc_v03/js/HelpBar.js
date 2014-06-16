@@ -163,7 +163,7 @@ function HelpBar(arg_host){
 	
 	
 	
-	
+	window.open("#","_self");
 	this.startload();
 }
 

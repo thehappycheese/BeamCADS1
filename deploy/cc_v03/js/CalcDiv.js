@@ -55,17 +55,6 @@ function CalcDiv(){
 	}.bind(this);
 	
 	
-	this.clearTitle = function(){
-		this.title = "";
-	}.bind(this);
-	this.clearContent = function(){
-		this.content = "";
-	}.bind(this);
-	this.clear = function(){
-		this.title = "";
-		this.content = "";
-	}.bind(this);
-	
 	this.appendTo = function(dom){
 		this.init();
 		dom.appendChild(this.body);
@@ -73,9 +62,16 @@ function CalcDiv(){
 		this.dispatch("added");
 	}.bind(this);
 	
+	
 	this.toggleCollapse = function(){
 		this.collapsed = !this.collapsed;
 	}.bind(this);
+	
+	
+	this.updateMathJax = function(){
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.body]);
+	}.bind(this);
+	
 	
 	Object.defineProperty(this,"collapsed",{
 		get:function(){
@@ -86,11 +82,14 @@ function CalcDiv(){
 			this.contentdiv.style.display = (newval)? "none" : "";
 			if(newval){
 				this.minmaxbutton.innerHTML = "+";
+				this.dispatch("hide");
 			}else{
 				this.minmaxbutton.innerHTML = "-";
+				this.dispatch("show");
 			}
 		}.bind(this)
 	})
+	
 	
 	Object.defineProperty(this,"title",{
 		get:function(){
@@ -99,7 +98,8 @@ function CalcDiv(){
 		set:function(newval){
 			this.titlediv.innerHTML = newval;
 		}.bind(this)
-	})
+	});
+	
 	
 	Object.defineProperty(this,"content",{
 		get:function(){
@@ -108,7 +108,9 @@ function CalcDiv(){
 		set:function(newval){
 			this.contentdiv.innerHTML = newval;
 		}.bind(this)
-	})
+	});
+	
+	
 	
 	this.addParagraph = function(content){
 		var newp = document.createElement("p");

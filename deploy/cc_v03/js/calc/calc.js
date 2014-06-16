@@ -3,7 +3,7 @@
 
 
 ///* calc.alpha2.js
-///* calc.gamma.js
+///* calc.dn.js
 
 
 
