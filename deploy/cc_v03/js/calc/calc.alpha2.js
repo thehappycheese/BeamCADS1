@@ -6,7 +6,7 @@ calc.alpha2 = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = '$$$\\alpha_2 = '+b.alpha2.toFixed(2)+" ~~~and~~~ \\gamma = "+b.gamma.toFixed(2)+"$$$";
+		this.title = '$$$\\href{#help_bar_alpha2}{\\alpha_2} = '+b.alpha2.toFixed(2)+" ~~~and~~~ \\href{#help_bar_gamma}{\\gamma} = "+b.gamma.toFixed(2)+"$$$";
 		this.updateMathJax();
 	}.bind(this);
 	

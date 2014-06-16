@@ -2,7 +2,6 @@
   "name": "nw-demo",
   "main": "index.htm",
   "node-js": false,
-  "node-remote": "<local>",
   "window": {
     "title": "node-webkit demo",
 	"toolbar": true,

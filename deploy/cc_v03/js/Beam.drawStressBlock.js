@@ -1,6 +1,7 @@
 
 ///* Vector.js
 ///* CADCanvas.js
+///* CADCanvas.Patterns.js
 ///* Beam.js
 
 Beam.prototype.drawStressBlock = function(ctx){
@@ -43,17 +44,39 @@ Beam.prototype.drawStressBlock = function(ctx){
 			padding_left,
 			padding_top
 		);
+		
+		// Draw compressive zone
+		CanvasPatterns.set2x2Hatch(ctx,"limegreen");
+		ctx.fillRect(0,0,b_b,b_dn*this.gamma);
+
+		// draw basic section
 		ctx.lineWidth = 2;
 		ctx.strokeStyle = "black";
 		ctx.strokeRect(0,0,b_b,b_D);
+
 		
+
+		// draw section with reo bars
 		for(var i = 0;i<this.reo.length;i++){
 			var layer = this.reo[i];
 			console.log(layer, scaleY(layer.depth),b_D,this.D)
 			var x = b_b*0.1;
 			var spacing = b_b*0.8/(layer.number-1);
+
+			var f = this.layer_strain_from_layer_dn(layer, b_dn);
+			if(f>0){
+				ctx.fillStyle = "red";
+			}else{
+				ctx.fillStyle = "blue";
+			}
+			var rad = Math.min(scaleX(10),scaleY(10));
+			var sid = rad*Math.SQRT2;
 			for(var j = 0; j<layer.number;j++){
-				ctx.fillCircle(x+spacing*j,scaleY(layer.depth),Math.min(scaleX(10),scaleY(10)))
+				if(f>0){
+					ctx.fillCircle(x+spacing*j,scaleY(layer.depth),rad);
+				}else{
+					ctx.fillRect(x+spacing*j-sid/2,scaleY(layer.depth)-sid/2,sid,sid);
+				}
 			}
 		}
 		

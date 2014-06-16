@@ -10,7 +10,10 @@ function HelpBar(arg_host){
 	this.data = null;
 	this.startload = function(){
 		tinyxhr("infos/infos.json",function(err,text,xhr){
-			if(err) throw new Error("Help Bar couldnt load :(");
+			if(err && !text){
+				console.log("Failed to load help bar json content");
+				throw err;
+			}
 			this.data = JSON.parse(text)
 			this.init()
 		}.bind(this));

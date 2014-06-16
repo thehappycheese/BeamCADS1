@@ -8,7 +8,8 @@ calc.dn = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = '$$$d_n = '+b.dn.toFixed(0)+' mm$$$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<a href="#help_bar_dn">Depth to Neutral Axis</a>)';
+		//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<a href="#help_bar_dn">Depth to Neutral Axis</a>)'
+		this.title = '$$$\\href{#help_bar_dn}{d_n} = '+b.dn.toFixed(0)+' mm$$$';
 		this.updateMathJax();
 	}.bind(this);
 	
@@ -20,7 +21,8 @@ calc.dn = new (function(){
 		}
 		
 		var str1 = "";
-		str1+= para("Depth to neutral axis ($$$d_n$$$) is calculated by the 'Rectangular Stress Block' Method. This involves solving the internal horizontal forces in the beam:");
+		str1+= para("Depth to neutral axis ($$$\\href{#help_bar_dn}{d_n}$$$) is calculated by the 'Rectangular Stress Block' Method. This involves solving the internal horizontal forces in the beam:");
+
 		str1 += '<canvas class="dncanvas" width="450" height="300">Canvas not shown</canvas>';
 		
 		
