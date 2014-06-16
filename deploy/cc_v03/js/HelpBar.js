@@ -39,6 +39,7 @@ function HelpBar(arg_host){
 		}catch(e){
 			console.log("Failed to typeset help bar",e);
 		}
+		ttips.grab(this.host);
 	}.bind(this);
 	
 	
@@ -71,7 +72,7 @@ function HelpBar(arg_host){
 			if(item.id){
 				html+= '<a href="#help_bar_'+item.id+'">';
 			}
-				html+= '<table class="help_bar_link"><tr>';
+				html+= '<table class="help_bar_link" data-tooltip="'+item.description+'"><tr>';
 				html+= '<td class="c1">$$$'+item.notation+'$$$</td><td class="c2">'+item.name+'</td>';
 				html+= "</tr></table>";
 			if(item.id){
@@ -139,7 +140,11 @@ function HelpBar(arg_host){
 		if(typeof e === "string"){
 			new_hash = e.split("#")[1];
 		}else{
-			new_hash = e.newURL.split("#")[1];
+			try{
+				new_hash = e.newURL.split("#")[1];
+			}catch(e){
+				new_hash = window.location.hash.split("#")[1];
+			}
 		}
 		
 		this.hideAll();
@@ -160,7 +165,6 @@ function HelpBar(arg_host){
 	
 	
 	this.startload();
-	window.open("#","_self")
 }
 
 

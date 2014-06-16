@@ -6,7 +6,7 @@ calc.gamma = new (function(){
 	CalcDiv.call(this); // Extends calcdiv
 	
 	this.updateTitle = function(){
-		this.title = "$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$<br> test";
+		this.title = "$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$";
 	}
 	
 	this.update = function(){

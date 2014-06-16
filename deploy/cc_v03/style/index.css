@@ -2,22 +2,24 @@
   width: 100%;
   border: 1px solid grey;
   margin: 5px 0px; }
-  .CalcDiv .topdiv:hover {
-    background-color: #f6feff; }
-  .CalcDiv .topdiv .titlediv {
-    font-size: 100%;
-    line-height: 25px;
-    height: 25px;
-    padding: 5px;
-    cursor: pointer;
-    display: inline-block; }
-    .CalcDiv .topdiv .titlediv .MathJax {
-      vertical-align: bottom; }
-  .CalcDiv .topdiv button {
-    width: 25px;
-    margin: 0;
-    margin-left: 5px;
-    margin-right: 2em; }
+  .CalcDiv .topdiv {
+    width: 100%;
+    cursor: pointer; }
+    .CalcDiv .topdiv:hover {
+      background-color: #f6feff; }
+    .CalcDiv .topdiv .titlediv {
+      font-size: 100%;
+      line-height: 25px;
+      height: 25px;
+      padding: 5px;
+      display: inline-block; }
+      .CalcDiv .topdiv .titlediv .MathJax {
+        vertical-align: bottom; }
+    .CalcDiv .topdiv button {
+      width: 100%;
+      margin: 0;
+      margin-left: 5px;
+      margin-right: 2em; }
   .CalcDiv .contentdiv {
     min-height: 20px;
     padding: 5px;

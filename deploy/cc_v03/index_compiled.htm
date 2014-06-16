@@ -7,6 +7,7 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="IE=Edge"/>
 	<link rel="stylesheet" href="style/index.css" type="text/css"/>
 	<script type="text/x-mathjax-config">
 		MathJax.Hub.Config({
@@ -32,8 +33,10 @@
 <body>
 	<div id="secondarycol">
 		<div id="apptitlebox" class="bmpblock">
-			<h1 style="display:block;padding:0;margin:0;">BeamCalc</h1>
-			<a href="https://www.surveymonkey.com/s/FBLMLHG" style="color:red;" target="_blank">CLICK HERE TO DO TUTE / SURVEY (in a new tab)</a>
+			<h1>BeamCalc</h1>
+			<a href="https://curtin.asia.qualtrics.com/SE/?SID=SV_5umJx1fAzIC3fa5" target="_blank">Click Here To Do Tute / Survey (in a new tab)</a>
+			<br>
+			<a href="../../">Return to Infosheet/Consent Form</a>
 		</div>
 		
 		
@@ -71,11 +74,13 @@
 				<table class="reotable" style="">
 					<thead>
 						<tr style="font-family:sans-serif;">
-							<td style="width:4em;">Layer#</td>
-							<td style="width:4em;border-left:none;">Enabled</td>
-							<td style="width:3em;">Bars</td>
+							<td style="width:4em;" data-tooltip="Number used to refer to a layer of reinforcement.">
+								Layer<br>Number
+							</td>
+							<td style="width:5em;border-left:none;">Enabled<br>&nbsp;</td>
+							<td style="width:3em;">Bars<br>&nbsp;</td>
 							<td style="width:30px;border-left:none;"></td>
-							<td style="min-width:3em;">Reo<br>Position</td>
+							<td style="width:6em;">Top/Bottom<br>Position</td>
 							<td style="min-width:3em;">Gap<br>(mm)</td>
 							<td style="min-width:3em;">Area<br>(mm&sup2;)</td>
 							<td style="min-width:3em;">Depth<br>(mm)</td>
@@ -102,11 +107,11 @@
 			<div style="width:100%;align-self:flex-start;">
 				<h2>Cross Section</h2>
 			</div>
-			<canvas width="430" height="400" id="crosssectioncanvas" ></canvas>
+			<canvas width="450" height="400" id="crosssectioncanvas" ></canvas>
 			<img id="bananascale" src="img/scale.png" style="display:none;"/>
 		</div>
 		
-		
+		<div style="flex: 0 0 100%;"></div>
 		
 		<div id="calcdiv" style="" class="bmpblock">
 			<div style="width:100%;">
@@ -1114,7 +1119,7 @@ Beam.prototype.drawSection = function(ctx){
 			lastDepth = lableDepth;
 			ctx.font = "15px sans-serif"
 			ctx.fillText(
-				"Layer"+layer.index+": "+layer.number+"\u00D7N"+layer.diameter,
+				"Layer "+layer.index+": "+layer.number+"\u00D7N"+layer.diameter,
 				this.b/2*scale+30,
 				lableDepth
 			)
@@ -1142,10 +1147,17 @@ Beam.prototype.drawSection = function(ctx){
 		//First, we need a way to sort reo by depth since this is not how it is present in the data structure.
 		// here we make a copy.
 		
+		
 
-		// lets look at the depth of the first element shall we. it should be within say  50mm of the top position
+
+		
+
+		// TODO this crack reo is a crock of shit.
+		// TODO crack controll reo should be more than half the diameter of the largest bar?
+
 		var crackreo = [];
-		if(creo[0].depth<(this.cover+this.df+50) ){
+		console.log(creo)
+		if(creo[0].offset === 0  && creo[0].from ==="highest"){
 			// Good. A top layer of reinforcement exists
 			last_depth = creo[0].depth;
 		}else{
@@ -1153,7 +1165,7 @@ Beam.prototype.drawSection = function(ctx){
 			// if the beam is particularly wide, do we need crack control reo accross the top? Dunno. lets put it there
 			// we will use N10s. It is only symbolic anyways.
 			crackreo.push({
-				number: Math.floor((this.b-2*this.cover-2*this.df)/300)+2,
+				number: Math.floor((this.b-2*this.cover-2*this.df)/(300+10))+2,// TODO: fix this line!!! baaaahhhg
 				diameter: 10 ,
 				depth:this.cover+this.df+5
 			});
@@ -1166,10 +1178,13 @@ Beam.prototype.drawSection = function(ctx){
 			if(ddif<300){
 				last_depth = creo[i].depth;
 			}else{
-				// TODO evenly space stuff
-				while(ddif>300){
-					last_depth += 300;
-					ddif -= 300;
+				
+				
+				var num_spaces = Math.ceil(ddif/300);
+				var spacing = ddif/num_spaces;
+				
+				for(var j = 0;j<num_spaces-1;j++){
+					last_depth += spacing
 					crackreo.push({
 						number: 2,
 						diameter: 10 ,
@@ -1185,12 +1200,12 @@ Beam.prototype.drawSection = function(ctx){
 		
 		// Draw reo
 		
+		ctx.fillStyle = "#CCCCCC";
 		for(var i = 0; i< crackreo.length; i++){
 			var layer = crackreo[i];
 			
 			var spacing = (this.b-(this.cover+this.df)*2 - layer.diameter)/(layer.number-1)
 			for(var j = 0; j<layer.number; j++){
-				ctx.fillStyle = "#CCCCCC";
 				ctx.fillCircle(
 					(-this.b/2+this.cover+this.df+layer.diameter/2+j*spacing)	*scale,
 					(-this.D/2 + layer.depth)			*scale,
@@ -1253,7 +1268,7 @@ Beam.prototype.drawSection = function(ctx){
 
 
 
-// #########		 Crawling:.\js\reoinput.js		#########
+// #########		 Crawling:.\js\ReoInput.js		#########
 
 
 
@@ -1348,6 +1363,11 @@ function ReoInput(arg_manager){
 	this.areas		= [78,	113,	201,	314,	452,	616,	804,	1020,	1260];
 	this.masses		= [0.632,0.910,1.619,2.528,3.640,4.955,6.471,8.910,10.112];
 	
+
+
+	this._isFirstRow = false;
+
+
 	this.create = function(){
 		this.body = document.createElement("tr");
 		this.body.className = "reoinput";
@@ -1355,9 +1375,9 @@ function ReoInput(arg_manager){
 		'\
 		<td class="layernum">#</td>\
 		<td><input type="checkbox" class="enabled"></td>\
-		<td><input class="barcode" required value="2N10"\></td>\
+		<td style="white-space:nowrap;"><input class="barcode" required value="2N10"/> <span class="offmessage" style="display:none;color:lightgrey;">&#8592; Click here to add a new row</span></td>\
 		<td><button class="more" tabindex="-1">+</button><button class="less" tabindex="-1">-</button></td>\
-		<td><select class="from"><option>lowest</option><option>highest</option></select></td>\
+		<td><select class="from"><option value="highest">&#8593; Top</option><option value="lowest" selected>&#8595; Bottom</option></select></td>\
 		<td><input type="number" class="offset" value="0" required/></td>\
 		\
 		<td class="area">--</td>\
@@ -1365,16 +1385,18 @@ function ReoInput(arg_manager){
 		';
 		
 		this.enabledCheckbox = this.body.querySelector(".enabled");
-		this.barcodeInput = this.body.querySelector(".barcode");
-		this.moreButton = this.body.querySelector(".more");
-		this.lessButton = this.body.querySelector(".less");
-		this.areaOutput = this.body.querySelector(".area");
+		this.barcodeInput	= this.body.querySelector(".barcode");
+		this.moreButton		= this.body.querySelector(".more");
+		this.lessButton		= this.body.querySelector(".less");
+		this.areaOutput		= this.body.querySelector(".area");
 		this.layerNumberOutput = this.body.querySelector(".layernum");
 		this.layerNumberOutput.style.fontWeight = "bold";
 		this.layerDepthOutput = this.body.querySelector(".depth");
-		this.offsetInput = this.body.querySelector(".offset");
-		this.fromInput = this.body.querySelector(".from");
+		this.offsetInput	= this.body.querySelector(".offset");
+		this.fromInput		= this.body.querySelector(".from");
 		this.selectedCheckbox = this.body.querySelector(".selected");
+
+		this.offMessageOutput = this.body.querySelector(".offmessage");
 		
 		this.enabled = false;
 	}.bind(this);
@@ -1493,10 +1515,11 @@ function ReoInput(arg_manager){
 	Object.defineProperty(this,"barcode",{
 		get:function(){
 			var inp = this.barcodeInput.value;
-			if(inp.match(/^(10|[1-9])(N)(10|12|16|20|24|28|32|36|40)$/)){
+			//if(inp.match(/^(10|[1-9])(N)(10|12|16|20|24|28|32|36|40)$/)){
+			if(inp.match(/^([0-9]+)(N)([0-9]+)$/)){
 				return inp;
 			}else{
-				return "2N10";
+				return "";
 			}
 		}.bind(this),
 		set:function(newval){
@@ -1558,7 +1581,7 @@ function ReoInput(arg_manager){
 		}.bind(this),
 		set:function(newval){
 			this.offsetInput.value = Math.abs(Math.round(parseFloat(newval)));
-			this.update();
+			//this.update();
 		}.bind(this),
 	});
 	
@@ -1573,7 +1596,56 @@ function ReoInput(arg_manager){
 			this.update();
 		}.bind(this),
 	});
+
+
+	// 			GET/SET IS AT HIGHEST POSITION
+	Object.defineProperty(this,"isAtHighestPosition",{
+		get:function(){
+			return this.isHighestHighestRow && (this.offset === 0);
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"isAtLowestPosition",{
+		get:function(){
+			return this.isLowestLowestRow && (this.offset === 0);
+		}.bind(this)
+	});
 	
+	Object.defineProperty(this,"isHighestHighestRow",{
+		get:function(){
+			return this.manager.getHighestHighestRow() === this;
+		}.bind(this)
+	});
+
+	Object.defineProperty(this,"isLowestLowestRow",{
+		get:function(){
+			return this.manager.getLowestLowestRow() === this;
+		}.bind(this)
+	});
+
+Object.defineProperty(this,"isFirstRow",{
+		get:function(){
+			return this._isFirstRow;
+		}.bind(this),
+		set:function(newval){
+			this._isFirstRow = newval;
+
+			if(this._isFirstRow){
+				this.enabledCheckbox.disabled = true;
+				this.offsetInput.disabled = true;
+				this.fromInput.disabled = true;
+				this.offsetInput.style.visibility = "hidden";
+				this.fromInput.style.visibility = "hidden";
+			}else{
+				this.enabledCheckbox.disabled = false;
+				this.offsetInput.disabled = false;
+				this.fromInput.disabled = false;
+				this.offsetInput.style.visibility = "";
+				this.fromInput.style.visibility = "";
+			}
+		}.bind(this)
+	})
+
 	
 	
 	// ##########################################################################################
@@ -1584,10 +1656,36 @@ function ReoInput(arg_manager){
 		if(this.enabled){
 			this.body.style.color = "";
 			this.areaOutput.innerHTML = this.area;
+
+			this.offsetInput.style.display	= "";
+			this.fromInput.style.display	= "";
+			this.moreButton.style.display	= "";
+			this.lessButton.style.display	= "";
+			this.barcodeInput.style.display = "";
+
+			this.offMessageOutput.style.display = "none";
+
+			if(this.isHighestHighestRow){
+				if(this.offest!== 0){
+					this.offset = 0;
+				}
+				this.offsetInput.style.display	= "none";
+			}
+			
 		}else{
 			this.areaOutput.innerHTML = "";
 			this.body.style.color = "grey";
+
+			this.offsetInput.style.display	= "none";
+			this.fromInput.style.display	= "none";
+			this.moreButton.style.display	= "none";
+			this.lessButton.style.display	= "none";
+			this.barcodeInput.style.display	= "none";
+
+			this.offMessageOutput.style.display = "";
 		}
+
+
 		
 		
 		
@@ -1614,14 +1712,7 @@ function ReoInput(arg_manager){
 	// ##########################################################################################
 	// 			HELPERS
 	// ##########################################################################################
-	this.makeFirstRow = function(){
-		this.enabled = true;
-		this.enabledCheckbox.disabled = true;
-		this.offsetInput.disabled = true;
-		this.fromInput.disabled = true;
-		this.offsetInput.style.visibility = "hidden";
-		this.fromInput.style.visibility = "hidden";
-	}.bind(this);
+
 	
 	// ##########################################################################################
 	// 			MORE AND LESS HELPER FUNCTIONS
@@ -1636,7 +1727,7 @@ function ReoInput(arg_manager){
 		var fitwidth = b-2*cover-2*df;
 		
 		var manager = this.manager;
-		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+		if(this.isAtLowestPosition || this.isAtHighestPosition){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
 			// ASSUME: assume minimum spacing of 20mm between
 			// ASSUME: assume maximum spacing of 300mm c-c
 			// ASSUME: assume maximum of 10 bars
@@ -1659,7 +1750,7 @@ function ReoInput(arg_manager){
 		var fitwidth = b-2*cover-2*df;
 		
 		var manager = this.manager;
-		if(manager.getBottomRow()===this || manager.getTopmostTop()===this){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
+		if(this.isAtLowestPosition || this.isAtHighestPosition){// TODO: or if the row is pressed against the top allow multi bars of comp reo.
 			// ASSUME: assume minimum spacing of 20mm between
 			// ASSUME: assume maximum spacing of 300mm c-c
 			// ASSUME: assume maximum of 10 bars
@@ -1693,6 +1784,7 @@ function ReoInput(arg_manager){
 		
 		if(combs.length==0){
 			console.log("never was possible combinations error");
+			return "2N10";
 		}
 		
 		combs.sort(function(a,b){
@@ -1750,6 +1842,7 @@ function ReoInput(arg_manager){
 		// no suitable combination was found. Return the top combination.
 		if(combs.length==0){
 			console.log("no possible combinations error");
+			return "2N10";
 		}
 		return combs[combs.length-1].number+"N"+combs[combs.length-1].diameter;
 		
@@ -1773,30 +1866,61 @@ function ReoInput(arg_manager){
 		var result = {error:[], warning:[], infos:[]};
 		if(!this.enabled) return result;
 		
-		var rowname = "Layer"+this.manager.getEnabledRowIndex(this);
+		var rowname = ("Layer "+this.manager.getEnabledRowIndex(this)).bold();
 		
 		// Check that this layer isn't near the neutral axis
 		
 		
-		if(!this.barcodeInput.value.match(/^[0-9]*N[0-9]*$/)){
+		if(!this.barcodeInput.value.match(/^[0-9]+N[0-9]+$/)){
 			result.error.push(rowname+' incorrect \'Bars\' column. This software uses the shorthand \"<b>2N10</b>\" to indicate 2 <a href="#help_bar_reoclass">normal ductility bars</a> with a diameter of 10mm.');
 		}else{
-			if(this.number>10){
+			var number = parseInt(this.barcodeInput.value.split("N")[0]);
+			var diameter = parseInt(this.barcodeInput.value.split("N")[1]);
+			if(number<2){
+				// we should never have less than 2 bars
+				result.error.push(rowname+" has less than 2 bars. At least 2 bars in each layer are required to form a symetrical reo cage for transportation.");
+			}else if(!this.isAtHighestPosition && !this.isAtLowestPosition){
+				// If this is a "middle" row, then it shouldn have more than 2 bars!
+				if(number > 2){
+					result.error.push(rowname+" has bars floating in mid air! This layer should have only 2 bars.")
+				}
+			}
+			if(number>10){
 				result.error.push(rowname+" has too many bars (<b>>10</b>). Consider using larger bar diameters instead.");
 			}
-			if(this.diameters.indexOf(this.diameter)===-1){
+			if(this.diameters.indexOf(diameter)===-1){
 				result.error.push(rowname+" non-standard bar diameter. This software can only function with standard deformed bar diameters: ["+this.diameters.join(", ")+"] mm");
+			}
+			// lets calculate the spacing between the bars in this layer!
+			var b = parseInt(vin.b.value);
+			var df = parseInt(vin.df.value);
+			var cover = parseInt(vin.cover.value);
+			var fitwidth = b-2*cover-2*df;
+			var gap = (fitwidth - (number*diameter))/(number-1);
+			if(gap<20){
+				result.error.push(rowname+" not enough space between bars (<20mm). Use fewer bars so that aggregate can compleatly surround the bars and and air bubbles can escape.");
+			}
+
+			// TODO: get code references for this section
+			// verify!
+			if(this.isAtHighestPosition || this.isAtLowestPosition){
+				if(gap > 300){
+					result.error.push(rowname+" has too much space between bars (>300mm) for crack controll requirements! Only bars which are &greq; half the diameter of the largest bar can be counted.")
+				}
 			}
 		}
 		
 		// if this is the top or bottom layer, gap can be 0. otherwise gap should be at least 20mm.
-		if(this.manager.getBottomRow()===this || this.manager.getTopmostTop()===this){
+		if(this.isAtLowestPosition || this.isAtHighestPosition){
 			// do nothing
 		}else{
 			if(this.offset<20){
 				result.error.push(rowname+" is too close to another layer. The <b>'Gap' should be at least 20mm</b> so that aggregate can compleatly surround the bars and and air bubbles can escape.");
 			}
 		}
+
+
+		
 		
 		// Check that this layer's diameter isnt less than half the diameter of the largest bar.
 		//var rs = this.manager.getEnabledRows();
@@ -1857,7 +1981,8 @@ function ReoManager(arg_body, arg_beam){
 	
 	this.create = function(){
 		var firstrow = this.createReoInput();
-		firstrow.makeFirstRow();
+		firstrow.isFirstRow = true;
+		firstrow.enabled = true;
 		this.rows.push(firstrow);
 		this.rows.push(this.createReoInput());
 		this.rows.push(this.createReoInput());
@@ -1911,29 +2036,14 @@ function ReoManager(arg_body, arg_beam){
 	
 	
 	
+
+
 	
-	
-	
-	this.getTopmostTop = function(){
-		var r = this.getEnabledRows();
+	this.getHighestHighestRow = function(){
+		r = this.getEnabledRows();
 		for(var i = r.length-1;i>=0;i--){
 			if(r[i].from==="highest"){
-				if(r[i].offset===0){
-					return r[i];
-				}
-				break;
-			}
-		}
-		return undefined;
-	}.bind(this);
-	
-	this.getTopRow = function(){
-		for(var i = r.length-1;i>=0;i--){
-			if(r[i].from==="highest"){
-				if(r[i].offset===0){
-					return r[i];
-				}
-				break;
+				return r[i];
 			}
 		}
 		return undefined;
@@ -1944,9 +2054,14 @@ function ReoManager(arg_body, arg_beam){
 	
 	
 	
-	this.getBottomRow = function(){
-		var r = this.getEnabledRows();
-		return r[0];
+	this.getLowestLowestRow = function(){
+		r = this.getEnabledRows();
+		for(var i = 0;i<r.length;i++){
+			if(r[i].from === "lowest"){
+				return r[i];
+			}
+		}
+		return undefined;
 	}.bind(this);
 	
 	
@@ -1958,7 +2073,7 @@ function ReoManager(arg_body, arg_beam){
 		var cover = this.beam.cover;
 		
 		var rs = this.getEnabledRows();
-		var br = this.getBottomRow();
+		var br = this.getLowestLowestRow();
 		
 		var last_low_depth = D-cover-df;
 		var last_high_depth = cover+df;
@@ -2008,16 +2123,72 @@ function ReoManager(arg_body, arg_beam){
 	
 	this.change = function(e){
 		//console.log("reo-manager change");
+
 		this.dispatch("change",this);
 	}.bind(this);
 	
 	
+	this.lock_update = false;
 	this.update = function(e){
+		if(this.lock_update) return;
+		this.lock_update = true;
 		//console.log("reo-manager update");
+		this.sort_rows(); // TODO: does this trigger when offset is changed in a row? prolly not :(
 		this.update_renumberRows();
+		this.lock_update = false;
 		this.dispatch("update",this);
 	}.bind(this);
 	
+
+
+	this.sort_rows = function(){
+		var r = this.rows; // Alias for the reoinput objects
+		var a, b, ad, bd;
+		for(i=0;i<r.length-1;i++){
+			a = r[i];
+			b = r[i+1];
+
+			// swap when:
+			// highest&enabled below an (enabled&lowest or a disabled) OR
+			// disabled item below an enabled&lowest
+			if(((a.from === "highest" && a.enabled === true) && ((b.from === "lowest" && b.enabled === true) || b.enabled === false))||
+				(a.enabled===false && (b.from==="lowest" && b.enabled===true))){
+			// dont sort against blanks!
+			// didnt work :(
+			//if((a.from==="highest" && a.enabled) && (b.from === "lowest" && b.enabled)){ 
+				// swap required. only need to swap in this direction to finish
+				this.swap_rows(a,b)
+				// set i to 0 and restart
+				i=0;
+			}
+
+
+
+		}
+		//this.update_renumberRows();
+	}.bind(this);
+
+	this.swap_rows = function(a,b){
+		var t_offset = a.offset;
+		var t_barcode = a.barcode;
+		var t_from = a.from;
+		var t_enabled = a.enabled;
+		var t_isFirstRow = a.isFirstRow;
+
+		a.offset = b.offset;
+		a.barcode = b.barcode;
+		a.from = b.from;
+		a.enabled = b.enabled;
+		a.isFirstRow = b.isFirstRow;
+
+		b.offset = t_offset;
+		b.barcode = t_barcode;
+		b.from = t_from;
+		b.enabled = t_enabled;
+		b.isFirstRow = t_isFirstRow;
+
+
+	}.bind(this);
 	
 	
 	
@@ -2048,8 +2219,11 @@ function ReoManager(arg_body, arg_beam){
 				rw = {
 					number:		rs[i].number,
 					diameter:	rs[i].diameter,
-					area:			rs[i].area,
-					depth:		this.getDepthOfRow(rs[i])
+					area:		rs[i].area,
+					depth:		this.getDepthOfRow(rs[i]),
+					from:		rs[i].from,
+					offset:		rs[i].offset,
+
 				}
 				result.push(rw);
 			}
@@ -2108,21 +2282,27 @@ function ProTips(arg_body){
 	}.bind(this);
 	
 	this.over	= function(e){
+		this.tips_div.style.color = "black";
 		var t = e.target;
 		while(this.tip_from_target(t) === undefined && t !== document.body){
 			t = t.parentElement;
 		}
-		this.tips_div.innerHTML = "Pro-tip: "+this.tip_from_target(t);
+		this.tips_div.innerHTML = this.tip_from_target(t);
 	}.bind(this);
 	this.out		= function(e){
-		this.tips_div.innerHTML = "";
+		this.tips_div.style.color = "lightgrey";
+		this.tips_div.innerHTML = "Roll your mouse over something to get a tooltip here!";
 	}.bind(this);
 	
 	
-	this.add(this.body,"Roll your mouse over something to get a tooltip here!");
 	
 	this.grab = function(elem){
-		var els = elem.querySelectorAll("*");
+		try{
+			var els = elem.querySelectorAll("*");
+		}catch(e){
+			console.log("protips could not grab from " +elem);
+			return; // fail silently
+		}
 		for(var i = 0;i<els.length;i++){
 			if(els[i].getAttribute("data-tooltip")){
 				this.add(els[i],els[i].getAttribute("data-tooltip"));
@@ -2194,14 +2374,10 @@ function CalcDiv(){
 		this.minmaxbutton.title = "Show workings."
 		
 		
-		this.topdiv.appendChild(this.minmaxbutton);
-		this.topdiv.appendChild(this.titlediv);
-		
-		this.body.appendChild(this.topdiv);
-		this.body.appendChild(this.contentdiv);
 		
 		
-		this.collapsed = true;
+		
+		
 		
 		
 	}.bind(this);
@@ -2218,9 +2394,25 @@ function CalcDiv(){
 	}.bind(this);
 	
 	
+	this.clearTitle = function(){
+		this.title = "";
+	}.bind(this);
+	this.clearContent = function(){
+		this.content = "";
+	}.bind(this);
+	this.clear = function(){
+		this.title = "";
+		this.content = "";
+	}.bind(this);
 	
 	this.appendTo = function(dom){
 		dom.appendChild(this.body);
+		this.topdiv.appendChild(this.minmaxbutton);
+		this.topdiv.appendChild(this.titlediv);
+		this.body.appendChild(this.topdiv);
+		this.body.appendChild(this.contentdiv);
+		this.minmaxbutton.innerHTML = "+";
+		this.collapsed = true;
 		this.registerEvents();
 	}.bind(this);
 	
@@ -2339,9 +2531,6 @@ function HelpBar(arg_host){
 		
 		 if ("onhashchange" in window) {
 			 window.addEventListener("hashchange",this.hashChangeListener,false);
-			 // Or $(window).bind( 'hashchange',function(e) {
-			 //       alert(window.location.hash);
-			 //   });
 		}else {
 			this.prevHash = window.location.hash;
 			window.setInterval(function () {
@@ -2362,6 +2551,7 @@ function HelpBar(arg_host){
 		}catch(e){
 			console.log("Failed to typeset help bar",e);
 		}
+		ttips.grab(this.host);
 	}.bind(this);
 	
 	
@@ -2379,7 +2569,7 @@ function HelpBar(arg_host){
 		items.sort(function(a,b){
 			return a.unicode.localeCompare(b.unicode)
 		})
-		var indexhtml = "<div><h1>Index</h1>";
+		var indexhtml = "<div><h1>Help Index</h1>";
 		for(var i = 0;i<items.length;i++){
 			this.host.appendChild(makeHelpBlock(items[i],this.data));
 			//indexhtml +='<a href="#help_bar_'+items[i].id+'">$$$'+items[i].notation+'$$$ '+items[i].name+'</a>';
@@ -2394,7 +2584,7 @@ function HelpBar(arg_host){
 			if(item.id){
 				html+= '<a href="#help_bar_'+item.id+'">';
 			}
-				html+= '<table class="help_bar_link"><tr>';
+				html+= '<table class="help_bar_link" data-tooltip="'+item.description+'"><tr>';
 				html+= '<td class="c1">$$$'+item.notation+'$$$</td><td class="c2">'+item.name+'</td>';
 				html+= "</tr></table>";
 			if(item.id){
@@ -2405,7 +2595,7 @@ function HelpBar(arg_host){
 		function makeHelpBlock(item,data){
 			var result = makeDiv("help_bar_"+item.id,"helpblock");
 			var html = "";
-			html += '<a href="#help_block_index">Back to Index.</a>'
+			html += '<a href="#help_block_index" style="display:block;line-height:40px;height:40px;text-align:center;">Back to Help Index.</a>'
 			html += '<h1>'+
 						((item.notation)?("$$$"+item.notation+"$$$ "):"")+
 						item.name+
@@ -2462,7 +2652,11 @@ function HelpBar(arg_host){
 		if(typeof e === "string"){
 			new_hash = e.split("#")[1];
 		}else{
-			new_hash = e.newURL.split("#")[1];
+			try{
+				new_hash = e.newURL.split("#")[1];
+			}catch(e){
+				new_hash = window.location.hash.split("#")[1];
+			}
 		}
 		
 		this.hideAll();
@@ -2483,7 +2677,6 @@ function HelpBar(arg_host){
 	
 	
 	this.startload();
-	window.open("#","_self")
 }
 
 
@@ -2512,6 +2705,299 @@ function HelpBar(arg_host){
 
 
 // #########		 Crawling:.\js\main.function.outputCalculations.js		#########
+
+
+
+
+// #########		 Crawling:.\js\calc\calc.js		#########
+
+
+
+
+// #########		 Crawling:.\js\calc\..\CalcDiv.js		#########
+
+
+
+
+// #########		 Crawling:.\js\calc\..\EventDispatcher.js		#########
+/**
+ * This mixin is used to lend primative event management to another class. The maintenance of this class is important!
+ * @class EventDispatcher
+ * @example
+ * 	var ev = new EventDispatcher();
+ * 	ev.on("run",function(e){
+ * 		console.log(e);
+ * 	});
+ */
+function EventDispatcher() {
+	"use strict";
+	
+ 
+ /**
+	 * This is set automotically when the mixin is instantiated. It is used to prevent repeated instantiation.
+	 * @property isEventDispatcher
+	 * @private
+	 */
+	if(this.__isEventDispatcher == true){
+		return;
+	}
+	this.__isEventDispatcher = true;
+	
+	
+	/**
+	 * Used as an internal dictionary to relate event names to event functions.
+	 * @property events
+	 * @type {Object}
+	 */
+	this.__events = {};
+	
+	
+	/**
+	 * @method on
+	 * @param EventName {String}
+	 * @param ListenerFunction {String}
+	 */
+	this.on = (function (eventName, eventFunction) {
+		if (typeof eventName !== "string" || typeof eventFunction !== "function") {
+			console.log("Invalid event registration, " + eventName);
+			return;
+		}
+		if (this.__events[eventName] === undefined) {
+			this.__events[eventName] = [];
+		}
+		this.__events[eventName].push(eventFunction);
+	}).bind(this);
+	
+	
+	/**
+	 * @method clearListeners
+	 * @param EventName {String}
+	 */
+	this.clearListeners = (function (eventName) {
+		if (this.__events[eventName] !== undefined) {
+			this.__events[eventName] = [];
+		}
+	}).bind(this);
+	
+	
+	/**
+	 * If the event name is unknown, this method will fail quietly, like a fish.
+	 * @method dispatch
+	 * @param EventName {String}
+	 * @param EventData {Any}
+	 */
+	this.dispatch = function (eventName, eventData) {
+		if (this.__events[eventName] !== undefined) {
+			for (var i = 0; i < this.__events[eventName].length; i++) {
+				this.__events[eventName][i](eventData);
+			}
+		} else {
+			//fail quietly, like a fish.
+		}
+	}.bind(this);
+}
+
+
+
+
+
+function CalcDiv(){
+	EventDispatcher.call(this);
+	
+	this.body;
+	this.topdiv;
+	this.contentdiv;
+	
+	this._collapsed = false;
+	
+	
+	
+	
+	this.init = function(){
+		
+		
+		this.body = document.createElement("div");
+		this.body.className = "CalcDiv";
+		this.topdiv = document.createElement("div");
+		this.topdiv.className = "topdiv";
+		this.contentdiv = document.createElement("div");
+		this.contentdiv.className = "contentdiv";
+		
+		this.titlediv = document.createElement("div");
+		this.titlediv.className = "titlediv";
+		
+		this.minmaxbutton = document.createElement("button");
+		this.minmaxbutton.className = "minmaxbutton";
+		this.minmaxbutton.innerHTML = "+";
+		this.minmaxbutton.title = "Show workings."
+		
+		
+		
+		
+		
+		
+		
+		
+	}.bind(this);
+	
+	
+	var _listeners_registered = false;
+	this.registerEvents = function(){
+		if(!_listeners_registered){
+			_listeners_registered = true;
+			this.topdiv.addEventListener("click",function(e){
+				this.collapsed = !this.collapsed;
+			}.bind(this),false);
+		}
+	}.bind(this);
+	
+	
+	this.clearTitle = function(){
+		this.title = "";
+	}.bind(this);
+	this.clearContent = function(){
+		this.content = "";
+	}.bind(this);
+	this.clear = function(){
+		this.title = "";
+		this.content = "";
+	}.bind(this);
+	
+	this.appendTo = function(dom){
+		dom.appendChild(this.body);
+		this.topdiv.appendChild(this.minmaxbutton);
+		this.topdiv.appendChild(this.titlediv);
+		this.body.appendChild(this.topdiv);
+		this.body.appendChild(this.contentdiv);
+		this.minmaxbutton.innerHTML = "+";
+		this.collapsed = true;
+		this.registerEvents();
+	}.bind(this);
+	
+	
+	Object.defineProperty(this,"collapsed",{
+		get:function(){
+			return this._collapsed;
+		}.bind(this),
+		set:function(newval){
+			this._collapsed = newval;
+			this.contentdiv.style.display = (newval)? "none" : "";
+			if(newval){
+				this.minmaxbutton.innerHTML = "+";
+			}else{
+				this.minmaxbutton.innerHTML = "-";
+			}
+		}.bind(this)
+	})
+	
+	Object.defineProperty(this,"title",{
+		get:function(){
+			return this.titlediv.innerHTML;
+		}.bind(this),
+		set:function(newval){
+			this.titlediv.innerHTML = newval;
+		}.bind(this)
+	})
+	
+	Object.defineProperty(this,"content",{
+		get:function(){
+			return this.contentdiv.innerHTML;
+		}.bind(this),
+		set:function(newval){
+			this.contentdiv.innerHTML = newval;
+		}.bind(this)
+	})
+	
+	this.addParagraph = function(content){
+		var newp = document.createElement("p");
+		newp.innerHTML = content;
+		this.contentdiv.appendChild(newp);
+	}.bind(this);
+	
+	this.addSpace = function(){
+		var newp = document.createElement("div");
+		newp.style.height = "5px";
+		this.contentdiv.appendChild(newp);
+	}.bind(this);
+	
+	this.addElement = function(element){
+		this.contentdiv.appendChild(element);
+	}.bind(this);
+	
+	
+	
+	this.init();
+}
+
+
+
+
+
+
+
+// #########		 Crawling:.\js\calc\calc.alpha2.js		#########
+if(calc===undefined) var calc = {};
+
+calc.alpha2 = new (function(){
+	CalcDiv.call(this); // Extends calcdiv
+	
+	
+	this.updateTitle = function(){
+		this.title = "$$$\\alpha_2 ~~=~~ "+b.alpha2.toFixed(2)+"$$$";
+	}.bind(this);
+	
+	this.update = function(){
+		this.clear();
+		this.updateTitle();
+		
+		
+		this.addParagraph("From AS3600 Section 8.1.3(b)(ii)")
+		this.addParagraph("$$$\\begin{aligned}\\alpha_2 &= 1.0 - 0.003 f'_c \\\\"+
+								"&= 1.0-0.003\\times "+b.fc.toFixed(0)+"\\\\"+
+								"&= "+(1-0.003*b.fc).toFixed(2)+"\\end{aligned}$$$");
+		this.addParagraph("where $$$0.67 \\le \\alpha_2 \\le 0.85 $$$");
+		this.addParagraph(" &there4; $$$\\alpha_2 = "+b.alpha2.toFixed(2)+" $$$");
+	}.bind(this);
+
+})();
+
+
+
+
+
+// #########		 Crawling:.\js\calc\calc.gamma.js		#########
+
+if(calc===undefined) var calc = {};
+
+calc.gamma = new (function(){
+	CalcDiv.call(this); // Extends calcdiv
+	
+	this.updateTitle = function(){
+		this.title = "$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$<br> test";
+	}
+	
+	this.update = function(){
+		this.clear();
+		this.updateTitle();
+		
+		this.addParagraph("From AS3600 Section 8.1.3(ii)")//Verify
+		this.addParagraph("$$$\\begin{aligned}\\gamma &= 1.05 - 0.007 f'_c \\\\ "+
+								 "&= 1.05-0.007\\times "+b.fc.toFixed(0)+"\\\\ "+
+								 "&=~ "+(1.05-0.007*b.fc).toFixed(2)+"\\end{aligned}$$$")//Verify
+		this.addSpace()//Verify
+		this.addParagraph("where $$$0.67 \\le \\gamma \\le 0.85 $$$")//Verify
+		this.addParagraph(" &there4; $$$\\gamma = "+b.gamma.toFixed(2)+" $$$")//Verify
+	}.bind(this);
+})();
+
+
+
+
+
+
+
+
+
 var calcs = {};
 function outputCalculations(){
 	var calculationdiv = document.querySelector("#calcdiv-content");
@@ -2527,35 +3013,17 @@ function outputCalculations(){
 	
 	
 	// ALPHA 2;///////////////////////////////
-	calcs.alpha2 = calcs.alpha2 || new CalcDiv();
-	calcs.alpha2.title = "$$$\\alpha_2 ~~=~~ "+b.alpha2.toFixed(2)+"$$$";
-	calcs.alpha2.content = "";
-	calcs.alpha2.addParagraph("From As3600 Section 8.1.3(ii)")//Verify
-	calcs.alpha2.addParagraph("$$$\\begin{aligned}\\alpha_2 &= 1.0 - 0.003 f'_c \\\\"+
-								"&= 1.0-0.003\\times "+b.fc.toFixed(0)+"\\\\"+
-								"&= "+(1-0.003*b.fc).toFixed(2)+"\\end{aligned}$$$")//Verify
-	calcs.alpha2.addParagraph("where $$$0.67 \\le \\alpha_2 \\le 0.85 $$$")//Verify
-	calcs.alpha2.addParagraph(" &there4; $$$\\alpha_2 = "+b.alpha2.toFixed(2)+" $$$")//Verify
-	calcs.alpha2.appendTo(calculationdiv);
-	
+	calc.alpha2.update();
+	calc.alpha2.appendTo(calculationdiv)
 	
 	
 	// GAMMA; ///////////////////////////////
-	calcs.gamma = calcs.gamma || new CalcDiv();
-	calcs.gamma.title = "$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$";
-	calcs.gamma.content = "";
-	calcs.gamma.addParagraph("From As3600 Section 8.1.3(ii)")//Verify
-	calcs.gamma.addParagraph("$$$\\begin{aligned}\\gamma &= 1.05 - 0.007 f'_c \\\\ "+
-							 "&= 1.05-0.007\\times "+b.fc.toFixed(0)+"\\\\ "+
-							 "&=~ "+(1.05-0.007*b.fc).toFixed(2)+"\\end{aligned}$$$")//Verify
-	calcs.gamma.addSpace()//Verify
-	calcs.gamma.addParagraph("where $$$0.67 \\le \\gamma \\le 0.85 $$$")//Verify
-	calcs.gamma.addParagraph(" &there4; $$$\\gamma = "+b.gamma.toFixed(2)+" $$$")//Verify
-	calcs.gamma.appendTo(calculationdiv);
+	calc.gamma.update();
+	calc.gamma.appendTo(calculationdiv);
 	
 	
 	
-	// TODO: disegaurd bars less than half the diameter of the largest bar!
+	
 	//d ///////////////////////////////
 	
 	calcs.d = calcs.d || new CalcDiv();
@@ -2627,6 +3095,7 @@ function outputCalculations(){
 	calcs.dn.addParagraph("Where...");
 		// d_n - epsilon_si ====================================
 		calcs.esi = calcs.esi || new CalcDiv(); // Create
+		calcs.esi.content = "";
 		calcs.esi.appendTo(calcs.dn.contentdiv);// Append
 		calcs.esi.title = "$$$\\epsilon_{si} = 0.003 ({{d_i}/{d_n}} - 1)$$$";
 		calcs.esi.addParagraph("$$$\\epsilon_{si}$$$ is the strain of each layer of steel.");
@@ -2947,6 +3416,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_options){
 			for(var i=0;i<this._options.length;i++){
 				var o = document.createElement("option");
 				o.innerHTML = this._options[i];
+				o.value = this._options[i];
 				this.valueInput.appendChild(o);
 			}
 		}.bind(this),
@@ -3083,8 +3553,8 @@ var vin = {};
 //vin.Ln     = new VarInput('Ln' , "$$$L_n$$$" , "number" , 4000, "mm");
 vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm");
 vin.D      = new VarInput('Depth' , "$$$D$$$" , "number" , 600, "mm");
-vin.cover  = new VarInput('cover' , "$$$\\text{Cover}$$$" , "number" , 25, "mm");
-vin.eclass = new VarInput('eclass' , "$$$\\text{E. Class}$$$" , "text" , "A1", "",["A1","A2","B1","B2","C1","C2"]);
+vin.cover  = new VarInput('cover' , "Cover" , "number" , 25, "mm");
+vin.eclass = new VarInput('eclass' , "E. Class" , "text" , "A1", "",["A1","A2","B1","B2","C1","C2"]);
 vin.df     = new VarInput('dfitments' , "$$$d_f$$$" , "number" , 10, "mm",[10, 12, 13, 14, 15, 15, 17, 18, 19, 20]);
 // TODO: SUPERVISOR Round bars http://www.onesteel.com/products.asp?action=showProduct&productID=52&categoryName=Bar%20Sections
 //vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;");
@@ -3109,7 +3579,6 @@ for(var i in vin){
 
 
 
-
 vin.b.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
 	var link = '<a href="#help_bar_b">b</a> '
@@ -3120,8 +3589,9 @@ vin.b.validate = function(e){
 	
 	
 	if(e.value%5!==0){
-		e.error.push(link+" will be rounded to nearest 5mm.");
-		e.value = Math.round(e.value/5)*5;
+		e.error.push(link+" should be rounded to nearest 5mm.");
+		// TODO: do not autocoorect rounding to 5mm because, firefox spin buttons stop working if you do.
+		//e.value = Math.round(e.value/5)*5;
 	}
 	if(e.value<MIN_BREADTH){
 		e.error.push(link+" is too small. Beams should be at least "+(MIN_BREADTH+"mm").bold()+" wide for this software to work.");
@@ -3155,8 +3625,8 @@ vin.D.validate = function(e){
 	var MAX_DEPTH = 2000;
 	
 	if(e.value%5!==0){
-		e.error.push(link+" will be rounded to nearest 5 mm.");
-		e.value = Math.round(e.value/5)*5;
+		e.error.push(link+" should be rounded to nearest 5 mm.");
+		//e.value = Math.round(e.value/5)*5;
 	}
 	if(e.value<MIN_DEPTH){
 		e.error.push(link+" is too small. Beams  should be at least "+(MIN_DEPTH+" mm").bold()+" deep for this software to work.");
@@ -3186,8 +3656,8 @@ vin.cover.validate = function(e){
 		e.value = 20;
 	}else{
 		if(e.value%5!==0){
-			e.error.push('<a href="#help_bar_cover">Cover</a> will be rounded to nearest 5 mm.');
-			e.value = Math.round(e.value/5)*5;
+			e.error.push('<a href="#help_bar_cover">Cover</a> should be rounded to nearest 5 mm.');
+			//e.value = Math.round(e.value/5)*5;
 		}
 		var min_cover = AS3600["4.10.3.2"].get_min_cover_from_fc_eclass(vin.fc.value, vin.eclass.value);
 		if(min_cover!==undefined && e.value<min_cover){
@@ -3222,8 +3692,16 @@ var helpBar  = new HelpBar("varinfodiv")
 
 
 ///////////////    SETUP TOOLTIPS     /////////////////////
-var vin_tips = new ProTips(document.querySelector("#protips"));
-vin_tips.add(vin.b.body,"test")
+var ttips = new ProTips(document.querySelector("#protips"));
+
+
+
+ttips.add(vin.b.body,"Breadth or Width of beam.");
+ttips.add(vin.D.body,"Depth or height of beam.");
+ttips.add(vin.cover.body,"Distance from outer surface to the steel embedded in the beam.");
+ttips.add(vin.eclass.body,"Exposure Classification. A designation of the harshness of the beam's enviroment. <b>See AS3600 Table 4.3</b>");
+ttips.add(vin.df.body,"Diameter of 'fitments' which make up the 'ribcage' of the beam. This software uses <b>Standard Round Bar Diameters</b>");
+ttips.add(vin.fc.body,"The concrete strength (standard grades only. See AS3600 3.1.1.1)");
 
 
 ///////////////    SETUP BEAM OBJECT     /////////////////////
@@ -3235,7 +3713,7 @@ var rman = new ReoManager(document.querySelector("#reorows"), b);
 rman.on("change",mainUpdateListener);
 
 
-
+ttips.grab(document.querySelector("#reotable"));
 
 
 
@@ -3274,7 +3752,7 @@ function mainUpdateListener(e){
 		err_list = err_list.concat(v.error);
 		war_list = war_list.concat(v.warning);
 	}
-	vin_tips.setError(err_list, war_list);
+	ttips.setError(err_list, war_list);
 	
 }
 

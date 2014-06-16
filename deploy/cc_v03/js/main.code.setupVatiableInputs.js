@@ -36,7 +36,6 @@ for(var i in vin){
 
 
 
-
 vin.b.validate = function(e){
 	//var e = {value:this.value, error:[], warning:[], info:[]};
 	var link = '<a href="#help_bar_b">b</a> '
@@ -47,8 +46,9 @@ vin.b.validate = function(e){
 	
 	
 	if(e.value%5!==0){
-		e.error.push(link+" will be rounded to nearest 5mm.");
-		e.value = Math.round(e.value/5)*5;
+		e.error.push(link+" should be rounded to nearest 5mm.");
+		// TODO: do not autocoorect rounding to 5mm because, firefox spin buttons stop working if you do.
+		//e.value = Math.round(e.value/5)*5;
 	}
 	if(e.value<MIN_BREADTH){
 		e.error.push(link+" is too small. Beams should be at least "+(MIN_BREADTH+"mm").bold()+" wide for this software to work.");
@@ -82,8 +82,8 @@ vin.D.validate = function(e){
 	var MAX_DEPTH = 2000;
 	
 	if(e.value%5!==0){
-		e.error.push(link+" will be rounded to nearest 5 mm.");
-		e.value = Math.round(e.value/5)*5;
+		e.error.push(link+" should be rounded to nearest 5 mm.");
+		//e.value = Math.round(e.value/5)*5;
 	}
 	if(e.value<MIN_DEPTH){
 		e.error.push(link+" is too small. Beams  should be at least "+(MIN_DEPTH+" mm").bold()+" deep for this software to work.");
@@ -113,8 +113,8 @@ vin.cover.validate = function(e){
 		e.value = 20;
 	}else{
 		if(e.value%5!==0){
-			e.error.push('<a href="#help_bar_cover">Cover</a> will be rounded to nearest 5 mm.');
-			e.value = Math.round(e.value/5)*5;
+			e.error.push('<a href="#help_bar_cover">Cover</a> should be rounded to nearest 5 mm.');
+			//e.value = Math.round(e.value/5)*5;
 		}
 		var min_cover = AS3600["4.10.3.2"].get_min_cover_from_fc_eclass(vin.fc.value, vin.eclass.value);
 		if(min_cover!==undefined && e.value<min_cover){

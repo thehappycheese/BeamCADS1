@@ -204,6 +204,7 @@ function VarInput(arg_id,arg_notation,arg_type,arg_value,arg_unit,arg_options){
 			for(var i=0;i<this._options.length;i++){
 				var o = document.createElement("option");
 				o.innerHTML = this._options[i];
+				o.value = this._options[i];
 				this.valueInput.appendChild(o);
 			}
 		}.bind(this),

@@ -25,6 +25,8 @@ var helpBar  = new HelpBar("varinfodiv")
 ///////////////    SETUP TOOLTIPS     /////////////////////
 var ttips = new ProTips(document.querySelector("#protips"));
 
+
+
 ttips.add(vin.b.body,"Breadth or Width of beam.");
 ttips.add(vin.D.body,"Depth or height of beam.");
 ttips.add(vin.cover.body,"Distance from outer surface to the steel embedded in the beam.");
@@ -42,7 +44,7 @@ var rman = new ReoManager(document.querySelector("#reorows"), b);
 rman.on("change",mainUpdateListener);
 
 
-
+ttips.grab(document.querySelector("#reotable"));
 
 
 

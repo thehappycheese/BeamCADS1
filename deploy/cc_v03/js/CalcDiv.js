@@ -18,43 +18,40 @@ function CalcDiv(){
 	this.init = function(){
 		
 		
-		this.body = document.createElement("div");
-		this.body.className = "CalcDiv";
-		this.topdiv = document.createElement("div");
-		this.topdiv.className = "topdiv";
-		this.contentdiv = document.createElement("div");
-		this.contentdiv.className = "contentdiv";
 		
-		this.titlediv = document.createElement("div");
-		this.titlediv.className = "titlediv";
+		this.body = this.body || document.createElement("div");
 		
-		this.minmaxbutton = document.createElement("button");
-		this.minmaxbutton.className = "minmaxbutton";
-		this.minmaxbutton.innerHTML = "+";
-		this.minmaxbutton.title = "Show workings."
+		this.body.innerHTML = '<div class="CalcDiv">\
+			<table class="topdiv">\
+				<tr>\
+					<td style="width:30px;padding-right:10px;">\
+						<button class="minmaxbutton" title="Show workings.">+</button>\
+					</td>\
+					<td class="titlediv">\
+						[Title]\
+					</td>\
+				</tr>\
+			</table>\
+			<div class="contentdiv" style="display: none;">\
+				<p>[Content]</p>\
+			</div>\
+		</div>';
+		
+		this.topdiv = this.body.querySelector(".topdiv");
+		this.minmaxbutton = this.body.querySelector(".minmaxbutton");
+		this.titlediv = this.body.querySelector(".titlediv");
+		this.contentdiv = this.body.querySelector(".contentdiv");
+		
+		this._collapsed = true;
+
 		
 		
-		this.topdiv.appendChild(this.minmaxbutton);
-		this.topdiv.appendChild(this.titlediv);
-		
-		this.body.appendChild(this.topdiv);
-		this.body.appendChild(this.contentdiv);
+		this.dispatch("init",null);
 		
 		
-		this.collapsed = true;
 		
 		
-	}.bind(this);
-	
-	
-	var _listeners_registered = false;
-	this.registerEvents = function(){
-		if(!_listeners_registered){
-			_listeners_registered = true;
-			this.topdiv.addEventListener("click",function(e){
-				this.collapsed = !this.collapsed;
-			}.bind(this),false);
-		}
+		
 	}.bind(this);
 	
 	
@@ -70,10 +67,15 @@ function CalcDiv(){
 	}.bind(this);
 	
 	this.appendTo = function(dom){
+		this.init();
 		dom.appendChild(this.body);
-		this.registerEvents();
+		this.topdiv.addEventListener("click",this.toggleCollapse,false);
+		this.dispatch("added");
 	}.bind(this);
 	
+	this.toggleCollapse = function(){
+		this.collapsed = !this.collapsed;
+	}.bind(this);
 	
 	Object.defineProperty(this,"collapsed",{
 		get:function(){

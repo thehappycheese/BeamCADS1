@@ -6,7 +6,9 @@ calc.alpha2 = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = "$$$\\alpha_2 ~~=~~ "+b.alpha2.toFixed(2)+"$$$";
+		this.title = '<table style="width:100%;"><tr><td>$$$\\alpha_2 ~~=~~ '+b.alpha2.toFixed(2)+"$$$</td><td>"+
+		"$$$\\gamma ~~=~~ "+b.gamma.toFixed(2)+"$$$"+
+		"</td></tr></table>";
 	}.bind(this);
 	
 	this.update = function(){

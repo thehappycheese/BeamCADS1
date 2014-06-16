@@ -432,6 +432,7 @@ Object.defineProperty(this,"isFirstRow",{
 		
 		if(combs.length==0){
 			console.log("never was possible combinations error");
+			return "2N10";
 		}
 		
 		combs.sort(function(a,b){
@@ -489,6 +490,7 @@ Object.defineProperty(this,"isFirstRow",{
 		// no suitable combination was found. Return the top combination.
 		if(combs.length==0){
 			console.log("no possible combinations error");
+			return "2N10";
 		}
 		return combs[combs.length-1].number+"N"+combs[combs.length-1].diameter;
 		

@@ -46,7 +46,12 @@ function ProTips(arg_body){
 	
 	
 	this.grab = function(elem){
-		var els = elem.querySelectorAll("*");
+		try{
+			var els = elem.querySelectorAll("*");
+		}catch(e){
+			console.log("protips could not grab from " +elem);
+			return; // fail silently
+		}
 		for(var i = 0;i<els.length;i++){
 			if(els[i].getAttribute("data-tooltip")){
 				this.add(els[i],els[i].getAttribute("data-tooltip"));
