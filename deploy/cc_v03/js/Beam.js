@@ -259,11 +259,17 @@ function Beam(){
 	// ### GET INDIVIDUAL STEEL FORCES #############################################
 	// #############################################################################
 	
+	this.strain_from_d_dn = function(d,dn){
+		// First get strain at specified depth according to similar triangles:
+		var epsilonsi = this.epsiloncmax/dn*(d - dn);
+		return epsilonsi
+	}.bind(this);
 	
-	// TODO: CAPPED AT0.0025 :(
+	
+	
 	this.layer_strain_from_layer_dn = function(layer,dn,uncapped){
 		// First get strain in the steel layer according to similar triangles:
-		var epsilonsi = this.epsiloncmax/dn*(layer.depth - dn);
+		var epsilonsi = this.strain_from_d_dn(layer.depth,dn);
 		// Limit the strain to a range of -0.0025 to 0.0025
 		// (The stress does not increase after yielding at fsy)
 		if(!uncapped){

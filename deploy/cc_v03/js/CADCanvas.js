@@ -7,7 +7,7 @@ CanvasRenderingContext2D.prototype.moveToV = function(v){
 CanvasRenderingContext2D.prototype.lineToV = function(v){
 	this.lineTo(v.x,v.y)
 }
-CanvasRenderingContext2D.prototype.arrow = function(from,to,size){
+CanvasRenderingContext2D.prototype.arrowv = function(from,to,size){
 	this.beginPath();
 	this.moveTo(from.x,from.y);
 	this.lineTo(to.x,to.y);
@@ -23,6 +23,26 @@ CanvasRenderingContext2D.prototype.arrow = function(from,to,size){
 		this.stroke();
 	this.restore();
 }
+
+
+CanvasRenderingContext2D.prototype.arrow = function(fx,fy,tx,ty,size){
+	this.beginPath();
+		this.moveTo(fx,fy);
+		this.lineTo(tx,ty);
+	this.stroke();
+	var ang = Math.atan2(ty-fy,tx-fx);
+	this.save();
+		this.translate(tx,ty);
+		this.rotate(ang-Math.PI/2);
+		this.beginPath();
+		this.moveTo(-0.3*size,-1*size);
+			this.lineTo( 0, 0  );
+			this.lineTo( 0.3*size,-1*size);
+		this.stroke();
+	this.restore();
+}
+
+
 ///////////////////////////////////////////////////////////////////
 //		Circle drawing Functions
 ///////////////////////////////////////////////////////////////////

@@ -3,7 +3,7 @@
 ///* CADCanvas.js
 ///* CADCanvas.Patterns.js
 ///* Beam.js
-
+///* function.drawArrow.js
 Beam.prototype.drawStressBlock = function(ctx){
 	
 	var options = {
@@ -19,7 +19,7 @@ Beam.prototype.drawStressBlock = function(ctx){
 		console.warn("Your browser isnt able to draw dashed lines :(")
 		ctx.setLineDash = function () {}
 	}
-	ctx.font = "15px serif";
+	ctx.font = "12px serif";
 	ctx.textBaseline = "top";
 	ctx.textAlign = "left";
 
@@ -27,10 +27,10 @@ Beam.prototype.drawStressBlock = function(ctx){
 	
 	
 	// PREPARE THE LAYOUT AND SCALING
-	var padding_left = 10;
-	var padding_top = 20;
-	var padding_bottom = 10;
-	var padding_right = 10;
+	var padding_left = 2;
+	var padding_top = 30;
+	var padding_bottom = 30;
+	var padding_right = 2;
 	
 	var max_height = canvas.height - (padding_top+padding_bottom);
 	var max_width = canvas.width - (padding_left+padding_right);
@@ -46,9 +46,7 @@ Beam.prototype.drawStressBlock = function(ctx){
 		return n*(s_D/this.D);
 	}.bind(this);
 	
-
-	var straincompat_x = 200;
-	var forcediagram_x = 300;
+	
 	
 	
 	// PREPARE SOME CASHED VAIABLES TO PREVENT REPEATED FUNCTION CALLS:
@@ -145,29 +143,37 @@ Beam.prototype.drawStressBlock = function(ctx){
 		////////////////////////////////////////////////////////
 		// DRAW THE STRAIN COMPATIBILITY DIAGRAM
 		////////////////////////////////////////////////////////
-		ctx.translate(straincompat_x,0);
+		ctx.translate(220,0);
 		
 
 		
 		// Establish plot function
 
-		var strain_from_d = function(d){
-			var c = 10;
-			var m = -c/dn
-			return m*d + c;			
+		var strain_from_d = function(arg_d,capped){
+			if(capped){
+				return -Math.min(0.0025,Math.max(-0.0025,this.strain_from_d_dn(arg_d,dn)))/0.0025*60;
+			}
+			
+			return -this.strain_from_d_dn(arg_d,dn)/0.003*10;
 		}.bind(this);
-		console.log(strain_from_d(0),strain_from_d(this.D),strain_from_d(this.D/2));
+		//console.log(strain_from_d(0),strain_from_d(this.D),strain_from_d(this.D/2));
+		
+		
+		
 		if(Math.abs(strain_from_d(this.D))>60){
-			console.log("switched")
-			var strain_from_d = function(d){
-				var c = -10;
-				var m = -c/dn;
-				return (m*d + c)/Math.abs(-c/dn*this.D+c)*-60;
+			var strain_from_d = function(arg_d,capped){
+				if(capped){
+					return -Math.min(0.0025,Math.max(-0.0025,this.strain_from_d_dn(arg_d,dn)))/0.0025*60;
+				}
+				
+				var i = this.strain_from_d_dn(arg_d,dn);
+				var k = Math.abs(this.strain_from_d_dn(this.D,dn));
+				return -i/k*60;
 			}.bind(this);
 		}
 		
 		// plot graph line
-		CanvasPatterns.setHorizontalLine(ctx,"lightgrey");
+		CanvasPatterns.setHorizontalLine(ctx,"#FFC9FF");
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = "magenta";
 		ctx.beginPath();
@@ -202,7 +208,7 @@ Beam.prototype.drawStressBlock = function(ctx){
 			ctx.stroke();
 			ctx.textAlign = "left";
 			ctx.textBaseline = "middle";
-			ctx.fillText("\u03B5"+i+" = "+strain.toFixed(4),10,scaleY(layer.depth));
+			ctx.fillText("\u03B5"+i+" = "+strain.toFixed(4)+((Math.abs(strain)>0.0025)?" yield":" elast"),10,scaleY(layer.depth));
 		}
 		
 		
@@ -214,6 +220,81 @@ Beam.prototype.drawStressBlock = function(ctx){
 			ctx.lineTo(0,s_D);
 		ctx.stroke();
 		 
+		
+		
+		
+		
+		
+		
+		////////////////////////////////////////////////////////
+		// DRAW THE FORCE DIAGRAM
+		////////////////////////////////////////////////////////
+		ctx.translate(180,0);
+		
+		// Draw the green square
+		CanvasPatterns.set2x2Hatch(ctx,"limegreen");
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "limegreen";
+		ctx.fillRect(0,0,50,s_dn*this.gamma);
+		ctx.strokeRect(0,0,50,s_dn*this.gamma);
+		ctx.fillStyle = "limegreen";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "bottom";
+		ctx.fillText("Cc = "+this.Cc_from_dn(dn).toFixed(0)+"kN",25,-2);
+		
+		
+		
+		// Draw the force vectors
+		for(var i = 0;i<this.reo.length;i++){
+			var layer= this.reo[i];
+			var strain = this.layer_strain_from_layer_dn(layer,dn);
+			var force = this.layer_force_from_layer_dn(layer,dn);
+			
+			
+			ctx.textBaseline = "middle";
+			if(strain>0){
+				ctx.strokeStyle="red";
+				ctx.fillStyle="red";
+				ctx.textAlign = "left";
+				ctx.fillText("Ts"+i+" = "+force.toFixed(0)+"kN",3,scaleY(layer.depth));
+			}else{
+				ctx.strokeStyle="blue";
+				ctx.fillStyle="blue";
+				ctx.textAlign = "right";
+				ctx.fillText("Cs"+i+" = "+force.toFixed(0)+"kN",-3,scaleY(layer.depth));
+			}
+			ctx.lineWidth=2;
+			drawArrow(ctx,
+				0,scaleY(layer.depth),
+				strain_from_d(layer.depth,true),scaleY(layer.depth),
+				6);
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Draw origin line
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "black";
+		ctx.beginPath();
+			ctx.moveTo(0,0);
+			ctx.lineTo(0,s_D);
+		ctx.stroke();
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
