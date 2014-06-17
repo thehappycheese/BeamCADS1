@@ -1,76 +1,135 @@
-
+///* function.dim.js
 ///* Vector.js
 ///* CADCanvas.js
 ///* CADCanvas.Patterns.js
 ///* Beam.js
 
 Beam.prototype.drawStressBlock = function(ctx){
-
-	var b = null;
-	var b_dn = this.dn;
-	var d = this.Ts_centroid_depth_from_dn(b_dn);
+	
+	var options = {
+		draw_d:false,
+		draw_dn:true,
+		draw_gammadn:true
+	}
 	
 	
-	
+	// PREPARE THE CANVAS:
 	var canvas = ctx.canvas;
-	
+	if (!ctx.setLineDash) {
+		console.warn("Your browser isnt able to draw dashed lines :(")
+		ctx.setLineDash = function () {}
+	}
+	ctx.font = "15px serif";
+	ctx.textBaseline = "top";
+	ctx.textAlign = "left";
+
 
 	
+	
+	// PREPARE THE LAYOUT AND SCALING
 	var padding_left = 10;
-	var padding_top = 10;
+	var padding_top = 20;
 	var padding_bottom = 10;
 	var padding_right = 10;
 	
 	var max_height = canvas.height - (padding_top+padding_bottom);
 	var max_width = canvas.width - (padding_left+padding_right);
-	// Set te beam width at 100;
-	var b_b = 100;
-	var b_D = Math.max(100,Math.min(max_height,this.D/this.b*b_b));
+	
+	
 	
 	
 	var scaleX = function(n){
-		return n*(b_b/this.b);
+		return n*(s_b/this.b);
 	}.bind(this);
 	
 	var scaleY = function(n){
-		return n*(b_D/this.D);
+		return n*(s_D/this.D);
 	}.bind(this);
 	
+
+	var straincompat_x = 200;
+	var forcediagram_x = 300;
 	
 	
+	// PREPARE SOME CASHED VAIABLES TO PREVENT REPEATED FUNCTION CALLS:
+	var dn = this.dn;
+	var d = this.Ts_centroid_depth_from_dn(dn)
+	var b = null;
+	var s_b = 100;// Set the beam width at 100;
+	var s_D = Math.max(100,Math.min(max_height,this.D/this.b*s_b));
+	var s_dn= scaleY(dn);
+	var s_d = scaleY(d);
+	
+	
+	
+
+	
+	
+	// BEING DRAWING:
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	ctx.save()
-		ctx.translate(
-			padding_left,
-			padding_top
-		);
+		// TRANSFORM:
+		ctx.translate(padding_left,	padding_top);
 		
-		// Draw compressive zone
-		CanvasPatterns.set2x2Hatch(ctx,"limegreen");
-		ctx.fillRect(0,0,b_b,b_dn*this.gamma);
+		if(options.draw_dn){
+			// Draw dn the Neutral axisline and lable:
+			ctx.setLineDash([4,4,12,4]);
+			ctx.beginPath();
+			ctx.strokeStyle = "grey";
+			ctx.lineWidth = 1;
+			ctx.moveTo(-10,s_dn);
+			ctx.lineTo(max_width+10,s_dn)
+			ctx.stroke();
+			ctx.fillStyle = "grey";
+			ctx.fillText("dn = "+dn.toFixed(0)+"mm", s_b+5,s_dn+2);
+		}
+		
+		if(options.draw_d){
+			// Draw d the effective depth line and lable:
+			ctx.setLineDash([8,4]);
+			ctx.beginPath();
+			ctx.strokeStyle = "darkred";
+			ctx.lineWidth = 2;
+			ctx.moveTo(-10,s_d);
+			ctx.lineTo(max_width+10,s_d)
+			ctx.stroke();
+			ctx.fillStyle = "darkred";
+			ctx.fillText("d = "+d.toFixed(0)+"mm", s_b+5,s_d+2);
+		}
+		
+		
+		
+		ctx.setLineDash([]);
+		if(options.draw_gammadn){
+			// Draw compressive zone and lable
+			CanvasPatterns.set2x2Hatch(ctx,"limegreen");
+			ctx.fillRect(0,0,s_b,s_dn*this.gamma);
+			ctx.fillStyle = "limegreen";
+			ctx.textBaseline = "bottom";
+			ctx.fillText("\u0263dn = "+(dn*this.gamma).toFixed(0)+"mm", s_b+5,s_dn*this.gamma-2);
+		}
 
 		// draw basic section
 		ctx.lineWidth = 2;
 		ctx.strokeStyle = "black";
-		ctx.strokeRect(0,0,b_b,b_D);
+		ctx.strokeRect(0,0,s_b,s_D);
 
 		
 
 		// draw section with reo bars
 		for(var i = 0;i<this.reo.length;i++){
 			var layer = this.reo[i];
-			console.log(layer, scaleY(layer.depth),b_D,this.D)
-			var x = b_b*0.1;
-			var spacing = b_b*0.8/(layer.number-1);
+			var x = s_b*0.1;
+			var spacing = s_b*0.8/(layer.number-1);
 
-			var f = this.layer_strain_from_layer_dn(layer, b_dn);
+			var f = this.layer_strain_from_layer_dn(layer, dn);
 			if(f>0){
 				ctx.fillStyle = "red";
 			}else{
 				ctx.fillStyle = "blue";
 			}
-			var rad = Math.min(scaleX(10),scaleY(10));
-			var sid = rad*Math.SQRT2;
+			var rad = Math.max(2,Math.min(scaleX(10),scaleY(10)));
+			var sid = rad*1.8;
 			for(var j = 0; j<layer.number;j++){
 				if(f>0){
 					ctx.fillCircle(x+spacing*j,scaleY(layer.depth),rad);
@@ -79,6 +138,82 @@ Beam.prototype.drawStressBlock = function(ctx){
 				}
 			}
 		}
+		
+		
+		
+		
+		////////////////////////////////////////////////////////
+		// DRAW THE STRAIN COMPATIBILITY DIAGRAM
+		////////////////////////////////////////////////////////
+		ctx.translate(straincompat_x,0);
+		
+
+		
+		// Establish plot function
+
+		var strain_from_d = function(d){
+			var c = 10;
+			var m = -c/dn
+			return m*d + c;			
+		}.bind(this);
+		console.log(strain_from_d(0),strain_from_d(this.D),strain_from_d(this.D/2));
+		if(Math.abs(strain_from_d(this.D))>60){
+			console.log("switched")
+			var strain_from_d = function(d){
+				var c = -10;
+				var m = -c/dn;
+				return (m*d + c)/Math.abs(-c/dn*this.D+c)*-60;
+			}.bind(this);
+		}
+		
+		// plot graph line
+		CanvasPatterns.setHorizontalLine(ctx,"lightgrey");
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "magenta";
+		ctx.beginPath();
+			ctx.moveTo(0,0);
+			ctx.lineTo(strain_from_d(0),0);
+			ctx.lineTo(strain_from_d(this.D),s_D);
+			ctx.lineTo(0,s_D)
+		ctx.fill();
+		ctx.stroke();
+		
+		// Label concrete strain
+		ctx.fillStyle = "magenta";
+		ctx.textAlign = "left";
+		ctx.textBaseline = "bottom";
+		ctx.fillText("\u03B5cmax = 0.003",strain_from_d(0),-2);
+		
+		// Draw/label reo strains
+		for(var i = 0;i<this.reo.length;i++){
+			var layer= this.reo[i];
+			var strain = this.layer_strain_from_layer_dn(layer,dn,true);
+			if(strain>0){
+				ctx.strokeStyle="red";
+				ctx.fillStyle="red";
+			}else{
+				ctx.strokeStyle="blue";
+				ctx.fillStyle="blue";
+			}
+			ctx.lineWidth=2;
+			ctx.beginPath();
+				ctx.moveTo(0,scaleY(layer.depth));
+				ctx.lineTo(strain_from_d(layer.depth),scaleY(layer.depth));
+			ctx.stroke();
+			ctx.textAlign = "left";
+			ctx.textBaseline = "middle";
+			ctx.fillText("\u03B5"+i+" = "+strain.toFixed(4),10,scaleY(layer.depth));
+		}
+		
+		
+		// Draw origin line
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "black";
+		ctx.beginPath();
+			ctx.moveTo(0,0);
+			ctx.lineTo(0,s_D);
+		ctx.stroke();
+		 
 		
 		
 		

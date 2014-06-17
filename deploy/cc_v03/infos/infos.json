@@ -31,7 +31,7 @@
 			"Asc",
 			"Muo"
 		],
-		"docs": "<p>\n    $$$\\alpha_2$$$ is a reduction factor for concrete strength.\n</p>\n<p>\n    $$$\\alpha_2 f'_c$$$ represents the reduced characteristic compressive strength of concrete in the rectangular stress block method.\n</p>",
+		"docs": "<p>\n    $$$\\alpha_2$$$ is a reduction factor for concrete strength.\n</p>\n<p>\n    [$$$\\alpha_2 f'_c$$$] represents the reduced characteristic compressive strength of concrete in the rectangular stress block method.\n</p>",
 		"coderef": [
 			{
 				"ref": "AS3600 8.1.3",
@@ -48,20 +48,20 @@
 		"default": "",
 		"unit": "mm\u00b2",
 		"related": [
-			"dn",
-			"ku",
-			"kuo",
+			"Acc",
 			"Ag",
 			"As",
-			"Ast"
+			"Ast",
+			"dn",
+			"ku"
 		],
-		"docs": "<p>The following diagram shows this area:</p>\n<img src=\"\" alt=\"// TODO: add image here.\"></img>\n<p>In a rectanular beam this area can be found by\n    $$\\begin{aligned} A_{cc} &= \\gamma (d_n) \\\\\n                             &= \\gamma (k_u \\times d) \\end{aligned}$$\n</p>",
+		"docs": "<p>The following diagram shows this area hatched in green:</p>\n<img src=\"\" alt=\"// TODO: add image here.\"></img>\n<p>In a rectanular beam this area can be found by\n    $$\\begin{aligned} A_{cc} &= \\gamma (d_n) \\\\\n                             &= \\gamma (k_u \\times d) \\end{aligned}$$\n</p>",
 		"coderef": []
 	},
 	"As": {
 		"id": "As",
 		"name": "Area of reinforcement",
-		"description": "Cross-sectional area of reinforcement steel (see Clauses 3.4.3.2 and 13.2.2);",
+		"description": "Cross-sectional area of reinforcement steel",
 		"notation": "A_s",
 		"unicode": "A_s",
 		"default": "",
@@ -72,8 +72,17 @@
 			"Acc",
 			"Ag"
 		],
-		"docs": "<p>\n    This area is foundby adding up the cross sectional areas of all reinforcing steel. The cross sectional areas can be found in \n<p>",
-		"coderef": []
+		"docs": "<p>\n    The following table is taken from ONESTEEL datasheets\n    which can be found at this link\n    <a href=\"http://www.reinforcing.com.au/~/media/OneSteel%20Reinforcing/Case%20Study%20PDFs/Technical%20Resources%20PDFs/REODATA40.pdf\">REODATA 4.0</a>\n<p>\n\n<p style=\"font-style:italic;\">\n   (Note: These areas are not quite the same as what you would find from standard geometry <span style=\"font-family:serif;\">&pi;r&sup2;</span>)\n</p>\n\n<table style=\"text-align:center;width:100%;\">\n    <tr style=\"font-weight: bold;\"><td>Nominal Diameter<br>(mm)</td><td>Cross Sectional Area<br>(mm&sup2;)</td></tr>\n    <tr><td>10</td><td>78</td></tr>\n    <tr><td>12</td><td>113</td></tr>\n    <tr><td>16</td><td>201</td></tr>\n    <tr><td>20</td><td>314</td></tr>\n    <tr><td>24</td><td>452</td></tr>\n    <tr><td>28</td><td>616</td></tr>\n    <tr><td>32</td><td>804</td></tr>\n    <tr><td>36</td><td>1020</td></tr>\n    <tr><td>40</td><td>1260</td></tr>\n</table>",
+		"coderef": [
+			{
+				"ref": "AS3600 3.4.4.2",
+				"data": "Loss of prestress due to shrinkage of the concrete"
+			},
+			{
+				"ref": "AS3600 13.2.2",
+				"data": "Affects the required development length for lapped splices in tension."
+			}
+		]
 	},
 	"Asc": {
 		"id": "Asc",
@@ -84,11 +93,12 @@
 		"default": "",
 		"unit": "mm\u00b2",
 		"related": [
+			"Acc",
 			"Ag",
-			"Ast",
-			"Acc"
+			"As",
+			"Ast"
 		],
-		"docs": "",
+		"docs": "<p>\n    Compressive reinforcement is shown as blue rectangles in the image below:\n</p>\n\n<img src=\"\" alt=\"// TODO: Image here\" />\n\n<p>\n    Note that all reinforcement above the neutral axis will be compressive.\n</p>\n\n<p>\n    Also note that this software will always include any reinforcement entered in calculations. In practice you may choose to disclude any reinforcement which is near the neutral axis since it makes a negligible contribution to the capacity.\n</p>",
 		"coderef": []
 	},
 	"Ast": {
@@ -100,12 +110,19 @@
 		"default": "",
 		"unit": "mm\u00b2",
 		"related": [
+			"Acc",
 			"Ag",
+			"As",
 			"Asc",
-			"Acc"
+			"Muomin"
 		],
-		"docs": "",
-		"coderef": []
+		"docs": "<p>\n    Tensile reinforcement is shown as red circles in the image below:\n</p>\n\n<img src=\"\" alt=\"// TODO: Image here\" />\n\n<p>\n    Note that all reinforcement below the neutral axis will be tensile.\n</p>\n\n<p>\n    Also note that this software will always include any reinforcement entered in calculations. In practice you may choose to disclude any reinforcement which is near the neutral axis since it makes a negligible contribution to the capacity.\n</p>",
+		"coderef": [
+			{
+				"ref": "AS3600 8.1.6.1",
+				"data": "<p>Minimum Strength Requirements:</p>\n\n<p>This section of the code specifies the minimum $$$A_{st}$$$ required to satisfy the 'Minimum Strength Requirement'. See this section of the code for more details.</p>"
+			}
+		]
 	},
 	"b": {
 		"id": "b",
@@ -117,8 +134,8 @@
 		"unit": "mm",
 		"related": [
 			"cover",
-			"Depth",
-			"d"
+			"d",
+			"Depth"
 		],
 		"docs": "",
 		"coderef": []
@@ -126,16 +143,18 @@
 	"Cc": {
 		"id": "Cc",
 		"name": "Concrete Compression",
-		"description": "",
+		"description": "The amount of concrete compression in the rectangular stress block method",
 		"notation": "C_c",
 		"unicode": "C_c",
 		"default": "",
 		"unit": "kN",
 		"related": [
 			"Cs",
-			"Ts"
+			"Ts",
+			"Ast",
+			"Asc"
 		],
-		"docs": "<p>\n    This software uses $$$C_c$$$to denote the concrete compression force in the cross section at ultimate load.\n</p>",
+		"docs": "<p>\n    The following image shows the area overwhich $$$C_c$$$ acts in green:\n</p>\n\n<img src=\"\" alt=\"// TODO: image here\">",
 		"coderef": []
 	},
 	"d": {
@@ -154,7 +173,7 @@
 			"ku",
 			"kuo"
 		],
-		"docs": "\n<p>\n    $$$d$$$ is the depth to the centroid of the tensile steel layers. Finding d requires that you know which layers are in tension.\n</p>\n<p>\n    When deciding which layers to use to find $$$d$$$, only the primary tensile layers are considered. Indiviual bars less than half the size of the largest tensile bar are to be ignored. (these bars might be there for crack control)\n</p>",
+		"docs": "\n<p>\n    $$$d$$$ is the depth to the centroid of the tensile steel layers. Finding d requires that you know/guess which layers are in tension.\n</p>\n<p> The following image illustrates the location size of $$$d$$$</p>\n\n<img src=\"\" alt=\"//TODO: image\">",
 		"coderef": []
 	},
 	"Depth": {
@@ -266,7 +285,12 @@
 		"unit": "",
 		"related": [],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "AS3600 8.1",
+				"data": "<p>Requires $$$\\epsilon_{c max} \\le 0.003$$$</p>"
+			}
+		]
 	},
 	"fc": {
 		"id": "fc",
@@ -561,7 +585,9 @@
 		"unicode": "M_ou_min",
 		"default": "",
 		"unit": "kN\u22c5m",
-		"related": [],
+		"related": [
+			"Ast"
+		],
 		"docs": "",
 		"coderef": []
 	},
