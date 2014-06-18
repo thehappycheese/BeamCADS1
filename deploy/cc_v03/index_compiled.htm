@@ -15,13 +15,15 @@
 			jax: ["input/TeX","output/HTML-CSS"],
 			tex2jax: {inlineMath: [["$$","$$"],["$$$","$$$"]]},
 			messageStyle: "none",
-			skipStartupTypeset: false,
+			skipStartupTypeset: true,
 			menuSettings: {
 				context: "Browser"
+			},
+			Tex:{
+				extensions: ["color.js"]
 			}
 		});
 	</script>
-	
 
 	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!---->
 
@@ -117,7 +119,9 @@
 			<div style="width:100%;">
 				<h2>Calculations</h2>
 			</div>
-			<div id="calcdiv-content"></div>
+			<div id="calcdiv-content">
+				<canvas style="margin-top:10px;margin-bottom:10px;" class="dncanvas" width="500" height="300">Canvas not shown</canvas>
+			</div>
 		</div>
 	</div>
 	
@@ -1297,6 +1301,427 @@ Beam.prototype.drawSection = function(ctx){
 
 
 
+// #########		 Crawling:.\js\Beam.drawStressBlock.js		#########
+
+
+
+// #########		 Crawling:.\js\CADCanvas.Patterns.js		#########
+
+
+CanvasPatterns = new (function(){
+	
+
+
+	this.set2x2Hatch = function(ctx, color){
+		var canvas = document.createElement("canvas");
+		var c = canvas.getContext('2d');
+
+
+		canvas.width = 2;
+		canvas.height = 2;
+		c.fillStyle = color;
+		c.fillRect(0,0,1,1);
+		c.fillRect(0,1,1,1);
+
+		ctx.fillStyle = ctx.createPattern(canvas,"repeat");
+
+	}
+	
+	this.setHorizontalLine = function(ctx,color){
+		var canvas = document.createElement("canvas");
+		var c = canvas.getContext('2d');
+
+
+		canvas.width = 1;
+		canvas.height = 6;
+		c.fillStyle = color;
+		c.fillRect(0,0,1,1);
+
+		ctx.fillStyle = ctx.createPattern(canvas,"repeat");
+	}
+
+})();
+
+
+
+
+
+// #########		 Crawling:.\js\function.drawArrow.js		#########
+
+
+
+
+function drawArrow(ctx,fx,fy,tx,ty,s){
+	
+	var ix = tx-fx;
+	var iy = ty-fy;
+	var im = Math.sqrt(ix*ix+iy*iy);
+	ix = ix/im*(im-s+1)+fx;
+	iy = iy/im*(im-s+1)+fy;
+	
+	s=Math.min(s,im/2);
+	
+	ctx.beginPath();
+		ctx.moveTo(fx,fy);
+		ctx.lineTo(ix,iy);
+	ctx.stroke();
+
+	// Arrowhead A
+	ctx.save()
+		ctx.translate(tx,ty);
+		ctx.rotate(Math.atan2(ty-fy,tx-fx)+Math.PI/2);
+		ctx.beginPath();
+			ctx.moveTo(0,0);
+			ctx.lineTo(s/2,s);
+			ctx.lineTo(-s/2,s);
+		ctx.fill();
+		ctx.stroke();
+		
+		//ctx.sharpLine(0,0,2,5,0,0,0,255);
+		//ctx.sharpLine(0,0,-2,5,0,0,0,255);
+	ctx.restore();
+}
+
+
+Beam.prototype.drawStressBlock = function(ctx){
+	
+	var options = {
+		draw_d:false,
+		draw_dn:true,
+		draw_gammadn:true
+	}
+	
+	
+	// PREPARE THE CANVAS:
+	var canvas = ctx.canvas;
+	if (!ctx.setLineDash) {
+		console.warn("Your browser isnt able to draw dashed lines :(")
+		ctx.setLineDash = function () {}
+	}
+	ctx.font = "12px serif";
+	ctx.textBaseline = "top";
+	ctx.textAlign = "left";
+
+
+	
+	
+	// PREPARE THE LAYOUT AND SCALING
+	var padding_left = 2;
+	var padding_top = 40;
+	var padding_bottom = 30;
+	var padding_right = 2;
+	
+	var max_height = canvas.height - (padding_top+padding_bottom);
+	var max_width = canvas.width - (padding_left+padding_right);
+	
+	
+	
+	
+	var scaleX = function(n){
+		return n*(s_b/this.b);
+	}.bind(this);
+	
+	var scaleY = function(n){
+		return n*(s_D/this.D);
+	}.bind(this);
+	
+	
+	
+	
+	// PREPARE SOME CASHED VAIABLES TO PREVENT REPEATED FUNCTION CALLS:
+	var dn = this.dn;
+	var d = this.Ts_centroid_depth_from_dn(dn)
+	var b = null;
+	var s_b = 100;// Set the beam width at 100;
+	var s_D = Math.max(100,Math.min(max_height,this.D/this.b*s_b));
+	var s_dn= scaleY(dn);
+	var s_d = scaleY(d);
+	
+	
+	
+
+	
+	
+	// BEING DRAWING:
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.save()
+		// TRANSFORM:
+		ctx.translate(padding_left,	padding_top);
+		
+		
+		// DRAW CROSS SECTION
+		// Lable cross section
+		ctx.save()
+			ctx.textBaseline = "top";
+			ctx.textAlign = "left";
+			ctx.font = "15px sans-serif";
+			ctx.fillStyle = "grey";
+			ctx.fillText("CROSS-SECTION",0,-padding_top+2);
+		ctx.restore();
+		
+		
+		
+		
+		
+		if(options.draw_dn){
+			// Draw dn the Neutral axisline and lable:
+			ctx.setLineDash([4,4,12,4]);
+			ctx.beginPath();
+			ctx.strokeStyle = "grey";
+			ctx.lineWidth = 1;
+			ctx.moveTo(-10,s_dn);
+			ctx.lineTo(max_width+10,s_dn)
+			ctx.stroke();
+			ctx.fillStyle = "grey";
+			ctx.fillText("dn = "+dn.toFixed(0)+"mm", s_b+5,s_dn+2);
+		}
+		
+		if(options.draw_d){
+			// Draw d the effective depth line and lable:
+			ctx.setLineDash([8,4]);
+			ctx.beginPath();
+			ctx.strokeStyle = "darkred";
+			ctx.lineWidth = 2;
+			ctx.moveTo(-10,s_d);
+			ctx.lineTo(max_width+10,s_d)
+			ctx.stroke();
+			ctx.fillStyle = "darkred";
+			ctx.fillText("d = "+d.toFixed(0)+"mm", s_b+5,s_d+2);
+		}
+		
+		
+		
+		ctx.setLineDash([]);
+		if(options.draw_gammadn){
+			// Draw compressive zone and lable
+			CanvasPatterns.set2x2Hatch(ctx,"limegreen");
+			ctx.fillRect(0,0,s_b,s_dn*this.gamma);
+			ctx.fillStyle = "limegreen";
+			ctx.textBaseline = "bottom";
+			ctx.fillText("\u0263dn = "+(dn*this.gamma).toFixed(0)+"mm", s_b+5,s_dn*this.gamma-2);
+		}
+
+		// draw basic section
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "black";
+		ctx.strokeRect(0,0,s_b,s_D);
+		
+		
+
+		
+
+		// draw section with reo bars
+		for(var i = 0;i<this.reo.length;i++){
+			var layer = this.reo[i];
+			var x = s_b*0.1;
+			var spacing = s_b*0.8/(layer.number-1);
+
+			var f = this.layer_strain_from_layer_dn(layer, dn);
+			if(f>0){
+				ctx.fillStyle = "red";
+			}else{
+				ctx.fillStyle = "blue";
+			}
+			var rad = Math.max(2,Math.min(scaleX(10),scaleY(10)));
+			var sid = rad*1.8;
+			for(var j = 0; j<layer.number;j++){
+				if(f>0){
+					ctx.fillCircle(x+spacing*j,scaleY(layer.depth),rad);
+				}else{
+					ctx.fillRect(x+spacing*j-sid/2,scaleY(layer.depth)-sid/2,sid,sid);
+				}
+			}
+		}
+		
+		
+		
+		
+		////////////////////////////////////////////////////////
+		// DRAW THE STRAIN COMPATIBILITY DIAGRAM
+		////////////////////////////////////////////////////////
+		ctx.translate(220,0);
+		// Lable cross section
+		ctx.save()
+			ctx.textBaseline = "top";
+			ctx.textAlign = "center";
+			ctx.font = "15px sans-serif";
+			ctx.fillStyle = "grey";
+			ctx.fillText("STRAIN DIAGRAM",0,-padding_top+2);
+		ctx.restore();
+
+		
+		// Establish plot function
+
+		var strain_from_d = function(arg_d,capped){
+			if(capped){
+				return -Math.min(0.0025,Math.max(-0.0025,this.strain_from_d_dn(arg_d,dn)))/0.0025*60;
+			}
+			
+			return -this.strain_from_d_dn(arg_d,dn)/0.003*10;
+		}.bind(this);
+		//console.log(strain_from_d(0),strain_from_d(this.D),strain_from_d(this.D/2));
+		
+		
+		
+		if(Math.abs(strain_from_d(this.D))>60){
+			var strain_from_d = function(arg_d,capped){
+				if(capped){
+					return -Math.min(0.0025,Math.max(-0.0025,this.strain_from_d_dn(arg_d,dn)))/0.0025*60;
+				}
+				
+				var i = this.strain_from_d_dn(arg_d,dn);
+				var k = Math.abs(this.strain_from_d_dn(this.D,dn));
+				return -i/k*60;
+			}.bind(this);
+		}
+		
+		// plot graph line
+		CanvasPatterns.setHorizontalLine(ctx,"#FFC9FF");
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "magenta";
+		ctx.beginPath();
+			ctx.moveTo(0,0);
+			ctx.lineTo(strain_from_d(0),0);
+			ctx.lineTo(strain_from_d(this.D),s_D);
+			ctx.lineTo(0,s_D)
+		ctx.fill();
+		ctx.stroke();
+		
+		// Label concrete strain
+		ctx.fillStyle = "magenta";
+		ctx.textAlign = "left";
+		ctx.textBaseline = "bottom";
+		ctx.fillText("\u03B5cmax = 0.003",strain_from_d(0),-2);
+		
+		// Draw/label reo strains
+		for(var i = 0;i<this.reo.length;i++){
+			var layer= this.reo[i];
+			var strain = this.layer_strain_from_layer_dn(layer,dn,true);
+			if(strain>0){
+				ctx.strokeStyle="red";
+				ctx.fillStyle="red";
+			}else{
+				ctx.strokeStyle="blue";
+				ctx.fillStyle="blue";
+			}
+			ctx.lineWidth=2;
+			ctx.beginPath();
+				ctx.moveTo(0,scaleY(layer.depth));
+				ctx.lineTo(strain_from_d(layer.depth),scaleY(layer.depth));
+			ctx.stroke();
+			ctx.textAlign = "left";
+			ctx.textBaseline = "middle";
+			ctx.fillText("\u03B5"+i+" = "+strain.toFixed(4)+((Math.abs(strain)>0.0025)?" yield":" elast"),10,scaleY(layer.depth));
+		}
+		
+		
+		// Draw origin line
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "black";
+		ctx.beginPath();
+			ctx.moveTo(0,0);
+			ctx.lineTo(0,s_D);
+		ctx.stroke();
+		 
+		
+		
+		
+		
+		
+		
+		////////////////////////////////////////////////////////
+		// DRAW THE FORCE DIAGRAM
+		////////////////////////////////////////////////////////
+		ctx.translate(180,0);
+		// Lable cross section
+		ctx.save()
+			ctx.textBaseline = "top";
+			ctx.textAlign = "center";
+			ctx.font = "15px sans-serif";
+			ctx.fillStyle = "grey";
+			ctx.fillText("FORCE DIAGRAM",0,-padding_top+2);
+		ctx.restore();
+		
+		
+		// Draw the green square
+		CanvasPatterns.set2x2Hatch(ctx,"limegreen");
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "limegreen";
+		ctx.fillRect(0,0,50,s_dn*this.gamma);
+		ctx.strokeRect(0,0,50,s_dn*this.gamma);
+		ctx.fillStyle = "limegreen";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "bottom";
+		var Cc = this.Cc_from_dn(dn);
+		ctx.fillText("Cc = "+Cc.toFixed(0)+"kN ("+(-this.fc*this.alpha2).toFixed(0)+"MPa)",25,-2);
+		
+		
+		
+		// Draw the force vectors
+		for(var i = 0;i<this.reo.length;i++){
+			var layer= this.reo[i];
+			var strain = this.layer_strain_from_layer_dn(layer,dn);
+			var force = this.layer_force_from_layer_dn(layer,dn);
+			
+			
+			ctx.textBaseline = "middle";
+			if(strain>0){
+				ctx.strokeStyle="red";
+				ctx.fillStyle="red";
+				ctx.textAlign = "left";
+				ctx.fillText("Ts"+i+" = "+force.toFixed(0)+"kN",3,scaleY(layer.depth));
+			}else{
+				ctx.strokeStyle="blue";
+				ctx.fillStyle="blue";
+				ctx.textAlign = "right";
+				ctx.fillText("Cs"+i+" = "+force.toFixed(0)+"kN",-3,scaleY(layer.depth));
+			}
+			ctx.lineWidth=2;
+			drawArrow(ctx,
+				0,scaleY(layer.depth),
+				strain_from_d(layer.depth,true),scaleY(layer.depth),
+				6);
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Draw origin line
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "black";
+		ctx.beginPath();
+			ctx.moveTo(0,0);
+			ctx.lineTo(0,s_D);
+		ctx.stroke();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	ctx.restore()
+	
+	
+	
+	return "ended draw normally";
+}
+
+
+
+
+
 
 // #########		 Crawling:.\js\ReoInput.js		#########
 
@@ -1908,9 +2333,9 @@ Object.defineProperty(this,"isFirstRow",{
 			var diameter = parseInt(this.barcodeInput.value.split("N")[1]);
 			if(number<2){
 				// we should never have less than 2 bars
-				result.error.push(rowname+" has less than 2 bars. At least 2 bars in each layer are required to form a symetrical reo cage for transportation.");
+				result.error.push(rowname+" has less than 2 bars. At least 2 bars in each layer are required to form a symmetrical reo cage for transportation.");
 			}else if(!this.isAtHighestPosition && !this.isAtLowestPosition){
-				// If this is a "middle" row, then it shouldn have more than 2 bars!
+				// If this is a "middle" row, then it shouldn't have more than 2 bars!
 				if(number > 2){
 					result.error.push(rowname+" has bars floating in mid air! This layer should have only 2 bars.")
 				}
@@ -1928,14 +2353,14 @@ Object.defineProperty(this,"isFirstRow",{
 			var fitwidth = b-2*cover-2*df;
 			var gap = (fitwidth - (number*diameter))/(number-1);
 			if(gap<20){
-				result.error.push(rowname+" not enough space between bars (<20mm). Use fewer bars so that aggregate can compleatly surround the bars and and air bubbles can escape.");
+				result.error.push(rowname+" not enough space between bars (<20mm). Use fewer bars so that aggregate can completely surround the bars and and air bubbles can escape.");
 			}
 
 			// TODO: get code references for this section
 			// verify!
 			if(this.isAtHighestPosition || this.isAtLowestPosition){
 				if(gap > 300){
-					result.error.push(rowname+" has too much space between bars (>300mm) for crack controll requirements! Only bars which are &greq; half the diameter of the largest bar can be counted.")
+					result.error.push(rowname+" has too much space between bars (>300mm) for crack control requirements! Only bars which are \u2265 half the diameter of the largest bar can be counted.")
 				}
 			}
 		}
@@ -1945,7 +2370,7 @@ Object.defineProperty(this,"isFirstRow",{
 			// do nothing
 		}else{
 			if(this.offset<20){
-				result.error.push(rowname+" is too close to another layer. The <b>'Gap' should be at least 20mm</b> so that aggregate can compleatly surround the bars and and air bubbles can escape.");
+				result.error.push(rowname+" is too close to another layer. The <b>'Gap' should be at least 20mm</b> so that aggregate can completely surround the bars and and air bubbles can escape.");
 			}
 		}
 
@@ -2980,13 +3405,10 @@ calc.alpha2 = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = '$$$\\href{#help_bar_alpha2}{\\alpha_2} = '+b.alpha2.toFixed(2)+" ~~~and~~~ \\href{#help_bar_gamma}{\\gamma} = "+b.gamma.toFixed(2)+"$$$";
-		this.updateMathJax();
+		this.title = '<a href="#help_bar_alpha2"> &alpha;<sub>2</sub></a> = '+b.alpha2.toFixed(2)+' &nbsp;&nbsp;&nbsp;and&nbsp;&nbsp;&nbsp; <a href="#help_bar_gamma">&gamma;</a> = '+b.gamma.toFixed(2);
 	}.bind(this);
 	
 	this.update = function(){
-		
-		this.updateTitle();
 		var para = function(str){
 			return '<p>'+str+'</p>';
 		}
@@ -3025,1197 +3447,18 @@ calc.alpha2 = new (function(){
 
 
 
-// #########		 Crawling:.\js\calc\..\Beam.drawStressBlock.js		#########
-
-
-
-// #########		 Crawling:.\js\calc\..\function.dim.js		#########
-
-
-
-// #########		 Crawling:.\js\calc\..\Vector.js		#########
-
-
-function Vector(x,y){
-	this.x = x || 0;
-	this.y = y || 0;
-	
-	this.set = function(x,y){
-		this.x = x;
-		this.y = y;
-		return this;
-	}.bind(this);
-	
-	this.fromVector = function(v){
-		this.x = v.x;
-		this.y = v.y;
-		return this;
-	}.bind(this);
-	
-	this.fromPoints = function(a,b){
-		this.x = b.x-a.x;
-		this.y = b.y-a.y;
-		return this;
-	}
-	
-	this.fromAngLen = function(angle,length){
-		this.x = Math.cos(angle)*length;
-		this.y = Math.sin(angle)*length;
-		return this;
-	}.bind(this);
-	
-	this.copy = function(){
-		return new Vector(this.x,this.y);
-	}.bind(this);
-	this.duplicate = this.copy;
-	
-	
-	this.plus = function(v){
-		this.x+=v.x;
-		this.y+=v.y;
-		return this;
-	}.bind(this);
-	this.add = this.plus;
-	this.plusScalar = function(s){
-		this.x+=s;
-		this.y+=s;
-		return this;
-	}.bind(this);
-	this.addScalar = this.plusScalar;
-	
-	this.minus = function(v){
-		this.x-=v.x;
-		this.y-=v.y;
-		return this;
-	}.bind(this);
-	this.subtract = this.minus;
-	this.minusScalar = function(s){
-		this.x-=s;
-		this.y-=s;
-		return this;
-	}.bind(this);
-	this.subtractScalar = this.minusScalar;
-	
-	this.scalar = function(s){
-		this.x*=s;
-		this.y*=s;
-		return this;
-	}.bind(this);
-	
-	this.dot = function(v){
-		return  this.x*v.x + this.y*v.y;
-	}.bind(this);
-	
-	
-	this.left = function(){
-		var tmpy = this.y;
-		this.y = this.x;
-		this.x = -tmpy;
-		return this;
-	}.bind(this);
-	this.right = function(){
-		var tmpy = this.y;
-		this.y = -this.x;
-		this.x = tmpy;
-		return this;
-	}.bind(this);
-	this.unit = function(){
-		var mag = this.len;
-		this.x/=mag;
-		this.y/=mag;
-		return this;
-	}.bind(this);
-	
-	Object.defineProperty(this,"lenSquared",{
-		get:function(){
-			return this.x*this.x + this.y*this.y;
-		}.bind(this)
-	});
-	
-	Object.defineProperty(this,"len",{
-		get:function(){
-			return Math.sqrt(this.lenSquared);
-		}.bind(this)
-	});
-	
-	Object.defineProperty(this,"ang",{
-		get:function(){
-			return Math.atan2(this.y,this.x);
-		}.bind(this)
-	});
-	
-	this.toString = function(){
-		return "<"+this.x.toFixed(2)+", "+this.y.toFixed(2)+">";
-	}.bind(this);
-
-
-	this.rounded = function(){
-		this.x =Math.round(this.x);
-		this.y =Math.round(this.y);
-		return this;
-	}
-	
-	
-	this.moveTo = function(ctx){
-		ctx.moveTo(this.x,this.y);
-		return this;
-	}.bind(this);
-	this.lineTo = function(ctx){
-		ctx.lineTo(this.x,this.y);
-		return this;
-	}.bind(this);
-	
-}
-
-
-
-
-
-// #########		 Crawling:.\js\calc\..\CADCanvas.js		#########
-
-
-CanvasRenderingContext2D.prototype.moveToV = function(v){
-	this.moveTo(v.x,v.y)
-}
-CanvasRenderingContext2D.prototype.lineToV = function(v){
-	this.lineTo(v.x,v.y)
-}
-CanvasRenderingContext2D.prototype.arrowv = function(from,to,size){
-	this.beginPath();
-	this.moveTo(from.x,from.y);
-	this.lineTo(to.x,to.y);
-	this.stroke();
-	var ang = Math.atan2(to.y-from.y,to.x-from.x);
-	this.save();
-		this.translate(to.x,to.y);
-		this.rotate(ang-Math.PI/2);
-		this.beginPath();
-		this.moveTo(-0.3*size,-1*size);
-		this.lineTo( 0, 0  );
-		this.lineTo( 0.3*size,-1*size);
-		this.stroke();
-	this.restore();
-}
-
-
-CanvasRenderingContext2D.prototype.arrow = function(fx,fy,tx,ty,size){
-	this.beginPath();
-		this.moveTo(fx,fy);
-		this.lineTo(tx,ty);
-	this.stroke();
-	var ang = Math.atan2(ty-fy,tx-fx);
-	this.save();
-		this.translate(tx,ty);
-		this.rotate(ang-Math.PI/2);
-		this.beginPath();
-		this.moveTo(-0.3*size,-1*size);
-			this.lineTo( 0, 0  );
-			this.lineTo( 0.3*size,-1*size);
-		this.stroke();
-	this.restore();
-}
-
-
-///////////////////////////////////////////////////////////////////
-//		Circle drawing Functions
-///////////////////////////////////////////////////////////////////
-CanvasRenderingContext2D.prototype.circle = function(x,y,radius){
-	this.arc(x,y,Math.max(0,radius),0,Math.PI*2);
-}
-CanvasRenderingContext2D.prototype.fillCircle = function(x,y,radius){
-	this.beginPath();
-	this.circle(x,y,radius);
-	this.fill();
-}
-CanvasRenderingContext2D.prototype.strokeCircle = function (x,y,radius) {
-	this.beginPath();
-	this.circle(x,y,radius);
-	this.stroke();
-}
-
-CanvasRenderingContext2D.prototype.fillStrokeCircle = function(x,y,radius){
-	this.beginPath();
-	this.circle(x,y,radius);
-	this.fill();
-	this.stroke();
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-//		SHARP LINE
-////////////////////////////////////////////////////////////////////////////////////////
-CanvasRenderingContext2D.prototype.sharpLine = function (aa, bb, cc, dd, r,g,b,a) {
-
-	
-	var v1 = {x:aa,y:bb};
-	var v2 = {x:cc,y:dd};
-	
-	var x0 = Math.round(v1.x);
-	var y0 = Math.round(v1.y);
-	var x1 = Math.round(v2.x);
-	var y1 = Math.round(v2.y);
-	
-	var imd = this.getImageData(0,0,this.canvas.width,this.canvas.height);
-	var index;
-	
-	
-	var dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-	var dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1; 
-	var err = (dx>dy ? dx : -dy)/2;
-	//var out = 0;
-	while (true) {
-		index = 4*x0 + (4*this.canvas.width)*y0;
-		imd.data[index+0]	= r;
-		imd.data[index+1]	= g;
-		imd.data[index+2]	= b;
-		imd.data[index+3]	= a;
-		//this.setPixel(x0,y0,0,0,0,255);
-		
-		if (x0 === x1 && y0 === y1) break;
-		var e2 = err;
-		if (e2 > -dx) { err -= dy; x0 += sx; }
-		if (e2 < dy) { err += dx; y0 += sy; }
-	}
-	//console.log(out);
-  this.putImageData(imd,0,0);
-}
-CanvasRenderingContext2D.prototype.sharpLineV = function(v1,v2,r,g,b,a){
-	this.sharpLine(v1.x,v1.y,v2.x,v2.y,r,g,b,a);
-}
-////////////////////////////////////////////////////////////////////////////////////////
-//		SET PIXEL
-////////////////////////////////////////////////////////////////////////////////////////
-CanvasRenderingContext2D.prototype.setPixel = function (x,y, r,g,b,a) {
-	var imd = this.getImageData(0,0,this.canvas.width,this.canvas.height);
-	var index = 4*x + (4*this.canvas.width)*y;
-
-	imd.data[index+0]	= r;
-	imd.data[index+1]	= g;
-	imd.data[index+2]	= b;
-	imd.data[index+3]	= a;
-	this.putImageData(imd,0,0);
-}
-
-
-
-function dim(ctx,x1,y1,x2,y2,angle,dist,txt){
-	var fontpx = 15;
-	ctx.save();
-	ctx.font = fontpx+"px serif";
-	ctx.textBaseline="middle"
-	ctx.textAlign="center"
-	
-	var metric = ctx.measureText(txt);
-	
-	
-	var v1 = new Vector(x1,y1);
-	var v2 = new Vector(x2,y2);
-	var offset = (new Vector()).fromAngLen(angle,Math.max(10,Math.abs(dist),metric.width/2*Math.cos(angle)+5)*dist/Math.abs(dist));
-	var va = v1.copy().add(offset);
-	var dimlen = (new Vector()).fromAngLen(angle+Math.PI/2,1).dot(v2.copy().minus(v1))
-	var vb = va.copy().add((new Vector()).fromAngLen(angle+Math.PI/2,1).scalar(dimlen));
-	var vt = va.copy().add(vb).scalar(0.5);
-	if(va.copy().minus(vb).len<30){
-		offset = (new Vector()).fromAngLen(angle, Math.max(10, Math.abs(dist))*dist/Math.abs(dist));
-		va = v1.copy().add(offset);
-		dimlen = (new Vector()).fromAngLen(angle+Math.PI/2,1).dot(v2.copy().minus(v1))
-		vb = va.copy().add((new Vector()).fromAngLen(angle+Math.PI/2,1).scalar(dimlen));
-		vt = va.copy().add(vb).scalar(0.5).add(offset.unit().scalar(metric.width/2+5));
-	}
-	
-	var angAtoB = vb.copy().minus(va).ang;
-	
-	ctx.lineWidth = 1;
-	ctx.strokeStyle = "#555555";
-	ctx.fillStyle = "#555555";
-	
-	// Draw line bodies
-	ctx.beginPath();
-		var vc = va.copy().minus(v1).unit().scalar(4).add(v1);
-		var vd = va.copy().minus(v1).unit().scalar(4).add(va);
-		ctx.moveTo(vc.x,vc.y);
-		ctx.lineTo(vd.x,vd.y);
-		//ctx.sharpLineV(vc,vd,0,0,0,255);
-		
-		
-		var vc = vb.copy().minus(v2).unit().scalar(4).add(v2);
-		var vd = vb.copy().minus(v2).unit().scalar(4).add(vb);
-		ctx.moveTo(vc.x,vc.y);
-		ctx.lineTo(vd.x,vd.y);
-		//ctx.sharpLineV(vc,vd,0,0,0,255);
-		
-		ctx.moveTo(va.x,va.y);
-		ctx.lineTo(vb.x,vb.y);
-		//ctx.sharpLineV(va,vb,0,0,0,255);
-	ctx.stroke();
-	
-	// Arrowhead A
-	ctx.save()
-		ctx.translate(va.x,va.y);
-		ctx.rotate(angAtoB-Math.PI/2);
-		ctx.beginPath();
-		ctx.moveTo(0,0);
-		ctx.lineTo(2,5);
-		ctx.lineTo(-2,5);
-		ctx.fill();
-		
-		//ctx.sharpLine(0,0,2,5,0,0,0,255);
-		//ctx.sharpLine(0,0,-2,5,0,0,0,255);
-	ctx.restore();
-	
-	// Arrowhead B
-	ctx.save()
-		ctx.translate(vb.x, vb.y);
-		ctx.rotate(angAtoB+Math.PI/2);
-		ctx.moveTo(0,0);
-		ctx.lineTo(2,5);
-		ctx.lineTo(-2,5);
-		//ctx.sharpLine(0,0,2,5,0,0,0,255);
-		//ctx.sharpLine(0,0,-2,5,0,0,0,255);
-		ctx.fill();
-	ctx.restore();
-	
-	if(txt && txt !== "") {
-		// Draw text
-		ctx.fillStyle = "#000000";
-
-		ctx.clearRect(vt.x-metric.width/2-3,vt.y-fontpx/2-1,metric.width+6,fontpx+4);
-		ctx.fillText(txt,vt.x,vt.y);
-	}
-	ctx.restore();
-	
-}
-
-
-
-
-
-// #########		 Crawling:.\js\calc\..\CADCanvas.Patterns.js		#########
-
-
-CanvasPatterns = new (function(){
-	
-
-
-	this.set2x2Hatch = function(ctx, color){
-		var canvas = document.createElement("canvas");
-		var c = canvas.getContext('2d');
-
-
-		canvas.width = 2;
-		canvas.height = 2;
-		c.fillStyle = color;
-		c.fillRect(0,0,1,1);
-		c.fillRect(0,1,1,1);
-
-		ctx.fillStyle = ctx.createPattern(canvas,"repeat");
-
-	}
-	
-	this.setHorizontalLine = function(ctx,color){
-		var canvas = document.createElement("canvas");
-		var c = canvas.getContext('2d');
-
-
-		canvas.width = 1;
-		canvas.height = 6;
-		c.fillStyle = color;
-		c.fillRect(0,0,1,1);
-
-		ctx.fillStyle = ctx.createPattern(canvas,"repeat");
-	}
-
-})();
-
-
-
-
-
-// #########		 Crawling:.\js\calc\..\Beam.js		#########
-
-
-function Beam(){
-	"use strict";
-	this.create = function(){
-		
-		// #########################################################
-		// Misc considerations
-		this.eclass 			= "A1";
-		this.minbarspacing		= undefined;
-		
-		
-		// #########################################################
-		// Reinforcement considerations
-		this.reo = [
-			{number:2, diameter:10, area:156, depth:25+10+10/2		},
-			{number:2, diameter:10, area:200, depth:600-25-10-10/2	},
-		];
-		this.df		= 10;
-		
-		
-		// #########################################################
-		// Geometric considerations
-		this.b		= 300;
-		this.D		= 600;
-		this.cover	= 25;
-		this.Ln		= 3000;
-		
-		
-		// #########################################################
-		// Material considerations
-		this.fc		= 32;
-		this.Ec		= undefined;
-		this.epsiloncmax = 0.003;// TODO: getcorrect code ref. AS3600 8.1.3??
-		this.rhoc	= 2400;
-		// AS4671 500MPa Steel && AS3600
-		this.fsy = 500;// Steel characteristic yield stress: MPa
-		// AS3600 3.2.2 taken to be (or determined by test)
-		// TODO: add Es to variable inputs (commit with35mins)
-		this.Es = 200000;// Steel Young's modulus of elasticity: MPa
-		this.epsilonsy = this.fsy/this.Es; // 0.0025 or there-abouts
-		
-	}.bind(this);
-
-
-	// #############################################################################
-	// ### CODE COMPLIANCE CHECKERS HELPER FUNCTIONS ###############################
-	// #############################################################################	
-	
-	// TODO: is_deep_beam ?
-	
-	// #############################################################################
-	// ### SERVICEABILITY LIMITS ###################################################
-	// #############################################################################	
-	
-	
-	// TODO:
-	
-	
-	// #############################################################################
-	// ### GEOMETRIC HELPER FUNCTIONS ##############################################
-	// #############################################################################
-	
-	Object.defineProperty(this,"innerWidth",{
-		get:function innerWidth(){
-			return this.b - 2*(this.cover+this.df);
-		}.bind(this)}
-	);
-	
-	
-	
-	
-	
-	this.get_tension_reo = function(){
-		console.warn("check this function before use")
-		var result = [];
-		var dn = this.dn ;
-		for(var i = 0; i < this.reo.length;i++){
-			if(this.layer_strain_from_layer_dn(this.reo[i], dn)>0){
-				result.push(this.reo[i]);
-			}
-		}
-		return result;
-	}.bind(this);
-	
-	this.get_compression_reo = function(){
-		console.warn("check this function before use")
-		var result = [];
-		var dn = this.dn ;
-		for(var i = 0; i < this.reo.length;i++){
-			if(this.layer_strain_from_layer_dn(this.reo[i], dn)<0){
-				result.push(this.reo[i]);
-			}
-		}
-		return result;
-	}.bind(this);
-	
-	
-	// #############################################################################
-	// ### HIGH LEVEL CAPACITY FUNCTIONS ###########################################
-	// #############################################################################
-	Object.defineProperty(this,"Muo",{
-		get:function Muo(){
-			var dn		= this.dn;
-			var cc		= this.Cc_from_dn(dn);
-			var ccd		= this.Cc_centroid_depth_from_dn(dn);
-			var ts		= this.Ts_from_dn(dn);
-			var tsd		= this.Ts_centroid_depth_from_dn(dn);
-			var cs		= this.Cs_from_dn(dn);
-			var csd		= this.Cs_centroid_depth_from_dn(dn);
-			
-			return (cc*ccd + ts*tsd + (cs*csd || 0)) / 1000; //kNm
-		}.bind(this)}
-	);
-	
-	// AS3600 8.1.6.1(1)
-	Object.defineProperty(this,"Muo_min",{
-		get:function(){
-			// no prestress only.
-			return 1.2*this.Ze*this.fctf/1000000; //mm^3*MPa => Nmm /1000/1000 => kNm
-		}.bind(this)}
-	);
-	// AS3600 8.1.6.1(2)
-	Object.defineProperty(this,"Muo_min_Ast_min",{
-		get:function(){
-			// rect sections only
-			// TODO: fix this probalem:
-			//console.warn("Check this function before use. 'd' may be wrong here. Using Ts_centroid_depth instead");
-			return 0.2*Math.pow(  this.D/this.Ts_centroid_depth   ,2)*this.fctf/this.fsy*this.b*this.Ts_centroid_depth;
-		}.bind(this)}
-	);
-	// TODO: create a proper getter for d, ku and kuo
-
-	
-	Object.defineProperty(this,"dn",{
-		get:function(){
-			// TODO: make a beam flag to determine whether compression steel is considered in this calculation.
-			// TODO: make a check to see that reo that is too small is never fed into this beam calculator
-			var dn;
-			var top = this.D;
-			var bot = 0;
-			var diff;
-			var cnt = 0;
-			do{
-				dn = (top+bot)/2;
-				diff = this.Ts_from_dn(dn)+this.Cs_from_dn(dn)+this.Cc_from_dn(dn);
-				if(diff>0){
-					bot = dn;
-				}else{
-					top = dn;
-				}
-				cnt++
-			}while(Math.abs(diff) > 0.0001 && cnt<20);
-
-			return dn;
-		}.bind(this)
-	});
-	
-	
-	
-	
-	// #############################################################################
-	// ### GET TOTAL FORCES ########################################################
-	// #############################################################################
-	
-	Object.defineProperty(this,"Ts",{get:function(){
-		return this.Ts_from_dn(this.dn);
-	}.bind(this)});
-	Object.defineProperty(this,"Cs",{get:function(){
-		return this.Cs_from_dn(this.dn);
-	}.bind(this)});
-	Object.defineProperty(this,"Cc",{get:function(){
-		return this.Cc_from_dn(this.dn);
-	}.bind(this)});
-	
-	
-	this.Ts_from_dn = function(dn){
-		return this.Fs_from_dn_tension(dn,true);
-	}.bind(this);
-	this.Cs_from_dn = function(dn){
-		return this.Fs_from_dn_tension(dn,false);
-	}.bind(this);
-	this.Cc_from_dn = function(dn){
-		return -(this.b*dn*this.gamma) * (this.fc*this.alpha2)/1000; // kN
-	}.bind(this);
-	
-	
-	this.Fs_from_dn_tension = function(dn, returntension){
-		var result = 0;
-		var epsilonsi;
-		for(var i = 0;i<this.reo.length;i++){
-			// First get strain in the steel layer according to similar triangles:
-			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
-			// Limit the strain to a range of -0.0025 to 0.0025
-			if(returntension){
-				epsilonsi = Math.max(0, Math.min(epsilonsi, this.epsilonsy));
-			}else{
-				epsilonsi = Math.max(-this.epsilonsy, Math.min(epsilonsi, 0));
-			}
-			result += this.reo[i].area * this.Es * epsilonsi/1000; // kN
-		}
-		return result;
-	}.bind(this);
-	
-	
-	// #############################################################################
-	// ### GET FORCE CENTROIDS #####################################################
-	// #############################################################################
-	
-	
-	// TODO: Which layers of steel should be disregarded? Surely steel 'close' to the centroid should be left out.
-	Object.defineProperty(this,"Ts_centroid_depth",{get:function(){
-		return this.Ts_centroid_depth_from_dn(this.dn);
-	}.bind(this)});
-	Object.defineProperty(this,"d",{get:function(){
-		return this.Ts_centroid_depth_from_dn(this.dn);
-	}.bind(this)});
-	Object.defineProperty(this,"Cs_centroid_depth",{get:function(){
-		return this.Cs_centroid_depth_from_dn(this.dn);
-	}.bind(this)});
-	Object.defineProperty(this,"Cc_centroid_depth",{get:function(){
-		return this.Cc_centroid_depth_from_dn(this.dn)
-	}.bind(this)});
-	
-	
-	
-	
-	this.Ts_centroid_depth_from_dn = function(dn){
-		return this.Fs_centroid_from_dn_tension(dn, true);
-	}.bind(this);
-	this.Cs_centroid_depth_from_dn = function(dn){
-		return this.Fs_centroid_from_dn_tension(dn, false);
-	}.bind(this);
-	this.Cc_centroid_depth_from_dn = function(dn){
-		return this.gamma * dn / 2;
-	}.bind(this);
-	
-	
-	this.Fs_centroid_from_dn_tension = function(dn, returntension){
-		var epsilonsi;
-		var sum_area = 0;
-		var sum_area_times_depth = 0;
-		for(var i = 0;i<this.reo.length;i++){
-			// First get strain in the steel layer according to similar triangles:
-			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
-			// Then depending on if we are looking for tension or compression steel, get weighted average depth
-			if(  (returntension && epsilonsi>0)  ||  (!returntension && epsilonsi<0)  ){
-				sum_area += this.reo[i].area;
-				sum_area_times_depth += this.reo[i].area * this.reo[i].depth;
-			}
-		}
-		return sum_area_times_depth/sum_area || undefined;
-	}.bind(this);
-	
-	
-	
-	
-	// #############################################################################
-	// ### GET INDIVIDUAL STEEL FORCES #############################################
-	// #############################################################################
-	
-	this.strain_from_d_dn = function(d,dn){
-		// First get strain at specified depth according to similar triangles:
-		var epsilonsi = this.epsiloncmax/dn*(d - dn);
-		return epsilonsi
-	}.bind(this);
-	
-	
-	
-	this.layer_strain_from_layer_dn = function(layer,dn,uncapped){
-		// First get strain in the steel layer according to similar triangles:
-		var epsilonsi = this.strain_from_d_dn(layer.depth,dn);
-		// Limit the strain to a range of -0.0025 to 0.0025
-		// (The stress does not increase after yielding at fsy)
-		if(!uncapped){
-			epsilonsi = Math.max(-this.epsilonsy, Math.min(epsilonsi, this.epsilonsy));
-		}
-		
-		return epsilonsi
-	}.bind(this);
-	
-	
-	this.layer_force_from_layer_dn = function(layer,dn){
-		var layer_strain = this.layer_strain_from_layer_dn(layer,dn);
-		return layer.area * this.Es * layer_strain/1000; // kN
-	}.bind(this);
-	
-	
-	this.layer_yielded_from_layer_dn = function(layer,dn){
-		var layer_strain = this.layer_strain_from_layer_dn(layer, dn);
-		return layer_strain<=-0.0025 || layer_strain>=0.0025;
-	}.bind(this);
-	
-	
-
-	// #############################################################################
-	// ### GET STEEL AREAS #########################################################
-	// #############################################################################
-	
-	Object.defineProperty(this,"As",{get:function(){
-		var sum = 0;
-		for(i = 0;i<this.reo.length;i++){
-			sum += this.reo[i].area;
-		}
-		return sum;
-	}.bind(this)});
-	
-	
-	Object.defineProperty(this,"Ast",{get:function(){
-		return this.Ast_from_dn(this.dn);
-	}.bind(this)});
-	
-	Object.defineProperty(this,"Asc",{get:function(){
-		return this.Asc_from_dn(this.dn);
-	}.bind(this)});
-	Object.defineProperty(this,"Acc",{get:function(){
-		return this.gamma*this.dn*this.b;
-	}.bind(this)});
-	
-	
-	this.Ast_from_dn = function(dn){
-		return this.As_from_dn_tension(dn,true);
-	}.bind(this);
-	this.Asc_from_dn = function(dn){
-		return this.As_from_dn_tension(dn,false);
-	}.bind(this);
-	
-	this.As_from_dn_tension = function(dn, returntension){
-		var epsilonsi;
-		var sum_area = 0;
-		for(var i = 0;i<this.reo.length;i++){
-			// First get strain in the steel layer according to similar triangles:
-			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
-			// Then depending on if we are looking for tension or compression steel, get weighted average depth
-			if(  (returntension && epsilonsi>0)  ||  (!returntension && epsilonsi<0)  ){
-				sum_area += this.reo[i].area;
-			}
-		}
-		return sum_area || undefined;
-	}.bind(this);
-	
-	
-	// ########################################################################
-	// #### MISC COEFICIENTS ##################################################
-	// ########################################################################
-	
-	Object.defineProperty(this,"gamma",{get:function(){
-		var r1 = 1.05-this.fc*0.007;
-		var r2 = Math.max(0.67,Math.min(0.85,r1)) 
-		return r2;
-	}.bind(this)});
-	
-	
-	Object.defineProperty(this,"alpha2",{get:function(){
-		var r1 = 1-this.fc*0.003
-		var r2 = Math.max(0.67,Math.min(0.85,r1));
-		return r2;
-	}.bind(this)});
-	
-	// TODO: note that this is only when no better info is avaliable.
-	// TODO: sort
-	Object.defineProperty(this,"fctf",{get:function(){
-		return 0.6*Math.sqrt(this.fc);
-	}.bind(this)});
-	
-	// TODO: Ensure technical correctness.
-	Object.defineProperty(this,"k",{get:function(){
-		var dn = this.dn;
-		var dts = this.Ts_centroid_depth_from_dn(dn); 
-		return dn/dts;
-	}.bind(this)});
-	
-	
-	// ########################################################################
-	// #### SECTION PROPERTIES ################################################
-	// ########################################################################
-	Object.defineProperty(this,"Ze",{get:function(){
-		// Rectangular section only
-		return this.b*Math.pow(this.D,2)/6;
-	}.bind(this)});
-	
-	Object.defineProperty(this,"Ixx",{get:function(){
-		// Rectangular section only
-		return this.b*Math.pow(this.D,3)/12;
-	}.bind(this)});
-	
-	
-	// STARTOFF: 4:35 14 04 14
-	this.toString = function(){
-		return JSON.stringify(this).replace(/,/g,",\n");
-	}.bind(this);
-	
-	Object.defineProperty(this,"Ag",{get:function(){
-		// Rectangular section only
-		return this.b*this.D;
-	}.bind(this)});
-	
-	// TODO: sort
-	// Reo ratio
-	Object.defineProperty(this,"p",{get:function(){
-		// rect section only
-		return this.Ast/this.b/this.D;
-	}.bind(this)});
-	
-	// AS3600 8.5.3.1
-	Object.defineProperty(this,"beta",{get:function(){
-		// rect section only
-		return this.Ast/this.b/this.D;
-	}.bind(this)});
-	
-	
-	this.create();
-	
-	/*
-	*/
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// #########		 Crawling:.\js\calc\..\function.drawArrow.js		#########
-
-
-
-
-function drawArrow(ctx,fx,fy,tx,ty,s){
-	
-	var ix = tx-fx;
-	var iy = ty-fy;
-	var im = Math.sqrt(ix*ix+iy*iy);
-	ix = ix/im*(im-s+1)+fx;
-	iy = iy/im*(im-s+1)+fy;
-	
-	s=Math.min(s,im/2);
-	
-	ctx.beginPath();
-		ctx.moveTo(fx,fy);
-		ctx.lineTo(ix,iy);
-	ctx.stroke();
-
-	// Arrowhead A
-	ctx.save()
-		ctx.translate(tx,ty);
-		ctx.rotate(Math.atan2(ty-fy,tx-fx)+Math.PI/2);
-		ctx.beginPath();
-			ctx.moveTo(0,0);
-			ctx.lineTo(s/2,s);
-			ctx.lineTo(-s/2,s);
-		ctx.fill();
-		ctx.stroke();
-		
-		//ctx.sharpLine(0,0,2,5,0,0,0,255);
-		//ctx.sharpLine(0,0,-2,5,0,0,0,255);
-	ctx.restore();
-}
-
-
-Beam.prototype.drawStressBlock = function(ctx){
-	
-	var options = {
-		draw_d:false,
-		draw_dn:true,
-		draw_gammadn:true
-	}
-	
-	
-	// PREPARE THE CANVAS:
-	var canvas = ctx.canvas;
-	if (!ctx.setLineDash) {
-		console.warn("Your browser isnt able to draw dashed lines :(")
-		ctx.setLineDash = function () {}
-	}
-	ctx.font = "12px serif";
-	ctx.textBaseline = "top";
-	ctx.textAlign = "left";
-
-
-	
-	
-	// PREPARE THE LAYOUT AND SCALING
-	var padding_left = 2;
-	var padding_top = 30;
-	var padding_bottom = 30;
-	var padding_right = 2;
-	
-	var max_height = canvas.height - (padding_top+padding_bottom);
-	var max_width = canvas.width - (padding_left+padding_right);
-	
-	
-	
-	
-	var scaleX = function(n){
-		return n*(s_b/this.b);
-	}.bind(this);
-	
-	var scaleY = function(n){
-		return n*(s_D/this.D);
-	}.bind(this);
-	
-	
-	
-	
-	// PREPARE SOME CASHED VAIABLES TO PREVENT REPEATED FUNCTION CALLS:
-	var dn = this.dn;
-	var d = this.Ts_centroid_depth_from_dn(dn)
-	var b = null;
-	var s_b = 100;// Set the beam width at 100;
-	var s_D = Math.max(100,Math.min(max_height,this.D/this.b*s_b));
-	var s_dn= scaleY(dn);
-	var s_d = scaleY(d);
-	
-	
-	
-
-	
-	
-	// BEING DRAWING:
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-	ctx.save()
-		// TRANSFORM:
-		ctx.translate(padding_left,	padding_top);
-		
-		if(options.draw_dn){
-			// Draw dn the Neutral axisline and lable:
-			ctx.setLineDash([4,4,12,4]);
-			ctx.beginPath();
-			ctx.strokeStyle = "grey";
-			ctx.lineWidth = 1;
-			ctx.moveTo(-10,s_dn);
-			ctx.lineTo(max_width+10,s_dn)
-			ctx.stroke();
-			ctx.fillStyle = "grey";
-			ctx.fillText("dn = "+dn.toFixed(0)+"mm", s_b+5,s_dn+2);
-		}
-		
-		if(options.draw_d){
-			// Draw d the effective depth line and lable:
-			ctx.setLineDash([8,4]);
-			ctx.beginPath();
-			ctx.strokeStyle = "darkred";
-			ctx.lineWidth = 2;
-			ctx.moveTo(-10,s_d);
-			ctx.lineTo(max_width+10,s_d)
-			ctx.stroke();
-			ctx.fillStyle = "darkred";
-			ctx.fillText("d = "+d.toFixed(0)+"mm", s_b+5,s_d+2);
-		}
-		
-		
-		
-		ctx.setLineDash([]);
-		if(options.draw_gammadn){
-			// Draw compressive zone and lable
-			CanvasPatterns.set2x2Hatch(ctx,"limegreen");
-			ctx.fillRect(0,0,s_b,s_dn*this.gamma);
-			ctx.fillStyle = "limegreen";
-			ctx.textBaseline = "bottom";
-			ctx.fillText("\u0263dn = "+(dn*this.gamma).toFixed(0)+"mm", s_b+5,s_dn*this.gamma-2);
-		}
-
-		// draw basic section
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = "black";
-		ctx.strokeRect(0,0,s_b,s_D);
-
-		
-
-		// draw section with reo bars
-		for(var i = 0;i<this.reo.length;i++){
-			var layer = this.reo[i];
-			var x = s_b*0.1;
-			var spacing = s_b*0.8/(layer.number-1);
-
-			var f = this.layer_strain_from_layer_dn(layer, dn);
-			if(f>0){
-				ctx.fillStyle = "red";
-			}else{
-				ctx.fillStyle = "blue";
-			}
-			var rad = Math.max(2,Math.min(scaleX(10),scaleY(10)));
-			var sid = rad*1.8;
-			for(var j = 0; j<layer.number;j++){
-				if(f>0){
-					ctx.fillCircle(x+spacing*j,scaleY(layer.depth),rad);
-				}else{
-					ctx.fillRect(x+spacing*j-sid/2,scaleY(layer.depth)-sid/2,sid,sid);
-				}
-			}
-		}
-		
-		
-		
-		
-		////////////////////////////////////////////////////////
-		// DRAW THE STRAIN COMPATIBILITY DIAGRAM
-		////////////////////////////////////////////////////////
-		ctx.translate(220,0);
-		
-
-		
-		// Establish plot function
-
-		var strain_from_d = function(arg_d,capped){
-			if(capped){
-				return -Math.min(0.0025,Math.max(-0.0025,this.strain_from_d_dn(arg_d,dn)))/0.0025*60;
-			}
-			
-			return -this.strain_from_d_dn(arg_d,dn)/0.003*10;
-		}.bind(this);
-		//console.log(strain_from_d(0),strain_from_d(this.D),strain_from_d(this.D/2));
-		
-		
-		
-		if(Math.abs(strain_from_d(this.D))>60){
-			var strain_from_d = function(arg_d,capped){
-				if(capped){
-					return -Math.min(0.0025,Math.max(-0.0025,this.strain_from_d_dn(arg_d,dn)))/0.0025*60;
-				}
-				
-				var i = this.strain_from_d_dn(arg_d,dn);
-				var k = Math.abs(this.strain_from_d_dn(this.D,dn));
-				return -i/k*60;
-			}.bind(this);
-		}
-		
-		// plot graph line
-		CanvasPatterns.setHorizontalLine(ctx,"#FFC9FF");
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = "magenta";
-		ctx.beginPath();
-			ctx.moveTo(0,0);
-			ctx.lineTo(strain_from_d(0),0);
-			ctx.lineTo(strain_from_d(this.D),s_D);
-			ctx.lineTo(0,s_D)
-		ctx.fill();
-		ctx.stroke();
-		
-		// Label concrete strain
-		ctx.fillStyle = "magenta";
-		ctx.textAlign = "left";
-		ctx.textBaseline = "bottom";
-		ctx.fillText("\u03B5cmax = 0.003",strain_from_d(0),-2);
-		
-		// Draw/label reo strains
-		for(var i = 0;i<this.reo.length;i++){
-			var layer= this.reo[i];
-			var strain = this.layer_strain_from_layer_dn(layer,dn,true);
-			if(strain>0){
-				ctx.strokeStyle="red";
-				ctx.fillStyle="red";
-			}else{
-				ctx.strokeStyle="blue";
-				ctx.fillStyle="blue";
-			}
-			ctx.lineWidth=2;
-			ctx.beginPath();
-				ctx.moveTo(0,scaleY(layer.depth));
-				ctx.lineTo(strain_from_d(layer.depth),scaleY(layer.depth));
-			ctx.stroke();
-			ctx.textAlign = "left";
-			ctx.textBaseline = "middle";
-			ctx.fillText("\u03B5"+i+" = "+strain.toFixed(4)+((Math.abs(strain)>0.0025)?" yield":" elast"),10,scaleY(layer.depth));
-		}
-		
-		
-		// Draw origin line
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = "black";
-		ctx.beginPath();
-			ctx.moveTo(0,0);
-			ctx.lineTo(0,s_D);
-		ctx.stroke();
-		 
-		
-		
-		
-		
-		
-		
-		////////////////////////////////////////////////////////
-		// DRAW THE FORCE DIAGRAM
-		////////////////////////////////////////////////////////
-		ctx.translate(180,0);
-		
-		// Draw the green square
-		CanvasPatterns.set2x2Hatch(ctx,"limegreen");
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = "limegreen";
-		ctx.fillRect(0,0,50,s_dn*this.gamma);
-		ctx.strokeRect(0,0,50,s_dn*this.gamma);
-		ctx.fillStyle = "limegreen";
-		ctx.textAlign = "center";
-		ctx.textBaseline = "bottom";
-		ctx.fillText("Cc = "+this.Cc_from_dn(dn).toFixed(0)+"kN",25,-2);
-		
-		
-		
-		// Draw the force vectors
-		for(var i = 0;i<this.reo.length;i++){
-			var layer= this.reo[i];
-			var strain = this.layer_strain_from_layer_dn(layer,dn);
-			var force = this.layer_force_from_layer_dn(layer,dn);
-			
-			
-			ctx.textBaseline = "middle";
-			if(strain>0){
-				ctx.strokeStyle="red";
-				ctx.fillStyle="red";
-				ctx.textAlign = "left";
-				ctx.fillText("Ts"+i+" = "+force.toFixed(0)+"kN",3,scaleY(layer.depth));
-			}else{
-				ctx.strokeStyle="blue";
-				ctx.fillStyle="blue";
-				ctx.textAlign = "right";
-				ctx.fillText("Cs"+i+" = "+force.toFixed(0)+"kN",-3,scaleY(layer.depth));
-			}
-			ctx.lineWidth=2;
-			drawArrow(ctx,
-				0,scaleY(layer.depth),
-				strain_from_d(layer.depth,true),scaleY(layer.depth),
-				6);
-			
-			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// Draw origin line
-		ctx.lineWidth = 2;
-		ctx.strokeStyle = "black";
-		ctx.beginPath();
-			ctx.moveTo(0,0);
-			ctx.lineTo(0,s_D);
-		ctx.stroke();
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	ctx.restore()
-	
-	
-	
-	return "ended draw normally";
-}
+// #########		 Crawling:.\js\calc\calc.esi.js		#########
 
 
 
 if(calc===undefined) var calc = {};
 
-calc.dn = new (function(){
+calc.esi = new (function(){
 	CalcDiv.call(this); // Extends calcdiv
 	
 	
 	this.updateTitle = function(){
-		//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<a href="#help_bar_dn">Depth to Neutral Axis</a>)'
-		this.title = '$$$\\href{#help_bar_dn}{d_n} = '+b.dn.toFixed(0)+' mm$$$';
-		this.updateMathJax();
+		this.title = '<a href="#help_bar_esi">&epsilon;<sub>si</sub></a> = '+b.dn.toFixed(0)+' mm';
 	}.bind(this);
 	
 	this.update = function(){
@@ -4226,15 +3469,9 @@ calc.dn = new (function(){
 		}
 		
 		var str1 = "";
-		str1+= para("Depth to neutral axis ($$$\\href{#help_bar_dn}{d_n}$$$) is calculated by the 'Rectangular Stress Block' Method. This involves solving the internal horizontal forces in the beam:");
+		str1+= para("// TODO: esi block");
 
-		str1 += '<canvas class="dncanvas" width="500" height="300">Canvas not shown</canvas>';
 		
-		
-		
-		str1 += para("$$$\\begin{aligned}\\alpha_2 &= 1.0 - 0.003 f'_c \\\\"+
-						"&= 1.0-0.003\\times "+b.fc.toFixed(0)+"\\\\"+
-						"&= "+(1-0.003*b.fc).toFixed(2)+"\\end{aligned}$$$");
 		
 		
 		
@@ -4242,7 +3479,64 @@ calc.dn = new (function(){
 		
 		
 		this.content =  str1;
-		b.drawStressBlock(this.contentdiv.querySelector("canvas").getContext('2d'))
+		
+		this.updateMathJax();
+	}.bind(this);
+	
+	this.on("init",this.updateTitle);
+	this.on("show",this.update);
+
+})();
+
+
+
+
+
+if(calc===undefined) var calc = {};
+
+calc.dn = new (function(){
+	CalcDiv.call(this); // Extends calcdiv
+	
+	
+	this.updateTitle = function(){
+		this.title = '<a href="#help_bar_dn">d<sub>n</sub></a> = '+b.dn.toFixed(0)+' mm';
+	}.bind(this);
+	
+	this.update = function(){
+		
+		this.updateTitle();
+		var para = function(str){
+			return '<p>'+str+'</p>';
+		}
+		
+		var str1 = "";
+		str1+= para("Depth to neutral axis ($$$\\href{#help_bar_dn}{d_n}$$$) is calculated by the 'Rectangular Stress Block' Method (See the diagram above). This involves solving the internal horizontal forces in the beam:");
+		
+		
+		str1+= para("$$\\sum F_x = C_c + C_s + T_s = 0\\\\~\\\\~\\\\"+
+						"\\begin{aligned}"+
+						"Where~~ C_c &= \\href{#help_bar_Cc}{\\text{Compression in Concrete}}	&= \\alpha_2f'_c \\times (b)(\\gamma \\color{green}{d_n}) \\\\"+
+						"		 C_s &= \\href{#help_bar_Cs}{\\text{Compression in Steel}}			&= E_s \\sum(\\epsilon_{s i} A_{s i}) \\\\"+
+						"		 T_s &= \\href{#help_bar_Ts}{\\text{Tension in Steel}}				&= E_s \\sum(\\epsilon_{s i} A_{s i})\\\\"+
+						"		\\\\"+
+						"\\epsilon_{s i} &= \\text{Strain in reo layer i} &= 0.003 ({{d_i}/\\color{green}{d_n}} - 1) \\\\"+
+						"E_s &= \\href{#help_bar_Es}{\\text{Young's Modulus of Steel}} &= 200000MPa"+
+						"\\end{aligned}$$");
+		
+		str1 += para("The only unknown variable here is $$$\\color{green}{d_n}$$$.");
+		
+
+		
+		this.content =  str1;
+		
+		calc.esi.appendTo(this.contentdiv);
+		
+		
+		
+		
+		
+		
+		
 		this.updateMathJax();
 	}.bind(this);
 	
@@ -4967,11 +4261,13 @@ ttips.add(vin.df.body,"Diameter of 'fitments' which make up the 'ribcage' of the
 ttips.add(vin.fc.body,"The concrete strength (standard grades only. See AS3600 3.1.1.1)");
 
 
+
+
 ///////////////    SETUP BEAM OBJECT     /////////////////////
 // Create global beam object
 var b = new Beam();
 
-///////////////    SETUP REO MANAGER     /////////////////////
+///////////////     SETUP REO MANAGER     /////////////////////
 var rman = new ReoManager(document.querySelector("#reorows"), b);
 rman.on("change",mainUpdateListener);
 
@@ -4996,8 +4292,10 @@ function mainUpdateListener(e){
 	intakeBeamValues();
 	
 	document.querySelector("#reosumarea").innerHTML = b.As || "";
+	// Drawsome nice calculation draings
+	b.drawStressBlock(document.querySelector(".dncanvas").getContext('2d'));
 	//outputCalculations();
-	clearCalculations();
+	flagCalcsForUpdate();
 	b.drawSection(cs_ctx);
 	
 	
@@ -5048,15 +4346,23 @@ function intakeBeamValues(){
 
 
 ///////////// CLEAR CALCULATION DIV HELPER FINCTION ////////////////
-function clearCalculations(){
+var calc_update_timeout_id = null;
+
+function flagCalcsForUpdate(){
+	clearTimeout(calc_update_timeout_id);
+	calc_update_timeout_id = setTimeout(updateCalculations,500);
+}
+
+function updateCalculations(){
+	calc_update_timeout_id = null;
+	console.log("UPDATE CALCS");
+	
 	var calculationdiv = document.querySelector("#calcdiv-content");
-	calculationdiv.innerHTML = "";
-	var but = document.createElement("button");
-	but.innerHTML = "Click here to show the Calculation Process";
-	but.onclick = function(){
-		outputCalculations()
-	}
-	calculationdiv.appendChild(but);
+	
+	calc.alpha2.updateTitle();
+	calc.dn.updateTitle();
+	calc.alpha2.appendTo(calculationdiv)
+	calc.dn.appendTo(calculationdiv);
 }
 
 

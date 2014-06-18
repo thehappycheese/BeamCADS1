@@ -157,6 +157,23 @@
 		"docs": "<p>\n    The following image shows the area overwhich $$$C_c$$$ acts in green:\n</p>\n\n<img src=\"\" alt=\"// TODO: image here\">",
 		"coderef": []
 	},
+	"Cs": {
+		"id": "Cs",
+		"name": "Steel Compression",
+		"description": "The amount of compression in all compressive reo layers",
+		"notation": "C_s",
+		"unicode": "C_s",
+		"default": "",
+		"unit": "kN",
+		"related": [
+			"Cc",
+			"Ts",
+			"Ast",
+			"Asc"
+		],
+		"docs": "<p>\n    The layers which contribute to the steel compression force are shown in blue in the diagram below:\n</p>\n\n<img src=\"\" alt=\"// TODO: image here\">",
+		"coderef": []
+	},
 	"d": {
 		"id": "d",
 		"name": "Depth to tensile steel centroid",
