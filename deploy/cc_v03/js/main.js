@@ -3,6 +3,7 @@
 ///* function.dim.js
 
 ///* Beam.drawSection.js
+///* Beam.drawStressBlock.js
 
 ///* ReoInput.js
 ///* ReoManager.js
@@ -35,11 +36,13 @@ ttips.add(vin.df.body,"Diameter of 'fitments' which make up the 'ribcage' of the
 ttips.add(vin.fc.body,"The concrete strength (standard grades only. See AS3600 3.1.1.1)");
 
 
+
+
 ///////////////    SETUP BEAM OBJECT     /////////////////////
 // Create global beam object
 var b = new Beam();
 
-///////////////    SETUP REO MANAGER     /////////////////////
+///////////////     SETUP REO MANAGER     /////////////////////
 var rman = new ReoManager(document.querySelector("#reorows"), b);
 rman.on("change",mainUpdateListener);
 
@@ -118,19 +121,16 @@ function intakeBeamValues(){
 
 
 ///////////// CLEAR CALCULATION DIV HELPER FINCTION ////////////////
-var calcsNeedUpdate = false;
+var calc_update_timeout_id = null;
+
 function flagCalcsForUpdate(){
-	calcsNeedUpdate = true;
+	clearTimeout(calc_update_timeout_id);
+	calc_update_timeout_id = setTimeout(updateCalculations,500);
 }
 
-setInterval(updateCalculations,1000);
 function updateCalculations(){
-	
-	if(calcsNeedUpdate){
-		calcsNeedUpdate = false;
-	}else{
-		return; // No update needed
-	}
+	calc_update_timeout_id = null;
+	console.log("UPDATE CALCS");
 	
 	var calculationdiv = document.querySelector("#calcdiv-content");
 	
@@ -138,5 +138,4 @@ function updateCalculations(){
 	calc.dn.updateTitle();
 	calc.alpha2.appendTo(calculationdiv)
 	calc.dn.appendTo(calculationdiv);
-	MathJax.Hub.Queue(["Typeset",MathJax.Hub,calculationdiv]);
 }

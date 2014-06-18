@@ -69,7 +69,7 @@ function CalcDiv(){
 	
 	
 	this.updateMathJax = function(){
-		//MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.body]);
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub,this.body]);
 	}.bind(this);
 	
 	

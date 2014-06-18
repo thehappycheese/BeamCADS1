@@ -6,7 +6,7 @@ calc.alpha2 = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = '$$$\\href{#help_bar_alpha2}{\\alpha_2} = '+b.alpha2.toFixed(2)+" ~~~and~~~ \\href{#help_bar_gamma}{\\gamma} = "+b.gamma.toFixed(2)+"$$$";
+		this.title = '<a href="#help_bar_alpha2"> &alpha;<sub>2</sub></a> = '+b.alpha2.toFixed(2)+' &nbsp;&nbsp;&nbsp;and&nbsp;&nbsp;&nbsp; <a href="#help_bar_gamma">&gamma;</a> = '+b.gamma.toFixed(2);
 	}.bind(this);
 	
 	this.update = function(){

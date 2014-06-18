@@ -230,7 +230,7 @@
 		"default": "",
 		"unit": "mm",
 		"related": [
-			"D",
+			"Depth",
 			"kuo",
 			"ku",
 			"gamma",
@@ -254,26 +254,49 @@
 	"Ec": {
 		"id": "Ec",
 		"name": "Concrete modulus of elasticity",
-		"description": "Mean value of the modulus of elasticity of concrete at 28 days",
+		"description": "Mean value of the modulus of elasticity (Young's Modulus) of concrete at 28 days",
 		"notation": "E_c",
 		"unicode": "E_c",
 		"default": "",
 		"unit": "GPa",
-		"related": [],
+		"related": [
+			"Es"
+		],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "AS3600 Table 3.1.2",
+				"data": "E<sub>c</sub> can be found from this table."
+			}
+		]
 	},
 	"eclass": {
 		"id": "eclass",
 		"name": "Exposure Classification",
-		"description": "Designation indicative of the most severe environment to which a concrete member is to be subjected during its design life (see Table 4.3).",
+		"description": "Designation of the most severe environment to which a concrete member is to be subjected during its design life.",
 		"notation": "",
 		"unicode": "",
 		"default": "",
 		"unit": "",
-		"related": [],
+		"related": [
+			"cover",
+			"fc"
+		],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "AS3600 Table 4.3",
+				"data": "Describes the surface and exposure environment which determine Exposure Classification."
+			},
+			{
+				"ref": "AS3600 Table 4.10.3.2",
+				"data": "Required cover and f'<sub>c</sub> for each exposure class under sandard formwork and compaction. <b>(Used in this software)</b>"
+			},
+			{
+				"ref": "AS3600 Table 4.10.3.3",
+				"data": "Required cover and f'<sub>c</sub> for each exposure class for rigid formwork and intense compaction."
+			}
+		]
 	},
 	"epsiloncmax": {
 		"id": "epsiloncmax",
@@ -283,7 +306,9 @@
 		"unicode": "\u03b5_c_max",
 		"default": 0.003,
 		"unit": "",
-		"related": [],
+		"related": [
+			"epsilonsi"
+		],
 		"docs": "",
 		"coderef": [
 			{
@@ -291,6 +316,21 @@
 				"data": "<p>Requires $$$\\epsilon_{c max} \\le 0.003$$$</p>"
 			}
 		]
+	},
+	"epsilonsi": {
+		"id": "epsilonsi",
+		"name": "Steel Strain in Layer i",
+		"description": "Maximum compressive concrete strain",
+		"notation": "\\epsilon_{s i}",
+		"unicode": "\u03b5_s_i",
+		"default": null,
+		"unit": "",
+		"related": [
+			"dn",
+			"epsiloncmax"
+		],
+		"docs": "<p>$$$\\epsilon_{s i}$$$ is used in this software to denote  the strain found in a particular layer of reinforcement</p>\n\n<p>\n    $$\\epsilon_{si} = \\frac{\\epsilon_{c max}}{d_n} \\times (d_i-d_n) = 0.003 ({{d_i}\\over{d_n}} - 1)$$\n</p>\n<p>\n    $$$\\begin{aligned}\n    Where~~~~d_i    &= \\text{the depth to the reo layer} \\\\\n    d_n             &= \\text{the depth to neutral axis} \\\\\n    \\epsilon_{c max} &= 0.003 \\text{(maximum concrete compressive strain)} \\\\\n    \\end{aligned}\n    $$$\n</p>\n\n<p>Negative values of $$$\\epsilon_{s i}$$$ indicate compression.</p>\n<p>This formula is derived by similar triangles from the 'strain diagram' shown in pink/magenta above the calculations in this software.</p>",
+		"coderef": []
 	},
 	"fc": {
 		"id": "fc",
@@ -698,14 +738,19 @@
 	},
 	"Es": {
 		"id": "Es",
-		"name": "Reo modulus of elasticity (200,000 MPa)",
-		"description": "Young's modulus of elasticity of reinforcement steel, determined in accordance with Clause 3.2.2",
+		"name": "Steel modulus of elasticity",
+		"description": "Young's modulus of elasticity of reinforcement steel.",
 		"notation": "E_s",
 		"unicode": "E_s",
 		"default": 200000,
 		"unit": "MPa",
 		"related": [],
 		"docs": "",
-		"coderef": []
+		"coderef": [
+			{
+				"ref": "AS3600 3.2.2",
+				"data": "E<sub>s</sub> can be determined by test or taken to be 200,000MPa (= 200GPa)"
+			}
+		]
 	}
 }
