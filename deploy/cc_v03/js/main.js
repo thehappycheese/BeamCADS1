@@ -64,8 +64,10 @@ function mainUpdateListener(e){
 	intakeBeamValues();
 	
 	document.querySelector("#reosumarea").innerHTML = b.As || "";
+	// Drawsome nice calculation draings
+	b.drawStressBlock(document.querySelector(".dncanvas").getContext('2d'));
 	//outputCalculations();
-	clearCalculations();
+	flagCalcsForUpdate();
 	b.drawSection(cs_ctx);
 	
 	
@@ -116,13 +118,25 @@ function intakeBeamValues(){
 
 
 ///////////// CLEAR CALCULATION DIV HELPER FINCTION ////////////////
-function clearCalculations(){
-	var calculationdiv = document.querySelector("#calcdiv-content");
-	calculationdiv.innerHTML = "";
-	var but = document.createElement("button");
-	but.innerHTML = "Click here to show the Calculation Process";
-	but.onclick = function(){
-		outputCalculations()
+var calcsNeedUpdate = false;
+function flagCalcsForUpdate(){
+	calcsNeedUpdate = true;
+}
+
+setInterval(updateCalculations,1000);
+function updateCalculations(){
+	
+	if(calcsNeedUpdate){
+		calcsNeedUpdate = false;
+	}else{
+		return; // No update needed
 	}
-	calculationdiv.appendChild(but);
+	
+	var calculationdiv = document.querySelector("#calcdiv-content");
+	
+	calc.alpha2.updateTitle();
+	calc.dn.updateTitle();
+	calc.alpha2.appendTo(calculationdiv)
+	calc.dn.appendTo(calculationdiv);
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub,calculationdiv]);
 }

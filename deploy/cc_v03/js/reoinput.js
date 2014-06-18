@@ -526,9 +526,9 @@ Object.defineProperty(this,"isFirstRow",{
 			var diameter = parseInt(this.barcodeInput.value.split("N")[1]);
 			if(number<2){
 				// we should never have less than 2 bars
-				result.error.push(rowname+" has less than 2 bars. At least 2 bars in each layer are required to form a symetrical reo cage for transportation.");
+				result.error.push(rowname+" has less than 2 bars. At least 2 bars in each layer are required to form a symmetrical reo cage for transportation.");
 			}else if(!this.isAtHighestPosition && !this.isAtLowestPosition){
-				// If this is a "middle" row, then it shouldn have more than 2 bars!
+				// If this is a "middle" row, then it shouldn't have more than 2 bars!
 				if(number > 2){
 					result.error.push(rowname+" has bars floating in mid air! This layer should have only 2 bars.")
 				}
@@ -546,14 +546,14 @@ Object.defineProperty(this,"isFirstRow",{
 			var fitwidth = b-2*cover-2*df;
 			var gap = (fitwidth - (number*diameter))/(number-1);
 			if(gap<20){
-				result.error.push(rowname+" not enough space between bars (<20mm). Use fewer bars so that aggregate can compleatly surround the bars and and air bubbles can escape.");
+				result.error.push(rowname+" not enough space between bars (<20mm). Use fewer bars so that aggregate can completely surround the bars and and air bubbles can escape.");
 			}
 
 			// TODO: get code references for this section
 			// verify!
 			if(this.isAtHighestPosition || this.isAtLowestPosition){
 				if(gap > 300){
-					result.error.push(rowname+" has too much space between bars (>300mm) for crack controll requirements! Only bars which are &greq; half the diameter of the largest bar can be counted.")
+					result.error.push(rowname+" has too much space between bars (>300mm) for crack control requirements! Only bars which are \u2265 half the diameter of the largest bar can be counted.")
 				}
 			}
 		}
@@ -563,7 +563,7 @@ Object.defineProperty(this,"isFirstRow",{
 			// do nothing
 		}else{
 			if(this.offset<20){
-				result.error.push(rowname+" is too close to another layer. The <b>'Gap' should be at least 20mm</b> so that aggregate can compleatly surround the bars and and air bubbles can escape.");
+				result.error.push(rowname+" is too close to another layer. The <b>'Gap' should be at least 20mm</b> so that aggregate can completely surround the bars and and air bubbles can escape.");
 			}
 		}
 

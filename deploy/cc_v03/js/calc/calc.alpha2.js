@@ -7,12 +7,9 @@ calc.alpha2 = new (function(){
 	
 	this.updateTitle = function(){
 		this.title = '$$$\\href{#help_bar_alpha2}{\\alpha_2} = '+b.alpha2.toFixed(2)+" ~~~and~~~ \\href{#help_bar_gamma}{\\gamma} = "+b.gamma.toFixed(2)+"$$$";
-		this.updateMathJax();
 	}.bind(this);
 	
 	this.update = function(){
-		
-		this.updateTitle();
 		var para = function(str){
 			return '<p>'+str+'</p>';
 		}

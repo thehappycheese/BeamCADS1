@@ -28,7 +28,7 @@ Beam.prototype.drawStressBlock = function(ctx){
 	
 	// PREPARE THE LAYOUT AND SCALING
 	var padding_left = 2;
-	var padding_top = 30;
+	var padding_top = 40;
 	var padding_bottom = 30;
 	var padding_right = 2;
 	
@@ -68,6 +68,21 @@ Beam.prototype.drawStressBlock = function(ctx){
 	ctx.save()
 		// TRANSFORM:
 		ctx.translate(padding_left,	padding_top);
+		
+		
+		// DRAW CROSS SECTION
+		// Lable cross section
+		ctx.save()
+			ctx.textBaseline = "top";
+			ctx.textAlign = "left";
+			ctx.font = "15px sans-serif";
+			ctx.fillStyle = "grey";
+			ctx.fillText("CROSS-SECTION",0,-padding_top+2);
+		ctx.restore();
+		
+		
+		
+		
 		
 		if(options.draw_dn){
 			// Draw dn the Neutral axisline and lable:
@@ -111,6 +126,8 @@ Beam.prototype.drawStressBlock = function(ctx){
 		ctx.lineWidth = 2;
 		ctx.strokeStyle = "black";
 		ctx.strokeRect(0,0,s_b,s_D);
+		
+		
 
 		
 
@@ -144,7 +161,14 @@ Beam.prototype.drawStressBlock = function(ctx){
 		// DRAW THE STRAIN COMPATIBILITY DIAGRAM
 		////////////////////////////////////////////////////////
 		ctx.translate(220,0);
-		
+		// Lable cross section
+		ctx.save()
+			ctx.textBaseline = "top";
+			ctx.textAlign = "center";
+			ctx.font = "15px sans-serif";
+			ctx.fillStyle = "grey";
+			ctx.fillText("STRAIN DIAGRAM",0,-padding_top+2);
+		ctx.restore();
 
 		
 		// Establish plot function
@@ -230,6 +254,15 @@ Beam.prototype.drawStressBlock = function(ctx){
 		// DRAW THE FORCE DIAGRAM
 		////////////////////////////////////////////////////////
 		ctx.translate(180,0);
+		// Lable cross section
+		ctx.save()
+			ctx.textBaseline = "top";
+			ctx.textAlign = "center";
+			ctx.font = "15px sans-serif";
+			ctx.fillStyle = "grey";
+			ctx.fillText("FORCE DIAGRAM",0,-padding_top+2);
+		ctx.restore();
+		
 		
 		// Draw the green square
 		CanvasPatterns.set2x2Hatch(ctx,"limegreen");
@@ -240,7 +273,8 @@ Beam.prototype.drawStressBlock = function(ctx){
 		ctx.fillStyle = "limegreen";
 		ctx.textAlign = "center";
 		ctx.textBaseline = "bottom";
-		ctx.fillText("Cc = "+this.Cc_from_dn(dn).toFixed(0)+"kN",25,-2);
+		var Cc = this.Cc_from_dn(dn);
+		ctx.fillText("Cc = "+Cc.toFixed(0)+"kN ("+(-this.fc*this.alpha2).toFixed(0)+"MPa)",25,-2);
 		
 		
 		
