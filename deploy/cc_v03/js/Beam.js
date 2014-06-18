@@ -150,7 +150,7 @@ function Beam(){
 					top = dn;
 				}
 				cnt++
-			}while(Math.abs(diff) > 0.0001 && cnt<20);
+			}while(Math.abs(diff) > 0.05 && cnt<50);
 
 			return dn;
 		}.bind(this)
