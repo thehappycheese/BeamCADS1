@@ -17,7 +17,7 @@
 			messageStyle: "none",
 			skipStartupTypeset: true,
 			menuSettings: {
-				context: "Browser"
+				//context: "Browser"
 			},
 			Tex:{
 				extensions: ["color.js"]
@@ -707,7 +707,7 @@ function Beam(){
 					top = dn;
 				}
 				cnt++
-			}while(Math.abs(diff) > 0.0001 && cnt<20);
+			}while(Math.abs(diff) > 0.05 && cnt<50);
 
 			return dn;
 		}.bind(this)
@@ -3458,16 +3458,17 @@ calc.dn = new (function(){
 	
 	this.update = function(){
 		
+		
 		this.updateTitle();
-		var para = function(str){
-			return '<p>'+str+'</p>';
-		}
+		this.content = "";
 		
-		var str1 = "";
-		str1+= para("Depth to neutral axis ($$$\\href{#help_bar_dn}{d_n}$$$) is calculated by the 'Rectangular Stress Block' Method (See the diagram above). This involves solving the internal horizontal forces in the beam:");
+		this.addParagraph(
+			"Depth to neutral axis ($$$\\href{#help_bar_dn}{d_n}$$$) is calculated by the 'Rectangular Stress Block' Method (See the diagram above). This involves solving the internal horizontal forces in the beam at ultimate loading:"
+		);
 		
 		
-		str1+= para("$$\\sum F_x = C_c + C_s + T_s = 0\\\\~\\\\~\\\\"+
+		this.addParagraph(
+						"$$\\sum F_x = C_c + C_s + T_s = 0\\\\~\\\\~\\\\"+
 						"\\begin{aligned}"+
 						"Where~~ C_c &= \\href{#help_bar_Cc}{\\text{Compression in Concrete}}	&= \\alpha_2f'_c \\times (b)(\\gamma \\color{green}{d_n}) \\\\"+
 						"		 C_s &= \\href{#help_bar_Cs}{\\text{Compression in Steel}}			&= E_s \\sum(\\color{brown}{\\epsilon_{s i}} A_{s i}) \\\\"+
@@ -3477,16 +3478,26 @@ calc.dn = new (function(){
 						"{A_{s i}} &= \\href{#help_bar_As}{\\text{Area of reo in layer i}}\\\\"+
 						"\\color{brown}{\\epsilon_{s i}} &= \\href{#help_bar_epsilonsi}{\\text{Strain in reo layer i}} &= 0.003 ({{d_i}/\\color{green}{d_n}} - 1) \\\\"+
 						"E_s &= \\href{#help_bar_Es}{\\text{Young's Modulus of Steel}} &= 200000MPa"+
-						"\\end{aligned}$$");
+						"\\end{aligned}$$"
+		);
 		
-		str1 += para("The only unknown variable here is $$$\\color{green}{d_n}$$$ and which layers are in tension/compression!");
+		this.addParagraph("At this point, there are 3 unknowns:");
 		
+		this.addParagraph(
+			"<ol>"+
+				"<li>$$$ \\color{green}{d_n} $$$</li>"+
+				"<li>Which layers are in tension and which are in compression?</li>"+
+				"<li>Which layers are yeilded and which are elastic at ultimate loading?</li>"+
+			"</ol>"
+		);
 		
-
+		this.addParagraph(
+			"If you are only using one layer of steel, this is easy. It will be yeilded and in tension. You just have to find $$$ \\color{green}{d_n} $$$!"
+		);
 		
-		this.content = str1;
-		
-		this.addParagraph("To proceed, take an educated guess as to which layers of reinforcement are in tension and which are in compression. The following workings are prepared with prior knowledge of which layers are in tension/compression. When working manually you have to guess and check if you don't know :(");
+		this.addParagraph(
+			'In all other cases we need to take an educated guess to proceed. This software solves this problem by brute force guess-and check.<br /><b>See the strain diagram above to see which layers are in <span style="color:red">tension</span>/<span style="color:blue">compression</span> and which layers have yeilded</b>'
+		);
 		
 		
 		
@@ -3495,62 +3506,178 @@ calc.dn = new (function(){
 		
 		
 		// TODO: add units to all calcs
-		var T_s = [];
-		var C_s = [];
+
 		
-		var T_s_sym = [];
-		var C_s_sym = [];
 		
-		var T_s_simp = [];
-		var C_s_simp = [];
+		
+		
+		
+		// Create some temporary arrays to hold the next few lines of calcs
+		
+		var symlines = [] 
+		symlines.push("C_c &= (\\alpha_2 f_c)(b \\times \\gamma \\color{green}{d_n})")
+		
+		var numlines = []
+		numlines.push("C_c &= ("+b.alpha2.toFixed(2)+"\\times"+b.fc.toFixed(0)+")("+b.b.toFixed(0)+"\\times"+b.gamma.toFixed(2)+"  \\color{green}{d_n})"+" &&N");
+		
+		var vallines = []
+		vallines.push("C_c &= -"+(b.alpha2*b.fc*b.b*b.gamma/1000).toFixed(0)+"\\color{green}{d_n}"+" &kN");
+		
+		
+		var esilines = [];
+		
+		var finallines = [{dn:1,val:-b.alpha2*b.fc*b.b*b.gamma}];
+		
+		
 		
 		///// LOOP THROUGH REO LAYERS  ///////
 		// d_n - T_s & C_s ================================
-		for(var i = 0;i<b.reo.length;i++){
-			var add_to = null;
-			var add_to_sym = null;
-			if(b.layer_strain_from_layer_dn(b.reo[i],b_dn)<=0){
-				// symbolic
-				C_s_sym.push("C_{s"+i+"} &= E_s \\times ([0.003( d_{"+i+"} / {\\color{green}{d_n}} - 1 )]\\times A_{s"+i+"})")
-				// numeric
-				C_s.push("C_{s"+i+"} &= 200000 \\times ([0.003( "+b.reo[i].depth.toFixed(0)+" / {\\color{green}{d_n}} - 1)]\\times "+b.reo[i].area.toFixed(0)+")")
+		for(var i = b.reo.length-1;i>=0;i--){
+			// IS THIS LAYER YEILDED?
+			
+			var layer_strain = b.layer_strain_from_layer_dn(b.reo[i],b_dn,true);
+			
+			
+			////////////// Figure out in advance if the strain value is negative or positive
+			
+			var neg = "";
+			if(layer_strain<=0){
+				// COMPRESSIVE LAYER
+				neg = "-";
 			}else{
+				// TENSILE LAYER
+				neg = "";
+			}
+			
+			//////////// Develope equations for esi for each layer
+			
+			var layer_esi = null;
+			var layer_esi_real = 0;
+			var layer_esi_dn = 0;
+			if( Math.abs(layer_strain)>=0.0025){
+				// layer is yeilded
+				esilines.push("\\epsilon_{s"+i+"} &= yielded &  {} &= "+neg+"0.0025");
+				layer_esi = neg+"0.0025";
+				
+				layer_esi_dn = 0;
+				layer_esi_real = parseFloat(layer_esi);
+				
+				
+			}else{
+				esilines.push("\\epsilon_{s"+i+"} &= elastic &  {} &= 0.003( "+b.reo[i].depth.toFixed(0)+" / {\\color{green}{d_n}} - 1)");
+				layer_esi = "0.003( "+b.reo[i].depth.toFixed(0)+" / {\\color{green}{d_n}} - 1)";
+				
+				layer_esi_dn = 0.003*b.reo[i].depth;
+				layer_esi_real = -0.003;
+				
+			}
+			
+			////////////// Develop equations for Ts and Tc for each layer:
+			
+			if(layer_strain<=0){
+				// COMPRESSIVE LAYER
+				symlines.push("C_{s"+i+"} &= E_s \\times ([\\epsilon_{s"+i+"}] \\times A_{s"+i+"})");
+				numlines.push("C_{s"+i+"} &= "+b.Es+" \\times (["+layer_esi+"] &\\times "+b.reo[i].area.toFixed(0)+") &N");
+				
+				if(layer_esi_dn!==0){
+					vallines.push("C_{s"+i+"} &= {"+(b.Es*b.reo[i].area*layer_esi_dn/1000).toFixed(0)+"} /{\\color{green}{d_n}} "+(b.Es*b.reo[i].area*layer_esi_real/1000).toFixed(0)+" &kN");
+					
+					finallines.push({dn:-1,val:b.Es*b.reo[i].area*layer_esi_dn})
+					finallines.push({dn:0,val:b.Es*b.reo[i].area*layer_esi_real});
+					
+				}else{
+					vallines.push("C_{s"+i+"} &= "+(b.Es*b.reo[i].area*layer_esi_real/1000).toFixed(0)+" &kN");
+					finallines.push({dn:0,val:(b.Es*b.reo[i].area*layer_esi_real)})
+				}
+			}else{
+				// TENSILE LAYER
 				// symbolic
-				T_s_sym.push("T_{s"+i+"} &= E_s \\times ([0.003( d_{"+i+"} / {\\color{green}{d_n}} - 1 )]\\times A_{s"+i+"})")
+				symlines.push("T_{s"+i+"} &= E_s \\times ([\\epsilon_{s"+i+"}] \\times A_{s"+i+"})");
 				// numeric
-				T_s.push("T_{s"+i+"} &= 200000 \\times ([0.003( "+b.reo[i].depth.toFixed(0)+" / {\\color{green}{d_n}} - 1)]\\times "+b.reo[i].area.toFixed(0)+")")
+				numlines.push("T_{s"+i+"} &= "+b.Es+" \\times (["+layer_esi+"] &\\times "+b.reo[i].area.toFixed(0)+") &N");
+				
+				if(layer_esi_dn!==0){
+					vallines.push("T_{s"+i+"} &= {"+(b.Es*b.reo[i].area*layer_esi_dn/1000).toFixed(0)+"} /{\\color{green}{d_n}} "+(b.Es*b.reo[i].area*layer_esi_real/1000).toFixed(0)+" &kN");
+					finallines.push({dn:-1,val:b.Es*b.reo[i].area*layer_esi_dn})
+					finallines.push({dn:0,val:b.Es*b.reo[i].area*layer_esi_real});
+				}else{
+					vallines.push("T_{s"+i+"} &= "+(b.Es*b.reo[i].area*layer_esi_real/1000).toFixed(0)+" &kN");
+					finallines.push({dn:0,val:(b.Es*b.reo[i].area*layer_esi_real)})
+				}
 			}
 		}
 		
 		
 		
 		
-		// Lets create a symbolic representation first:
-		var symlines = [] // create a temporary array to hold the next few lines of calcs
-		symlines.push("C_c &= (\\alpha_2 f_c)(b \\times \\gamma \\color{green}{d_n})")
-		symlines= symlines.concat(C_s_sym);
-		symlines = symlines.concat(T_s_sym);
+		
+
+
+
+		
+		// process final lines:
+		//first, lets sort based on dn
+		finallines.sort(function(a,b){return a.dn-b.dn;});
+		
+		var quadratic = [0,0,0];
+		for(var i = 0;i<finallines.length;i++){
+			line = finallines[i];
+			if(finallines[0].dn<0){
+				quadratic[line.dn+1]+=line.val;
+			}else{
+				quadratic[line.dn]+=line.val;
+			}
+		}
+		console.log(finallines)
+		console.log(quadratic)
+		
+		var finalline = []
+		if(quadratic[2]!==0){
+			finalline.push("("+(quadratic[2]/1000).toFixed(2)+"){\\color{green}{d^2_n}}");
+		}
+		if(quadratic[1]!==0){
+			finalline.push("("+(quadratic[1]/1000).toFixed(2)+"){\\color{green}{d_n}}");
+		}
+		
+		if(quadratic[0]!==0){
+			finalline.push("("+(quadratic[0]/1000).toFixed(2)+")");
+		}
+		
+		
+		
 
 		
 		
-		// now lets do the numeric representation:
 		
-		var numlines = [] // create a temporary array to hold the next few lines of calcs
-		numlines.push("C_c &= ("+b.alpha2.toFixed(2)+"\\times"+b.fc.toFixed(0)+")("+b.b.toFixed(0)+"\\times"+b.gamma.toFixed(2)+"  \\color{green}{d_n})")
-		numlines = numlines.concat(C_s);
-		numlines = numlines.concat(T_s);
+		this.addParagraph("Here are our strains:");
+		this.addParagraph("$$\\begin{aligned}"+esilines.join("\\\\")+"\\end{aligned}$$");
 		
 		
 		
-		
+		this.addParagraph("And our full equations:");
 		this.addParagraph("$$\\begin{aligned}"+symlines.join("\\\\")+"\\end{aligned}$$");
+		
 		this.addParagraph("Substituting in all the known values:");
 		this.addParagraph("$$\\begin{aligned}"+numlines.join("\\\\")+"\\end{aligned}$$");
 		
+		this.addParagraph("Simplifing:");
+		this.addParagraph("$$\\begin{aligned}"+vallines.join("\\\\")+"\\end{aligned}$$");
+		
 		
 		this.addParagraph("Now resubstitute back into the following equation and solve for $$$\\color{green}{d_n}$$$!");
-		this.addParagraph("BUT THIS IS WRONG! if the layers have yielded we need to check that the strain of steel never leaves the range -0.0025 to 0.0025");
-		this.addParagraph("$$\\sum F_x = C_c + C_s + -T_s = 0$$"); //TODO: check sign convention
+		
+		
+		
+		
+		this.addParagraph(
+			"$$\\begin{aligned}"+
+			"\\sum F_x &= C_c + C_s + T_s = 0 \\\\"+
+			((finallines[0].dn<0)?"\\color{green}{d_n} \\times":"")+" \\sum F_x &= "+finalline.join(" + ")+" = 0\\\\"+
+			"\\color{green}{d_n} &= "+b_dn.toFixed(0)+"mm"+
+			"\\end{aligned}$$"
+		);
+		
+		
 		
 		
 		
@@ -4310,6 +4437,17 @@ ttips.grab(document.querySelector("#reotable"));
 
 var cs_canvas = document.querySelector("#crosssectioncanvas");
 var cs_ctx = cs_canvas.getContext('2d');
+
+
+
+
+rman.rows[0].barcode = "3N40";
+rman.rows[1].enabled = true;
+rman.rows[1].offset = 80;
+rman.rows[2].enabled = true;
+rman.rows[2].offset = 80;
+rman.rows[3].enabled = true;
+rman.rows[3].from = "highest";
 
 
 ///////////////////// MAIN UPDATE LISTENER  /////////////////////////////

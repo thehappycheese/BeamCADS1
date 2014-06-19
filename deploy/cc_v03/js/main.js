@@ -139,14 +139,20 @@ function flagCalcsForUpdate(){
 	calc_update_timeout_id = setTimeout(updateCalculations,500);
 }
 
+
+
+var calculationdiv = document.querySelector("#calcdiv-content");
+calc.alpha2.appendTo(calculationdiv)
+calc.dn.appendTo(calculationdiv);
+calc.Muo.appendTo(calculationdiv);
 function updateCalculations(){
 	calc_update_timeout_id = null;
 	console.log("UPDATE CALCS");
 	
-	var calculationdiv = document.querySelector("#calcdiv-content");
-	
 	calc.alpha2.updateTitle();
 	calc.dn.updateTitle();
-	calc.alpha2.appendTo(calculationdiv)
-	calc.dn.appendTo(calculationdiv);
+	calc.Muo.updateTitle();
+	
+	
+	
 }

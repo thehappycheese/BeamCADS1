@@ -99,7 +99,9 @@ function Beam(){
 	// #############################################################################
 	// ### HIGH LEVEL CAPACITY FUNCTIONS ###########################################
 	// #############################################################################
-	Object.defineProperty(this,"Muo",{
+	
+	// TODO: WHY IS THIS WRONG:(It is very concerning!)
+	Object.defineProperty(this,"MuoWRONG",{
 		get:function Muo(){
 			var dn		= this.dn;
 			var cc		= this.Cc_from_dn(dn);
@@ -110,6 +112,20 @@ function Beam(){
 			var csd		= this.Cs_centroid_depth_from_dn(dn);
 			
 			return (cc*ccd + ts*tsd + (cs*csd || 0)) / 1000; //kNm
+		}.bind(this)}
+	);
+	
+	Object.defineProperty(this,"Muo",{
+		get:function Muo(){
+			var dn		= this.dn;
+			
+			var result = this.Cc_from_dn(dn)*this.Cc_centroid_depth_from_dn(dn);
+			
+			for(var i = 0;i<this.reo.length;i++){
+				result += this.layer_force_from_layer_dn(this.reo[i],dn) * this.reo[i].depth;
+			}
+			
+			return result / 1000; //kNm
 		}.bind(this)}
 	);
 	
@@ -242,7 +258,7 @@ function Beam(){
 		var sum_area_times_depth = 0;
 		for(var i = 0;i<this.reo.length;i++){
 			// First get strain in the steel layer according to similar triangles:
-			epsilonsi = this.epsiloncmax/dn*(this.reo[i].depth - dn);
+			epsilonsi = this.layer_strain_from_layer_dn(this.reo[i], dn);
 			// Then depending on if we are looking for tension or compression steel, get weighted average depth
 			if(  (returntension && epsilonsi>0)  ||  (!returntension && epsilonsi<0)  ){
 				sum_area += this.reo[i].area;
@@ -281,8 +297,12 @@ function Beam(){
 	
 	
 	this.layer_force_from_layer_dn = function(layer,dn){
-		var layer_strain = this.layer_strain_from_layer_dn(layer,dn);
-		return layer.area * this.Es * layer_strain/1000; // kN
+		var layer_strain = this.layer_strain_from_layer_dn(layer,dn,false);
+		return layer.area * this.Es * layer_strain / 1000; // kN
+	}.bind(this);
+	
+	this.layer_force_from_layer_strain = function(layer,layer_strain){
+		return layer.area * this.Es * Math.max(-this.epsilonsy,Math.min(this.epsilonsy,layer_strain))/1000; // kN
 	}.bind(this);
 	
 	

@@ -76,7 +76,7 @@ calc.dn = new (function(){
 		numlines.push("C_c &= ("+b.alpha2.toFixed(2)+"\\times"+b.fc.toFixed(0)+")("+b.b.toFixed(0)+"\\times"+b.gamma.toFixed(2)+"  \\color{green}{d_n})"+" &&N");
 		
 		var vallines = []
-		vallines.push("C_c &= -"+(b.alpha2*b.fc*b.b*b.gamma/1000).toFixed(0)+"\\color{green}{d_n}"+" &kN");
+		vallines.push("C_c &= -"+(b.alpha2*b.fc*b.b*b.gamma/1000).toFixed(2)+"\\color{green}{d_n}"+" &kN");
 		
 		
 		var esilines = [];
