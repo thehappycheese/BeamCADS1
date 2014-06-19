@@ -160,7 +160,7 @@ Beam.prototype.drawStressBlock = function(ctx){
 		////////////////////////////////////////////////////////
 		// DRAW THE STRAIN COMPATIBILITY DIAGRAM
 		////////////////////////////////////////////////////////
-		ctx.translate(220,0);
+		ctx.translate(200,0);
 		// Lable cross section
 		ctx.save()
 			ctx.textBaseline = "top";
