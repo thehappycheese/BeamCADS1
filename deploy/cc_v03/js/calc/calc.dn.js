@@ -25,14 +25,17 @@ calc.dn = new (function(){
 		this.addParagraph(
 						"$$\\sum F_x = C_c + C_s + T_s = 0\\\\~\\\\~\\\\"+
 						"\\begin{aligned}"+
-						"Where~~ C_c &= \\href{#help_bar_Cc}{\\text{Compression in Concrete}}	&= \\alpha_2f'_c \\times (b)(\\gamma \\color{green}{d_n}) \\\\"+
-						"		 C_s &= \\href{#help_bar_Cs}{\\text{Compression in Steel}}			&= E_s \\sum(\\color{brown}{\\epsilon_{s i}} A_{s i}) \\\\"+
-						"		 T_s &= \\href{#help_bar_Ts}{\\text{Tension in Steel}}				&= E_s \\sum(\\color{brown}{\\epsilon_{s i}} A_{s i})\\\\"+
+						"Where~~ C_c &= \\href{#help_bar_Cc}{\\text{Compression in Concrete}}	& {} &= \\alpha_2f'_c \\times (b)(\\gamma \\color{green}{d_n}) \\\\"+
+						"		 C_s &= \\href{#help_bar_Cs}{\\text{Compression in Steel}}			& {} &= E_s \\sum(\\color{brown}{\\epsilon_{s i}} A_{s i}) \\\\"+
+						"		 T_s &= \\href{#help_bar_Ts}{\\text{Tension in Steel}}				& {} &= E_s \\sum(\\color{brown}{\\epsilon_{s i}} A_{s i})\\\\"+
 						"		\\\\"+
-						"b &= \\href{#help_bar_b}{\\text{Breadth of beam}} &= "+b.b+"mm\\\\"+
+						"b &= \\href{#help_bar_b}{\\text{Breadth of beam}} & {} &= "+b.b+"mm\\\\"+
 						"{A_{s i}} &= \\href{#help_bar_As}{\\text{Area of reo in layer i}}\\\\"+
-						"\\color{brown}{\\epsilon_{s i}} &= \\href{#help_bar_epsilonsi}{\\text{Strain in reo layer i}} &= 0.003 ({{d_i}/\\color{green}{d_n}} - 1) \\\\"+
-						"E_s &= \\href{#help_bar_Es}{\\text{Young's Modulus of Steel}} &= 200000MPa"+
+						"\\color{brown}{\\epsilon_{s i}} &= \\href{#help_bar_epsilonsi}{\\text{Strain in reo layer i}} & {} &= 0.003 ({{d_i}/\\color{green}{d_n}} - 1)\\\\"+
+						"&Where~~~&  &-\\epsilon_{sy}\\le \\color{brown}{\\epsilon_{s i}} \\le \\epsilon_{sy}\\\\"+
+						"\\epsilon_{s y} &= \\href{#help_bar_epsilonsy}{\\text{Steel Yeild Strain}} & {} &= 0.0025 \\\\"+
+						"\\epsilon_{c max} &= \\href{#help_bar_epsiloncmax}{\\text{Highest allowable strain in Concrete}} & {} &= 0.003 \\\\"+
+						"E_s &= \\href{#help_bar_Es}{\\text{Young's Modulus of Steel}} & {} &= 200000MPa"+
 						"\\end{aligned}$$"
 		);
 		
@@ -42,18 +45,11 @@ calc.dn = new (function(){
 			"<ol>"+
 				"<li>$$$ \\color{green}{d_n} $$$</li>"+
 				"<li>Which layers are in tension and which are in compression?</li>"+
-				"<li>Which layers are yeilded and which are elastic at ultimate loading?</li>"+
+				"<li>Which steel layers are yeilded/elastic?</li>"+
 			"</ol>"
 		);
 		
-		this.addParagraph(
-			"If you are only using one layer of steel, this is easy. It will be yeilded and in tension. You just have to find $$$ \\color{green}{d_n} $$$!"
-		);
-		
-		this.addParagraph(
-			'In all other cases we need to take an educated guess to proceed. This software solves this problem by brute force guess-and check.<br /><b>See the strain diagram above to see which layers are in <span style="color:red">tension</span>/<span style="color:blue">compression</span> and which layers have yeilded</b>'
-		);
-		
+		this.addParagraph('You need to make assumptions for 2 & 3. <b>This software solves this problem by brute force guess-and check. The strain diagram above shows which layers are in tension/compression and yeilded/elastic</b>');
 		
 		
 		// TODO: this is naughty :O
@@ -204,7 +200,7 @@ calc.dn = new (function(){
 		
 		
 		
-		this.addParagraph("Here are our strains:");
+		this.addParagraph("Here are our strains: (note that yielded layers are at $$$\\epsilon_{sy}$$$)");
 		this.addParagraph("$$\\begin{aligned}"+esilines.join("\\\\")+"\\end{aligned}$$");
 		
 		

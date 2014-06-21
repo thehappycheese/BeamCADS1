@@ -156,3 +156,25 @@ function updateCalculations(){
 	
 	
 }
+
+
+function printcalcs(){
+	
+	var w = window.open("","_blank");
+
+	w.document.head.innerHTML = '<link rel="stylesheet" href="style/index.css" type="text/css">'
+
+
+
+	//w.document.head.innerHTML = head;
+
+	w.document.body.style.width = "21cm";
+	w.document.body.style.margin = "2.5cm";
+
+	calc.alpha2.appendTo(w.document.body);
+	calc.dn.appendTo(w.document.body);
+	calc.Muo.appendTo(w.document.body);
+
+	w.print()
+
+}

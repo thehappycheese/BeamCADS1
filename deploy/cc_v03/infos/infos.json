@@ -337,16 +337,34 @@
 	"epsilonsi": {
 		"id": "epsilonsi",
 		"name": "Steel Strain in Layer i",
-		"description": "Maximum compressive concrete strain",
+		"description": "",
 		"notation": "\\epsilon_{s i}",
 		"unicode": "\u03b5_s_i",
 		"default": null,
 		"unit": "",
 		"related": [
 			"dn",
+			"epsilonsy",
 			"epsiloncmax"
 		],
 		"docs": "<p>$$$\\epsilon_{s i}$$$ is used in this software to denote  the strain found in a particular layer of reinforcement</p>\n\n<p>\n    $$\\epsilon_{si} = \\frac{\\epsilon_{c max}}{d_n} \\times (d_i-d_n) = 0.003 ({{d_i}\\over{d_n}} - 1)$$\n</p>\n<p>\n    $$$\\begin{aligned}\n    Where~~~~d_i    &= \\text{the depth to the reo layer} \\\\\n    d_n             &= \\text{the depth to neutral axis} \\\\\n    \\epsilon_{c max} &= 0.003 \\text{(maximum concrete compressive strain)} \\\\\n    \\end{aligned}\n    $$$\n</p>\n\n<p>Negative values of $$$\\epsilon_{s i}$$$ indicate compression.</p>\n<p>This formula is derived by similar triangles from the 'strain diagram' shown in pink/magenta above the calculations in this software.</p>",
+		"coderef": []
+	},
+	"epsilonsy": {
+		"id": "epsilonsy",
+		"name": "Steel Yeild Strain",
+		"description": "",
+		"notation": "\\epsilon_{sy}",
+		"unicode": "\u03b5_s_y",
+		"default": null,
+		"unit": "",
+		"related": [
+			"epsilonsi",
+			"epsiloncmax",
+			"fsy",
+			"Es"
+		],
+		"docs": "<p>$$$\\epsilon_{sy}$$$ is the strain of reinforcement steel when it yeilds</p>\n<p> For a particular reinforcing steel it is calculated as follows from youngs modulus:</p>\n\n<p>\n    $$\\epsilon_{sy} =\\frac{f_{sy}}{E_s}$$\n    Thus for 500Mpa reo bar with a Youngs Modulus of 200GPa:\n    $$\\epsilon_{sy} = \\frac{500 MPa}{200 000MPa} = 0.0025$$\n</p>\n<p>\n    This value is used to find the force in a yeilded layer of steel. The actual value of strain in a layer of steel may be much higher, but the theoretical highest force is:\n    \n</p>\n<p>\n    $$Layer Force = E_s \\times \\epsilon_{sy} \\times Layer Area$$\n</p>",
 		"coderef": []
 	},
 	"fc": {

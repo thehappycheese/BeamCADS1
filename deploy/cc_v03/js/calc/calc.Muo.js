@@ -107,7 +107,7 @@ calc.Muo = new (function(){
 		this.addParagraph("$$$M_{uo}$$$ is found by the sum of moments of internal forces at ultimate loading.<br>This software uses the top surface of the beam as the 'fulcrum point' about which moments are calculated.");
 		
 		this.addParagraph(
-						"$$M_{uo} = \\sum M_x = C_c \\frac{\\gamma d_n}{2} + C_{si}d_i + T_{si}d_i = M_{uo}\\\\~\\\\~\\\\"+
+						"$$M_{uo} = \\sum M_{\\text{at top surface}} = C_c \\frac{\\gamma d_n}{2} + C_{si}d_i + T_{si}d_i\\\\~\\\\~\\\\"+
 						"\\begin{aligned}"+
 						"Where~~ C_c =& \\href{#help_bar_Cc}{\\text{Compression in Concrete}} \\\\"+
 						"		 C_{si} =& \\href{#help_bar_Cs}{\\text{Compression in steel layer i}} \\\\"+
