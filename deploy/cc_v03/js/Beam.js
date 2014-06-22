@@ -129,9 +129,49 @@ function Beam(){
 		}.bind(this)}
 	);
 	
+	
+	Object.defineProperty(this,"kuo",{
+		get:function kuo(){
+			return this.dn/this.d0; // ratio
+		}.bind(this)}
+	);
+	Object.defineProperty(this,"ku",{
+		get:function kuo(){
+			var dn = this.dn;
+			return dn/this.Ts_centroid_depth_from_dn(dn); // ratio
+		}.bind(this)}
+	);
+	
+	Object.defineProperty(this,"phi",{
+		get:function phi(){
+			// TODO - FOR N CLASS MEMBERS ONLY!
+			return Math.max(0.6,Math.min(0.8,1.19-13/12*this.kuo)); // ratio
+		}.bind(this)}
+	);
+	Object.defineProperty(this,"phiMuo",{
+		get:function phiMuo(){
+			// TODO - FOR N CLASS MEMBERS ONLY!
+			return this.phi*this.Muo; // ratio
+		}.bind(this)}
+	);
+	
+	
+	Object.defineProperty(this,"d0",{
+		get:function d0(){
+			var d0 = -Infinity;
+			for(var i = 0;i<this.reo.length;i++){
+				if(this.reo[i].depth>d0){
+					d0=this.reo[i].depth;
+				}
+			}
+			return d0; //mm
+		}.bind(this)}
+	);
+	
+	
 	// AS3600 8.1.6.1(1)
 	Object.defineProperty(this,"Muo_min",{
-		get:function(){
+		get:function Muo_min(){
 			// no prestress only.
 			return 1.2*this.Ze*this.fctf/1000000; //mm^3*MPa => Nmm /1000/1000 => kNm
 		}.bind(this)}

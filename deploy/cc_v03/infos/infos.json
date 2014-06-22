@@ -264,7 +264,9 @@
 		"unicode": "d_o",
 		"default": "",
 		"unit": "",
-		"related": [],
+		"related": [
+			"kuo"
+		],
 		"docs": "",
 		"coderef": []
 	},
@@ -530,10 +532,11 @@
 		"unit": "",
 		"related": [
 			"kuo",
-			"gamma",
-			"d"
+			"d",
+			"dn",
+			"gamma"
 		],
-		"docs": "",
+		"docs": "<p>\n    $$ k_u = \\frac{d_n}{d} $$\n</p>",
 		"coderef": [
 			{
 				"ref": "AS3600 6.2.7.2",
@@ -560,7 +563,7 @@
 			"Mub",
 			"Nub"
 		],
-		"docs": "",
+		"docs": "\n\n<p>\n    $$k_{uo} = \\frac{d_n}{d_o}$$\n</p>",
 		"coderef": [
 			{
 				"ref": "AS3600 8.1.5",

@@ -131,50 +131,93 @@ function intakeBeamValues(){
 
 
 
-///////////// CLEAR CALCULATION DIV HELPER FINCTION ////////////////
+///////////// CALCS HELPER FUNCTIONS ////////////////
+
+var calculationdiv = document.querySelector("#calcdiv-content");
+initCalcs(calculationdiv);
+
+
+
+function initCalcs(calculationdiv){
+	calc.alpha2.appendTo(calculationdiv)
+	calc.dn.appendTo(calculationdiv);
+	calc.Muo.appendTo(calculationdiv);
+	calc.kuo.appendTo(calculationdiv);
+	calc.phi.appendTo(calculationdiv);
+	calc.phiMuo.appendTo(calculationdiv);
+}
+
 var calc_update_timeout_id = null;
 
 function flagCalcsForUpdate(){
 	clearTimeout(calc_update_timeout_id);
 	calc_update_timeout_id = setTimeout(updateCalculations,500);
 }
-
-
-
-var calculationdiv = document.querySelector("#calcdiv-content");
-calc.alpha2.appendTo(calculationdiv)
-calc.dn.appendTo(calculationdiv);
-calc.Muo.appendTo(calculationdiv);
 function updateCalculations(){
 	calc_update_timeout_id = null;
-	console.log("UPDATE CALCS");
+	//console.log("UPDATE CALCS");
+	
 	
 	calc.alpha2.updateTitle();
 	calc.dn.updateTitle();
 	calc.Muo.updateTitle();
-	
-	
-	
+	calc.kuo.updateTitle();
+	calc.phi.updateTitle();
+	calc.phiMuo.updateTitle();
 }
+
+
+
+
 
 
 function printcalcs(){
 	
-	var w = window.open("","_blank");
+	var w = window.open("","_blank","width=1500,height=700, top=100,left=100");
 
-	w.document.head.innerHTML = '<link rel="stylesheet" href="style/index.css" type="text/css">'
+	w.document.write('<link rel="stylesheet" href="style/index.css" type="text/css">');
 
-
+	w.document.write('<div style="width:100%;">BEAMCALCS:</div><hr />');
 
 	//w.document.head.innerHTML = head;
+	
+	var cnv = document.querySelectorAll("canvas");
+	
+	for(var i = 0;i<cnv. length;i++){
+		var img = w.document.createElement("img");
+		img.src = cnv[i].toDataURL();
+		w.document.body.appendChild(img);
+		img.style.marginLeft = "auto";
+		img.style.marginRight = "auto";
+		img.style.display = "block";
+	}
 
-	w.document.body.style.width = "21cm";
-	w.document.body.style.margin = "2.5cm";
+	var div = w.document.createElement('div');
+	w.document.body.appendChild(div);
+	
+	w.document.body.style.width = "calc(100% - 1cm)";
+	w.document.body.style.margin = "0.5cm";
+	w.document.body.style.display = "block";
+	w.document.body.style.background = "white";
 
-	calc.alpha2.appendTo(w.document.body);
-	calc.dn.appendTo(w.document.body);
-	calc.Muo.appendTo(w.document.body);
-
-	w.print()
-
+	calc.alpha2.appendTo(div);
+	calc.dn.appendTo(div);
+	calc.Muo.appendTo(div);
+	calc.kuo.appendTo(div);
+	calc.phi.appendTo(div);
+	calc.phiMuo.appendTo(div);
+	
+	calc.alpha2.collapsed = false;
+	calc.dn.collapsed = false;
+	calc.Muo.collapsed = false;
+	calc.kuo.collapsed = false;
+	calc.phi.collapsed =false;
+	calc.phiMuo.collapsed =false;
+	
+	MathJax.Hub.Queue(function () {
+		w.print();
+		w.close();
+		initCalcs(calculationdiv);
+	});
+	
 }

@@ -1,4 +1,5 @@
 .CalcDiv {
+  page-break-inside: avoid;
   width: 100%;
   border: 1px solid grey;
   margin: 5px 0px; }
@@ -298,3 +299,10 @@ h3 {
 
 #crosssectiondiv {
   flex: 0 0 auto; }
+
+.calcerror {
+  width: 100%;
+  background-color: lightyellow;
+  color: red;
+  border: 1px sold red;
+  padding: 4px; }

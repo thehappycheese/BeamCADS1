@@ -6,7 +6,7 @@ calc.Muo = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+b.Muo.toFixed(0)+' kN';
+		this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+b.Muo.toFixed(0)+' kNm';
 	}.bind(this);
 	
 	this.update = function(){

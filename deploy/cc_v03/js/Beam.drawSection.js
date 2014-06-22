@@ -208,7 +208,7 @@ Beam.prototype.drawSection = function(ctx){
 		// TODO crack controll reo should be more than half the diameter of the largest bar?
 
 		var crackreo = [];
-		console.log(creo)
+		//console.log(creo)
 		if(creo[0].offset === 0  && creo[0].from ==="highest"){
 			// Good. A top layer of reinforcement exists
 			last_depth = creo[0].depth;
