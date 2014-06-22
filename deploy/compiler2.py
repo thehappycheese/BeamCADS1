@@ -131,7 +131,7 @@ def crawl(arg_path, arg_filename):
 
 
 def filterLines(line):
-	return line;
+	#return line;
 	result = line;
 	# we dont like leading tabs or spaces. Lets get rid of them
 	while len(result)>0 and (result[0] == "\t" or result[0] == " "):

@@ -1,0 +1,170 @@
+dfb49a3	Nicholas Archer	Sun Jun 22 23:09:46 2014	2hr DONE. Minimum viable product.
+d0e5ec2	Nicholas Archer	Sat Jun 21 16:02:14 2014	1hr Calculations work
+38de13a	Nicholas Archer	Fri Jun 20 00:18:33 2014	0hr tweeks
+5cdde2c	Nicholas Archer	Fri Jun 20 00:14:10 2014	4hr M_uo is done! d_n to be checked
+229b79e	Nicholas Archer	Thu Jun 19 02:04:54 2014	2hr FINISHED dn. BOY DOES THAT FEEL GOOD
+e05c79a	Nicholas Archer	Wed Jun 18 22:42:15 2014	0.5hr some calculations tweeks. eep :S
+bf1f0d0	Nicholas Archer	Wed Jun 18 21:37:24 2014	2hr help files and main.js flow
+e5ab108	thehappycheese	Wed Jun 18 17:00:23 2014	1hr Layout and drawings
+14edd30	Nicholas Archer	Wed Jun 18 02:04:45 2014	1.5hr finished calculation drawings. needs tweeks
+9759021	thehappycheese	Tue Jun 17 18:37:45 2014	4hr Strain diagram
+bd2a50d	Nicholas Archer	Tue Jun 17 01:18:42 2014	1hr drawings
+e506e87	thehappycheese	Mon Jun 16 19:02:57 2014	2hr calculation drawings
+fa56f7f	thehappycheese	Mon Jun 16 15:37:16 2014	3hr compat bugfixes and improvements
+9eb66f4	Nicholas Archer	Mon Jun 16 03:31:28 2014	4hr Interface improvements. More reo error checking. bugfix
+4e7b8da	Nicholas Archer	Mon Jun 16 03:30:25 2014	0.2hr deleting some useless kruft
+fc6e748	thehappycheese	Sun Jun 15 17:35:11 2014	2.1hr calcs modularized and improving
+0359de9	Nicholas Archer	Sat Jun 14 02:18:06 2014	4hr validation, proTips, styling, bugfixes
+4b65e3f	Nicholas Archer	Sat Jun 14 02:16:36 2014	1hr compiler finished
+86f1d58	thehappycheese	Fri Jun 13 19:51:11 2014	0hr tweek compiler
+de72b4d	thehappycheese	Fri Jun 13 19:44:16 2014	0.5hr compliler
+1fd3c74	thehappycheese	Fri Jun 13 17:47:35 2014	3hr compiler and compatibility. help bar done
+940777f	thehappycheese	Wed Jun 11 17:47:15 2014	0.2hr tweeks and screenshots
+d8b2068	thehappycheese	Wed Jun 11 16:36:15 2014	2hr Validation
+05d7ed8	thehappycheese	Wed Jun 11 10:26:55 2014	0hr commits log dl
+6f88119	Nicholas Archer	Wed Jun 11 02:03:06 2014	0.1hr tweek to info sheet
+f0dad05	thehappycheese	Mon Jun 9 16:39:28 2014	1hr profile pic and consent form etc
+21908ee	thehappycheese	Fri Jun 6 12:14:30 2014	2hr cleaning up and consent form
+c3f6d84	thehappycheese	Thu Jun 5 17:08:57 2014	4hr Tutorial Task
+289ab3e	Nicholas Archer	Thu Jun 5 03:54:34 2014	0.8hr drawing improvements
+39dcfc5	Nicholas Archer	Thu Jun 5 03:11:36 2014	2hr Draw's better
+c7dea09	thehappycheese	Wed Jun 4 16:03:45 2014	3hr Reo input table is done
+d69ded8	thehappycheese	Tue Jun 3 18:10:20 2014	4hr tabulated output
+2affe3c	thehappycheese	Mon Jun 2 16:13:06 2014	0.5hr infos
+2848152	thehappycheese	Sun Jun 1 23:27:01 2014	2hr infos tidying
+8ab284e	thehappycheese	Sun Jun 1 20:02:33 2014	0.5hr infos
+1c19fff	thehappycheese	Sun Jun 1 19:34:49 2014	1hr infos up and going again. verre nice
+0061c42	thehappycheese	Sun Jun 1 17:52:43 2014	3hr infos.json is connected omg :O
+919d770	thehappycheese	Sun Jun 1 14:42:54 2014	2h infos
+2e28dc4	thehappycheese	Fri May 30 00:38:41 2014	0.3hr formulas
+984b8bb	thehappycheese	Thu May 29 13:10:51 2014	1hr formulas
+b8fd3e1	thehappycheese	Wed May 28 18:18:46 2014	0.5hr infos and calcs
+c51fcca	Nicholas Archer	Tue May 27 20:24:43 2014	2hr Gettin there :)
+9e840d7	thehappycheese	Tue May 27 17:16:18 2014	1hr formulas
+410dfc8	Nicholas Archer	Thu May 22 21:18:07 2014	0.5hr infos.json
+2d214b2	thehappycheese	Wed May 21 19:53:59 2014	0.5hr infos
+a262a7a	thehappycheese	Wed May 21 17:25:15 2014	4hr infos mechanism
+85ac7e3	thehappycheese	Tue May 20 17:46:11 2014	3hr working on formulas
+525f05e	thehappycheese	Tue May 20 14:53:52 2014	2hr Relayout complete
+84fe771	thehappycheese	Mon May 19 16:50:06 2014	2hr relayout cleaning
+477c56d	thehappycheese	Tue May 13 17:51:16 2014	2hr Formula Refinements
+ff8290c	thehappycheese	Mon May 12 20:48:37 2014	1hr mathjax CDN
+62f031b	thehappycheese	Mon May 12 17:08:33 2014	2hr Calculates a2 gam d
+9fe1fe8	thehappycheese	Mon May 12 14:28:53 2014	0.66hr Calculation collapsibles
+eb58ad2	thehappycheese	Mon May 5 11:15:30 2014	0.1hr added mockup screenshot
+59f4192	Nicholas Archer	Mon May 5 01:17:06 2014	2hr Fixing. Validation features 10% done?
+04418ee	Nicholas Archer	Sun May 4 23:55:57 2014	0.1hr gitignore
+8d833f6	Nicholas Archer	Sun May 4 23:42:37 2014	0.1hr gitignore mathjax
+b440aa2	Nicholas Archer	Sun May 4 23:33:25 2014	0.1hr cleanup broken
+86f811e	Nicholas Archer	Wed Apr 30 23:14:40 2014	0.1hr cleanup stage 2 broken.
+336e27a	Nicholas Archer	Wed Apr 30 22:39:15 2014	0.1hr cleanup stage 1 about to move mathjax
+c3b50ca	thehappycheese	Tue Apr 29 18:00:27 2014	2hr Infos
+d9f33e3	thehappycheese	Tue Apr 29 12:41:47 2014	1hr Bugfixes/screenshots
+63e309e	Nicholas Archer	Tue Apr 29 01:14:44 2014	0.3hr fix merge fault :'(
+c5bfb72	Nicholas Archer	Tue Apr 29 01:09:37 2014	1hr resurected protips
+881b6c3	thehappycheese	Mon Apr 28 17:01:16 2014	0.5hr Styling. Canvas size etc
+a2f5820	Nicholas Archer	Mon Apr 28 02:10:25 2014	0.5hr BeamDraw Restored
+6c4be8f	thehappycheese	Sun Apr 27 22:27:23 2014	0.2hr styles
+82301cd	thehappycheese	Sun Apr 27 18:04:16 2014	5hr Sass
+e5dcb8c	Nicholas Archer	Sun Apr 27 01:42:57 2014	0.5hr node-webkit compiler. WIN.
+fd25818	Nicholas Archer	Sun Apr 27 01:00:11 2014	4hr Working again. Compatibility should be ok now!
+9404e19	thehappycheese	Sat Apr 26 16:42:57 2014	0.8hr broken compatibility
+ce7dccc	thehappycheese	Sat Apr 26 16:12:00 2014	4hr compatability still broken
+9c2a697	Nicholas Archer	Sat Apr 26 01:28:00 2014	1.5hr compatiblity and layout (broken)
+aeb49e3	thehappycheese	Fri Apr 25 23:02:25 2014	2.5hr Improvig compatibility
+b38d953	Nicholas Archer	Tue Apr 22 02:00:17 2014	0.1hr minor TODO additions
+68df116	Nicholas Archer	Tue Apr 22 01:45:00 2014	0.5hr Validation and styling
+5f71986	Nicholas Archer	Tue Apr 22 01:15:42 2014	1hr Cover/fc/E. Class. verification
+dd58090	Nicholas Archer	Mon Apr 21 23:45:40 2014	3hr Input validations and Styling
+3349d75	Nicholas Archer	Mon Apr 21 01:21:45 2014	3.5hr Validation and CSS
+93e7df8	thehappycheese	Sat Apr 19 15:34:45 2014	0.1hr fix bug retrieving ui number as string
+462f19a	Nicholas Archer	Sat Apr 19 01:21:34 2014	1hr It works!! MVP is mere hours away :)
+d356dd5	Nicholas Archer	Fri Apr 18 23:56:55 2014	1hr validation, usablility
+787cc92	thehappycheese	Fri Apr 18 22:11:47 2014	3hr Calculator integrated
+d406ee0	Nicholas Archer	Wed Apr 16 23:26:35 2014	1hr more/less buttons working
+f077b40	thehappycheese	Wed Apr 16 16:01:09 2014	1hr more/less buttons
+283dafc	thehappycheese	Wed Apr 16 14:58:04 2014	1hr more/less buttons
+64d10ed	thehappycheese	Wed Apr 16 13:51:32 2014	1.8hr styling and functionality
+2c2cd9d	thehappycheese	Wed Apr 16 12:15:39 2014	1hr styling and calc interface
+6f5fb4d	thehappycheese	Wed Apr 16 11:35:02 2014	Scroll behaviour and styling
+73d1730	Nicholas Archer	Tue Apr 15 00:19:02 2014	0.1hr halfway through adding infos
+0a23347	thehappycheese	Mon Apr 14 21:57:57 2014	1hr added some infos.htm's
+d91af83	thehappycheese	Mon Apr 14 20:58:05 2014	2hr fixed python dependance
+dbdfe46	thehappycheese	Sun Apr 13 22:37:45 2014	2h Switch to python compiler dependance :(
+63b59d9	thehappycheese	Sun Apr 13 20:46:58 2014	0.5hr Beam.js corrections
+6725110	thehappycheese	Sun Apr 13 19:46:28 2014	1.3hr Beam.js Handles compression steel
+17e29bd	thehappycheese	Sat Apr 12 16:13:47 2014	0hr moved UI code to main.js
+145626e	thehappycheese	Sat Apr 12 16:10:15 2014	5hr Finished python compiler
+73a6a1a	thehappycheese	Sat Apr 12 15:54:25 2014	Wrote Python recursive compiler
+460675a	Nicholas Archer	Fri Apr 11 23:03:13 2014	0.5hr abstract beam.js away from UI
+999e91b	thehappycheese	Fri Apr 11 18:49:41 2014	5min tweeks
+51149e2	Nicholas Archer	Fri Apr 11 00:04:49 2014	1hr added task and survey placeholders
+ffdcd5c	thehappycheese	Thu Apr 10 21:16:45 2014	1.5hr help files and ui work
+d7146e1	thehappycheese	Thu Apr 10 18:00:14 2014	3hr help files and UI work
+3aec3e4	thehappycheese	Thu Apr 10 13:30:27 2014	1hr tooltips and ui functionality
+c4fce29	thehappycheese	Thu Apr 10 11:33:12 2014	1hr tooltip functionality
+99d22fc	Nicholas Archer	Wed Apr 9 23:31:51 2014	0hr forgot to save
+d26c31f	Nicholas Archer	Wed Apr 9 23:31:13 2014	1hr bringing back some functionality
+2e894d9	thehappycheese	Mon Apr 7 20:28:11 2014	2h reoinput
+153a229	thehappycheese	Mon Apr 7 18:25:57 2014	2h reoinput
+0ab82fe	Nicholas Archer	Sun Apr 6 23:37:12 2014	0.5hr begin ReoController Class
+9431ff9	Nicholas Archer	Sun Apr 6 23:07:19 2014	1hr styling
+19d0a58	Nicholas Archer	Sun Apr 6 21:14:13 2014	2hr Reorganise filesystem
+3c83c9d	thehappycheese	Fri Apr 4 15:07:48 2014	3hr ui functionality. error window
+5d4732d	thehappycheese	Thu Apr 3 15:28:07 2014	0.15hr ui resize
+1265df7	thehappycheese	Thu Apr 3 12:49:54 2014	0.75hr ui resize events
+93aa20c	thehappycheese	Thu Apr 3 11:20:04 2014	0.5hr ui final touches
+8e75b15	thehappycheese	Thu Apr 3 10:39:53 2014	0.5hr formatting tweeks before porting calculatr
+175a3f7	thehappycheese	Tue Apr 1 17:32:09 2014	1.4hr New interface
+69c5294	thehappycheese	Tue Apr 1 14:56:06 2014	2hr dev new UI
+22cd405	thehappycheese	Sat Mar 29 19:26:42 2014	1hr x-input widget
+f4ed1f9	Nicholas Archer	Sat Mar 29 16:53:20 2014	2hr last night widgets
+23b9ffd	thehappycheese	Sat Mar 29 15:30:10 2014	2hr correction widget idea
+7edfd14	thehappycheese	Fri Mar 28 18:04:21 2014	0.25hr reoinput iframe exp failed
+4f493df	thehappycheese	Fri Mar 28 17:16:19 2014	1.75hr reoinput
+1b49bb1	thehappycheese	Fri Mar 28 15:06:15 2014	2hr reoinput
+3bdc649	thehappycheese	Thu Mar 27 18:32:18 2014	1hr got good design for reoinput
+04e3e2d	thehappycheese	Thu Mar 27 17:17:18 2014	1hr reoinput tweeks
+a916eaf	thehappycheese	Thu Mar 27 14:44:41 2014	0.5hr reoinput tweeks
+c6f87e7	thehappycheese	Thu Mar 27 11:52:47 2014	1hr reoinput work
+42b90ed	thehappycheese	Thu Mar 27 10:58:37 2014	0.5hr shadowdom experimentation
+cbf64f1	thehappycheese	Wed Mar 26 18:13:51 2014	2hr discovered shadow dom
+e01af48	thehappycheese	Tue Mar 25 18:33:34 2014	0hr Forgot to save
+aedc6db	thehappycheese	Tue Mar 25 18:32:19 2014	2hr verbose calculation mode
+68baac0	thehappycheese	Tue Mar 25 15:59:45 2014	1hr new reoinputter
+8a520c0	thehappycheese	Tue Mar 25 14:50:30 2014	3hr Drawing refinements and experiments
+c32f2f7	Nicholas Archer	Tue Mar 25 00:43:07 2014	3hr Capacity check
+d89d3eb	thehappycheese	Mon Mar 24 20:50:00 2014	0.75hr Capacity check and support
+9bf6cfb	thehappycheese	Mon Mar 24 16:53:37 2014	0.75hr input validation
+a2b3efc	thehappycheese	Mon Mar 24 16:01:54 2014	1hr Capacity check & input update validation
+5fdd145	Nicholas Archer	Sun Mar 23 23:13:45 2014	Some CSS and drawing improvements
+68a57d2	thehappycheese	Sun Mar 23 21:41:30 2014	0.1hr Reo drawing look nicer
+5056310	Nicholas Archer	Sat Mar 22 15:27:12 2014	0.5hr Reo drawing made to look nicer
+12709f4	thehappycheese	Fri Mar 21 14:56:00 2014	2.5hr Back to normal OOP :)
+185a404	thehappycheese	Thu Mar 20 23:15:37 2014	3hr still brokenfixing
+d545885	thehappycheese	Thu Mar 20 20:21:13 2014	4hr object orientated broken
+f7a21b7	Nicholas Archer	Wed Mar 19 22:51:02 2014	1hr Tried to bring in model/view for beam... :/
+21a575e	thehappycheese	Wed Mar 19 19:46:19 2014	0.5hr reo input/drawing work
+06867f1	thehappycheese	Wed Mar 19 18:15:10 2014	4hr reo input/drawing work
+74a88a9	thehappycheese	Wed Mar 19 14:48:19 2014	2.5hr reo input work
+cf6e539	thehappycheese	Wed Mar 19 12:15:38 2014	0.3hr in shopping center "2N12" ->mm^2
+00eba79	thehappycheese	Tue Mar 18 17:16:57 2014	0.25hr started a realistic bar designer
+9ce5efa	thehappycheese	Tue Mar 18 14:48:26 2014	1.5hr started data collection from UI
+ee333f9	Nicholas Archer	Tue Mar 18 02:46:02 2014	Finished Basic Elevation Drawing
+fa4e38f	Nicholas Archer	Tue Mar 18 02:22:50 2014	tore out transforms. all better
+4ab7541	Nicholas Archer	Tue Mar 18 02:02:23 2014	Still having trouble with the bloody transforms
+e3f302e	thehappycheese	Mon Mar 17 17:41:23 2014	1hr polish and tweeking
+2c8524a	Nicholas Archer	Mon Mar 17 01:20:07 2014	revamped the reo inputs
+e274b95	Nicholas Archer	Sat Mar 15 01:32:29 2014	Spent like 4 hours making it look good
+1507dfd	thehappycheese	Fri Mar 14 17:05:27 2014	Added TaffyDB. 5hrs today.
+71b8cad	thehappycheese	Fri Mar 14 15:04:31 2014	Failed at tracking canvas transforms. Continuing without it.
+8a37150	thehappycheese	Fri Mar 14 13:38:56 2014	Trying to make sharp lines
+085a91f	thehappycheese	Fri Mar 14 11:46:20 2014	Some calculations, some presentation
+5369bff	thehappycheese	Fri Mar 14 06:35:35 2014	Working on beam sketch. Added top longitudinalbar
+908c792	thehappycheese	Thu Mar 13 16:01:03 2014	A libraryfor extra canvas funcs: arrows, mutilead
+03b0218	Nicholas Archer	Wed Mar 12 02:04:15 2014	Some presentation adjustments
+72989f3	thehappycheese	Tue Mar 11 18:48:49 2014	Fitments complete. Started Hatching Effect
+df20024	thehappycheese	Tue Mar 11 16:58:17 2014	draw fitments. rearrange file structure
+d2225ff	Nicholas Archer	Mon Mar 10 23:54:26 2014	Capacity Calculator
+3a0b1a9	thehappycheese	Mon Mar 10 21:16:20 2014	not much
+a76d5a9	thehappycheese	Tue Mar 11 10:26:39 2014	First Commit
