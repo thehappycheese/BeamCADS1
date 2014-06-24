@@ -214,6 +214,19 @@ Beam.prototype.drawStressBlock = function(ctx){
 		ctx.textBaseline = "bottom";
 		ctx.fillText("\u03B5cmax = 0.003",strain_from_d(0),-2);
 		
+		// TODO: Pack this function out a utility file.
+		var unicodeToNumSubscript=function(str){
+			var result = [];
+			var inp = String(str).split("")
+			var offset = ("\u2080").charCodeAt(0)-("0").charCodeAt(0);
+			while(inp.length>0){
+				result.push(
+					String.fromCharCode(inp.shift().charCodeAt(0)+offset)
+				);
+			}
+			return result.join('')
+		}
+		
 		// Draw/label reo strains
 		for(var i = 0;i<this.reo.length;i++){
 			var layer= this.reo[i];
@@ -232,7 +245,7 @@ Beam.prototype.drawStressBlock = function(ctx){
 			ctx.stroke();
 			ctx.textAlign = "left";
 			ctx.textBaseline = "middle";
-			ctx.fillText("\u03B5"+i+" = "+strain.toFixed(4)+((Math.abs(strain)>0.0025)?" yield":" elast"),10,scaleY(layer.depth));
+			ctx.fillText("\u03B5s"+i+" = "+strain.toFixed(4)+((Math.abs(strain)>0.0025)?" yield":" elast"),10,scaleY(layer.depth));
 		}
 		
 		

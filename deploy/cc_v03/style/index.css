@@ -228,16 +228,20 @@ h3 {
   font-family: sans-serif;
   font-weight: bold;
   color: #3e9cad;
-  text-align: center; }
+  text-align: left; }
   #apptitlebox h1 {
     font-size: 1.5em;
     line-height: 2em;
     padding: 0;
     margin: 0; }
   #apptitlebox a {
-    line-height: 1.2em;
-    font-size: 1em;
-    color: red; }
+    color: red;
+    display: block;
+    text-align: center;
+    border: 1px solid grey;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 3px; }
 
 #invardiv {
   flex: 1 1 auto;
