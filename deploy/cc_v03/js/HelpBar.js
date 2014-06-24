@@ -105,6 +105,7 @@ function HelpBar(arg_host){
 			}
 			if(item.related.length>0){
 				html += "<h2>Related:</h2>";
+				item.related.sort();
 				for(var i = 0;i<item.related.length;i++){
 					// TRY TO FIND THE RELATED item in this.data
 					try{

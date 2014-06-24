@@ -19,7 +19,7 @@ body{
 	margin:0;
 	padding: 0px;
 	
-	background: mix($sec-a-2,lightgrey);
+	background: #E9E9E9;
 	
 	display:flex;
 	flex-direction:row;
@@ -64,11 +64,11 @@ h3{
 	flex-wrap:wrap;
 	justify-content:center;
 	align-content:flex-start;
-	flex: 1 1 500px;
-	height: calc(100% - 6px - 10px);
-	margin:5px;
+	flex: 1 1 800px;
+	height: calc(100% - 4px - 6px);
+	margin:3px;
 	overflow-y:scroll;
-	border: 3px inset;
+	border: 2px inset;
 	border-color:$sec-a-5*2;
 	background-color:white;
 }
@@ -76,12 +76,12 @@ h3{
 	display:flex;
 	flex-direction:column;
 	display:flex;
-	flex: 0 1 400px;
+	flex: 0 1 500px;
 	max-width:500px;
-	height: calc(100% - 6px - 10px);
-	margin:5px;
+	height: calc(100% - 4px - 6px);
+	margin:3px;
 	margin-right:0px;
-	border: 3px inset;
+	border: 2px inset;
 	border-color:$sec-a-5*2;
 	background-color:white;
 }
@@ -92,11 +92,12 @@ h3{
 }
 
 #apptitlebox{
-	flex: 0 0 (3em + 2 * 1.2em);
+	flex: 0 0 auto;
 	font-family:sans-serif;
 	font-weight:bold;
 	color:$pri-3;
 	text-align: left;
+	padding:5px;
 	h1{
 		font-size:1.5em;
 		line-height:2em;
@@ -109,7 +110,7 @@ h3{
 		text-align:center;
 		border:1px solid grey;
 		padding:5px;
-		margin:5px;
+		margin-bottom:5px;
 		border-radius:3px;
 	}
 }
@@ -186,6 +187,11 @@ h3{
 		.c2{
 			
 		}
+	}
+	img{
+		max-width:100%;
+		display:block;
+		margin: 20px auto;
 	}
 }
 

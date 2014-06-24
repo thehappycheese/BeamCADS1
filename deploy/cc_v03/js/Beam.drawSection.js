@@ -78,14 +78,16 @@ Beam.prototype.drawSection = function(ctx){
 			""
 		);
 		
-		
-		//////// BANANA FOR SCALE ////////////
-		//ctx.drawImage(
-		//	document.querySelector("#bananascale"),
-		//	0,0,
-		//	200*scale,
-		//	200*scale
-		//);
+		if(document.querySelector("#bananaforscalecheck") && document.querySelector("#bananaforscalecheck").checked){
+			//////// BANANA FOR SCALE ////////////
+			var bananascale = 180*scale;
+			ctx.drawImage(
+				document.querySelector("#bananascale"),
+				-bananascale/2,-bananascale/2,
+				bananascale,
+				bananascale
+			);
+		}
 		
 		////// d_n  /////////////
 		if(drawOptions.draw_dn){

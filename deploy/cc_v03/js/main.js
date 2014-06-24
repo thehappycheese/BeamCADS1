@@ -47,7 +47,6 @@ var rman = new ReoManager(document.querySelector("#reorows"), b);
 rman.on("change",mainUpdateListener);
 
 
-ttips.grab(document.querySelector("#reotable"));
 
 
 
@@ -60,7 +59,7 @@ var cs_ctx = cs_canvas.getContext('2d');
 
 
 
-
+//////////////// INITIAL BEAM CONFIGURATION //////////////////////////
 rman.rows[0].barcode = "3N40";
 rman.rows[1].enabled = true;
 rman.rows[1].offset = 80;
@@ -70,6 +69,10 @@ rman.rows[3].enabled = true;
 rman.rows[3].from = "highest";
 
 
+
+///////////////// FINALIZE TOOLTIPS //////////////////////////
+ttips.grab(document.body);
+
 ///////////////////// MAIN UPDATE LISTENER  /////////////////////////////
 mainUpdateListener()
 function mainUpdateListener(e){
@@ -78,9 +81,9 @@ function mainUpdateListener(e){
 	intakeBeamValues();
 	
 	document.querySelector("#reosumarea").innerHTML = b.As || "";
-	// Drawsome nice calculation draings
+	
 	b.drawStressBlock(document.querySelector(".dncanvas").getContext('2d'));
-	//outputCalculations();
+	collapseCalcs();
 	flagCalcsForUpdate();
 	b.drawSection(cs_ctx);
 	
@@ -105,13 +108,11 @@ function mainUpdateListener(e){
 
 
 function intakeBeamValues(){
-	//b.Ln		= vin.Ln.value;
 	b.b			= Math.max(150, vin.b.value) || 200;
 	b.D			= Math.max(150, vin.D.value) || 300;
 	b.cover		= Math.max(5, vin.cover.value);
 	b.eclass	= vin.eclass.value;
 	b.df		= vin.df.value;
-	//b.rhoc	= vin.rhoc.value;
 	b.fc		= vin.fc.value;
 	b.reo		= rman.value;
 	
@@ -155,8 +156,6 @@ function flagCalcsForUpdate(){
 }
 function updateCalculations(){
 	calc_update_timeout_id = null;
-	//console.log("UPDATE CALCS");
-	
 	
 	calc.alpha2.updateTitle();
 	calc.dn.updateTitle();
@@ -164,6 +163,15 @@ function updateCalculations(){
 	calc.kuo.updateTitle();
 	calc.phi.updateTitle();
 	calc.phiMuo.updateTitle();
+}
+
+function collapseCalcs(){
+	calc.alpha2.collapsed = true;
+	calc.dn.collapsed = true;
+	calc.Muo.collapsed = true;
+	calc.kuo.collapsed = true;
+	calc.phi.collapsed = true;
+	calc.phiMuo.collapsed = true;
 }
 
 

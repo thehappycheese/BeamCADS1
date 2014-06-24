@@ -111,11 +111,16 @@
 		
 		
 		<div id="crosssectiondiv" class="bmpblock" style="">
-			<div style="width:100%;align-self:flex-start;">
-				<h2>Cross Section</h2>
-			</div>
-			<canvas width="450" height="400" id="crosssectioncanvas" ></canvas>
+			<h2>Cross Section</h2>
+			<canvas width="450" height="400" id="crosssectioncanvas" >
+				There has been some error! A beam cross section should show up here!
+			</canvas>
+			<br/>
+			<label for="bananaforscalecheck" onclick="b.drawSection(cs_ctx);" data-tooltip="A banana is a poor measure of scale. Please think about how big the real beam is.">
+				<input type="checkbox" id="bananaforscalecheck"/> Show Banana For Scale.
+			</label>
 			<img id="bananascale" src="img/scale.png" style="display:none;"/>
+			<p>Note that greyed out bars are shown for crack control. Not included in strength calcs.</p>
 		</div>
 		
 		<div style="flex: 0 0 100%;"></div>
