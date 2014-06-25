@@ -29,10 +29,15 @@ extensions: ["color.js"]
 <body>
 <div id="secondarycol">
 <div id="apptitlebox" class="bmpblock">
-<h1>BeamCalc</h1>
-<a href="https://curtin.asia.qualtrics.com/SE/?SID=SV_5umJx1fAzIC3fa5" target="_blank">Click Here To Do Tute / Survey (in a new tab)</a>
-<br>
-<a href="../../">Return to Infosheet/Consent Form</a>
+<!--<h1>BeamCalc</h1>-->
+<a href="https://curtin.asia.qualtrics.com/SE/?SID=SV_5umJx1fAzIC3fa5" target="_blank" style="font-size:1.5em;">
+Click To Open Tute / Survey
+<br />
+<span style="font-size:0.8em;">(in a new tab)</span>
+</a>
+<a href="../../" style="font-size:0.8em;">
+Return to Infosheet / Consent Form
+</a>
 </div>
 <div id="protips" class="protip">
 <div class="tips"></div>
@@ -91,11 +96,16 @@ REO INPUT CONTROLS HERE
 </div>
 </div>
 <div id="crosssectiondiv" class="bmpblock" style="">
-<div style="width:100%;align-self:flex-start;">
 <h2>Cross Section</h2>
-</div>
-<canvas width="450" height="400" id="crosssectioncanvas" ></canvas>
+<canvas width="450" height="400" id="crosssectioncanvas" >
+There has been some error! A beam cross section should show up here!
+</canvas>
+<br/>
+<label for="bananaforscalecheck" onclick="b.drawSection(cs_ctx);" data-tooltip="A banana is a poor measure of scale. Please think about how big the real beam is.">
+<input type="checkbox" id="bananaforscalecheck"/> Show Banana For Scale.
+</label>
 <img id="bananascale" src="img/scale.png" style="display:none;"/>
+<p>Note that greyed out bars are shown for crack control. Not included in strength calcs.</p>
 </div>
 <div style="flex: 0 0 100%;"></div>
 <div id="calcdiv" style="" class="bmpblock">
@@ -903,13 +913,16 @@ Math.PI/2,
 20,
 ""
 );
+if(document.querySelector("#bananaforscalecheck") && document.querySelector("#bananaforscalecheck").checked){
 //////// BANANA FOR SCALE ////////////
-//ctx.drawImage(
-//	document.querySelector("#bananascale"),
-//	0,0,
-//	200*scale,
-//	200*scale
-//);
+var bananascale = 180*scale;
+ctx.drawImage(
+document.querySelector("#bananascale"),
+-bananascale/2,-bananascale/2,
+bananascale,
+bananascale
+);
+}
 ////// d_n  /////////////
 if(drawOptions.draw_dn){
 ctx.strokeStyle="#FFAAAA"
@@ -1270,6 +1283,18 @@ ctx.fillStyle = "magenta";
 ctx.textAlign = "left";
 ctx.textBaseline = "bottom";
 ctx.fillText("\u03B5cmax = 0.003",strain_from_d(0),-2);
+// TODO: Pack this function out a utility file.
+var unicodeToNumSubscript=function(str){
+var result = [];
+var inp = String(str).split("")
+var offset = ("\u2080").charCodeAt(0)-("0").charCodeAt(0);
+while(inp.length>0){
+result.push(
+String.fromCharCode(inp.shift().charCodeAt(0)+offset)
+);
+}
+return result.join('')
+}
 // Draw/label reo strains
 for(var i = 0;i<this.reo.length;i++){
 var layer= this.reo[i];
@@ -1288,7 +1313,7 @@ ctx.lineTo(strain_from_d(layer.depth),scaleY(layer.depth));
 ctx.stroke();
 ctx.textAlign = "left";
 ctx.textBaseline = "middle";
-ctx.fillText("\u03B5"+i+" = "+strain.toFixed(4)+((Math.abs(strain)>0.0025)?" yield":" elast"),10,scaleY(layer.depth));
+ctx.fillText("\u03B5s"+i+" = "+strain.toFixed(4)+((Math.abs(strain)>0.0025)?" yield":" elast"),10,scaleY(layer.depth));
 }
 // Draw origin line
 ctx.lineWidth = 2;
@@ -2394,6 +2419,7 @@ html+="</table>";
 }
 if(item.related.length>0){
 html += "<h2>Related:</h2>";
+item.related.sort();
 for(var i = 0;i<item.related.length;i++){
 // TRY TO FIND THE RELATED item in this.data
 try{
@@ -3560,10 +3586,10 @@ var b = new Beam();
 ///////////////     SETUP REO MANAGER     /////////////////////
 var rman = new ReoManager(document.querySelector("#reorows"), b);
 rman.on("change",mainUpdateListener);
-ttips.grab(document.querySelector("#reotable"));
 /////////////////// SETUP CANVAS VARIABLES //////////////////////////////
 var cs_canvas = document.querySelector("#crosssectioncanvas");
 var cs_ctx = cs_canvas.getContext('2d');
+//////////////// INITIAL BEAM CONFIGURATION //////////////////////////
 rman.rows[0].barcode = "3N40";
 rman.rows[1].enabled = true;
 rman.rows[1].offset = 80;
@@ -3571,14 +3597,15 @@ rman.rows[2].enabled = true;
 rman.rows[2].offset = 80;
 rman.rows[3].enabled = true;
 rman.rows[3].from = "highest";
+///////////////// FINALIZE TOOLTIPS //////////////////////////
+ttips.grab(document.body);
 ///////////////////// MAIN UPDATE LISTENER  /////////////////////////////
 mainUpdateListener()
 function mainUpdateListener(e){
 intakeBeamValues();
 document.querySelector("#reosumarea").innerHTML = b.As || "";
-// Drawsome nice calculation draings
 b.drawStressBlock(document.querySelector(".dncanvas").getContext('2d'));
-//outputCalculations();
+collapseCalcs();
 flagCalcsForUpdate();
 b.drawSection(cs_ctx);
 var err_list = [];
@@ -3597,13 +3624,11 @@ war_list = war_list.concat(v.warning);
 ttips.setError(err_list, war_list);
 }
 function intakeBeamValues(){
-//b.Ln		= vin.Ln.value;
 b.b			= Math.max(150, vin.b.value) || 200;
 b.D			= Math.max(150, vin.D.value) || 300;
 b.cover		= Math.max(5, vin.cover.value);
 b.eclass	= vin.eclass.value;
 b.df		= vin.df.value;
-//b.rhoc	= vin.rhoc.value;
 b.fc		= vin.fc.value;
 b.reo		= rman.value;
 for(var i in vin){
@@ -3631,13 +3656,20 @@ calc_update_timeout_id = setTimeout(updateCalculations,500);
 }
 function updateCalculations(){
 calc_update_timeout_id = null;
-//console.log("UPDATE CALCS");
 calc.alpha2.updateTitle();
 calc.dn.updateTitle();
 calc.Muo.updateTitle();
 calc.kuo.updateTitle();
 calc.phi.updateTitle();
 calc.phiMuo.updateTitle();
+}
+function collapseCalcs(){
+calc.alpha2.collapsed = true;
+calc.dn.collapsed = true;
+calc.Muo.collapsed = true;
+calc.kuo.collapsed = true;
+calc.phi.collapsed = true;
+calc.phiMuo.collapsed = true;
 }
 function printcalcs(){
 var w = window.open("","_blank","width=1500,height=700, top=100,left=100");
