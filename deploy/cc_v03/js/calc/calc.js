@@ -8,6 +8,7 @@
 ///* calc.kuo.js
 ///* calc.phi.js
 ///* calc.phiMuo.js
+///* calc.checks.js
 
 var calc = calc || {};
 

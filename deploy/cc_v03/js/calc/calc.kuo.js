@@ -6,7 +6,17 @@ calc.kuo = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = '<a href="#help_bar_kuo"> k<sub>uo</sub></a> = '+b.kuo.toFixed(3);
+		var kuo = b.kuo;
+		
+		var addendum = "";
+		if(kuo>0.36){
+			addendum = '<span style="color:red"> &gt;0.36 beam is over-reinforced (See AS3600 8.1.5)</span>'
+		}
+		if(kuo<0.25){
+			addendum = '<span style="color:red"> &lt;0.25 might be under-reinforced (See AS3600 8.1.5)</span>'
+		}
+		
+		this.title = '<a href="#help_bar_kuo"> k<sub>uo</sub></a> = '+b.kuo.toFixed(3)+addendum;
 	}.bind(this);
 	
 	this.update = function(){
@@ -25,6 +35,7 @@ calc.kuo = new (function(){
 		// TODO: verify!
 		if(b_kuo<0.25 || b_kuo>0.36){
 			this.addParagraph('<div class="calcerror">ERROR! $$$k_uo$$$ should be more than 0.25 and less than 0.36 (Except for in special conditions.) - See AS3600 8.1.5.</div>');
+			this.addParagraph('<div class="calcerror">To fix this you must change the depth of the beam or add / remove reinforcment</div>');
 		}else{
 			this.addParagraph("Within limits: $$$k_{uo}$$$ should be more than 0.25 and less than 0.36 (Except for in special conditions.) - See AS3600 8.1.5.");
 		}

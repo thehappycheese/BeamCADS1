@@ -146,6 +146,7 @@ function initCalcs(calculationdiv){
 	calc.kuo.appendTo(calculationdiv);
 	calc.phi.appendTo(calculationdiv);
 	calc.phiMuo.appendTo(calculationdiv);
+	calc.checks.appendTo(calculationdiv);
 }
 
 var calc_update_timeout_id = null;
@@ -163,6 +164,7 @@ function updateCalculations(){
 	calc.kuo.updateTitle();
 	calc.phi.updateTitle();
 	calc.phiMuo.updateTitle();
+	calc.checks.updateTitle();
 }
 
 function collapseCalcs(){
@@ -172,6 +174,7 @@ function collapseCalcs(){
 	calc.kuo.collapsed = true;
 	calc.phi.collapsed = true;
 	calc.phiMuo.collapsed = true;
+	calc.checks.collapsed = true;
 }
 
 
@@ -214,6 +217,7 @@ function printcalcs(){
 	calc.kuo.appendTo(div);
 	calc.phi.appendTo(div);
 	calc.phiMuo.appendTo(div);
+	calc.checks.appendTo(div);
 	
 	calc.alpha2.collapsed = false;
 	calc.dn.collapsed = false;
@@ -221,6 +225,7 @@ function printcalcs(){
 	calc.kuo.collapsed = false;
 	calc.phi.collapsed =false;
 	calc.phiMuo.collapsed =false;
+	calc.checks.collapsed =false;
 	
 	MathJax.Hub.Queue(function () {
 		w.print();
