@@ -6,7 +6,15 @@ calc.Muo = new (function(){
 	
 	
 	this.updateTitle = function(){
-		this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+b.Muo.toFixed(0)+' kNm';
+		var Muo_min = b.Muo_min;
+		var Muo = b.Muo;
+		
+		var addendum = "";
+		if(Muo<Muo_min){
+			addendum = '<span style="color:red"> &lt; <a href="#help_bar_Muomin">(M<sub>uo</sub>)<sub>min</sub></a>  (= '+Muo_min.toFixed(0)+' kNm) (See AS3600 8.1.6 Minimum Capacity)</span>'
+		}
+		
+		this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+Muo.toFixed(0)+' kNm'+addendum;
 	}.bind(this);
 	
 	this.update = function(){
