@@ -7,7 +7,8 @@
 Beam.prototype.drawSection = function(ctx){
 	var drawOptions = {
 		draw_dn:false,
-		draw_d:false
+		draw_d:false,
+		draw_question:true
 		
 	};
 	var b = null;
@@ -37,6 +38,33 @@ Beam.prototype.drawSection = function(ctx){
 	
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	ctx.save()
+	
+		// befor translation show some extra info for asking questions
+		if(drawOptions.draw_question){
+			
+			ctx.fillStyle = "black";
+			ctx.font = "15px serif";
+			ctx.textBaseline="top"
+			ctx.textAlign="right"
+			ctx.fillText(
+				"Fitment Diameter = "+this.df+" mm",
+				canvas.width,
+				0
+			);
+			ctx.fillText(
+				"Exposure Class = "+this.eclass+"   ",
+				canvas.width,
+				20
+			);
+			ctx.fillText(
+				"Concrete Strength = "+this.fc+" MPa",
+				canvas.width,
+				40
+			);
+			
+		}
+	
+	
 		ctx.translate(
 			padding_left+this.b/2*scale,
 			padding_top+this.D/2*scale+((canvas.height-padding_top-padding_bottom)-this.D*scale)/2
@@ -173,10 +201,11 @@ Beam.prototype.drawSection = function(ctx){
 			lastDepth = lableDepth;
 			ctx.font = "15px sans-serif"
 			ctx.fillText(
-				"Layer "+layer.index+": "+layer.number+"\u00D7N"+layer.diameter,
+				"Layer "+layer.index+": "+layer.number+"N"+layer.diameter,
 				this.b/2*scale+30,
 				lableDepth
 			)
+			//\u00D7 == the multiply symbol
 			ctx.strokeStyle = "#AAAAAA";
 			ctx.lineWidth = 1;
 			ctx.beginPath();

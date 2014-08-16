@@ -15,7 +15,7 @@ vin.eclass = new VarInput('eclass' , "E. Class" , "text" , "A1", "",["A1","A2","
 vin.df     = new VarInput('dfitments' , "$$$d_f$$$" , "number" , 10, "mm",[10, 12, 13, 14, 15, 15, 17, 18, 19, 20]);
 // TODO: SUPERVISOR Round bars http://www.onesteel.com/products.asp?action=showProduct&productID=52&categoryName=Bar%20Sections
 //vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;");
-vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa",[20, 25, 32, 40, 50, 65, 80, 100]);
+vin.fc     = new VarInput('fc' , "$$$f'_c$$$" , "number" , 32, "MPa",[20, 25, 32, 40, 50, 65, 80, 100]);
 
 
 // append to dom and attatch a listener
@@ -45,7 +45,9 @@ vin.b.validate = function(e){
 	var MAX_BREADTH = 2000;
 	
 	
-	if(e.value%5!==0){
+	if(e.value == undefined || e.value == null|| isNaN(e.value)){
+		e.warning.push(link+' Should not be left blank.');
+	}else if(e.value%5!==0){
 		e.error.push(link+" should be rounded to nearest 5mm.");
 		// TODO: do not autocoorect rounding to 5mm because, firefox spin buttons stop working if you do.
 		//e.value = Math.round(e.value/5)*5;
@@ -81,7 +83,9 @@ vin.D.validate = function(e){
 	var MIN_DEPTH = 150;
 	var MAX_DEPTH = 2000;
 	
-	if(e.value%5!==0){
+	if(e.value == undefined || e.value == null|| isNaN(e.value)){
+		e.warning.push(link+' Should not be left blank.');
+	}else if(e.value%5!==0){
 		e.error.push(link+" should be rounded to nearest 5 mm.");
 		//e.value = Math.round(e.value/5)*5;
 	}
@@ -103,8 +107,9 @@ vin.cover.validate = function(e){
 				not too small
 	**/
 	
-	
-	if(e.value> 150){
+	if(e.value == undefined || e.value == null|| isNaN(e.value)){
+		e.warning.push('<a href="#help_bar_cover">Cover</a> Should not be left blank.');
+	}else if(e.value> 150){
 		// silent warning?
 		e.warning.push('<a href="#help_bar_cover">Cover</a> might be too big... unless there is a special reason.');
 	}else if(e.value< 20){

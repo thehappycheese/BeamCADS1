@@ -26,12 +26,14 @@ calc.checks = new (function(){
 		);
 		this.addParagraph(
 						"Values for which calculations are not shown in this software: "+
-						"$$"+
-						"I_g = " + (b.Ixx).toFixed(0) + " mm^4\\\\"+
-						"Z_e = " + b.Ze.toFixed(0) + " mm^3 \\\\"+
-						"(M_{uo})_{min} = "+ b.Muo_min.toFixed(0) +" kNm (\\text{See AS3600 8.1.6.1}) \\\\"+
-						"(A_{st})_{min} = "+ b.Muo_min_Ast_min +" mm^2 (\\text{See AS3600 8.1.6.1}) \\\\"+
-						"$$"
+						"$$\\begin{aligned}"+
+						"I_g &= " + (b.Ixx).toFixed(0) + " ~mm^4\\\\"+
+						"Z_e &= " + b.Ze.toFixed(0) + " ~mm^3 \\\\"+
+						"A_g &= " + b.Ag.toFixed(0) + " ~mm^2 \\\\"+
+						"f'_{ct.f} &= " + b.fctf.toFixed(2) + " MPa \\\\"+
+						"(M_{uo})_{min} &= "+ b.Muo_min.toFixed(0) +" ~kNm ~(\\text{See AS3600 8.1.6.1}) \\\\"+
+						"(A_{st})_{min} &= "+ b.Muo_min_Ast_min.toFixed(0) +" ~mm^2 ~(\\text{See AS3600 8.1.6.1}) \\\\"+
+						"\\end{aligned}$$"
 		);
 		
 		this.updateMathJax();
