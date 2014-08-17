@@ -7,7 +7,7 @@
 Beam.prototype.drawStressBlock = function(ctx){
 	
 	var options = {
-		draw_d:false,
+		draw_d:true,
 		draw_dn:true,
 		draw_gammadn:true
 	}

@@ -10,11 +10,14 @@ calc.Muo = new (function(){
 		var Muo = b.Muo;
 		
 		var addendum = "";
+		this.topdiv.style.backgroundColor = "";
 		if(Muo<Muo_min){
-			addendum = '<span style="color:red"> &lt; <a href="#help_bar_Muomin">(M<sub>uo</sub>)<sub>min</sub></a>  (= '+Muo_min.toFixed(0)+' kNm) (See AS3600 8.1.6 Minimum Capacity)</span>'
+			addendum = '<span style="color:red"> &lt; <a href="#help_bar_Muomin">(M<sub>uo</sub>)<sub>min</sub></a>  (= '+Muo_min.toFixed(0)+' kNm) (See AS3600 8.1.6 Minimum Capacity)</span>';
+			this.topdiv.style.backgroundColor = "yellow";
 		}
 		
 		this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+Muo.toFixed(0)+' kNm'+addendum;
+		
 	}.bind(this);
 	
 	this.update = function(){

@@ -188,7 +188,7 @@
 			"ku",
 			"kuo"
 		],
-		"docs": "\n<p>\n    $$$d$$$ is the depth to the centroid of the tensile steel layers. Finding d requires that you know/guess which layers are in tension.\n</p>\n<p> The following image illustrates the location size of $$$d$$$</p>\n\n<img src=\"\" alt=\"//TODO: image\"> sarmintine",
+		"docs": "\n<p>\n    $$$d$$$ is the depth to the centroid of the tensile steel layers. Finding d requires that you know/guess which layers are in tension.\n</p>\n<p> The following image illustrates the location size of $$$d$$$</p>\n\n<img src=\"img/rectangular_stress_block_forces_d.png\" alt=\"//TODO: image\"></img>",
 		"coderef": []
 	},
 	"Depth": {

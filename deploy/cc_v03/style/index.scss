@@ -26,7 +26,7 @@ body{
 }
 
 input:invalid, select:invalid{
-	background-color:$sec-b-1;
+	background-color:yellow;
 	color:red;
 }
 

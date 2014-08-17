@@ -8,7 +8,8 @@ Beam.prototype.drawSection = function(ctx){
 	var drawOptions = {
 		draw_dn:false,
 		draw_d:false,
-		draw_question:true
+		draw_question:true,
+		draw_Muo:true
 		
 	};
 	var b = null;
@@ -42,7 +43,7 @@ Beam.prototype.drawSection = function(ctx){
 		// befor translation show some extra info for asking questions
 		if(drawOptions.draw_question){
 			
-			ctx.fillStyle = "black";
+			ctx.fillStyle = "grey";
 			ctx.font = "15px serif";
 			ctx.textBaseline="top"
 			ctx.textAlign="right"
@@ -61,6 +62,20 @@ Beam.prototype.drawSection = function(ctx){
 				canvas.width,
 				40
 			);
+			
+		}
+		if(drawOptions.draw_Muo){
+			
+			ctx.fillStyle = "red";
+			ctx.font = "25px serif";
+			ctx.textBaseline="top"
+			ctx.textAlign="right"
+			ctx.fillText(
+				"\u03D5Muo = "+(this.phi*this.Muo).toFixed(0)+" kNm",
+				canvas.width,
+				70
+			);
+			
 			
 		}
 	

@@ -9,11 +9,15 @@ calc.kuo = new (function(){
 		var kuo = b.kuo;
 		
 		var addendum = "";
+		this.topdiv.style.backgroundColor = ""
 		if(kuo>0.36){
-			addendum = '<span style="color:red"> &gt;0.36 beam is over-reinforced (See AS3600 8.1.5)</span>'
+			addendum = '<span style="color:red"> &gt;0.36 beam is over-reinforced (See AS3600 8.1.5)</span>';
+			this.topdiv.style.backgroundColor = "yellow";
+			console.log(this.topdiv);
 		}
 		if(kuo<0.1){
-			addendum = '<span style="color:red"> &lt;0.1 beam might be under-reinforced (See AS3600 8.1.5)</span>'
+			addendum = '<span style="color:red"> &lt;0.1 beam might be under-reinforced (See AS3600 8.1.5)</span>';
+			this.topdiv.style.backgroundColor = "yellow";
 		}
 		
 		this.title = '<a href="#help_bar_kuo"> k<sub>uo</sub></a> = '+b.kuo.toFixed(3)+addendum;

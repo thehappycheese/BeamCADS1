@@ -85,7 +85,8 @@ rman.rows[0].barcode = "3N32";
 //rman.rows[2].enabled = true;
 //rman.rows[2].offset = 80;
 //rman.rows[3].enabled = true;
-//rman.rows[3].from = "highest";
+rman.rows[2].from = "highest";
+rman.rows[3].from = "highest";
 
 
 

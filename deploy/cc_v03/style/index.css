@@ -83,8 +83,7 @@
   .protip .feedback {
     height: 64px;
     margin: 5px;
-    overflow-y: scroll;
-    background-color: #fffdd2; }
+    overflow-y: scroll; }
     .protip .feedback .errorlist, .protip .feedback .warninglist, .protip .feedback .infolist {
       list-style: none;
       padding: 0;
@@ -169,7 +168,7 @@ body {
   flex-direction: row; }
 
 input:invalid, select:invalid {
-  background-color: #fffba6;
+  background-color: yellow;
   color: red; }
 
 h1, h2, h3, h4 {

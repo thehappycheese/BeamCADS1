@@ -68,6 +68,11 @@ function ProTips(arg_body){
 			out += '<ul class="warninglist"><li>'+warning_list.join("</li><li>")+'</li></ul>';
 		}
 		this.feedback_div.innerHTML = out;
+		if(error_list.length+warning_list.length>0){
+			this.feedback_div.style.backgroundColor = "yellow";
+		}else{
+			this.feedback_div.style.backgroundColor = "";
+		}
 	}.bind(this);
 	
 	this.updateMathJax = function(){
