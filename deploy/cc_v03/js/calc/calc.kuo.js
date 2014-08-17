@@ -17,6 +17,7 @@ calc.kuo = new (function(){
 		}
 		
 		this.title = '<a href="#help_bar_kuo"> k<sub>uo</sub></a> = '+b.kuo.toFixed(3)+addendum;
+		
 	}.bind(this);
 	
 	this.update = function(){

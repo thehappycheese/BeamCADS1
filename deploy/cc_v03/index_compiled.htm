@@ -857,7 +857,8 @@ this.create();
 Beam.prototype.drawSection = function(ctx){
 var drawOptions = {
 draw_dn:false,
-draw_d:false
+draw_d:false,
+draw_question:true
 };
 var b = null;
 var dn = this.dn;
@@ -877,6 +878,28 @@ var max_width = canvas.width - (padding_left+padding_right);
 var scale = Math.min(max_width/this.b, max_height/this.D);
 ctx.clearRect(0,0,canvas.width,canvas.height);
 ctx.save()
+// befor translation show some extra info for asking questions
+if(drawOptions.draw_question){
+ctx.fillStyle = "black";
+ctx.font = "15px serif";
+ctx.textBaseline="top"
+ctx.textAlign="right"
+ctx.fillText(
+"Fitment Diameter = "+this.df+" mm",
+canvas.width,
+0
+);
+ctx.fillText(
+"Exposure Class = "+this.eclass+"   ",
+canvas.width,
+20
+);
+ctx.fillText(
+"Concrete Strength = "+this.fc+" MPa",
+canvas.width,
+40
+);
+}
 ctx.translate(
 padding_left+this.b/2*scale,
 padding_top+this.D/2*scale+((canvas.height-padding_top-padding_bottom)-this.D*scale)/2
@@ -989,10 +1012,11 @@ lableDepth = lastDepth+LABLESPACING;
 lastDepth = lableDepth;
 ctx.font = "15px sans-serif"
 ctx.fillText(
-"Layer "+layer.index+": "+layer.number+"\u00D7N"+layer.diameter,
+"Layer "+layer.index+": "+layer.number+"N"+layer.diameter,
 this.b/2*scale+30,
 lableDepth
 )
+//\u00D7 == the multiply symbol
 ctx.strokeStyle = "#AAAAAA";
 ctx.lineWidth = 1;
 ctx.beginPath();
@@ -2856,7 +2880,13 @@ if(calc===undefined) var calc = {};
 calc.Muo = new (function(){
 CalcDiv.call(this); // Extends calcdiv
 this.updateTitle = function(){
-this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+b.Muo.toFixed(0)+' kNm';
+var Muo_min = b.Muo_min;
+var Muo = b.Muo;
+var addendum = "";
+if(Muo<Muo_min){
+addendum = '<span style="color:red"> &lt; <a href="#help_bar_Muomin">(M<sub>uo</sub>)<sub>min</sub></a>  (= '+Muo_min.toFixed(0)+' kNm) (See AS3600 8.1.6 Minimum Capacity)</span>'
+}
+this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+Muo.toFixed(0)+' kNm'+addendum;
 }.bind(this);
 this.update = function(){
 this.content = "";
@@ -2952,7 +2982,15 @@ if(calc===undefined) var calc = {};
 calc.kuo = new (function(){
 CalcDiv.call(this); // Extends calcdiv
 this.updateTitle = function(){
-this.title = '<a href="#help_bar_kuo"> k<sub>uo</sub></a> = '+b.kuo.toFixed(3);
+var kuo = b.kuo;
+var addendum = "";
+if(kuo>0.36){
+addendum = '<span style="color:red"> &gt;0.36 beam is over-reinforced (See AS3600 8.1.5)</span>'
+}
+if(kuo<0.1){
+addendum = '<span style="color:red"> &lt;0.1 beam might be under-reinforced (See AS3600 8.1.5)</span>'
+}
+this.title = '<a href="#help_bar_kuo"> k<sub>uo</sub></a> = '+b.kuo.toFixed(3)+addendum;
 }.bind(this);
 this.update = function(){
 var b_kuo = b.kuo
@@ -2964,10 +3002,11 @@ this.addParagraph("$$d_n =\\href{#help_bar_dn}{\\text{Depth to Neutral Axis}} = 
 this.addParagraph("Thus:");
 this.addParagraph("$$k_{uo} = "+b_kuo.toFixed(3)+"$$");
 // TODO: verify!
-if(b_kuo<0.25 || b_kuo>0.36){
-this.addParagraph('<div class="calcerror">ERROR! $$$k_uo$$$ should be more than 0.25 and less than 0.36 (Except for in special conditions.) - See AS3600 8.1.5.</div>');
+if(b_kuo<0.1 || b_kuo>0.36){
+this.addParagraph('<div class="calcerror">ERROR! $$$k_uo$$$ should be more than ~0.1 and less than 0.36 (Except for in special conditions.) - See AS3600 8.1.5.</div>');
+this.addParagraph('<div class="calcerror">To fix this you must change the depth of the beam or add / remove reinforcment</div>');
 }else{
-this.addParagraph("Within limits: $$$k_{uo}$$$ should be more than 0.25 and less than 0.36 (Except for in special conditions.) - See AS3600 8.1.5.");
+this.addParagraph("Within limits: $$$k_{uo}$$$ should be more than ~0.1 and less than 0.36 (Except for in special conditions.) - See AS3600 8.1.5.");
 }
 this.updateMathJax();
 }.bind(this);
@@ -3025,6 +3064,41 @@ this.addParagraph(
 "$$\\begin{aligned}"+
 "\\phi M_{uo} &= "+b.phi.toFixed(2)+"\\times"+b.Muo.toFixed(0)+"~kNm \\\\"+
 "&= "+b.phiMuo.toFixed(0)+" ~kNm"+
+"\\end{aligned}$$"
+);
+this.updateMathJax();
+}.bind(this);
+this.on("init",this.updateTitle);
+this.on("show",this.update);
+})();
+
+
+
+
+
+
+// #########		 Crawling:.\js\calc\calc.checks.js		#########
+if(calc===undefined) var calc = {};
+calc.checks = new (function(){
+CalcDiv.call(this); // Extends calcdiv
+this.updateTitle = function(){
+this.title = 'Other Values';
+}.bind(this);
+this.update = function(){
+this.content = "";
+// TODO: Highlight error bar and this ones title if there is a problem
+this.addParagraph(
+"This software does not check serviceability requirements (yet)."
+);
+this.addParagraph(
+"Values for which calculations are not shown in this software: "+
+"$$\\begin{aligned}"+
+"I_g &= " + (b.Ixx).toFixed(0) + " ~mm^4\\\\"+
+"Z_e &= " + b.Ze.toFixed(0) + " ~mm^3 \\\\"+
+"A_g &= " + b.Ag.toFixed(0) + " ~mm^2 \\\\"+
+"f'_{ct.f} &= " + b.fctf.toFixed(2) + " MPa \\\\"+
+"(M_{uo})_{min} &= "+ b.Muo_min.toFixed(0) +" ~kNm ~(\\text{See AS3600 8.1.6.1}) \\\\"+
+"(A_{st})_{min} &= "+ b.Muo_min_Ast_min.toFixed(0) +" ~mm^2 ~(\\text{See AS3600 8.1.6.1}) \\\\"+
 "\\end{aligned}$$"
 );
 this.updateMathJax();
@@ -3472,11 +3546,11 @@ var vin = {};
 vin.b      = new VarInput('b' , "$$$b$$$" , "number" , 300, "mm");
 vin.D      = new VarInput('Depth' , "$$$D$$$" , "number" , 600, "mm");
 vin.cover  = new VarInput('cover' , "Cover" , "number" , 25, "mm");
-vin.eclass = new VarInput('eclass' , "E. Class" , "text" , "A1", "",["A1","A2","B1","B2","C1","C2"]);
 vin.df     = new VarInput('dfitments' , "$$$d_f$$$" , "number" , 10, "mm",[10, 12, 13, 14, 15, 15, 17, 18, 19, 20]);
+vin.eclass = new VarInput('eclass' , "E. Class" , "text" , "A1", "",["A1","A2","B1","B2","C1","C2"]);
 // TODO: SUPERVISOR Round bars http://www.onesteel.com/products.asp?action=showProduct&productID=52&categoryName=Bar%20Sections
 //vin.rhoc   = new VarInput('rhoc', "$$$\\rho_c$$$" , "number" , 2400, "kg/m&#179;");
-vin.fc     = new VarInput('fc' , "$$$f_c$$$" , "number" , 32, "MPa",[20, 25, 32, 40, 50, 65, 80, 100]);
+vin.fc     = new VarInput('fc' , "$$$f'_c$$$" , "number" , 32, "MPa",[20, 25, 32, 40, 50, 65, 80, 100]);
 // append to dom and attatch a listener
 for(var i in vin){
 vin[i].appendTo(document.querySelector("#invardiv-content"));
@@ -3490,7 +3564,9 @@ vin.b.validate = function(e){
 var link = '<a href="#help_bar_b">b</a> '
 var MIN_BREADTH = 150;
 var MAX_BREADTH = 2000;
-if(e.value%5!==0){
+if(e.value == undefined || e.value == null|| isNaN(e.value)){
+e.warning.push(link+' Should not be left blank.');
+}else if(e.value%5!==0){
 e.error.push(link+" should be rounded to nearest 5mm.");
 // TODO: do not autocoorect rounding to 5mm because, firefox spin buttons stop working if you do.
 //e.value = Math.round(e.value/5)*5;
@@ -3517,7 +3593,9 @@ vin.D.validate = function(e){
 var link = '<a href="#help_bar_Depth">D</a> '
 var MIN_DEPTH = 150;
 var MAX_DEPTH = 2000;
-if(e.value%5!==0){
+if(e.value == undefined || e.value == null|| isNaN(e.value)){
+e.warning.push(link+' Should not be left blank.');
+}else if(e.value%5!==0){
 e.error.push(link+" should be rounded to nearest 5 mm.");
 //e.value = Math.round(e.value/5)*5;
 }
@@ -3536,7 +3614,9 @@ reasonable multiple
 not too big ?? how big is too big?
 not too small
 **/
-if(e.value> 150){
+if(e.value == undefined || e.value == null|| isNaN(e.value)){
+e.warning.push('<a href="#help_bar_cover">Cover</a> Should not be left blank.');
+}else if(e.value> 150){
 // silent warning?
 e.warning.push('<a href="#help_bar_cover">Cover</a> might be too big... unless there is a special reason.');
 }else if(e.value< 20){
@@ -3570,6 +3650,23 @@ return e;
 
 
 
+setTimeout(function(){
+try{
+var v = parseInt(localStorage.getItem("visits"));
+if(v==null || v==undefined || isNaN(v)){
+v=0;
+}
+if(v<3){
+var el = document.getElementById("apptitlebox");
+el.style.outline="red 4px dashed";
+alert("When you are ready, open the tutorial & survey with the red link in the top left corner. \n\n This message will be displayed the first 3 times you open this page.");
+el.style.outline="";
+}else{
+}
+v++;
+localStorage.setItem("visits", v);
+}catch(e){
+}},2000);
 ///////////////  HELP BAR SETUP  ///////////////////////////
 var helpBar  = new HelpBar("varinfodiv")
 ///////////////    SETUP TOOLTIPS     /////////////////////
@@ -3590,13 +3687,13 @@ rman.on("change",mainUpdateListener);
 var cs_canvas = document.querySelector("#crosssectioncanvas");
 var cs_ctx = cs_canvas.getContext('2d');
 //////////////// INITIAL BEAM CONFIGURATION //////////////////////////
-rman.rows[0].barcode = "3N40";
-rman.rows[1].enabled = true;
-rman.rows[1].offset = 80;
-rman.rows[2].enabled = true;
-rman.rows[2].offset = 80;
-rman.rows[3].enabled = true;
-rman.rows[3].from = "highest";
+rman.rows[0].barcode = "3N32";
+//rman.rows[1].enabled = true;
+//rman.rows[1].offset = 80;
+//rman.rows[2].enabled = true;
+//rman.rows[2].offset = 80;
+//rman.rows[3].enabled = true;
+//rman.rows[3].from = "highest";
 ///////////////// FINALIZE TOOLTIPS //////////////////////////
 ttips.grab(document.body);
 ///////////////////// MAIN UPDATE LISTENER  /////////////////////////////
@@ -3608,6 +3705,9 @@ b.drawStressBlock(document.querySelector(".dncanvas").getContext('2d'));
 collapseCalcs();
 flagCalcsForUpdate();
 b.drawSection(cs_ctx);
+updateErrorOutput();
+}
+function updateErrorOutput(){
 var err_list = [];
 var war_list = [];
 for(var i in vin){
@@ -3620,6 +3720,14 @@ for(var i = 0; i<rs.length; i++){
 var v = rs[i].getValidity(b.dn);
 err_list = err_list.concat(v.error);
 war_list = war_list.concat(v.warning);
+}
+if(b.kuo < 0.1){
+err_list.push('<a href="#help_bar_kuo">k<sub>uo</sub></a> &lt;0.1 The beam may be under-reinforced. See calculations below.');
+}else if(b.kuo>0.36){
+err_list.push('<a href="#help_bar_kuo">k<sub>uo</sub></a> &gt;0.36 The beam may be over-reinforced. See calculations below. See AS3600 8.1.5');
+}
+if(b.Muo<b.Muo_min){
+err_list.push('<a href="#help_bar_Muo">M<sub>uo</sub></a> &lt; <a href="#help_bar_Muo_min">(M<sub>uo</sub>)<sub>min</sub></a> ( '+b.Muo.toFixed(0)+'kNm < '+b.Muo_min.toFixed(0)+'kNm). See AS3600 8.6.1.');
 }
 ttips.setError(err_list, war_list);
 }
@@ -3648,6 +3756,7 @@ calc.Muo.appendTo(calculationdiv);
 calc.kuo.appendTo(calculationdiv);
 calc.phi.appendTo(calculationdiv);
 calc.phiMuo.appendTo(calculationdiv);
+calc.checks.appendTo(calculationdiv);
 }
 var calc_update_timeout_id = null;
 function flagCalcsForUpdate(){
@@ -3662,6 +3771,7 @@ calc.Muo.updateTitle();
 calc.kuo.updateTitle();
 calc.phi.updateTitle();
 calc.phiMuo.updateTitle();
+calc.checks.updateTitle();
 }
 function collapseCalcs(){
 calc.alpha2.collapsed = true;
@@ -3670,6 +3780,7 @@ calc.Muo.collapsed = true;
 calc.kuo.collapsed = true;
 calc.phi.collapsed = true;
 calc.phiMuo.collapsed = true;
+calc.checks.collapsed = true;
 }
 function printcalcs(){
 var w = window.open("","_blank","width=1500,height=700, top=100,left=100");
@@ -3697,18 +3808,21 @@ calc.Muo.appendTo(div);
 calc.kuo.appendTo(div);
 calc.phi.appendTo(div);
 calc.phiMuo.appendTo(div);
+calc.checks.appendTo(div);
 calc.alpha2.collapsed = false;
 calc.dn.collapsed = false;
 calc.Muo.collapsed = false;
 calc.kuo.collapsed = false;
 calc.phi.collapsed =false;
 calc.phiMuo.collapsed =false;
+calc.checks.collapsed =false;
 MathJax.Hub.Queue(function () {
 w.print();
 w.close();
 initCalcs(calculationdiv);
 });
 }
+
 
 
 </script>

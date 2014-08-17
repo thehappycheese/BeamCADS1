@@ -18,6 +18,25 @@
 
 
 
+setTimeout(function(){
+try{
+	var v = parseInt(localStorage.getItem("visits"));
+	if(v==null || v==undefined || isNaN(v)){
+		v=0;
+	}
+	if(v<3){
+		var el = document.getElementById("apptitlebox");
+		el.style.outline="red 4px dashed";
+		alert("When you are ready, open the tutorial & survey with the red link in the top left corner. \n\n This message will be displayed the first 3 times you open this page.");
+		el.style.outline="";
+	}else{
+	}
+	v++;
+	localStorage.setItem("visits", v);
+
+}catch(e){
+}},2000);
+
 
 ///////////////  HELP BAR SETUP  ///////////////////////////
 var helpBar  = new HelpBar("varinfodiv")
@@ -87,8 +106,15 @@ function mainUpdateListener(e){
 	flagCalcsForUpdate();
 	b.drawSection(cs_ctx);
 	
+	updateErrorOutput();
 	
 	
+	
+}
+
+
+
+function updateErrorOutput(){
 	var err_list = [];
 	var war_list = [];
 	for(var i in vin){
@@ -102,8 +128,19 @@ function mainUpdateListener(e){
 		err_list = err_list.concat(v.error);
 		war_list = war_list.concat(v.warning);
 	}
-	ttips.setError(err_list, war_list);
 	
+	if(b.kuo < 0.1){
+		err_list.push('<a href="#help_bar_kuo">k<sub>uo</sub></a> &lt;0.1 The beam may be under-reinforced. See calculations below.');
+	}else if(b.kuo>0.36){
+		err_list.push('<a href="#help_bar_kuo">k<sub>uo</sub></a> &gt;0.36 The beam may be over-reinforced. See calculations below. See AS3600 8.1.5');
+	}
+	
+	if(b.Muo<b.Muo_min){
+		err_list.push('<a href="#help_bar_Muo">M<sub>uo</sub></a> &lt; <a href="#help_bar_Muo_min">(M<sub>uo</sub>)<sub>min</sub></a> ( '+b.Muo.toFixed(0)+'kNm < '+b.Muo_min.toFixed(0)+'kNm). See AS3600 8.6.1.');
+	}
+	
+	
+	ttips.setError(err_list, war_list);
 }
 
 
