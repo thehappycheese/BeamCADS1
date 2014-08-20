@@ -858,7 +858,8 @@ Beam.prototype.drawSection = function(ctx){
 var drawOptions = {
 draw_dn:false,
 draw_d:false,
-draw_question:true
+draw_question:true,
+draw_Muo:true
 };
 var b = null;
 var dn = this.dn;
@@ -880,7 +881,7 @@ ctx.clearRect(0,0,canvas.width,canvas.height);
 ctx.save()
 // befor translation show some extra info for asking questions
 if(drawOptions.draw_question){
-ctx.fillStyle = "black";
+ctx.fillStyle = "grey";
 ctx.font = "15px serif";
 ctx.textBaseline="top"
 ctx.textAlign="right"
@@ -898,6 +899,17 @@ ctx.fillText(
 "Concrete Strength = "+this.fc+" MPa",
 canvas.width,
 40
+);
+}
+if(drawOptions.draw_Muo){
+ctx.fillStyle = "red";
+ctx.font = "25px serif";
+ctx.textBaseline="top"
+ctx.textAlign="right"
+ctx.fillText(
+"\u03D5Muo = "+(this.phi*this.Muo).toFixed(0)+" kNm",
+canvas.width,
+70
 );
 }
 ctx.translate(
@@ -2211,6 +2223,11 @@ if(warning_list && warning_list.length>0){
 out += '<ul class="warninglist"><li>'+warning_list.join("</li><li>")+'</li></ul>';
 }
 this.feedback_div.innerHTML = out;
+if(error_list.length+warning_list.length>0){
+this.feedback_div.style.backgroundColor = "yellow";
+}else{
+this.feedback_div.style.backgroundColor = "";
+}
 }.bind(this);
 this.updateMathJax = function(){
 if(document.body.contains(this.body)){
@@ -2883,8 +2900,10 @@ this.updateTitle = function(){
 var Muo_min = b.Muo_min;
 var Muo = b.Muo;
 var addendum = "";
+this.topdiv.style.backgroundColor = "";
 if(Muo<Muo_min){
-addendum = '<span style="color:red"> &lt; <a href="#help_bar_Muomin">(M<sub>uo</sub>)<sub>min</sub></a>  (= '+Muo_min.toFixed(0)+' kNm) (See AS3600 8.1.6 Minimum Capacity)</span>'
+addendum = '<span style="color:red"> &lt; <a href="#help_bar_Muomin">(M<sub>uo</sub>)<sub>min</sub></a>  (= '+Muo_min.toFixed(0)+' kNm) (See AS3600 8.1.6 Minimum Capacity)</span>';
+this.topdiv.style.backgroundColor = "yellow";
 }
 this.title = '<a href="#help_bar_Muo"> M<sub>uo</sub></a> = '+Muo.toFixed(0)+' kNm'+addendum;
 }.bind(this);
@@ -2984,11 +3003,15 @@ CalcDiv.call(this); // Extends calcdiv
 this.updateTitle = function(){
 var kuo = b.kuo;
 var addendum = "";
+this.topdiv.style.backgroundColor = ""
 if(kuo>0.36){
-addendum = '<span style="color:red"> &gt;0.36 beam is over-reinforced (See AS3600 8.1.5)</span>'
+addendum = '<span style="color:red"> &gt;0.36 beam is over-reinforced (See AS3600 8.1.5)</span>';
+this.topdiv.style.backgroundColor = "yellow";
+console.log(this.topdiv);
 }
 if(kuo<0.1){
-addendum = '<span style="color:red"> &lt;0.1 beam might be under-reinforced (See AS3600 8.1.5)</span>'
+addendum = '<span style="color:red"> &lt;0.1 beam might be under-reinforced (See AS3600 8.1.5)</span>';
+this.topdiv.style.backgroundColor = "yellow";
 }
 this.title = '<a href="#help_bar_kuo"> k<sub>uo</sub></a> = '+b.kuo.toFixed(3)+addendum;
 }.bind(this);
@@ -3693,7 +3716,8 @@ rman.rows[0].barcode = "3N32";
 //rman.rows[2].enabled = true;
 //rman.rows[2].offset = 80;
 //rman.rows[3].enabled = true;
-//rman.rows[3].from = "highest";
+rman.rows[2].from = "highest";
+rman.rows[3].from = "highest";
 ///////////////// FINALIZE TOOLTIPS //////////////////////////
 ttips.grab(document.body);
 ///////////////////// MAIN UPDATE LISTENER  /////////////////////////////
